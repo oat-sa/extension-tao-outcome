@@ -34,12 +34,12 @@ class taoResultServer_models_classes_ItemResult {
     /**
      * @var taoResultServer_models_classes_context
      */
-//    private $identifier;
+    private $identifier;
     /**
      * When a test result is given the following item results must relate only to items that were selected for presentation as part of the corresponding test session. Furthermore, all items selected for presentation should be reported with a corresponding itemResult.
      * @var taoResultServer_models_classes_testResult
      */
-//    private $sequenceIndex;
+    private $sequenceIndex;
     /**
      *
      *The date stamp of when this result was recorded.

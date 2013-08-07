@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Implements the exposed Services for the storage of item and test variables,
+ * Implements the Services for the storage of item and test variables,
  * The physical storage is delegated to the results extension
  
  * @author plichart

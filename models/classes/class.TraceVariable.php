@@ -29,44 +29,21 @@
  * with a test and/or one or more items attempted. Information about the test is optional,
  *  in some systems it may be possible to interact with items that are not organized into a test at all. For example, items that are organized with learning resources and presented individually in a formative context.
  */
-abstract class taoResultServer_models_classes_ResponseVariable extends taoResultServer_models_classes_ItemVariable{
+abstract class taoResultServer_models_classes_TraceVariable extends taoResultServer_models_classes_ItemVariable{
 
     /**
      * When a response variable is bound to an interaction that supports the shuffling of choices, the sequence of choices experienced by the candidate will vary between test instances. When shuffling is in effect, the sequence of choices should be reported as a sequence of choice identifiers using this attribute.
-     * @var array
+     * @var string
      */
-//    private $choicesequence;
-    /**
-     * The correct response may be output as part of the report if desired. Systems are not limited to reporting correct responses declared in responseDeclarations. For example, a correct response may be set by a templateRule or may simply have been suppressed from the declaration passed to the delivery engine (e.g., for security).
-     * @var string (todo should be a class)
-     */
-    private $correctResponse;
-    /**
-     *
-     * @var  array
-     */
-    private $candidateResponse;
-/*
-    public function setChoiceSequence($choicesequence){
-	$this->choiceSequence = $choiceSequence;
+    private $trace;
+
+    public function setTrace($trace){
+	$this->trace = $trace;
     }
-    public function getChoiceSequence(){
-	return $this->choiceSequence;
+    public function getTrace(){
+	return $this->trace;
     }
- *
- */
-    public function setCorrectResponse($correctResponse){
-	$this->correctResponse = $correctResponse;
-    }
-    public function getCorrectResponse(){
-	return $this->correctResponse;
-    }
-    public function addCandidateResponse($candidateResponse){
-	$this->candidateResponse[] = $candidateResponse;
-    }
-    public function getCandidateResponse(){
-	return $this->candidateResponse;
-    }
+    
 }
 
 ?>

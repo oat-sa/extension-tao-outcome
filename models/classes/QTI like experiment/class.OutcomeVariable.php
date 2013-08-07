@@ -35,17 +35,17 @@ abstract class taoResultServer_models_classes_OutcomeVariable extends taoResultS
      * The views (if any) declared for the outcome must be copied to the report to enable systems that render the report to hide information not relevant in a specific situation. If no values are given, the outcome's value should be considered relevant in all views.
      * @var array {author, candidate, proctor, scorer, testConstructor, tutor}
      */
-//    private $views;
+    private $views;
     /**
      * 
      * @var string
      */
-//    private $interpretation;
+    private $interpretation;
     /**
      *
      * @var uri
      */
-//    private $longInterpretation;
+    private $longInterpretation;
      /**
      * taken from the corresponding outcomeDeclaration.
      * @var float
@@ -60,13 +60,13 @@ abstract class taoResultServer_models_classes_OutcomeVariable extends taoResultS
      *If a mastery value is specified in the corresponding outcomeDeclaration it may be reported alongside the value of the outcomeVariable. In some cases, the mastery value may not be an attribute of the item itself, but be determined by the context in which the item is delivered, for example, by examining the candidates in a specific cohort. The mastery value may be reported with the outcome value even when there is no corresponding value in the declaration.
      * @var float
      */
- //   private $masteryValue;
+    private $masteryValue;
     /**
      *The value(s) of the outcome variable. The order of the values is significant only if the outcome was declared with ordered cardinality.
      * @var array
      */
     private $values;
-/*
+
     public function getViews(){
     return $this->views;
     }
@@ -88,8 +88,6 @@ abstract class taoResultServer_models_classes_OutcomeVariable extends taoResultS
     public function getLongInterpretation(){
 	return $this->longInterpretation;
     }
- *
- */
     public function setNormalMaximum($normalMaximum){
 	$this->normalMaximum = $normalMaximum;
     }
@@ -102,14 +100,14 @@ abstract class taoResultServer_models_classes_OutcomeVariable extends taoResultS
     public function getNormalMinimum($normalMinimum){
 	return $this->normalMinimum;
     }
-/*
+
     public function setMasteryValue($masteryValue){
 	$this->masteryValue = $masteryValue;
     }
     public function getMasteryValue(){
 	return $this->masteryValue;
     }
-*/
+
     public function getValues(){
 	return $this->getValues;
     }
