@@ -53,7 +53,7 @@ abstract class taoResultServer_models_classes_ItemVariable {
     }
     public function getIdentifier(){
     
-	return getIdentifier();
+	return $this->identifier;
     }
     public function setCardinality($cardinality = "single"){
 	if (!(in_array($cardinality, array("single","multiple","ordered", "record")))){
@@ -68,7 +68,7 @@ abstract class taoResultServer_models_classes_ItemVariable {
 	$this->baseType = $baseType;
     }
     public function getBaseType(){
-	return $this->baseType();
+	return $this->baseType;
     }
 }
 ?>

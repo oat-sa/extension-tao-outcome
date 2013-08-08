@@ -29,7 +29,7 @@
  * with a test and/or one or more items attempted. Information about the test is optional,
  *  in some systems it may be possible to interact with items that are not organized into a test at all. For example, items that are organized with learning resources and presented individually in a formative context.
  */
-abstract class taoResultServer_models_classes_OutcomeVariable extends taoResultServer_models_classes_ItemVariable{
+ class taoResultServer_models_classes_OutcomeVariable extends taoResultServer_models_classes_ItemVariable{
 
     /**
      * The views (if any) declared for the outcome must be copied to the report to enable systems that render the report to hide information not relevant in a specific situation. If no values are given, the outcome's value should be considered relevant in all views.
@@ -91,13 +91,13 @@ abstract class taoResultServer_models_classes_OutcomeVariable extends taoResultS
     public function setNormalMaximum($normalMaximum){
 	$this->normalMaximum = $normalMaximum;
     }
-    public function getNormalMaximum($normalMaximum){
+    public function getNormalMaximum(){
 	return $this->normalMaximum;
     }
       public function setNormalMinimum($normalMinimum){
 	$this->normalMinimum = $normalMinimum;
     }
-    public function getNormalMinimum($normalMinimum){
+    public function getNormalMinimum(){
 	return $this->normalMinimum;
     }
 

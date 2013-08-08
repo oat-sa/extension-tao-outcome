@@ -13,7 +13,7 @@ return array(
 	'description' => 'This extension exposes a result server interface for results submission. The data is stored using the results extension ',
 	'version' => '1.0',
 	'author' => 'CRP Henri Tudor',
-	'dependencies' => array('tao'),
+	'dependencies' => array('tao', 'taoResults'),
 	'models' => array(),
 	'install' => array(),
 	'classLoaderPackages' => array( 

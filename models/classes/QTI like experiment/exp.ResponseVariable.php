@@ -29,7 +29,7 @@
  * with a test and/or one or more items attempted. Information about the test is optional,
  *  in some systems it may be possible to interact with items that are not organized into a test at all. For example, items that are organized with learning resources and presented individually in a formative context.
  */
-abstract class taoResultServer_models_classes_ResponseVariable extends taoResultServer_models_classes_ItemVariable{
+class taoResultServer_models_classes_ResponseVariable extends taoResultServer_models_classes_ItemVariable{
 
     /**
      * When a response variable is bound to an interaction that supports the shuffling of choices, the sequence of choices experienced by the candidate will vary between test instances. When shuffling is in effect, the sequence of choices should be reported as a sequence of choice identifiers using this attribute.

@@ -6,11 +6,13 @@
  * TODO : move the impl to results services
  * @author plichart
  */
-class taoResultServer_models_classes_DbResultServer
+class taoResultServer_models_classes_LtiResultServer
     extends tao_models_classes_GenerisService
     implements taoResultServer_models_classes_ResultServer {
-
-    private $taoResultsStorage;
+//https://testlauncher-a.secure.cito.nl/tools/consumer.aspx
+//Basic LTI http://www.imsglobal.org/LTI/v1p1p1/ltiIMGv1p1p1.html#_Toc330273033
+    
+    private $url;
 
     private $deliveryResult;
     /**
@@ -18,24 +20,25 @@ class taoResultServer_models_classes_DbResultServer
     */
 
     public function __construct($deliveryResultIdentifier){
+        // section 10-13-1-39-5129ca57:1276133a327:-8000:00000000000020A9 begin
 		parent::__construct();
-		$this->taoResultsStorage = new taoResults_models_classes_ResultsService();
-        //spawns a new delivery result or retrieve an existing one with this identifier
-        $this->deliveryResult = $this->taoResultsStorage->storeDeliveryResult($deliveryResultIdentifier);
+		$this->deliveryResult = $this->getDeliveryResult($deliveryResultIdentifier);
+        // section 10-13-1-39-5129ca57:1276133a327:-8000:00000000000020A9 end
     }
     
     /**
     * @param string testTakerIdentifier (uri recommended)
     */
-    public function storeTestTaker($testTakerIdentifier) {
-        $this->taoResultsStorage->storeTestTaker($this->deliveryResult, $testTakerIdentifier);
+    public function setTestTaker($testTakerIdentifier) {
+       
     }
 
     /**
     * @param string deliveryIdentifier (uri recommended)
     */
-    public function storeDelivery($deliveryIdentifier) {
-        $this->taoResultsStorage->storeDelivery($this->deliveryResult, $deliveryIdentifier);
+    public function setDelivery($deliveryIdentifier) {
+        
+
     }
 
     
@@ -46,11 +49,9 @@ class taoResultServer_models_classes_DbResultServer
     * @param taoResultServer_models_classes_ItemVariable itemVariable
     * @param string callId an id for the item instanciation
     */
-    public function storeItemVariable($test, $item, taoResultServer_models_classes_ItemVariable $itemVariable, $callIdItem){
-        $this->taoResultsStorage->storeItemVariable($this->deliveryResult, $test, $item, $itemVariable, $callIdItem);
-        
-    }
+    public function setItemVariable($test, $item, taoResultServer_models_classes_ItemVariable $itemVariable, $callId){
 
+    }
 
     /** Submit a complete Item result
     *
@@ -60,7 +61,7 @@ class taoResultServer_models_classes_DbResultServer
 //    public function setItemResult($item, taoResultServer_models_classes_ItemResult $itemResult, $callId ) {}
 //    public function setTestResult($test, taoResultServer_models_classes_TestResult $testResult, $callId){}
 
-    public function storeTestVariable($test, taoResultServer_models_classes_ItemVariable $testVariable, $callIdTest){
+    public function setTestVariable($test, taoResultServer_models_classes_ItemVariable $testVariable, $callId){
     }
 
 }

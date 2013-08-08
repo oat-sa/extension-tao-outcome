@@ -1,35 +1,42 @@
 <?php
 
-interface taoResultServer_actions_ResultServer {
+interface taoResultServer_models_classes_ResultServer {
+
     /**
-     * @param string deliveryResultIdentifier if no such deliveryResult with this identifier exists a new one gets created
+     * @param string callId, if no such deliveryResult with this identifier exists a new one gets created
      */
-    public function init($deliveryResultIdentifier);
+    public function __construct($callId);
     /**
     * @param string testTakerIdentifier (uri recommended)
     */
-    public function setTestTaker($testTakerIdentifier);
+    public function storeTestTaker($testTakerIdentifier);
 
     /**
     * @param string deliveryIdentifier (uri recommended)
     */
-    public function setDelivery($deliveryIdentifier);
+    public function storeDelivery($deliveryIdentifier);
 
-    /** Submit a complete Item result
-    *
-    * @param taoResultServer_models_classes_ItemResult itemResult
-    */
-    public function setItemResult(taoResultServer_models_classes_ItemResult $itemResult);
     /**
     * Submit a specific Item Variable, (ResponseVariable and OutcomeVariable shall be used respectively for collected data and score/interpretation computation)
     * @param string test (uri recommended)
     * @param string item (uri recommended)
     * @param taoResultServer_models_classes_ItemVariable itemVariable
+    * @param string callId an id for the item instanciation
     */
-    public function setItemVariable($test, $item, taoResultServer_models_classes_ItemVariable $itemVariable);
+    public function storeItemVariable($test, $item, taoResultServer_models_classes_ItemVariable $itemVariable, $callIdItem );
 
-    public function setTestResult($test, taoResultServer_models_classes_TestResult $testResult);
+    
 
-    public function setTestVariable($test, taoResultServer_models_classes_ItemVariable $itemVariable);
+    public function storeTestVariable($test, taoResultServer_models_classes_ItemVariable $testVariable, $callIdTest);
+
+     /** Submit a complete Item result
+    *
+    * @param taoResultServer_models_classes_ItemResult itemResult
+    * @param string callId an id for the item instanciation
+    */
+    //public function setItemResult($item, taoResultServer_models_classes_ItemResult $itemResult, $callId);
+    
+    //public function setTestResult($test, taoResultServer_models_classes_TestResult $testResult, $callId);
+    
 }
 ?>
