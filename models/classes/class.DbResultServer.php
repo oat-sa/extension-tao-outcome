@@ -30,15 +30,12 @@ class taoResultServer_models_classes_DbResultServer
     public function storeTestTaker($testTakerIdentifier) {
         $this->taoResultsStorage->storeTestTaker($this->deliveryResult, $testTakerIdentifier);
     }
-
     /**
     * @param string deliveryIdentifier (uri recommended)
     */
     public function storeDelivery($deliveryIdentifier) {
         $this->taoResultsStorage->storeDelivery($this->deliveryResult, $deliveryIdentifier);
     }
-
-    
     /**
     * Submit a specific Item Variable, (ResponseVariable and OutcomeVariable shall be used respectively for collected data and score/interpretation computation)
     * @param string test (uri recommended)
@@ -46,12 +43,10 @@ class taoResultServer_models_classes_DbResultServer
     * @param taoResultServer_models_classes_ItemVariable itemVariable
     * @param string callId an id for the item instanciation
     */
-    public function storeItemVariable($test, $item, taoResultServer_models_classes_ItemVariable $itemVariable, $callIdItem){
+    public function storeItemVariable($test, $item, taoResultServer_models_classes_Variable $itemVariable, $callIdItem){
         $this->taoResultsStorage->storeItemVariable($this->deliveryResult, $test, $item, $itemVariable, $callIdItem);
         
     }
-
-
     /** Submit a complete Item result
     *
     * @param taoResultServer_models_classes_ItemResult itemResult
@@ -60,7 +55,9 @@ class taoResultServer_models_classes_DbResultServer
 //    public function setItemResult($item, taoResultServer_models_classes_ItemResult $itemResult, $callId ) {}
 //    public function setTestResult($test, taoResultServer_models_classes_TestResult $testResult, $callId){}
 
-    public function storeTestVariable($test, taoResultServer_models_classes_ItemVariable $testVariable, $callIdTest){
+    public function storeTestVariable($test, taoResultServer_models_classes_Variable $testVariable, $callIdTest){
+         $this->taoResultsStorage->storeTestVariable($this->deliveryResult, $test, $item, $testVariable, $callIdItem);
+
     }
 
 }

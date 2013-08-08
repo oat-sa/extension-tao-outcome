@@ -29,14 +29,14 @@ class taoResultServer_models_classes_LtiResultServer
     /**
     * @param string testTakerIdentifier (uri recommended)
     */
-    public function setTestTaker($testTakerIdentifier) {
+    public function storeTestTaker($testTakerIdentifier) {
        
     }
 
     /**
     * @param string deliveryIdentifier (uri recommended)
     */
-    public function setDelivery($deliveryIdentifier) {
+    public function storeDelivery($deliveryIdentifier) {
         
 
     }
@@ -49,7 +49,7 @@ class taoResultServer_models_classes_LtiResultServer
     * @param taoResultServer_models_classes_ItemVariable itemVariable
     * @param string callId an id for the item instanciation
     */
-    public function setItemVariable($test, $item, taoResultServer_models_classes_ItemVariable $itemVariable, $callId){
+    public function storeItemVariable($test, $item, taoResultServer_models_classes_Variable $itemVariable, $callId){
 
     }
 
@@ -61,7 +61,7 @@ class taoResultServer_models_classes_LtiResultServer
 //    public function setItemResult($item, taoResultServer_models_classes_ItemResult $itemResult, $callId ) {}
 //    public function setTestResult($test, taoResultServer_models_classes_TestResult $testResult, $callId){}
 
-    public function setTestVariable($test, taoResultServer_models_classes_ItemVariable $testVariable, $callId){
+    public function storeTestVariable($test, taoResultServer_models_classes_Variable $testVariable, $callId){
     }
 
 }

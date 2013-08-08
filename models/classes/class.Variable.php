@@ -29,7 +29,7 @@
  * with a test and/or one or more items attempted. Information about the test is optional,
  *  in some systems it may be possible to interact with items that are not organized into a test at all. For example, items that are organized with learning resources and presented individually in a formative context.
  */
-abstract class taoResultServer_models_classes_ItemVariable {
+abstract class taoResultServer_models_classes_Variable {
 
     /**
      * The purpose of an itemVariable is to report the value of the item variable with the given identifier.

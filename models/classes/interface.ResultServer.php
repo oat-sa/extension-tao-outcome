@@ -6,6 +6,8 @@ interface taoResultServer_models_classes_ResultServer {
      * @param string callId, if no such deliveryResult with this identifier exists a new one gets created
      */
     public function __construct($callId);
+
+    //public function __construct($callId, $test);
     /**
     * @param string testTakerIdentifier (uri recommended)
     */
@@ -23,11 +25,11 @@ interface taoResultServer_models_classes_ResultServer {
     * @param taoResultServer_models_classes_ItemVariable itemVariable
     * @param string callId an id for the item instanciation
     */
-    public function storeItemVariable($test, $item, taoResultServer_models_classes_ItemVariable $itemVariable, $callIdItem );
+    public function storeItemVariable($test, $item, taoResultServer_models_classes_Variable $itemVariable, $callIdItem );
 
     
 
-    public function storeTestVariable($test, taoResultServer_models_classes_ItemVariable $testVariable, $callIdTest);
+    public function storeTestVariable($test, taoResultServer_models_classes_Variable $testVariable, $callIdTest);
 
      /** Submit a complete Item result
     *
