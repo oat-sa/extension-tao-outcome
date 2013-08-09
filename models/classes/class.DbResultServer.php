@@ -41,7 +41,7 @@ class taoResultServer_models_classes_DbResultServer
     * @param string test (uri recommended)
     * @param string item (uri recommended)
     * @param taoResultServer_models_classes_ItemVariable itemVariable
-    * @param string callId an id for the item instanciation
+    * @param string callId contextual call id for the variable, ex. :  to distinguish the same variable output by the same item but taht is presented several times in the same test 
     */
     public function storeItemVariable($test, $item, taoResultServer_models_classes_Variable $itemVariable, $callIdItem){
         $this->taoResultsStorage->storeItemVariable($this->deliveryResult, $test, $item, $itemVariable, $callIdItem);
