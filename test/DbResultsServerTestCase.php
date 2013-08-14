@@ -2,7 +2,9 @@
 
 require_once dirname(__FILE__) . '/../../tao/test/TaoTestRunner.php';
 include_once dirname(__FILE__) . '/../includes/raw_start.php';
-
+/**
+ * TODO Not a real unit test, script used for the dev. time , will be removed
+ */
 class DbResultsServerTestCase extends UnitTestCase {
 	 /**
 	  *
@@ -16,12 +18,38 @@ class DbResultsServerTestCase extends UnitTestCase {
 
 	}
 
+
+    private function spawnDependantData() {
+        $subjectClass= new core_kernel_classes_Class(TAO_SUBJECT_CLASS);
+        $testTaker = $subjectClass->createInstanceWithProperties(array(
+					RDFS_LABEL					=> "tempTTforResultsTest".rand(0,65535),
+                    PROPERTY_USER_LOGIN	=> time().rand(0,65535),
+                    PROPERTY_USER_FIRSTNAME	=> "randTest".rand(0,65535),
+                    PROPERTY_USER_LASTNAME => "randTest".rand(0,65535),
+                    PROPERTY_USER_MAIL => "foo@foo.bar",
+				));
+        $testClass= new core_kernel_classes_Class(TAO_TEST_CLASS);
+        $test = $testClass->createInstanceWithProperties(array(
+					RDFS_LABEL					=> "tempTestforResultsTest".rand(0,65535),
+				));
+        $itemClass= new core_kernel_classes_Class(TAO_ITEM_CLASS);
+        $item = $itemClass->createInstanceWithProperties(array(
+					RDFS_LABEL					=> "tempItemforResultsTest".rand(0,65535),
+                    TAO_ITEM_MODEL_PROPERTY => TAO_ITEM_MODEL_XHTML
+				));
+        $deliveryClass= new core_kernel_classes_Class(TAO_ITEM_CLASS);
+        $delivery = $deliveryClass->createInstanceWithProperties(array(
+					RDFS_LABEL					=> "tempDeliveryforResultsTest".rand(0,65535),
+				));
+        return array($testTaker->getUri(),$test->getUri(),$item->getUri(), $delivery->getUri());
+    }
     public function testSetResult() {
         $resultIdentifier = "atrial".rand(0,512);
-        $testTaker = 'http://tao-dev/taodev.rdf#i1376035802900929';
-        $delivery = 'http://tao-dev/taodev.rdf#i1376035790164827';
-        $test = 'http://tao-dev/taodev.rdf#i1376035966325031';
-        $item = "http://tao-dev/taodev.rdf#i1376035671745";
+        $tempData = $this->spawnDependantData();
+        $testTaker = $tempData[0];
+        $delivery = $tempData[3];
+        $test = $tempData[1];
+        $item = $tempData[2];
         
         $this->resultServer = new taoResultServer_models_classes_DbResultServer($resultIdentifier);
         $this->assertIsA($this->resultServer, 'taoResultServer_models_classes_DbResultServer');
@@ -120,7 +148,7 @@ Tu seras châtié de ta témérité.");
         $this->resultServer->storeItemVariable($test, $item, $traceVariable, "yyy");
 
     }
-
+/*
        public function testSetPoorlySpecifiedResult() {
         $resultIdentifier = "loose".rand(0,512);
         $testTaker = 'tt';
@@ -174,6 +202,6 @@ Tu seras châtié de ta témérité.");
 
 
     }
-
+*/
 }
 ?>
