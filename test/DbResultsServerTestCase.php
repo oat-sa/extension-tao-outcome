@@ -37,7 +37,7 @@ class DbResultsServerTestCase extends UnitTestCase {
 					RDFS_LABEL					=> "tempItemforResultsTest".rand(0,65535),
                     TAO_ITEM_MODEL_PROPERTY => TAO_ITEM_MODEL_XHTML
 				));
-        $deliveryClass= new core_kernel_classes_Class(TAO_ITEM_CLASS);
+        $deliveryClass= new core_kernel_classes_Class(TAO_DELIVERY_CLASS);
         $delivery = $deliveryClass->createInstanceWithProperties(array(
 					RDFS_LABEL					=> "tempDeliveryforResultsTest".rand(0,65535),
 				));
