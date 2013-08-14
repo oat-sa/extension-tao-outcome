@@ -1,22 +1,26 @@
 <?php
 
-interface taoResultServer_models_classes_ResultServer {
+interface taoResultServer_models_classes_ResultStorage {
 
     /**
-     * @param string callId, if no such deliveryResult with this identifier exists a new one gets created
+     * Optionnally spawn a new result and returns
+     * an identifier for it, use of the other services with an unknow identifier
+     *  will trigger the spawning of a new result
+     * @return string deliveryResultIdentifier
      */
-    public function __construct($callId);
+    public function spawnResult();
 
     //public function __construct($callId, $test);
     /**
     * @param string testTakerIdentifier (uri recommended)
+    *
     */
-    public function storeTestTaker($testTakerIdentifier);
+    public function storeTestTaker($deliveryResultIdentifier, $testTakerIdentifier);
 
     /**
     * @param string deliveryIdentifier (uri recommended)
     */
-    public function storeDelivery($deliveryIdentifier);
+    public function storeDelivery($deliveryResultIdentifier, $deliveryIdentifier);
 
     /**
     * Submit a specific Item Variable, (ResponseVariable and OutcomeVariable shall be used respectively for collected data and score/interpretation computation)
@@ -25,11 +29,11 @@ interface taoResultServer_models_classes_ResultServer {
     * @param taoResultServer_models_classes_ItemVariable itemVariable
     * @param string callId contextual call id for the variable, ex. :  to distinguish the same variable output by the same item but taht is presented several times in the same test
     */
-    public function storeItemVariable($test, $item, taoResultServer_models_classes_Variable $itemVariable, $callIdItem );
+    public function storeItemVariable($deliveryResultIdentifier, $test, $item, taoResultServer_models_classes_Variable $itemVariable, $callIdItem );
 
     
 
-    public function storeTestVariable($test, taoResultServer_models_classes_Variable $testVariable, $callIdTest);
+    public function storeTestVariable($deliveryResultIdentifier, $test, taoResultServer_models_classes_Variable $testVariable, $callIdTest);
 
      /** Submit a complete Item result
     *

@@ -44,6 +44,10 @@ class DbResultsServerTestCase extends UnitTestCase {
         return array($testTaker->getUri(),$test->getUri(),$item->getUri(), $delivery->getUri());
     }
     public function testSetResult() {
+
+
+
+
         $resultIdentifier = "atrial".rand(0,512);
         $tempData = $this->spawnDependantData();
         $testTaker = $tempData[0];
@@ -51,23 +55,23 @@ class DbResultsServerTestCase extends UnitTestCase {
         $test = $tempData[1];
         $item = $tempData[2];
         
-        $this->resultServer = new taoResultServer_models_classes_DbResultServer($resultIdentifier);
-        $this->assertIsA($this->resultServer, 'taoResultServer_models_classes_DbResultServer');
-        $this->resultServer->storeTestTaker($testTaker );
-        $this->resultServer->storeDelivery($delivery);
+        $this->resultServer = new taoResultServer_models_classes_DbResult();
+        $this->assertIsA($this->resultServer, 'taoResultServer_models_classes_DbResult');
+        $this->resultServer->storeTestTaker($resultIdentifier, $testTaker );
+        $this->resultServer->storeDelivery($resultIdentifier, $delivery);
          $outComeVariable = new taoResultServer_models_classes_OutcomeVariable();
         $outComeVariable->setBaseType("int");
         $outComeVariable->setCardinality("single");
         $outComeVariable->setIdentifier("Spatial representation");
         $outComeVariable->setValue("".rand(0,30));
-        $this->resultServer->storeItemVariable($test, $item, $outComeVariable, "xxx");
+        $this->resultServer->storeItemVariable($resultIdentifier, $test, $item, $outComeVariable, "xxx");
 
         $outComeVariable = new taoResultServer_models_classes_OutcomeVariable();
         $outComeVariable->setBaseType("int");
         $outComeVariable->setCardinality("single");
         $outComeVariable->setIdentifier("Rotation in Space");
         $outComeVariable->setValue("".rand(0,50));
-        $this->resultServer->storeItemVariable($test, $item, $outComeVariable, "yyy");
+        $this->resultServer->storeItemVariable($resultIdentifier, $test, $item, $outComeVariable, "yyy");
 
         $responseVariable = new taoResultServer_models_classes_ResponseVariable();
         $responseVariable->setBaseType("int");
@@ -75,7 +79,7 @@ class DbResultsServerTestCase extends UnitTestCase {
         $responseVariable->setIdentifier("historyResponse");
         $responseVariable->setCandidateResponse("choice_".rand(0,5));
         $responseVariable->setCorrectResponse(true);
-        $this->resultServer->storeItemVariable($test, $item, $responseVariable, "yyy");
+        $this->resultServer->storeItemVariable($resultIdentifier, $test, $item, $responseVariable, "yyy");
 
         //an unscored response
          $responseVariable = new taoResultServer_models_classes_ResponseVariable();
@@ -92,7 +96,7 @@ Qui te rend si hardi de troubler mon breuvage ?
 Dit cet animal plein de rage :
 Tu seras châtié de ta témérité.");
         $responseVariable->setCorrectResponse(true);
-        $this->resultServer->storeItemVariable($test, $item, $responseVariable, "yyy");
+        $this->resultServer->storeItemVariable($resultIdentifier, $test, $item, $responseVariable, "yyy");
 
 
         $responseVariable = new taoResultServer_models_classes_ResponseVariable();
@@ -101,7 +105,7 @@ Tu seras châtié de ta témérité.");
         $responseVariable->setIdentifier("populationResponse");
         $responseVariable->setCandidateResponse("choice_".rand(0,5));
         $responseVariable->setCorrectResponse(false);
-        $this->resultServer->storeItemVariable($test, $item, $responseVariable, "yyy");
+        $this->resultServer->storeItemVariable($resultIdentifier, $test, $item, $responseVariable, "yyy");
 
         //4 different observations are submitted for the sam variableIdentifier
          $responseVariable = new taoResultServer_models_classes_ResponseVariable();
@@ -110,7 +114,7 @@ Tu seras châtié de ta témérité.");
         $responseVariable->setIdentifier("planets");
         $responseVariable->setCandidateResponse("choice_1");
         $responseVariable->setCorrectResponse(false);
-        $this->resultServer->storeItemVariable($test, $item, $responseVariable, "yyy");
+        $this->resultServer->storeItemVariable($resultIdentifier, $test, $item, $responseVariable, "yyy");
 
         $responseVariable = new taoResultServer_models_classes_ResponseVariable();
         $responseVariable->setBaseType("int");
@@ -118,7 +122,7 @@ Tu seras châtié de ta témérité.");
         $responseVariable->setIdentifier("planets");
         $responseVariable->setCandidateResponse("choice_3");
         $responseVariable->setCorrectResponse(false);
-        $this->resultServer->storeItemVariable($test, $item, $responseVariable, "yyy");
+        $this->resultServer->storeItemVariable($resultIdentifier, $test, $item, $responseVariable, "yyy");
 
         $responseVariable = new taoResultServer_models_classes_ResponseVariable();
         $responseVariable->setBaseType("int");
@@ -126,7 +130,7 @@ Tu seras châtié de ta témérité.");
         $responseVariable->setIdentifier("planets");
         $responseVariable->setCandidateResponse("choice_5");
         $responseVariable->setCorrectResponse(true);
-        $this->resultServer->storeItemVariable($test, $item, $responseVariable, "yyy");
+        $this->resultServer->storeItemVariable($resultIdentifier, $test, $item, $responseVariable, "yyy");
 
         $responseVariable = new taoResultServer_models_classes_ResponseVariable();
         $responseVariable->setBaseType("int");
@@ -134,7 +138,7 @@ Tu seras châtié de ta témérité.");
         $responseVariable->setIdentifier("planets");
         $responseVariable->setCandidateResponse("choice_4");
         $responseVariable->setCorrectResponse(false);
-        $this->resultServer->storeItemVariable($test, $item, $responseVariable, "yyy");
+        $this->resultServer->storeItemVariable($resultIdentifier, $test, $item, $responseVariable, "yyy");
 
 
 
@@ -145,7 +149,7 @@ Tu seras châtié de ta témérité.");
         $traceVariable->setIdentifier("myTrace");
 
         $traceVariable->setTrace("<xml><event id='5' domNode='xpath:/body/thiselement' eventName= 'Click' value=''</xml> ");
-        $this->resultServer->storeItemVariable($test, $item, $traceVariable, "yyy");
+        $this->resultServer->storeItemVariable($resultIdentifier, $test, $item, $traceVariable, "yyy");
 
     }
 /*

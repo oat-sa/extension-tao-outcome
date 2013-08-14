@@ -6,6 +6,6 @@
  * 
  */
 $todefine = array(
-	
+	"TAO_RESULTSERVER_STORAGE_PROP" => ""
 );
 ?>
