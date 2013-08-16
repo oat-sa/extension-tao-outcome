@@ -16,14 +16,14 @@ class todo {
 
 /*Delivery*/
 
-// Delivery Result server changed
+// Delivery Result server property associated to delviery chanegd changed
 
 
-//associate to all existing deliveries the new defult result server defintion
+// The result server TAO 2.4 local changed; associate to all existing deliveries the new defult result server defintion
 
 /*Result Server*/
-//all uris from the model changed
+//all uris from the model changed : http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServer
 
-/**/
-
+/*Results*/
+//a lot
 ?>
