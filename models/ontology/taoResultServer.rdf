@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<rdf:RDF 
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" 
+	xml:base="http://www.tao.lu/Ontologies/TAODelivery.rdf#" 
+	xmlns:resultserver="http://www.tao.lu/Ontologies/TAOResultServer.rdf#"
+	xmlns:widget="http://www.tao.lu/datatypes/WidgetDefinitions.rdf#" 
+	xmlns:generis="http://www.tao.lu/Ontologies/generis.rdf#"
+	xmlns:tao="http://www.tao.lu/Ontologies/TAO.rdf#"
+>
+
+    <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResultServer.rdf##DeliveryResultServer">
+    <rdfs:label xml:lang="en-US"><![CDATA[Result Server]]></rdfs:label>
+    <rdfs:comment xml:lang="en-US"><![CDATA[the Result Server for the Delivery]]></rdfs:comment>
+    <rdfs:subClassOf rdf:resource="http://www.tao.lu/Ontologies/TAO.rdf#TAOObject"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TTAOResultServer.rdf##saveResultUrl">
+    <rdfs:domain rdf:resource="http://www.tao.lu/Ontologies/TAODelivery.rdf#DeliveryResultServer"/>
+    <rdfs:label xml:lang="en-US"><![CDATA[Save result url]]></rdfs:label>
+    <rdfs:comment xml:lang="en-US"><![CDATA[The url where we push the results of an item]]></rdfs:comment>
+    <widget:widget rdf:resource="http://www.tao.lu/datatypes/WidgetDefinitions.rdf#TextBox"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <tao:TAOGUIOrder><![CDATA[10]]></tao:TAOGUIOrder>
+  </rdf:Description>
+   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResultServer.rdf##saveEventUrl">
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+    <widget:widget rdf:resource="http://www.tao.lu/datatypes/WidgetDefinitions.rdf#TextBox"/>
+    <rdfs:label xml:lang="en-US"><![CDATA[Save events url]]></rdfs:label>
+    <rdfs:comment xml:lang="en-US"><![CDATA[The url where we push the events traced in an item]]></rdfs:comment>
+    <rdfs:domain rdf:resource="http://www.tao.lu/Ontologies/TAODelivery.rdf#DeliveryResultServer"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <tao:TAOGUIOrder><![CDATA[20]]></tao:TAOGUIOrder>
+  </rdf:Description>
+
+   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResultServer.rdf#LocalResultServer">
+    <rdf:type rdf:resource="http://www.tao.lu/Ontologies/TAODelivery.rdf#DeliveryResultServer"/>
+    <rdfs:label xml:lang="en-US"><![CDATA[TAO 2.4 Local Result Server]]></rdfs:label>
+    <rdfs:comment xml:lang="en-US"><![CDATA[TAO 2.4 Local Result Server]]></rdfs:comment>
+    <delivery:saveResultUrl><![CDATA[/taoDelivery/InternalResultServer/save]]></delivery:saveResultUrl>
+    <delivery:saveEventUrl><![CDATA[/taoDelivery/InternalResultServer/traceEvents]]></delivery:saveEventUrl>
+    <delivery:matchingUrl><![CDATA[/taoDelivery/InternalResultServer/evaluate]]></delivery:matchingUrl>
+    <delivery:matchingServerSide rdf:resource="http://www.tao.lu/Ontologies/generis.rdf#True"/>
+  </rdf:Description>
+
+
+  <!-- Management Role -->
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResultServer.rdf#DeliveryManagerRole">
+  	<rdf:type rdf:resource="http://www.tao.lu/Ontologies/TAO.rdf#ManagementRole"/>
+  	<generis:includesRole rdf:resource="http://www.tao.lu/Ontologies/TAO.rdf#BackOfficeRole"/>
+  	<rdfs:label xml:lang="en-US"><![CDATA[Delivery Manager]]></rdfs:label>
+    <rdfs:comment xml:lang="en-US"><![CDATA[The Delivery Manager Role]]></rdfs:comment>
+  </rdf:Description>
+</rdf:RDF>
