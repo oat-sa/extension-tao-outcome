@@ -15,12 +15,12 @@ interface taoResultServer_models_classes_ResultStorage {
     * @param string testTakerIdentifier (uri recommended)
     *
     */
-    public function storeTestTaker($deliveryResultIdentifier, $testTakerIdentifier);
+    public function storeRelatedTestTaker($deliveryResultIdentifier, $testTakerIdentifier);
 
     /**
     * @param string deliveryIdentifier (uri recommended)
     */
-    public function storeDelivery($deliveryResultIdentifier, $deliveryIdentifier);
+    public function storeRelatedDelivery($deliveryResultIdentifier, $deliveryIdentifier);
 
     /**
     * Submit a specific Item Variable, (ResponseVariable and OutcomeVariable shall be used respectively for collected data and score/interpretation computation)

@@ -99,7 +99,7 @@ class taoResultServer_models_classes_ResultServerAuthoringService
         
     	parent::__construct();
 		
-		$this->resultServerClass = new core_kernel_classes_Class(TAO_DELIVERY_RESULTSERVER_CLASS);
+		$this->resultServerClass = new core_kernel_classes_Class(TAO_RESULTSERVER_CLASS);
     	
         // section 10-13-1-39-5129ca57:1276133a327:-8000:000000000000216F end
     }

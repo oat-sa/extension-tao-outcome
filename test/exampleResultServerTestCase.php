@@ -18,7 +18,7 @@ class exampleResultServerTestCase extends UnitTestCase {
 
     public function testResultServerWorstCase() {
         //the uri of a resultserver in the KB and probably associated with the delivery
-        $resultServer = new taoResultServer_models_classes_ResultServer('http://www.tao.lu/Ontologies/TAODelivery.rdf#LocalResultServer');
+        $resultServer = new taoResultServer_models_classes_ResultServer(TAO_DEFAULT_RESULT_SERVER);
         //the storage impl varies according to the resultserver
         $api = $resultServer->getStorageInterface();
         //optionnaly you may ask the server and its storage to generate for you an identifier
@@ -26,7 +26,7 @@ class exampleResultServerTestCase extends UnitTestCase {
         $testTaker = "19"; //or ideally a uri of a tao test taker
 
         //if the resultidentifier is not know, a new result is spawned with the submitted identifier , could be a process execution etc.
-        $api->storeTestTaker($myResultIdentifier, "19" );
+        $api->storeRelatedTestTaker($myResultIdentifier, "19" );
 
         $test = "22"; //or ideally a uri of a tao test
         $item = "Mammoth"; //or ideally a uri of ta tao item
@@ -116,7 +116,7 @@ Tu seras châtié de ta témérité.");
         $item = $tempData[2];
 
         //the uri of a resultserver in the KB and probably associated with the delivery
-        $resultServer = new taoResultServer_models_classes_ResultServer('http://www.tao.lu/Ontologies/TAODelivery.rdf#LocalResultServer');
+        $resultServer = new taoResultServer_models_classes_ResultServer(TAO_DEFAULT_RESULT_SERVER);
         //the storage impl varies according to the resultserver
         $api = $resultServer->getStorageInterface();
         //optionnaly you may ask the server and its storage to generate for you an identifier
@@ -124,7 +124,7 @@ Tu seras châtié de ta témérité.");
         
 
         //if the resultidentifier is not know, a new result is spawned with the submitted identifier , could be a process execution etc.
-        $api->storeTestTaker($myResultIdentifier, $testTaker );
+        $api->storeRelatedTestTaker($myResultIdentifier, $testTaker );
 
        
 

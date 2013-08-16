@@ -31,7 +31,7 @@ class taoResultServer_models_classes_DbResult
     /**
     * @param string testTakerIdentifier (uri recommended)
     */
-    public function storeTestTaker($deliveryResultIdentifier, $testTakerIdentifier) {
+    public function storeRelatedTestTaker($deliveryResultIdentifier, $testTakerIdentifier) {
          //spawns a new delivery result or retrieve an existing one with this identifier
        $deliveryResult = $this->taoResultsStorage->storeDeliveryResult($deliveryResultIdentifier);
         $this->taoResultsStorage->storeTestTaker($deliveryResult, $testTakerIdentifier);
@@ -39,7 +39,7 @@ class taoResultServer_models_classes_DbResult
     /**
     * @param string deliveryIdentifier (uri recommended)
     */
-    public function storeDelivery($deliveryResultIdentifier, $deliveryIdentifier) {
+    public function storeRelatedDelivery($deliveryResultIdentifier, $deliveryIdentifier) {
          //spawns a new delivery result or retrieve an existing one with this identifier
        $deliveryResult = $this->taoResultsStorage->storeDeliveryResult($deliveryResultIdentifier);
         $this->taoResultsStorage->storeDelivery($deliveryResult, $deliveryIdentifier);

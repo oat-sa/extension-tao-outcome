@@ -28,7 +28,7 @@
     <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResultServer.rdf#taoResultServer">
 	<rdfs:label xml:lang="en-US"><![CDATA[TAO Result Server 2.5 (DB storage)]]></rdfs:label>
 	<rdfs:comment xml:lang="en-US"><![CDATA[TAO Result Server 2.5 (using DB storage)]]></rdfs:comment>
-	<resultserver:taoResultServerModel rdf:resource="http://www.tao.lu/Ontologies/TAOResultServer.rdf#taoResultServerModel" />
+	<resultserver:hasResultServerModel rdf:resource="http://www.tao.lu/Ontologies/TAOResultServer.rdf#taoResultServerModel" />
 	<rdf:type rdf:resource="http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServer"/>
    </rdf:Description>
 

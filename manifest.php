@@ -12,7 +12,7 @@ return array(
 	'name' => 'taoResultServer',
 	'description' => 'Results Server management and exposed interfaces for results data submission',
 	'version' => '1.0',
-	'author' => 'CRP Henri Tudor',
+	'author' => 'Open Assessment Technologies',
     //taoResults may be needed for the taoResults taoResultServerModel that uses taoResults db storage
 	'dependencies' => array('tao', 'taoResults'),
 	'models' => array(

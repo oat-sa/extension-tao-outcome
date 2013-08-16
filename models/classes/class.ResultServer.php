@@ -1,10 +1,7 @@
 <?php
-
 class taoResultServer_models_classes_ResultServer {
-
     private $resultServer; //the KB Resource
     private $storage; //the storage implementation according to the selected resultServer
-
     /**
      *
      * @param mixed $resultServer string uri or resource
@@ -18,13 +15,25 @@ class taoResultServer_models_classes_ResultServer {
                 $this->resultServer = new core_kernel_classes_Resource($resultServer);
             }
         }
+        $resultServerModels = $this->resultServer->getPropertyValues(new core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_PROP));
 
-        //read storage method from Db and set it
-        //$this->resultServer->getPropertiesValues($properties);
-        //hardcoded
-            $resultStoragePolicy = "taoResultServer_models_classes_DbResult";
+        if ( (!isset($resultServerModels)) or (count($resultServerModels)==0)) {
+            throw new common_Exception("The result server is not correctly configured (Resource definition)");
+        }
+        
+        //restricted to one imple for the moment
+        $resultServerModel = new core_kernel_classes_Resource(current($resultServerModels));
+       
+        $resultServerImplementation = $resultServerModel->getUniquePropertyValue(new core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_IMPL_PROP))->literal;
+        
+        if (class_exists($resultServerImplementation) && in_array('taoResultServer_models_classes_ResultStorage', class_implements($resultServerImplementation))) {
+        
+            $resultStoragePolicy = $resultServerImplementation;
             $this->setResultStorageInterface(new $resultStoragePolicy());
-
+            
+        } else {
+            throw new common_Exception("The result server is not correctly configured (Implementation not found)");
+        }
         //sets the details required depending on the type of storage 
 
     }
@@ -37,7 +46,7 @@ class taoResultServer_models_classes_ResultServer {
    private function setResultStorageInterface(taoResultServer_models_classes_ResultStorage $storageInterface) {
        $this->storage = $storageInterface;
    }
-
+    /*should have an impl of the interface  that propagates to n impl of the itnerface*/
    public function getStorageInterface(){
        return $this->storage;
    }
