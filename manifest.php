@@ -10,12 +10,19 @@ $taopath = dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'tao'.DIRECTORY_SEPARA
 	
 return array(
 	'name' => 'taoResultServer',
-	'description' => 'This extension exposes a result server interface for results submission. The data is stored using the results extension ',
+	'description' => 'Results Server management and exposed interfaces for results data submission',
 	'version' => '1.0',
 	'author' => 'CRP Henri Tudor',
+    //taoResults may be needed for the taoResults taoResultServerModel that uses taoResults db storage
 	'dependencies' => array('tao', 'taoResults'),
-	'models' => array(),
-	'install' => array(),
+	'models' => array(
+		'http://www.tao.lu/Ontologies/TAOResultServer.rdf#'
+	),
+	'install' => array(
+        'rdf' => array(
+			dirname(__FILE__). '/models/ontology/taoResultServer.rdf'
+		)
+    ),
 	'classLoaderPackages' => array( 
 		dirname(__FILE__).'/actions/',
 		dirname(__FILE__).'/helpers/'

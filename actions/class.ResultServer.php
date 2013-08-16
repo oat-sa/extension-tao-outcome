@@ -70,6 +70,7 @@ class taoResultServer_actions_ResultServer extends tao_actions_SaSModule {
 	 * @return core_kernel_classes_Classes
 	 */
 	protected function getRootClass(){
+        echo $this->service->getResultServerClass();
 		return $this->service->getResultServerClass();
 	}
 	
