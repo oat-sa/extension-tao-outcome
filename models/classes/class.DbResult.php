@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * todo move it in the taoResults
  * Implements the Services for the storage of item and test variables,
  * This implementations depends on results for the the physical storage
  * TODO : move the impl to results services
@@ -69,6 +70,10 @@ class taoResultServer_models_classes_DbResult
         $deliveryResult = $this->taoResultsStorage->storeDeliveryResult($deliveryResultIdentifier);
         $this->taoResultsStorage->storeTestVariable($deliveryResult, $test, $item, $testVariable, $callIdItem);
 
+    }
+
+    public function configure(core_kernel_classes_Resource $resultServer) {
+        //nothing to configure in the case of taoResults storage
     }
 
 }

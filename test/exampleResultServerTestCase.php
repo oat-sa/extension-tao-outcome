@@ -22,6 +22,7 @@ class exampleResultServerTestCase extends UnitTestCase {
         //the storage impl varies according to the resultserver
         $api = $resultServer->getStorageInterface();
         //optionnaly you may ask the server and its storage to generate for you an identifier
+        //you may also provide your own identifier like a (example : lis_result_sourcedid)
         $myResultIdentifier = $api->spawnResult();
         $testTaker = "19"; //or ideally a uri of a tao test taker
 

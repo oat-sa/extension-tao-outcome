@@ -12,6 +12,7 @@ interface taoResultServer_models_classes_ResultStorage {
 
     //public function __construct($callId, $test);
     /**
+     * @param deliveryResultIdentifier (example : lis_result_sourcedid)
     * @param string testTakerIdentifier (uri recommended)
     *
     */
@@ -35,6 +36,10 @@ interface taoResultServer_models_classes_ResultStorage {
 
     public function storeTestVariable($deliveryResultIdentifier, $test, taoResultServer_models_classes_Variable $testVariable, $callIdTest);
 
+    /**
+     * The storage may configure itselfs based on the resultServer definition
+     */
+    public function configure(core_kernel_classes_Resource $resultServer);
      /** Submit a complete Item result
     *
     * @param taoResultServer_models_classes_ItemResult itemResult

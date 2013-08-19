@@ -30,6 +30,8 @@ class taoResultServer_models_classes_ResultServer {
         
             $resultStoragePolicy = $resultServerImplementation;
             $this->setResultStorageInterface(new $resultStoragePolicy());
+            //configure it , the storage may rely on specific extra parameters added to the result server like the lti consumer in the case of lti outcome
+            $this->storage->configure($this->resultServer);
             
         } else {
             throw new common_Exception("The result server is not correctly configured (Implementation not found)");

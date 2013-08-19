@@ -53,11 +53,6 @@
 	<rdf:type rdf:resource="http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerModel"/>
    </rdf:Description>
 
-   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResultServer.rdf#basicLTI">
-	<rdfs:label xml:lang="en-US"><![CDATA[basicLTI forward (No Local Storage)]]></rdfs:label>
-	<rdfs:comment xml:lang="en-US"><![CDATA[Return results using basic LTI]]></rdfs:comment>
-	<rdf:type rdf:resource="http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerModel"/>
-   </rdf:Description>
 
      <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResultServer.rdf#Implementation">
     <rdfs:domain rdf:resource="http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerModel"/>
