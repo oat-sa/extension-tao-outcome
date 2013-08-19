@@ -14,7 +14,7 @@ return array(
 	'version' => '1.0',
 	'author' => 'Open Assessment Technologies',
     //taoResults may be needed for the taoResults taoResultServerModel that uses taoResults db storage
-	'dependencies' => array('tao', 'taoResults'),
+	'dependencies' => array('tao'),
 	'models' => array(
 		'http://www.tao.lu/Ontologies/TAOResultServer.rdf#'
 	),

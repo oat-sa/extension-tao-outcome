@@ -25,13 +25,7 @@
     <tao:TAOGUIOrder><![CDATA[10]]></tao:TAOGUIOrder>
     </rdf:Description>
 
-    <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResultServer.rdf#taoResultServer">
-	<rdfs:label xml:lang="en-US"><![CDATA[TAO Result Server 2.5 (DB storage)]]></rdfs:label>
-	<rdfs:comment xml:lang="en-US"><![CDATA[TAO Result Server 2.5 (using DB storage)]]></rdfs:comment>
-	<resultserver:hasResultServerModel rdf:resource="http://www.tao.lu/Ontologies/TAOResultServer.rdf#taoResultServerModel" />
-	<rdf:type rdf:resource="http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServer"/>
-   </rdf:Description>
-
+  
      <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerModel">
 	<rdfs:label xml:lang="en-US"><![CDATA[Result Server Model]]></rdfs:label>
 	<rdfs:comment xml:lang="en-US"><![CDATA[Result Server Model]]></rdfs:comment>
@@ -39,12 +33,8 @@
     </rdf:Description>
 
 
-    <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResultServer.rdf#taoResultServerModel">
-	<rdfs:label xml:lang="en-US"><![CDATA[taoResults storage (database)]]></rdfs:label>
-	<rdfs:comment xml:lang="en-US"><![CDATA[TAO Result Server 2.5 (DB storage)]]></rdfs:comment>
-	<resultserver:implementation><![CDATA[taoResultServer_models_classes_DbResult]]></resultserver:implementation>
-	<rdf:type rdf:resource="http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerModel"/>
-   </rdf:Description>
+
+
 
 
    <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResultServer.rdf#fileStorage">
