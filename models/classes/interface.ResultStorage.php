@@ -6,6 +6,7 @@ interface taoResultServer_models_classes_ResultStorage {
      * Optionnally spawn a new result and returns
      * an identifier for it, use of the other services with an unknow identifier
      *  will trigger the spawning of a new result
+     * //you may also provide your own identifier to the other services like a lis_result_sourcedid:GUID
      * @return string deliveryResultIdentifier
      */
     public function spawnResult();
@@ -28,18 +29,22 @@ interface taoResultServer_models_classes_ResultStorage {
     * @param string test (uri recommended)
     * @param string item (uri recommended)
     * @param taoResultServer_models_classes_ItemVariable itemVariable
-    * @param string callId contextual call id for the variable, ex. :  to distinguish the same variable output by the same item but taht is presented several times in the same test
-    */
+    * @param string callId contextual call id for the variable, ex. :  to distinguish the same variable output by the same item and that is presented several times in the same test
+     * 
+     */
     public function storeItemVariable($deliveryResultIdentifier, $test, $item, taoResultServer_models_classes_Variable $itemVariable, $callIdItem );
 
-    
+    /*
+     *  CreateResultValue(sourcedId,ResultValueRecord)
+     *  CreateLineItem(sourcedId,lineItemRecord:LineItemRecord)
+     */
 
     public function storeTestVariable($deliveryResultIdentifier, $test, taoResultServer_models_classes_Variable $testVariable, $callIdTest);
 
     /**
      * The storage may configure itselfs based on the resultServer definition
      */
-    public function configure(core_kernel_classes_Resource $resultServer);
+    public function configure(core_kernel_classes_Resource $resultServer, $callOptions = array());
      /** Submit a complete Item result
     *
     * @param taoResultServer_models_classes_ItemResult itemResult

@@ -160,10 +160,11 @@ class taoResultServer_actions_ResultServer extends tao_actions_SaSModule {
 		$this->setSessionAttribute("showNodeUri", tao_helpers_Uri::encode($resultServer->getUri()));
 		
 		//get the deliveries related to this delivery resultServer
-		$relatedDeliveries = tao_helpers_Uri::encodeArray($this->service->getRelatedDeliveries($resultServer), tao_helpers_Uri::ENCODE_ARRAY_VALUES);
+		/*
+        $relatedDeliveries = tao_helpers_Uri::encodeArray($this->service->getRelatedDeliveries($resultServer), tao_helpers_Uri::ENCODE_ARRAY_VALUES);
 		$this->setData('relatedDeliveries', json_encode($relatedDeliveries));
 		$this->setData('index', '2');
-		
+		*/
 		
 		$this->setData('formTitle', __('Edit ResultServer'));
 		$this->setData('myForm', $myForm->render());

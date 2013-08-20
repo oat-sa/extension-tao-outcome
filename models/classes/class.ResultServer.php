@@ -3,10 +3,10 @@ class taoResultServer_models_classes_ResultServer {
     private $resultServer; //the KB Resource
     private $storage; //the storage implementation according to the selected resultServer
     /**
-     *
+     * @param array callOptions an array of parameters sent to the results storage configuration 
      * @param mixed $resultServer string uri or resource
      */
-    public function __construct( $resultServer){
+    public function __construct($resultServer, $callOptions =array()){
     
         if (is_object($resultServer) and (get_class($resultServer)=='core_kernel_classes_Resource')) {
         $this->resultServer = $resultServer;
@@ -15,6 +15,7 @@ class taoResultServer_models_classes_ResultServer {
                 $this->resultServer = new core_kernel_classes_Resource($resultServer);
             }
         }
+
         $resultServerModels = $this->resultServer->getPropertyValues(new core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_PROP));
 
         if ( (!isset($resultServerModels)) or (count($resultServerModels)==0)) {
@@ -31,10 +32,10 @@ class taoResultServer_models_classes_ResultServer {
             $resultStoragePolicy = $resultServerImplementation;
             $this->setResultStorageInterface(new $resultStoragePolicy());
             //configure it , the storage may rely on specific extra parameters added to the result server like the lti consumer in the case of lti outcome
-            $this->storage->configure($this->resultServer);
+            $this->storage->configure($this->resultServer, $callOptions);
             
         } else {
-            throw new common_Exception("The result server is not correctly configured (Implementation not found)");
+            throw new common_Exception("The result server is not correctly configured (Implementation not found)".$resultServerImplementation);
         }
         //sets the details required depending on the type of storage 
 

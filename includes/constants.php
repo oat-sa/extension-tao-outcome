@@ -17,6 +17,6 @@ $todefine = array(
 //todo problem here with a two way dependency
     'TAO_DELIVERY_RESULTSERVER_PROP'	=> 'http://www.tao.lu/Ontologies/TAODelivery.rdf#ResultServer',
 
-	"TAO_RESULTSERVER_STORAGE_PROP" => ""
+	"TAO_RESULTSERVER_STORAGE_PROP" => "aa"
 );
 ?>
