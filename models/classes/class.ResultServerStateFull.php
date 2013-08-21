@@ -40,9 +40,10 @@ class taoResultServer_models_classes_ResultServerStateFull extends tao_models_cl
 	
 
     
-    public function initResultServer($resultServerUri) {
+    public function initResultServer($resultServerUri, $callOptions) {
         if (common_Utils::isUri($resultServerUri)) {
         PHPSession::singleton()->setAttribute("resultServerUri", $resultServerUri);
+        PHPSession::singleton()->setAttribute("resultServerCallOptions", $callOptions);
         } else {
             throw new common_exception_MissingParameter("resultServerUri");
         }
@@ -50,7 +51,11 @@ class taoResultServer_models_classes_ResultServerStateFull extends tao_models_cl
     private function restoreResultServer() {
         if (PHPSession::singleton()->hasAttribute("resultServerUri")) {
         $resultServerUri = PHPSession::singleton()->getAttribute("resultServerUri");
-        return new taoResultServer_models_classes_ResultServer($resultServerUri);
+        $callOptions = array();
+        if (PHPSession::singleton()->hasAttribute("resultServerCallOptions")) {
+            $callOptions = PHPSession::singleton()->getAttribute("resultServerCallOptions");
+        }
+        return new taoResultServer_models_classes_ResultServer($resultServerUri, $callOptions);
         } else {
            throw new common_exception_PreConditionFailure("The result server hasn't been initalized");
         }
