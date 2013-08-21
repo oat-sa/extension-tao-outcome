@@ -130,16 +130,44 @@ class taoResultServer_actions_ResultServerStateFull extends tao_actions_SaSModul
     }
 
     
-    public function storeItemResponseVariable(){
-        
-    }
-    public function storeItemOutcomeVariable(){
+    public function storeItemData(){
+        if ($this->hasRequestParameter("outcomeVariables")) {
+            try {
+                $outcomeVariables = $this->getRequestParameter("outcomeVariables");
+                foreach ($outcomeVariables as $variableName => $outcomeValue) {
+                $test = "hardcoded";
+                $item = "use the item reported";
+                $callIdItem = $this->getRequestParameter("serviceCallId");
+                
+               
 
-    }
-    public function storeItemTraceVariable(){
+                $outComeVariable = new taoResultServer_models_classes_OutcomeVariable();
+                //$outComeVariable->setBaseType("int");
+                //$outComeVariable->setCardinality("single");
+                $outComeVariable->setIdentifier($variableName);
+                $outComeVariable->setValue($outcomeValue);
 
+              
+                $data = $this->service->storeItemVariable($test, $item, $outComeVariable, $callIdItem );
+                }
+            } catch (exception $e) {
+                $this->returnFailure($e);
+            }
+
+            return $this->returnSuccess($data);
+        } 
     }
+   
     
+    /**
+     *   $responseVariable = new taoResultServer_models_classes_ResponseVariable();
+                    $responseVariable->setBaseType("int");
+                    $responseVariable->setCardinality("single");
+                    $responseVariable->setIdentifier("historyResponse");
+                    $responseVariable->setCandidateResponse("choice_".rand(0,5));
+                    $responseVariable->setCorrectResponse(true);
+     */
+
     /*
     public function storeTestVariable($deliveryResultIdentifier, $test, taoResultServer_models_classes_Variable $testVariable, $callIdTest);
     */
