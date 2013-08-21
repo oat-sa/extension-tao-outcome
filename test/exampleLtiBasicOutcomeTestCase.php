@@ -15,22 +15,21 @@ class exampleLtiBasicOutcomeTestCase extends UnitTestCase {
     public function testLtiBasicOutcome() {
 
         $aResultServerUsingLtiBasicEngine = 'http://www.tao.lu/Ontologies/taoLtiBasicOutcome.rdf#ltiBasicOutcomeExample';
-
         $resultServer = new taoResultServer_models_classes_ResultServer(
             $aResultServerUsingLtiBasicEngine,
-            array("serviceUrl" => "http://localhost/")
+            array("serviceUrl" => "http://localhost/",
+                "consumerKey" => "examplekey"
+                )
             );
         $api = $resultServer->getStorageInterface();
-        
         $outComeVariable = new taoResultServer_models_classes_OutcomeVariable();
         //optional
         $outComeVariable->setBaseType("int");
         //optional
         $outComeVariable->setCardinality("single");
-        
         $outComeVariable->setIdentifier("Rotation in Space");
         $outComeVariable->setValue(0.34);
-            /*
+     /*
      *  CreateResultValue(sourcedId,ResultValueRecord)
      *  CreateLineItem(sourcedId,lineItemRecord:LineItemRecord)
      */

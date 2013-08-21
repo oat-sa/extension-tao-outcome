@@ -33,7 +33,7 @@
  * @license GPLv2  http://www.opensource.org/licenses/gpl-2.0.php
  */
  
-class taoResultServer_actions_ResultServer extends tao_actions_SaSModule {
+class taoResultServer_actions_ResultServerMgt extends tao_actions_SaSModule {
 	
 	public function getClassService() {
 		return taoResultServer_models_classes_ResultServerAuthoringService::singleton();
@@ -258,6 +258,7 @@ class taoResultServer_actions_ResultServer extends tao_actions_SaSModule {
 	 * Get the data to populate the tree of deliveries
 	 * @return void
 	 */
+    /*
 	public function getDeliveries(){
 		if(!tao_helpers_Request::isAjax()){
 			throw new Exception("wrong request mode");
@@ -279,11 +280,12 @@ class taoResultServer_actions_ResultServer extends tao_actions_SaSModule {
 		}
 		echo json_encode($this->service->toTree($clazz, $options));
 	}
-	
+	*/
 	/**
 	 * Save the related deliveries
 	 * @return void
 	 */
+    /*
 	public function saveDeliveries(){
 		if(!tao_helpers_Request::isAjax()){
 			throw new Exception("wrong request mode");
@@ -303,7 +305,7 @@ class taoResultServer_actions_ResultServer extends tao_actions_SaSModule {
 		}
 		echo json_encode(array('saved'	=> $saved));
 	}
-	
+	*/
 	/**
 	 * Main action
 	 *
