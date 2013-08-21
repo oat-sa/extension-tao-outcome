@@ -10,12 +10,6 @@
 			}
 		});
 
-		<?if(get_data('uri') && get_data('classUri') && (get_data('authoringMode')=='advanced') ):?>
-			helpers.updateTabUrl(uiBootstrap.tabs, 'delivery_authoring', "<?=_url('authoring', 'Delivery', 'taoDelivery', array('uri' => get_data('uri'), 'classUri' => get_data('classUri') ))?>");
-		<?else:?>
-			uiBootstrap.tabs.tabs('disable', helpers.getTabIndexByName('delivery_authoring'));
-		<?endif;?>
-
 		<?if(get_data('reload')):?>
 			uiBootstrap.initTrees();
 		<?endif;?>
@@ -24,10 +18,6 @@
 			helpers.createMessage("<?=get_data('message')?>");
 		<?endif?>
 
-		setAuthoringModeButtons();
-		eventMgr.bind('actionInitiated', function(event, response){
-			setAuthoringModeButtons();
-		});
 	});
 
 	function setAuthoringModeButtons(){
