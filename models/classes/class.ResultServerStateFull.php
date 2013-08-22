@@ -114,6 +114,13 @@ class taoResultServer_models_classes_ResultServerStateFull extends tao_models_cl
         return PHPSession::singleton()->getAttribute("resultServer_deliveryResultIdentifier");
     }
     
+    public function storeItemVariableSet($test, $item, $itemVariableSet, $callIdItem ) {
+        $resultServer = $this->restoreResultServer();
+        foreach ($itemVariableSet as $itemVariable) {
+        $resultServer->getStorageInterface()->storeItemVariable(PHPSession::singleton()->getAttribute("resultServer_deliveryResultIdentifier"), $test, $item, $itemVariable, $callIdItem );
+        }
+        return PHPSession::singleton()->getAttribute("resultServer_deliveryResultIdentifier");
+    }
     
     public function storeTestVariable($deliveryResultIdentifier, $test, taoResultServer_models_classes_Variable $testVariable, $callIdTest){
         $resultServer = $this->restoreResultServer();

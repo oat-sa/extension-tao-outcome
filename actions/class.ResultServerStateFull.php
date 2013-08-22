@@ -130,32 +130,54 @@ class taoResultServer_actions_ResultServerStateFull extends tao_actions_SaSModul
     }
 
     
-    public function storeItemData(){
+    public function storeItemVariableSet(){
+        $variables = array();
+        $item = $this->hasRequestParameter("itemId") ? $this->getRequestParameter("itemId") : "undefined";
+        $callIdItem = $this->hasRequestParameter("serviceCallId") ? $this->getRequestParameter("serviceCallId") : "undefined";
+        $test = $this->hasRequestParameter("testId") ? $this->getRequestParameter("testId") : "undefined";
         if ($this->hasRequestParameter("outcomeVariables")) {
-            try {
                 $outcomeVariables = $this->getRequestParameter("outcomeVariables");
                 foreach ($outcomeVariables as $variableName => $outcomeValue) {
-                $test = "hardcoded";
-                $item = "use the item reported";
-                $callIdItem = $this->getRequestParameter("serviceCallId");
-                
-               
-
                 $outComeVariable = new taoResultServer_models_classes_OutcomeVariable();
                 //$outComeVariable->setBaseType("int");
-                //$outComeVariable->setCardinality("single");
+                $outComeVariable->setCardinality("single");
                 $outComeVariable->setIdentifier($variableName);
                 $outComeVariable->setValue($outcomeValue);
-
-              
-                $data = $this->service->storeItemVariable($test, $item, $outComeVariable, $callIdItem );
+                $variables[]= $outComeVariable;
                 }
-            } catch (exception $e) {
-                $this->returnFailure($e);
-            }
+        }
+        if ($this->hasRequestParameter("responseVariables")) {
+                $responseVariables = $this->getRequestParameter("responseVariables");
+                foreach ($responseVariables as $variableName => $responseValue) {
+                $responseVariable = new taoResultServer_models_classes_ResponseVariable();
+                //$responseVariable->setBaseType("int");
+                //$responseVariable->setCardinality("single");
+                $responseVariable->setIdentifier($variableName);
+                $responseVariable->setCandidateResponse($responseValue);
+                $responseVariable->setCorrectResponse(true);
+                $variables[]=  $responseVariable;
+                }
+        }
+        if ($this->hasRequestParameter("traceVariables")) {
+                $traceVariables = $this->getRequestParameter("outcomeVariables");
+                foreach ($traceVariables as $variableName => $traceValue) {
+                $traceVariable = new taoResultServer_models_classes_TraceVariable();
+                //$outComeVariable->setBaseType("int");
+                 $traceVariable->setIdentifier($variableName);
+                $traceVariable->setTrace($traceVariables);
+                $variables[]=  $traceVariable;
+                }
+        }
 
-            return $this->returnSuccess($data);
-        } 
+        try {
+            
+            $data = $this->service->storeItemVariableSet($test, $item, $variables, $callIdItem );
+        }
+        catch (exception $e) {
+                $this->returnFailure($e);
+        }
+
+        return $this->returnSuccess($data);
     }
    
     
