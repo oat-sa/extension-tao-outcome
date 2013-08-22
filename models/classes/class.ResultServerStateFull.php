@@ -19,7 +19,7 @@
  */
 
 /**
- *
+ * A session for a particular delivery execution/session on the corresponding result server
  * Statefull api for results submission
  * 
  * 
@@ -40,20 +40,28 @@ class taoResultServer_models_classes_ResultServerStateFull extends tao_models_cl
 	
 
     
-    public function initResultServer($resultServerUri, $callOptions) {
+    public function initResultServer($resultServerUri, $callOptions = null) {
         if (common_Utils::isUri($resultServerUri)) {
         PHPSession::singleton()->setAttribute("resultServerUri", $resultServerUri);
-        PHPSession::singleton()->setAttribute("resultServerCallOptions", $callOptions);
+        if (!is_null($callOptions)) {
+            //the policy is that if the result server has already been intialized and configured further calls without callOptions will reuse the same calloptions
+            PHPSession::singleton()->setAttribute("resultServerCallOptions", array($resultServerUri => callOptions));
+            }
         } else {
             throw new common_exception_MissingParameter("resultServerUri");
         }
     }
+    
     private function restoreResultServer() {
         if (PHPSession::singleton()->hasAttribute("resultServerUri")) {
         $resultServerUri = PHPSession::singleton()->getAttribute("resultServerUri");
         $callOptions = array();
         if (PHPSession::singleton()->hasAttribute("resultServerCallOptions")) {
-            $callOptions = PHPSession::singleton()->getAttribute("resultServerCallOptions");
+            $callOptionsList = PHPSession::singleton()->getAttribute("resultServerCallOptions");
+            if (isset($callOptionsList[$resultServerUri])) {
+                $callOptions = $callOptionsList[$resultServerUri];
+                
+            }
         }
         return new taoResultServer_models_classes_ResultServer($resultServerUri, $callOptions);
         } else {

@@ -4,7 +4,7 @@
     <structure id="settings" name="Settings" level="11" visible="false">
 		<description>Manage Result Servers</description>
     <sections>
-    <section id="manage_resultservers" name="Manage result servers" url="/taoResultServer/ResultServerMgt/index">
+    <section id="manage_resultservers" name="Result Server Manager" url="/taoResultServer/ResultServerMgt/index">
 				<trees>
 					<tree name="Result Servers library"
 						className="Result Server"
@@ -27,7 +27,7 @@
 					<action name="move" js="generisActions.moveNode" url="" context="instance" />
 					
 				</actions>
-			</section>
-     </sections>
+    </section>
+    </sections>
     </structure>
 </structures>

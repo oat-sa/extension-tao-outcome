@@ -19,7 +19,7 @@
  */
 
 /**
- *
+ *  A session for a particular delivery execution/session on the corresponding result server
  * Statefull api for results submission from the client
  * 
  * 
@@ -37,7 +37,7 @@ class taoResultServer_actions_ResultServerStateFull extends tao_actions_SaSModul
 	 */
 	public function __construct(){
     	parent::__construct();
-        $this->service = taoResultServer_models_classes_ResultServerStateFull::singleton();
+        $this->service = $this->getClassService();
 	}
     public function getClassService() {
         return taoResultServer_models_classes_ResultServerStateFull::singleton();
