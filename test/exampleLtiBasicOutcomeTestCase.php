@@ -17,7 +17,7 @@ class exampleLtiBasicOutcomeTestCase extends UnitTestCase {
                 "type" =>"LTI_Basic_1.1.1",
                 "result_identifier" => "lis_result_sourcedid",
                 "consumer_key" => "Consumerkey",
-                "service_url" => "http://localhost/",
+                "service_url" => "http://tao-dev/log.php",
                 "user_identifier" => "lis_person_sourcedid" //optional
                 );
 
