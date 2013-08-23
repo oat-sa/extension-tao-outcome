@@ -2,6 +2,7 @@
 class taoResultServer_models_classes_ResultServer {
     private $resultServer; //the KB Resource
     private $storage; //the storage implementation according to the selected resultServer
+    private $resultServerImplementation; // the KB resource representing the implementation
     /**
      * @param array callOptions an array of parameters sent to the results storage configuration 
      * @param mixed $resultServer string uri or resource
@@ -25,18 +26,11 @@ class taoResultServer_models_classes_ResultServer {
         //restricted to one imple for the moment
         $resultServerModel = new core_kernel_classes_Resource(current($resultServerModels));
        
-        $resultServerImplementation = $resultServerModel->getUniquePropertyValue(new core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_IMPL_PROP))->literal;
         
-        if (class_exists($resultServerImplementation) && in_array('taoResultServer_models_classes_ResultStorage', class_implements($resultServerImplementation))) {
-        
-            $resultStoragePolicy = $resultServerImplementation;
-            $this->setResultStorageInterface(new $resultStoragePolicy());
-            //configure it , the storage may rely on specific extra parameters added to the result server like the lti consumer in the case of lti outcome
-            $this->storage->configure($this->resultServer, $callOptions);
-            
-        } else {
-            throw new common_Exception("The result server is not correctly configured (Implementation not found)".$resultServerImplementation);
-        }
+
+        $this->resultServerImplementation = $resultServerModel->getUniquePropertyValue(new core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_IMPL_PROP))->literal;
+        $this->callOptions = $callOptions;
+       
         //sets the details required depending on the type of storage 
 
     }
@@ -51,6 +45,16 @@ class taoResultServer_models_classes_ResultServer {
    }
     /*should have an impl of the interface  that propagates to n impl of the itnerface*/
    public function getStorageInterface(){
+        if (class_exists($this->resultServerImplementation) && in_array('taoResultServer_models_classes_ResultStorage', class_implements($this->resultServerImplementation))) {
+        
+            $resultStoragePolicy = $this->resultServerImplementation;
+            $this->setResultStorageInterface(new $resultStoragePolicy());
+            //configure it , the storage may rely on specific extra parameters added to the result server like the lti consumer in the case of lti outcome
+            $this->storage->configure($this->resultServer, $this->callOptions);
+            
+        } else {
+            throw new common_Exception("The result server is not correctly configured (Implementation not found)".$this->resultServerImplementation);
+        }
        return $this->storage;
    }
 

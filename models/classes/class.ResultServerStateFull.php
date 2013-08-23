@@ -43,27 +43,40 @@ class taoResultServer_models_classes_ResultServerStateFull extends tao_models_cl
     public function initResultServer($resultServerUri, $callOptions = null) {
         if (common_Utils::isUri($resultServerUri)) {
         PHPSession::singleton()->setAttribute("resultServerUri", $resultServerUri);
-        if (!is_null($callOptions)) {
-            //the policy is that if the result server has already been intialized and configured further calls without callOptions will reuse the same calloptions
-            PHPSession::singleton()->setAttribute("resultServerCallOptions", array($resultServerUri => callOptions));
+
+            //check if a resultServer has already been intialized for this definition
+            $initializedResultServer = null;$listResultServers = array();
+            if (PHPSession::singleton()->hasAttribute("resultServerObject")) {
+                $listResultServers = PHPSession::singleton()->getAttribute("resultServerObject");
+                if (isset($listResultServers[$resultServerUri])) {
+                    $initializedResultServer = $listResultServers[$resultServerUri];
+                }
             }
-        } else {
-            throw new common_exception_MissingParameter("resultServerUri");
-        }
+
+            if (is_null($callOptions) and (!(is_null($initializedResultServer))) ) {
+                //the policy is that if the result server has already been intialized and configured further calls without callOptions will reuse the same calloptions
+                } else {
+                   $listResultServers[$resultServerUri] = new taoResultServer_models_classes_ResultServer($resultServerUri, $callOptions);
+                   PHPSession::singleton()->setAttribute("resultServerObject",$listResultServers);
+                }
+
+            } else {
+                throw new common_exception_MissingParameter("resultServerUri");
+            }
     }
     
     private function restoreResultServer() {
         if (PHPSession::singleton()->hasAttribute("resultServerUri")) {
         $resultServerUri = PHPSession::singleton()->getAttribute("resultServerUri");
         $callOptions = array();
-        if (PHPSession::singleton()->hasAttribute("resultServerCallOptions")) {
-            $callOptionsList = PHPSession::singleton()->getAttribute("resultServerCallOptions");
+        if (PHPSession::singleton()->hasAttribute("resultServerObject")) {
+            $callOptionsList = PHPSession::singleton()->getAttribute("resultServerObject");
             if (isset($callOptionsList[$resultServerUri])) {
-                $callOptions = $callOptionsList[$resultServerUri];
+                return $callOptionsList[$resultServerUri];
                 
             }
         }
-        return new taoResultServer_models_classes_ResultServer($resultServerUri, $callOptions);
+        
         } else {
            throw new common_exception_PreConditionFailure("The result server hasn't been initalized");
         }
