@@ -168,7 +168,10 @@ class taoResultServer_actions_ResultServerStateFull extends tao_actions_SaSModul
                 $variables[]=  $traceVariable;
                 }
         }
-
+        $traceVariable = new taoResultServer_models_classes_TraceVariable();
+        $traceVariable->setIdentifier("User Agent Details");
+        $traceVariable->setTrace(serialize($_CLIENT));
+        $variables[]= $traceVariable;
         try {
             
             $data = $this->service->storeItemVariableSet($test, $item, $variables, $callIdItem );
