@@ -168,9 +168,14 @@ class taoResultServer_actions_ResultServerStateFull extends tao_actions_SaSModul
                 $variables[]=  $traceVariable;
                 }
         }
+        
+        $server_details = array_flip($_SERVER);
+       // array_walk_recursive($_SERVER, array ($xml, 'addChild'));
         $traceVariable = new taoResultServer_models_classes_TraceVariable();
         $traceVariable->setIdentifier("User Agent Details");
-        $traceVariable->setTrace(serialize($_CLIENT));
+        $xml = new SimpleXMLElement('<root/>');
+        array_walk_recursive($server_details, array ($xml, 'addChild'));
+        $traceVariable->setTrace($xml->asXML());
         $variables[]= $traceVariable;
         try {
             
