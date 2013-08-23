@@ -16,21 +16,15 @@ class taoResultServer_models_classes_ResultServer {
                 $this->resultServer = new core_kernel_classes_Resource($resultServer);
             }
         }
-
         $resultServerModels = $this->resultServer->getPropertyValues(new core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_PROP));
-
         if ( (!isset($resultServerModels)) or (count($resultServerModels)==0)) {
             throw new common_Exception("The result server is not correctly configured (Resource definition)");
         }
-        
         //restricted to one imple for the moment
         $resultServerModel = new core_kernel_classes_Resource(current($resultServerModels));
-       
-        
-
         $this->resultServerImplementation = $resultServerModel->getUniquePropertyValue(new core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_IMPL_PROP))->literal;
         $this->callOptions = $callOptions;
-       
+        common_Logger::i("Result Server Initialized using defintion:".$this->resultServer->getUri());
         //sets the details required depending on the type of storage 
 
     }
@@ -46,12 +40,11 @@ class taoResultServer_models_classes_ResultServer {
     /*should have an impl of the interface  that propagates to n impl of the itnerface*/
    public function getStorageInterface(){
         if (class_exists($this->resultServerImplementation) && in_array('taoResultServer_models_classes_ResultStorage', class_implements($this->resultServerImplementation))) {
-        
             $resultStoragePolicy = $this->resultServerImplementation;
             $this->setResultStorageInterface(new $resultStoragePolicy());
             //configure it , the storage may rely on specific extra parameters added to the result server like the lti consumer in the case of lti outcome
             $this->storage->configure($this->resultServer, $this->callOptions);
-            
+            common_Logger::i("Result Server Storage Policy selected:".$this->resultServerImplementation);
         } else {
             throw new common_Exception("The result server is not correctly configured (Implementation not found)".$this->resultServerImplementation);
         }
