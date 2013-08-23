@@ -16,8 +16,8 @@ class exampleLtiBasicOutcomeTestCase extends UnitTestCase {
         $resultServerCallOptions = array(
                 "type" =>"LTI_Basic_1.1.1",
                 "result_identifier" => "lis_result_sourcedid",
-                "consumer_key" => "oauth_consumer_key",
-                "service_url" => "lis_outcome_service_url",
+                "consumer_key" => "Consumerkey",
+                "service_url" => "http://localhost/",
                 "user_identifier" => "lis_person_sourcedid" //optional
                 );
 
