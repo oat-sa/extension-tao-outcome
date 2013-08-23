@@ -13,13 +13,18 @@ class exampleLtiBasicOutcomeTestCase extends UnitTestCase {
 	}
 
     public function testLtiBasicOutcome() {
+        $resultServerCallOptions = array(
+                "type" =>"LTI_Basic_1.1.1",
+                "result_identifier" => "lis_result_sourcedid",
+                "consumer_key" => "oauth_consumer_key",
+                "service_url" => "lis_outcome_service_url",
+                "user_identifier" => "lis_person_sourcedid" //optional
+                );
 
         $aResultServerUsingLtiBasicEngine = 'http://www.tao.lu/Ontologies/taoLtiBasicOutcome.rdf#ltiBasicOutcomeExample';
         $resultServer = new taoResultServer_models_classes_ResultServer(
             $aResultServerUsingLtiBasicEngine,
-            array("serviceUrl" => "http://localhost/",
-                "consumerKey" => "examplekey"
-                )
+            $resultServerCallOptions
             );
         $api = $resultServer->getStorageInterface();
         $outComeVariable = new taoResultServer_models_classes_OutcomeVariable();

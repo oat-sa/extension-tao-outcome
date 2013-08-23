@@ -190,86 +190,9 @@ class taoResultServer_models_classes_ResultServerAuthoringService
         return (bool) $returnValue;
     }
 
-    /**
-     * Short description of method getRelatedDeliveries
-     *
-     * @access public
-     * @author Joel Bout, <joel.bout@tudor.lu>
-     * @param  Resource resultServer
-     * @return array
-     */
-    public function getRelatedDeliveries( core_kernel_classes_Resource $resultServer)
-    {
-        $returnValue = array();
+    
 
-        // section 10-13-1-39-5129ca57:1276133a327:-8000:0000000000002177 begin
-        
-		if(!is_null($resultServer)){
-			
-			$deliveryClass =  new core_kernel_classes_Class(TAO_DELIVERY_CLASS);
-			$deliveries = $deliveryClass->searchInstances(array(TAO_DELIVERY_RESULTSERVER_PROP => $resultServer->getUri()), array('like' => false, 'recursive' => 1000));
-			foreach ($deliveries as $delivery){
-				if($delivery instanceof core_kernel_classes_Resource ){
-					$returnValue[] = $delivery->getUri();
-				}
-			}
-		}
-        
-        // section 10-13-1-39-5129ca57:1276133a327:-8000:0000000000002177 end
 
-        return (array) $returnValue;
-    }
-
-    /**
-     * Short description of method setRelatedDeliveries
-     *
-     * @access public
-     * @author Joel Bout, <joel.bout@tudor.lu>
-     * @param  Resource resultServer
-     * @param  array deliveries
-     * @return boolean
-     */
-    public function setRelatedDeliveries( core_kernel_classes_Resource $resultServer, $deliveries = array())
-    {
-        $returnValue = (bool) false;
-
-        // section 10-13-1-39-5129ca57:1276133a327:-8000:000000000000217B begin
-        if(!is_null($resultServer)){
-			$deliveryClass 		= new core_kernel_classes_Class(TAO_DELIVERY_CLASS);
-			$resultServerProp	= new core_kernel_classes_Property(TAO_DELIVERY_RESULTSERVER_PROP);
-			
-			$done = 0;
-			foreach($deliveryClass->getInstances(true) as $instance){
-				$newMembers = array();
-				$updateIt = false;
-				foreach($instance->getPropertyValues($resultServerProp) as $member){
-					if($member == $resultServer->getUri()){
-						$updateIt = true;
-					}else{
-						$newMembers[] = $member;
-					}
-				}
-				if($updateIt){
-					$instance->removePropertyValues($resultServerProp);
-					foreach($newMembers as $newMember){
-						$instance->setPropertyValue($resultServerProp, $newMember);
-					}
-				}
-				if(in_array($instance->getUri(), $deliveries)){
-					if($instance->setPropertyValue($resultServerProp, $resultServer->getUri())){
-						$done++;
-					}
-				}
-			}
-			if($done == count($deliveries)){
-				$returnValue = true;
-			}
-		}
-        
-        // section 10-13-1-39-5129ca57:1276133a327:-8000:000000000000217B end
-
-        return (bool) $returnValue;
-    }
 
     /**
      * Short description of method isResultServerClass

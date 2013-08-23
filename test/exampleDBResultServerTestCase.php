@@ -111,6 +111,11 @@ Tu seras châtié de ta témérité.");
         $responseVariable->setCandidateResponse("choice_4");
         $responseVariable->setCorrectResponse(false);
          $api->storeItemVariable($myResultIdentifier, $test, $item, $responseVariable, "yyy");
+
+         $traceVariable = new taoResultServer_models_classes_TraceVariable();
+         $traceVariable->setTrace("<xml>blablablablalbalba</xml>");
+         $traceVariable->setIdentifier("Some trace");
+         $api->storeItemVariable($myResultIdentifier, $test, $item, $traceVariable, "yyy");
     }
     public function testResultServerNormalCase() {
 
@@ -208,6 +213,11 @@ Tu seras châtié de ta témérité.");
         $responseVariable->setCandidateResponse("choice_4");
         $responseVariable->setCorrectResponse(false);
          $api->storeItemVariable($myResultIdentifier, $test, $item, $responseVariable, "yyy");
+
+            $traceVariable = new taoResultServer_models_classes_TraceVariable();
+             $traceVariable->setIdentifier("Some trace");
+         $traceVariable->setTrace("<xml>blablablablalbalba</xml>");
+         $api->storeItemVariable($myResultIdentifier, $test, $item, $traceVariable, "yyy");
     }
 
      private function spawnDependantData() {
