@@ -85,15 +85,26 @@ class taoResultServer_models_classes_ResultServerStateFull extends tao_models_cl
      * @example http://tao-dev/taoResultServer/ResultServerStateFull/spawnResult
      * @return type
      */
-     public function spawnResult($deliveryResultIdentifier = null){
+     public function spawnResult($deliveryExecutionIdentifier, $deliveryResultIdentifier = null){
         
         if ($deliveryResultIdentifier == null) {
          $resultServer = $this->restoreResultServer();
-        $resultServer_deliveryResultIdentifier = $resultServer->getStorageInterface()->spawnResult();
+            if (
+                (PHPSession::singleton()->hasAttribute("resultServer_deliveryExecutionIdentifier"))
+                and
+                ((PHPSession::singleton()->getAttribute("resultServer_deliveryExecutionIdentifier"))==$deliveryExecutionIdentifier)
+                )
+                {
+                $resultServer_deliveryResultIdentifier = PHPSession::singleton()->getAttribute("resultServer_deliveryResultIdentifier");
+
+                }
+                else
+                {$resultServer_deliveryResultIdentifier = $resultServer->getStorageInterface()->spawnResult();}
         } else {
             $resultServer_deliveryResultIdentifier = $deliveryResultIdentifier;
         }
         PHPSession::singleton()->setAttribute("resultServer_deliveryResultIdentifier",  $resultServer_deliveryResultIdentifier);
+        PHPSession::singleton()->setAttribute("resultServer_deliveryExecutionIdentifier",  $deliveryExecutionIdentifier);
         return $resultServer_deliveryResultIdentifier;
         
      }
