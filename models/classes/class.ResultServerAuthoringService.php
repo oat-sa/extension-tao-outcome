@@ -262,6 +262,7 @@ class taoResultServer_models_classes_ResultServerAuthoringService
      * @param  Resource resultServer
      * @return array
      */
+    /*
     public function getDelpoymentParameters( core_kernel_classes_Resource $resultServer)
     {
         $returnValue = array();
@@ -287,6 +288,8 @@ class taoResultServer_models_classes_ResultServerAuthoringService
 
         return (array) $returnValue;
     }
+     * 
+     */
 
 } /* end of class taoResultServer_models_classes_ResultServerAuthoringService */
 
