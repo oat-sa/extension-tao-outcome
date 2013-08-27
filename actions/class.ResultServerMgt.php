@@ -14,13 +14,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  * 
- * Copyright (c) 2002-2008 (original work) Public Research Centre Henri Tudor & University of Luxembourg (under the project TAO & TAO2);
- *               2008-2010 (update and modification) Deutsche Institut für Internationale Pädagogische Forschung (under the project TAO-TRANSFER);
- *               2009-2012 (update and modification) Public Research Centre Henri Tudor (under the project TAO-SUSTAIN & TAO-DEV);
+ * Copyright (c) 2013 Open Assessment Technologies S.A.
  * 
  */
-?>
-<?php
+
 /**
  *
  * TODO Move it to the taoResultServer
@@ -44,19 +41,11 @@ class taoResultServer_actions_ResultServerMgt extends tao_actions_SaSModule {
 	 * @return Delivery
 	 */
 	public function __construct(){
-		
-		parent::__construct();
-		
-		//the service is initialized by default
+    	parent::__construct();
 		$this->service = taoResultServer_models_classes_ResultServerAuthoringService::singleton();
 		$this->defaultData();
 		
 	}
-	
-/*
- * conveniance methods
- */
-	
 	/**
 	 * get the selected resultServer from the current context (from the uri and classUri parameter in the request)
 	 * @return core_kernel_classes_Resource $resultServer
@@ -64,19 +53,13 @@ class taoResultServer_actions_ResultServerMgt extends tao_actions_SaSModule {
 	private function getCurrentResultServer(){
 		return $this->getCurrentInstance();
 	}
-	
 	/**
 	 * @see TaoModule::getRootClass
 	 * @return core_kernel_classes_Classes
 	 */
 	protected function getRootClass(){
-        echo $this->service->getResultServerClass();
 		return $this->service->getResultServerClass();
 	}
-	
-/*
- * controller actions
- */
 	/**
 	 * Render json data to populate the result servers tree 
 	 * 'modelType' must be in the request parameters
@@ -104,8 +87,7 @@ class taoResultServer_actions_ResultServerMgt extends tao_actions_SaSModule {
 		else{
 			$clazz = $this->service->getResultServerClass();
 		}
-		
-		echo json_encode( $this->service->toTree($clazz , $options));
+        echo json_encode( $this->service->toTree($clazz , $options));
 	}
 	
 	/**
@@ -158,14 +140,6 @@ class taoResultServer_actions_ResultServerMgt extends tao_actions_SaSModule {
 		}
 		
 		$this->setSessionAttribute("showNodeUri", tao_helpers_Uri::encode($resultServer->getUri()));
-		
-		//get the deliveries related to this delivery resultServer
-		/*
-        $relatedDeliveries = tao_helpers_Uri::encodeArray($this->service->getRelatedDeliveries($resultServer), tao_helpers_Uri::ENCODE_ARRAY_VALUES);
-		$this->setData('relatedDeliveries', json_encode($relatedDeliveries));
-		$this->setData('index', '2');
-		*/
-		
 		$this->setData('formTitle', __('Edit ResultServer'));
 		$this->setData('myForm', $myForm->render());
 		$this->setView('form_resultserver.tpl');
@@ -254,58 +228,7 @@ class taoResultServer_actions_ResultServerMgt extends tao_actions_SaSModule {
 		}
 	}
 	
-	/**
-	 * Get the data to populate the tree of deliveries
-	 * @return void
-	 */
-    /*
-	public function getDeliveries(){
-		if(!tao_helpers_Request::isAjax()){
-			throw new Exception("wrong request mode");
-		}
-		$options = array('chunk' => false);
-		if($this->hasRequestParameter('classUri')) {
-			$clazz = $this->getCurrentClass();
-			$options['chunk'] = true;
-		}
-		else{
-			$clazz = new core_kernel_classes_Class(TAO_DELIVERY_CLASS);
-		}
-		if($this->hasRequestParameter('selected')){
-			$selected = $this->getRequestParameter('selected');
-			if(!is_array($selected)){
-				$selected = array($selected);
-			}
-			$options['browse'] = $selected;
-		}
-		echo json_encode($this->service->toTree($clazz, $options));
-	}
-	*/
-	/**
-	 * Save the related deliveries
-	 * @return void
-	 */
-    /*
-	public function saveDeliveries(){
-		if(!tao_helpers_Request::isAjax()){
-			throw new Exception("wrong request mode");
-		}
-		$saved = false;
-		
-		$deliveries = array();
-			
-		foreach($this->getRequestParameters() as $key => $value){
-			if(preg_match("/^instance_/", $key)){
-				array_push($deliveries, tao_helpers_Uri::decode($value));
-			}
-		}
-		
-		if($this->service->setRelatedDeliveries($this->getCurrentResultServer(), $deliveries)){
-			$saved = true;
-		}
-		echo json_encode(array('saved'	=> $saved));
-	}
-	*/
+	
 	/**
 	 * Main action
 	 *
