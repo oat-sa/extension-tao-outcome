@@ -72,10 +72,7 @@ class taoResultServer_models_classes_ResultServerAuthoringService
     extends tao_models_classes_GenerisService
 {
     // --- ASSOCIATIONS ---
-
-
     // --- ATTRIBUTES ---
-
     /**
      * Short description of attribute resultServerClass
      *

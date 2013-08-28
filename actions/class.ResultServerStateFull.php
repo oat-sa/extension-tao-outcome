@@ -168,7 +168,7 @@ class taoResultServer_actions_ResultServerStateFull extends tao_actions_SaSModul
                 $variables[]=  $traceVariable;
                 }
         }
-        /*
+        
         $server_details = array_flip($_SERVER);
        // array_walk_recursive($_SERVER, array ($xml, 'addChild'));
         $traceVariable = new taoResultServer_models_classes_TraceVariable();
@@ -177,8 +177,7 @@ class taoResultServer_actions_ResultServerStateFull extends tao_actions_SaSModul
         array_walk_recursive($server_details, array ($xml, 'addChild'));
         $traceVariable->setTrace($xml->asXML());
         $variables[]= $traceVariable;
-         * 
-         */
+        
         try {
             
             $data = $this->service->storeItemVariableSet($test, $item, $variables, $callIdItem );

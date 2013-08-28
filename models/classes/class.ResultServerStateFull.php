@@ -153,8 +153,14 @@ class taoResultServer_models_classes_ResultServerStateFull extends tao_models_cl
         }
         return PHPSession::singleton()->getAttribute("resultServer_deliveryResultIdentifier");
     }
-    
-    public function storeTestVariable($deliveryResultIdentifier, $test, taoResultServer_models_classes_Variable $testVariable, $callIdTest){
+    /**
+     *
+     * @param type $test an identifier for the test uri rpeferred
+     * @param taoResultServer_models_classes_Variable $testVariable
+     * @param type $callIdTest  a call test reference (distinguish test being embdded twice)
+     * @return type
+     */
+    public function storeTestVariable($test, taoResultServer_models_classes_Variable $testVariable, $callIdTest){
         $resultServer = $this->restoreResultServer();
         $resultServer->getStorageInterface()->storeTestVariable(PHPSession::singleton()->getAttribute("resultServer_deliveryResultIdentifier"), $test, $testVariable,  $callIdTest );
         return PHPSession::singleton()->getAttribute("resultServer_deliveryResultIdentifier");
