@@ -138,46 +138,41 @@ class taoResultServer_actions_ResultServerStateFull extends tao_actions_SaSModul
         if ($this->hasRequestParameter("outcomeVariables")) {
                 $outcomeVariables = $this->getRequestParameter("outcomeVariables");
                 foreach ($outcomeVariables as $variableName => $outcomeValue) {
-                $outComeVariable = new taoResultServer_models_classes_OutcomeVariable();
-                //$outComeVariable->setBaseType("int");
-                $outComeVariable->setCardinality("single");
-                $outComeVariable->setIdentifier($variableName);
-                $outComeVariable->setValue($outcomeValue);
-                $variables[]= $outComeVariable;
+                    $outComeVariable = new taoResultServer_models_classes_OutcomeVariable();
+                    //$outComeVariable->setBaseType("int");
+                    $outComeVariable->setCardinality("single");
+                    $outComeVariable->setIdentifier($variableName);
+                    $outComeVariable->setValue($outcomeValue);
+                    $variables[]= $outComeVariable;
                 }
         }
         if ($this->hasRequestParameter("responseVariables")) {
                 $responseVariables = $this->getRequestParameter("responseVariables");
                 foreach ($responseVariables as $variableName => $responseValue) {
-                $responseVariable = new taoResultServer_models_classes_ResponseVariable();
-                //$responseVariable->setBaseType("int");
-                //$responseVariable->setCardinality("single");
-                $responseVariable->setIdentifier($variableName);
-                $responseVariable->setCandidateResponse($responseValue);
-                $responseVariable->setCorrectResponse(true);
-                $variables[]=  $responseVariable;
+                    $responseVariable = new taoResultServer_models_classes_ResponseVariable();
+                    //$responseVariable->setBaseType("int");
+                    //$responseVariable->setCardinality("single");
+                    $responseVariable->setIdentifier($variableName);
+                    $responseVariable->setCandidateResponse($responseValue);
+                    $responseVariable->setCorrectResponse(true);
+                    $variables[]=  $responseVariable;
                 }
         }
         if ($this->hasRequestParameter("traceVariables")) {
                 $traceVariables = $this->getRequestParameter("outcomeVariables");
                 foreach ($traceVariables as $variableName => $traceValue) {
-                $traceVariable = new taoResultServer_models_classes_TraceVariable();
-                //$outComeVariable->setBaseType("int");
-                 $traceVariable->setIdentifier($variableName);
-                $traceVariable->setTrace($traceVariables);
-                $variables[]=  $traceVariable;
+                    $traceVariable = new taoResultServer_models_classes_TraceVariable();
+                    //$outComeVariable->setBaseType("int");
+                     $traceVariable->setIdentifier($variableName);
+                    $traceVariable->setTrace($traceVariables);
+                    $variables[]=  $traceVariable;
                 }
         }
-        
-        $server_details = array_flip($_SERVER);
-       // array_walk_recursive($_SERVER, array ($xml, 'addChild'));
-        $traceVariable = new taoResultServer_models_classes_TraceVariable();
-        $traceVariable->setIdentifier("User Agent Details");
-        $xml = new SimpleXMLElement('<root/>');
-        array_walk_recursive($server_details, array ($xml, 'addChild'));
-        $traceVariable->setTrace($xml->asXML());
-        $variables[]= $traceVariable;
-        
+        try {
+        $variables[]= $this->getRequestDetails();
+        } catch (Exception $e) {
+            common_Logger::i("Exception while computing the informative trace variable during results sumbission  ".$e->getMessage());
+        }
         try {
             
             $data = $this->service->storeItemVariableSet($test, $item, $variables, $callIdItem );
@@ -185,10 +180,29 @@ class taoResultServer_actions_ResultServerStateFull extends tao_actions_SaSModul
         catch (exception $e) {
                 $this->returnFailure($e);
         }
-
         return $this->returnSuccess($data);
     }
-   
+
+    /**
+     * return a Trace Variable with informations from the request itselfs
+     */
+   private function getRequestDetails(){
+       $dom = new DOMDocument('1.0', 'utf-8');
+        $element = $dom->createElement('agent');
+        foreach ($_SERVER as $key => $agentDetail){
+           $node = $dom->createElement ($key);
+           $cdata = $dom->createCDATASection($agentDetail);
+           $node->appendChild($cdata);
+           $element->appendChild($node);
+        }
+        $dom->formatOutput = true;
+       // array_walk_recursive($_SERVER, array ($xml, 'addChild'));
+        $traceVariable = new taoResultServer_models_classes_TraceVariable();
+        $traceVariable->setIdentifier("User Agent Details");
+
+        $traceVariable->setTrace($dom->saveXML());
+        return $traceVariable;
+   }
     
     /**
      *   $responseVariable = new taoResultServer_models_classes_ResponseVariable();
