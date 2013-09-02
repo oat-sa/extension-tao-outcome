@@ -20,7 +20,8 @@ return array(
 	),
 	'install' => array(
         'rdf' => array(
-			dirname(__FILE__). '/models/ontology/taoResultServer.rdf'
+			dirname(__FILE__). '/models/ontology/taoResultServer.rdf',
+            dirname(__FILE__). '/models/ontology/aclrole.rdf'
 		)
     ),
 	'classLoaderPackages' => array( 
