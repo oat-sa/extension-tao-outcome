@@ -154,7 +154,7 @@ class taoResultServer_actions_ResultServerStateFull extends tao_actions_SaSModul
                     //$responseVariable->setCardinality("single");
                     $responseVariable->setIdentifier($variableName);
                     $responseVariable->setCandidateResponse($responseValue);
-                    $responseVariable->setCorrectResponse(true);
+                    //$responseVariable->setCorrectResponse(true);
                     $variables[]=  $responseVariable;
                 }
         }
