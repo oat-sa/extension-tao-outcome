@@ -65,10 +65,10 @@ class taoResultServer_models_classes_ResponseVariable extends taoResultServer_mo
 	return $this->correctResponse;
     }
     public function setCandidateResponse($candidateResponse){
-	$this->candidateResponse = $candidateResponse;
+	$this->candidateResponse = serialize($candidateResponse);
     }
     public function getCandidateResponse(){
-	return $this->candidateResponse;
+	return unserialize($this->candidateResponse);
     }
 }
 
