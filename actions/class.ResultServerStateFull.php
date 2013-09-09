@@ -174,7 +174,7 @@ class taoResultServer_actions_ResultServerStateFull extends tao_actions_SaSModul
             common_Logger::i("Exception while computing the informative trace variable during results sumbission  ".$e->getMessage());
         }
         try {
-            
+           
             $data = $this->service->storeItemVariableSet($test, $item, $variables, $callIdItem );
         }
         catch (exception $e) {
@@ -189,13 +189,14 @@ class taoResultServer_actions_ResultServerStateFull extends tao_actions_SaSModul
    private function getRequestDetails(){
        $dom = new DOMDocument('1.0', 'utf-8');
         $element = $dom->createElement('agent');
+        $dom->appendChild($element);
         foreach ($_SERVER as $key => $agentDetail){
-           $node = $dom->createElement ($key);
+           $node = $dom->createElement($key);
            $cdata = $dom->createCDATASection($agentDetail);
            $node->appendChild($cdata);
            $element->appendChild($node);
         }
-        $dom->formatOutput = true;
+        //$dom->formatOutput = true;
        // array_walk_recursive($_SERVER, array ($xml, 'addChild'));
         $traceVariable = new taoResultServer_models_classes_TraceVariable();
         $traceVariable->setIdentifier("User Agent Details");
