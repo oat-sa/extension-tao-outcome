@@ -31,7 +31,7 @@ class taoResultServer_helpers_ResultServerJsApi
     }
     
     private static function getEndpoint(core_kernel_classes_Resource $resultServer) {
-        $endpoint = $resultServer->getOnePropertyValue(new core_kernel_classes_Property(PROPERTY_RESULTSERVER_ENDPOINT));
+        $endpoint = (string) $resultServer->getOnePropertyValue(new core_kernel_classes_Property(PROPERTY_RESULTSERVER_ENDPOINT));
         if (empty($endpoint)) {
             $endpoint = _url('', 'ResultServerStateFull','taoResultServer');
         } 

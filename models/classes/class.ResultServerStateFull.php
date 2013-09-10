@@ -146,10 +146,19 @@ class taoResultServer_models_classes_ResultServerStateFull extends tao_models_cl
         return PHPSession::singleton()->getAttribute("resultServer_deliveryResultIdentifier");
     }
     
+    /**
+     * 
+     * @param string $test Ideally the URI of the test.
+     * @param string $item Ideally the URI of the item.
+     * @param array $itemVariableSet An array of taoResultServer_models_classes_Variable objects.
+     * @param string $callIdItem An identifier that identifies uniquely an item delivery.
+     * @return string The identifier of the delivery result.
+     * @throws Exception
+     */
     public function storeItemVariableSet($test, $item, $itemVariableSet, $callIdItem ) {
         $resultServer = $this->restoreResultServer();
         foreach ($itemVariableSet as $itemVariable) {
-        $resultServer->getStorageInterface()->storeItemVariable(PHPSession::singleton()->getAttribute("resultServer_deliveryResultIdentifier"), $test, $item, $itemVariable, $callIdItem );
+            $resultServer->getStorageInterface()->storeItemVariable(PHPSession::singleton()->getAttribute("resultServer_deliveryResultIdentifier"), $test, $item, $itemVariable, $callIdItem );
         }
         return PHPSession::singleton()->getAttribute("resultServer_deliveryResultIdentifier");
     }
