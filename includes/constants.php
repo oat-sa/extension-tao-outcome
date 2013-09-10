@@ -11,5 +11,6 @@ $todefine = array(
     'TAO_RESULTSERVER_MODEL_IMPL_PROP' =>'http://www.tao.lu/Ontologies/TAOResultServer.rdf#Implementation',
     'TAO_DEFAULT_RESULT_SERVER' => 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#taoResultServer',
 
+    'PROPERTY_RESULTSERVER_ENDPOINT' => 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerEndpoint'
 );
 ?>

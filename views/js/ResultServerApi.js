@@ -4,7 +4,7 @@ function ResultServerApi(endpoint){
 
 ResultServerApi.prototype.submitItemVariables = function(itemId, serviceCallId, responses, scores, events, callback){
 	$.ajax({
-		url  		: this.endpoint,
+		url  		: this.endpoint + 'storeItemVariableSet',
 		data 		: {
 			itemId: itemId,
 			serviceCallId: serviceCallId,
