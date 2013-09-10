@@ -26,16 +26,12 @@
 class taoResultServer_helpers_ResultServerJsApi
 {
     
-    public static function getServiceApi(core_kernel_classes_Resource $resultServer) {
+    public static function getServiceApi(core_kernel_classes_Resource $resultServer = null) {
         return 'new ResultServerApi('.tao_helpers_Javascript::buildObject(self::getEndpoint($resultServer)).')';
     }
     
-    private static function getEndpoint(core_kernel_classes_Resource $resultServer) {
-        $endpoint = (string) $resultServer->getOnePropertyValue(new core_kernel_classes_Property(PROPERTY_RESULTSERVER_ENDPOINT));
-        if (empty($endpoint)) {
-            $endpoint = _url('', 'ResultServerStateFull','taoResultServer');
-        } 
-        return $endpoint;
+    private static function getEndpoint(core_kernel_classes_Resource $resultServer = null) {
+        return _url('', 'ResultServerStateFull','taoResultServer');
     }
     
 }
