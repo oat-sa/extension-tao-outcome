@@ -19,7 +19,7 @@
     <rdfs:domain rdf:resource="http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServer"/>
     <rdfs:label xml:lang="en-US"><![CDATA[Link to the Result Server engine]]></rdfs:label>
     <rdfs:comment xml:lang="en-US"><![CDATA[Link to the Result Server engine]]></rdfs:comment>
-    <widget:widget rdf:resource="http://www.tao.lu/datatypes/WidgetDefinitions.rdf#RadioBox"/>
+    <widget:widget rdf:resource="http://www.tao.lu/datatypes/WidgetDefinitions.rdf#CheckBox"/>
     <rdfs:range rdf:resource="http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerModel"/>
     <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
     <tao:TAOGUIOrder><![CDATA[10]]></tao:TAOGUIOrder>
@@ -45,8 +45,9 @@
 
 
    <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResultServer.rdf#fileStorage">
-	<rdfs:label xml:lang="en-US"><![CDATA[taoFile storage (FILE)]]></rdfs:label>
-	<rdfs:comment xml:lang="en-US"><![CDATA[Results are stored in files]]></rdfs:comment>
+	<rdfs:label xml:lang="en-US"><![CDATA[tao logger]]></rdfs:label>
+	<rdfs:comment xml:lang="en-US"><![CDATA[Data about the storage is sent into the logger]]></rdfs:comment>
+	<resultserver:implementation><![CDATA[taoResultServer_models_classes_LoggerStorage]]></resultserver:implementation>
 	<rdf:type rdf:resource="http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerModel"/>
    </rdf:Description>
 
