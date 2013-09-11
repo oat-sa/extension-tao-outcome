@@ -20,15 +20,15 @@ class taoResultServer_models_classes_LoggerStorage
     }
 
     public function storeItemVariable($deliveryResultIdentifier, $test, $item, taoResultServer_models_classes_Variable $itemVariable, $callIdItem){
-        common_logger::i("LoggerStorage - StoreItemVariable Test:".$test." item:".$item." callid:".$callIdItem."variable:".serialize($itemVariable)." into ".$deliveryResultIdentifier);
+        common_logger::i("LoggerStorage - StoreItemVariable :".$test." item:".$item." callid:".$callIdItem."variable:".serialize($itemVariable)." into ".$deliveryResultIdentifier);
     }
  
     public function storeTestVariable($deliveryResultIdentifier, $test, taoResultServer_models_classes_Variable $testVariable, $callIdTest){
-        common_logger::i("LoggerStorage - StoreTestVariable Test:".$test." callid:".$callIdTest."variable:".serialize($testVariable)." into ".$deliveryResultIdentifier);
+        common_logger::i("LoggerStorage - StoreTestVariable :".$test." callid:".$callIdTest."variable:".serialize($testVariable)." into ".$deliveryResultIdentifier);
     }
 
     public function configure(core_kernel_classes_Resource $resultServer, $callOptions = array()) {
-        common_logger::i("LoggerStorage - configuration:".$resultServer."configuration:".serialize($callOptions));
+        common_logger::i("LoggerStorage - configuration:".$resultServer." configuration:".serialize($callOptions));
     }
 
     public function spawnResult(){
