@@ -47,7 +47,7 @@ class taoResultServer_models_classes_MultipleResultStorage
 
     public function configure(core_kernel_classes_Resource $resultServer, $callOptions = array()) {
         foreach ($this->implementations as $implementation) {
-             $implementation->configure($resultServer, $callOptions = array());
+             $implementation->configure($resultServer, $callOptions);
          }
     }
 

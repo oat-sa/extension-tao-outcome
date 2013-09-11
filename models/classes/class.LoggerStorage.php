@@ -1,12 +1,6 @@
 <?php
 
-/**
- * todo move it in the taoResults
- * Implements the Services for the storage of item and test variables,
- * This implementations depends on results for the the physical storage
- * TODO : move the impl to results services
- * @author plichart
- */
+
 class taoResultServer_models_classes_LoggerStorage
     extends tao_models_classes_GenerisService
     implements taoResultServer_models_classes_ResultStorage {
