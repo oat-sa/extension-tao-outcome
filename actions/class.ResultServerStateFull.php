@@ -164,7 +164,7 @@ class taoResultServer_actions_ResultServerStateFull extends tao_actions_SaSModul
                     $traceVariable = new taoResultServer_models_classes_TraceVariable();
                     //$outComeVariable->setBaseType("int");
                      $traceVariable->setIdentifier($variableName);
-                    $traceVariable->setTrace($traceVariables);
+                    $traceVariable->setTrace($traceValue);
                     $variables[]=  $traceVariable;
                 }
         }
