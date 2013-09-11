@@ -200,7 +200,6 @@ class taoResultServer_actions_ResultServerStateFull extends tao_actions_SaSModul
        // array_walk_recursive($_SERVER, array ($xml, 'addChild'));
         $traceVariable = new taoResultServer_models_classes_TraceVariable();
         $traceVariable->setIdentifier("User Agent Details");
-
         $traceVariable->setTrace($dom->saveXML());
         return $traceVariable;
    }

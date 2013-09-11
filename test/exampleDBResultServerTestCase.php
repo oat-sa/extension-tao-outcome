@@ -137,7 +137,13 @@ Tu seras châtié de ta témérité.");
         //if the resultidentifier is not know, a new result is spawned with the submitted identifier , could be a process execution etc.
         $api->storeRelatedTestTaker($myResultIdentifier, $testTaker );
 
-       
+       $outComeVariable = new taoResultServer_models_classes_OutcomeVariable();
+        $outComeVariable->setBaseType("int");
+        $outComeVariable->setCardinality("single");
+        $outComeVariable->setIdentifier("mytestvariable");
+        $outComeVariable->setValue("".rand(0,50));
+        //callID will help to distinguish the same variable output from the same item used twice in the same test for example
+        $api->storeTestVariable( $myResultIdentifier, $test,  $outComeVariable, "An identifier of the variable instanciation context");
 
         $outComeVariable = new taoResultServer_models_classes_OutcomeVariable();
         $outComeVariable->setBaseType("int");
