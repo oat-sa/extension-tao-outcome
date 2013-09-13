@@ -64,9 +64,6 @@ class taoResultServer_models_classes_ResultServerStateFull extends tao_models_cl
                 throw new common_exception_MissingParameter("resultServerUri");
             }
     }
-
-    
-
     
     private function restoreResultServer() {
         if (PHPSession::singleton()->hasAttribute("resultServerUri")) {

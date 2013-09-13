@@ -49,7 +49,9 @@ class taoResultServer_models_classes_ResultStorageContainer
 
     public function configure(core_kernel_classes_Resource $resultServer, $callOptions = array()) {
         foreach ($this->implementations as $implementation) {
+             if (isset($implementation["params"])) {
              $implementation["object"]->configure($resultServer, $implementation["params"]);
+             }
          }
     }
 
