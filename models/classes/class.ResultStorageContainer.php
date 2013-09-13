@@ -7,7 +7,7 @@
  * TODO : move the impl to results services
  * @author plichart
  */
-class taoResultServer_models_classes_MultipleResultStorage
+class taoResultServer_models_classes_ResultStorageContainer
     extends tao_models_classes_GenerisService
     implements taoResultServer_models_classes_ResultStorage {
 
@@ -15,39 +15,41 @@ class taoResultServer_models_classes_MultipleResultStorage
 
     public function __construct($implementations =array()){
 		parent::__construct();
-        foreach ($implementations as $implementation) {
-            $this->implementations[] = new $implementation();
+        foreach ($implementations as $key => $implementationParams) {
+            $implementationClassName = $implementationParams["className"];
+            $implementations[$key]["object"] =new $implementationClassName();
         }
+        $this->implementations = $implementations;
         //retrieve implementations
     }
     
     public function storeRelatedTestTaker($deliveryResultIdentifier, $testTakerIdentifier) {
          foreach ($this->implementations as $implementation) {
-             $implementation->storeRelatedTestTaker($deliveryResultIdentifier, $testTakerIdentifier);
+             $implementation["object"]->storeRelatedTestTaker($deliveryResultIdentifier, $testTakerIdentifier);
          }
     }
    
     public function storeRelatedDelivery($deliveryResultIdentifier, $deliveryIdentifier) {
          foreach ($this->implementations as $implementation) {
-             $implementation->storeRelatedDelivery($deliveryResultIdentifier, $deliveryIdentifier);
+             $implementation["object"]->storeRelatedDelivery($deliveryResultIdentifier, $deliveryIdentifier);
          }
     }
 
     public function storeItemVariable($deliveryResultIdentifier, $test, $item, taoResultServer_models_classes_Variable $itemVariable, $callIdItem){
         foreach ($this->implementations as $implementation) {
-             $implementation->storeItemVariable($deliveryResultIdentifier, $test, $item, $itemVariable, $callIdItem);
+             $implementation["object"]->storeItemVariable($deliveryResultIdentifier, $test, $item, $itemVariable, $callIdItem);
          }
     }
  
     public function storeTestVariable($deliveryResultIdentifier, $test, taoResultServer_models_classes_Variable $testVariable, $callIdTest){
         foreach ($this->implementations as $implementation) {
-             $implementation->storeTestVariable($deliveryResultIdentifier, $test, $testVariable, $callIdTest);
+             $implementation["object"]->storeTestVariable($deliveryResultIdentifier, $test, $testVariable, $callIdTest);
          }
     }
 
     public function configure(core_kernel_classes_Resource $resultServer, $callOptions = array()) {
         foreach ($this->implementations as $implementation) {
-             $implementation->configure($resultServer, $callOptions);
+             $implementation["object"]->configure($resultServer, $implementation["params"]);
          }
     }
 
@@ -56,7 +58,7 @@ class taoResultServer_models_classes_MultipleResultStorage
             //currently the first found implementation will generate an Id
             // to be used as a result identifier across all implementations,
             foreach ($this->implementations as $implementation) {
-            $spawnedIdentifier = $implementation->spawnResult();
+            $spawnedIdentifier = $implementation["object"]->spawnResult();
             if ((!is_null($spawnedIdentifier))and $spawnedIdentifier != "") {return $spawnedIdentifier;}
             }
     }
