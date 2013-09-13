@@ -39,7 +39,7 @@ class taoResultServer_models_classes_ResultServer {
         common_Logger::i("Result Server Initialized using defintion:".$this->resultServer->getUri());
         //sets the details required depending on the type of storage 
     }
-   public function addImplementation($className, $options){
+   public function addImplementation($className, $options = array()){
        $this->implementations[] = array("className" =>$className, "params" => $options);
    }
    
