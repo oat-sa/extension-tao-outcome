@@ -13,6 +13,7 @@ class exampleLtiBasicOutcomeTestCase extends UnitTestCase {
 	}
 
     public function testLtiBasicOutcome() {
+/*
         $resultServerCallOptions = array(
                 "type" =>"LTI_Basic_1.1.1",
                 "result_identifier" => "lis_result_sourcedid",
@@ -34,12 +35,11 @@ class exampleLtiBasicOutcomeTestCase extends UnitTestCase {
         $outComeVariable->setCardinality("single");
         $outComeVariable->setIdentifier("Rotation in Space");
         $outComeVariable->setValue(0.34);
-     /*
-     *  CreateResultValue(sourcedId,ResultValueRecord)
-     *  CreateLineItem(sourcedId,lineItemRecord:LineItemRecord)
-     */
+     
         $myResultIdentifier = "My_lis_result_sourcedid";
         $api->storeTestVariable( $myResultIdentifier, "testidentifier_uri_isalways_preferred", $outComeVariable, "callid_useful to distinguish cases where the test was incldued severaltiems in the_same_delivery");
+ * 
+ */
     }
     
 }
