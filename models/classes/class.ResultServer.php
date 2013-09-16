@@ -9,7 +9,7 @@ class taoResultServer_models_classes_ResultServer {
      * @param array callOptions an array of parameters sent to the results storage configuration 
      * @param mixed $resultServer string uri or resource
      */
-    public function __construct($resultServer, $additionalStorages =array()){
+    public function __construct($resultServer, $additionalStorages = array()){
 
         $this->implementations = array();
         
@@ -31,9 +31,11 @@ class taoResultServer_models_classes_ResultServer {
                 $this->addImplementation($resultServerModel->getUniquePropertyValue(new core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_IMPL_PROP))->literal);
             }
         }
+        if (!is_null($additionalStorages)) {
         //the dynamic storages
         foreach ($additionalStorages as $additionalStorage) {
             $this->addImplementation($additionalStorage["implementation"], $additionalStorage["parameters"]);
+        }
         }
         
         common_Logger::i("Result Server Initialized using defintion:".$this->resultServer->getUri());
