@@ -1,5 +1,5 @@
 <?php
-/*  
+/**  
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; under version 2
@@ -16,18 +16,13 @@
  * 
  * Copyright (c) 2013 Open Assessment Technologies S.A.
  * 
- */
-
-/**
  *
- * TODO Move it to the taoResultServer
  * 
  * ResultServer Controller provide actions performed from url resolution
  * 
- * @author CRP Henri Tudor - TAO Team - {@link http://www.tao.lu}
  * @package taoResultServer
  * @subpackage actions
- * @license GPLv2  http://www.opensource.org/licenses/gpl-2.0.php
+ * @license GPLv2  
  */
  
 class taoResultServer_actions_ResultServerMgt extends tao_actions_SaSModule {

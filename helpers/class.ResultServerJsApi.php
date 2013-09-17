@@ -16,20 +16,27 @@
  * 
  * Copyright (c) 2013 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  * 
- */
-
-/**
- * @access public
- * @package tao
+ * @author "Patrick Plichart, <patrick@taotesting.com>"
+ * @package taoResultServer
  * @subpackage helpers
  */
 class taoResultServer_helpers_ResultServerJsApi
 {
     
+    /**
+     * @author "Patrick Plichart, <patrick@taotesting.com>"
+     * @param core_kernel_classes_Resource $resultServer
+     * @return string
+     */
     public static function getServiceApi(core_kernel_classes_Resource $resultServer = null) {
         return 'new ResultServerApi('.tao_helpers_Javascript::buildObject(self::getEndpoint($resultServer)).')';
     }
     
+    /**
+     * @author "Patrick Plichart, <patrick@taotesting.com>"
+     * @param core_kernel_classes_Resource $resultServer
+     * @return Ambigous <, string>
+     */
     private static function getEndpoint(core_kernel_classes_Resource $resultServer = null) {
         return _url('', 'ResultServerStateFull','taoResultServer');
     }

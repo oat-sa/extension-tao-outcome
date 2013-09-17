@@ -1,5 +1,5 @@
 <?php
-/*  
+/**  
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; under version 2
@@ -15,11 +15,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  * 
  * Copyright (c) 2013 Open Assessment Technologies
-  * 
- */
-
-/**
- *  A session for a particular delivery execution/session on the corresponding result server
+ * 
+ * A session for a particular delivery execution/session on the corresponding result server
  * Statefull api for results submission from the client
  * 
  * 
@@ -130,6 +127,9 @@ class taoResultServer_actions_ResultServerStateFull extends tao_actions_SaSModul
     }
 
     
+    /**
+     * @author  "Patrick Plichart, <patrick@taotesting.com>"
+     */
     public function storeItemVariableSet(){
         $variables = array();
         $item = $this->hasRequestParameter("itemId") ? $this->getRequestParameter("itemId") : "undefined";

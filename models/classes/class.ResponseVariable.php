@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; under version 2
@@ -16,59 +16,86 @@
  *
  * Copyright (c) 2013 (original work) Open Assessment Technologies S.A.
  *
- */
-
-/**
- * Description of taoResultServer_models_classes_assessmentResult
  *
- * @author plichart
- */
-
-/**
+ * @author "Patrick Plichart, <patrick@taotesting.com>"
+ * 
  * An Assessment Result is used to report the results of a candidate's interaction
  * with a test and/or one or more items attempted. Information about the test is optional,
- *  in some systems it may be possible to interact with items that are not organized into a test at all. For example, items that are organized with learning resources and presented individually in a formative context.
+ * in some systems it may be possible to interact with items that are not organized into 
+ * a test at all. For example, items that are organized with learning resources and 
+ * presented individually in a formative context.
+ * 
  */
-class taoResultServer_models_classes_ResponseVariable extends taoResultServer_models_classes_Variable{
+class taoResultServer_models_classes_ResponseVariable extends taoResultServer_models_classes_Variable
+{
 
     /**
-     * When a response variable is bound to an interaction that supports the shuffling of choices, the sequence of choices experienced by the candidate will vary between test instances. When shuffling is in effect, the sequence of choices should be reported as a sequence of choice identifiers using this attribute.
+     * When a response variable is bound to an interaction that supports the shuffling of choices, the sequence of choices experienced by the candidate will vary between test instances.
+     * When shuffling is in effect, the sequence of choices should be reported as a sequence of choice identifiers using this attribute.
+     * 
      * @var array
      */
-//    private $choicesequence;
+    // private $choicesequence;
     /**
-     * The correct response may be output as part of the report if desired. Systems are not limited to reporting correct responses declared in responseDeclarations. For example, a correct response may be set by a templateRule or may simply have been suppressed from the declaration passed to the delivery engine (e.g., for security).
+     * The correct response may be output as part of the report if desired.
+     * Systems are not limited to reporting correct responses declared in responseDeclarations. For example, a correct response may be set by a templateRule or may simply have been suppressed from the declaration passed to the delivery engine (e.g., for security).
+     * 
      * @var bool (todo should be a class)
      */
     private $correctResponse;
+
     /**
      *
-     * @var  string
+     * @var string
      */
     private $candidateResponse;
-/*
-    public function setChoiceSequence($choicesequence){
-	$this->choiceSequence = $choiceSequence;
-    }
-    public function getChoiceSequence(){
-	return $this->choiceSequence;
-    }
- *
- */
+    /*
+     * public function setChoiceSequence($choicesequence){ $this->choiceSequence = $choiceSequence; } public function getChoiceSequence(){ return $this->choiceSequence; }
+     */
+    
     /**
      * substitued for the db storage into a GENERIS_TRUE/FALSE
+     *
+     * @access public
+     * @author "Patrick Plichart, <patrick@taotesting.com>"
+     * @param string correctResponse
      */
-    public function setCorrectResponse($correctResponse){
-	$this->correctResponse = $correctResponse;
+    public function setCorrectResponse($correctResponse)
+    {
+        $this->correctResponse = $correctResponse;
     }
-    public function getCorrectResponse(){
-	return $this->correctResponse;
+
+    /**
+     *
+     * @access public
+     * @author "Patrick Plichart, <patrick@taotesting.com>"
+     * @return boolean
+     */
+    public function getCorrectResponse()
+    {
+        return $this->correctResponse;
     }
-    public function setCandidateResponse($candidateResponse){
-	$this->candidateResponse = serialize($candidateResponse);
+
+    /**
+     *
+     * @access public
+     * @author "Patrick Plichart, <patrick@taotesting.com>"
+     * @param unknown $candidateResponse            
+     */
+    public function setCandidateResponse($candidateResponse)
+    {
+        $this->candidateResponse = serialize($candidateResponse);
     }
-    public function getCandidateResponse(){
-	return unserialize($this->candidateResponse);
+
+    /**
+     *
+     * @access public
+     * @author "Patrick Plichart, <patrick@taotesting.com>"
+     * @return mixed
+     */
+    public function getCandidateResponse()
+    {
+        return unserialize($this->candidateResponse);
     }
 }
 

@@ -1,5 +1,6 @@
 <?php
-/*
+
+/**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; under version 2
@@ -16,34 +17,42 @@
  *
  * Copyright (c) 2013 (original work) Open Assessment Technologies S.A.
  *
- */
-
-/**
- * Description of taoResultServer_models_classes_assessmentResult
  *
- * @author plichart
- */
-
-/**
+ * @author "Patrick Plichart, <patrick@taotesting.com>"
+ * 
  * An Assessment Result is used to report the results of a candidate's interaction
- * with a test and/or one or more items attempted. Information about the test is optional,
- *  in some systems it may be possible to interact with items that are not organized into a test at all. For example, items that are organized with learning resources and presented individually in a formative context.
+ * with a test and/or one or more items attempted.
+ * Information about the test is optional,
+ * in some systems it may be possible to interact with items that are not organized into a test at all. For example, items that are organized with learning resources and presented individually in a formative context.
  */
-class taoResultServer_models_classes_TraceVariable extends taoResultServer_models_classes_Variable{
+class taoResultServer_models_classes_TraceVariable extends taoResultServer_models_classes_Variable
+{
 
     /**
-     * When a response variable is bound to an interaction that supports the shuffling of choices, the sequence of choices experienced by the candidate will vary between test instances. When shuffling is in effect, the sequence of choices should be reported as a sequence of choice identifiers using this attribute.
+     * When a response variable is bound to an interaction that supports the shuffling of choices, the sequence of choices experienced by the candidate will vary between test instances.
+     * When shuffling is in effect, the sequence of choices should be reported as a sequence of choice identifiers using this attribute.
+     * 
      * @var string
      */
     private $trace;
 
-    public function setTrace($trace){
-	$this->trace = $trace;
+    /**
+     * @author  "Patrick Plichart, <patrick@taotesting.com>"
+     * @param string $trace
+     */
+    public function setTrace($trace)
+    {
+        $this->trace = $trace;
     }
-    public function getTrace(){
-	return $this->trace;
+
+    /**
+     * @author  "Patrick Plichart, <patrick@taotesting.com>"
+     * @return string
+     */
+    public function getTrace()
+    {
+        return $this->trace;
     }
-    
 }
 
 ?>
