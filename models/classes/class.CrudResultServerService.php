@@ -85,7 +85,7 @@ class taoResultServer_models_classes_CrudResultServerService extends tao_models_
     /*
      * (non-PHPdoc) @see tao_models_classes_CrudService::create()
      */
-    public function create(array $propertiesValues)
+    public function createFromArray(array $propertiesValues)
     {
         if (! isset($propertiesValues[RDFS_LABEL])) {
             $propertiesValues[RDFS_LABEL] = "";
