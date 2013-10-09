@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    @sourceLanguage EN
+    @targetLanguage id-ID
+-->
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xml:base="http://www.tao.lu/Ontologies/TAOResultServer.rdf#">
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServer">
+    <!--
+    @sourceLanguage EN
+    @targetLanguage id-ID
+    @source Result Server
+    @subject http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServer
+    @predicate http://www.w3.org/2000/01/rdf-schema#label
+    -->
+    <rdfs:label xml:lang="id-ID"><![CDATA[Result Server]]></rdfs:label>
+    <!--
+    @sourceLanguage EN
+    @targetLanguage id-ID
+    @source the Result Server for the Delivery
+    @subject http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServer
+    @predicate http://www.w3.org/2000/01/rdf-schema#comment
+    -->
+    <rdfs:comment xml:lang="id-ID"><![CDATA[the Result Server for the Delivery]]></rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResultServer.rdf#hasResultServerModel">
+    <!--
+    @sourceLanguage EN
+    @targetLanguage id-ID
+    @source Link to the Result Server engine
+    @subject http://www.tao.lu/Ontologies/TAOResultServer.rdf#hasResultServerModel
+    @predicate http://www.w3.org/2000/01/rdf-schema#label
+    -->
+    <rdfs:label xml:lang="id-ID"><![CDATA[Link to the Result Server engine]]></rdfs:label>
+    <!--
+    @sourceLanguage EN
+    @targetLanguage id-ID
+    @source Link to the Result Server engine
+    @subject http://www.tao.lu/Ontologies/TAOResultServer.rdf#hasResultServerModel
+    @predicate http://www.w3.org/2000/01/rdf-schema#comment
+    -->
+    <rdfs:comment xml:lang="id-ID"><![CDATA[Link to the Result Server engine]]></rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerEndpoint">
+    <!--
+    @sourceLanguage EN
+    @targetLanguage id-ID
+    @source Result Server Endpoint
+    @subject http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerEndpoint
+    @predicate http://www.w3.org/2000/01/rdf-schema#label
+    -->
+    <rdfs:label xml:lang="id-ID"><![CDATA[Result Server Endpoint]]></rdfs:label>
+    <!--
+    @sourceLanguage EN
+    @targetLanguage id-ID
+    @source Endpoint of the Result Server
+    @subject http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerEndpoint
+    @predicate http://www.w3.org/2000/01/rdf-schema#comment
+    -->
+    <rdfs:comment xml:lang="id-ID"><![CDATA[Endpoint of the Result Server]]></rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerModel">
+    <!--
+    @sourceLanguage EN
+    @targetLanguage id-ID
+    @source Result Server Model
+    @subject http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerModel
+    @predicate http://www.w3.org/2000/01/rdf-schema#label
+    -->
+    <rdfs:label xml:lang="id-ID"><![CDATA[Result Server Model]]></rdfs:label>
+    <!--
+    @sourceLanguage EN
+    @targetLanguage id-ID
+    @source Result Server Model
+    @subject http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerModel
+    @predicate http://www.w3.org/2000/01/rdf-schema#comment
+    -->
+    <rdfs:comment xml:lang="id-ID"><![CDATA[Result Server Model]]></rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResultServer.rdf#fileStorage">
+    <!--
+    @sourceLanguage EN
+    @targetLanguage id-ID
+    @source tao logger
+    @subject http://www.tao.lu/Ontologies/TAOResultServer.rdf#fileStorage
+    @predicate http://www.w3.org/2000/01/rdf-schema#label
+    -->
+    <rdfs:label xml:lang="id-ID"><![CDATA[tao logger]]></rdfs:label>
+    <!--
+    @sourceLanguage EN
+    @targetLanguage id-ID
+    @source Data about the storage is sent into the logger
+    @subject http://www.tao.lu/Ontologies/TAOResultServer.rdf#fileStorage
+    @predicate http://www.w3.org/2000/01/rdf-schema#comment
+    -->
+    <rdfs:comment xml:lang="id-ID"><![CDATA[Data about the storage is sent into the logger]]></rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResultServer.rdf#Implementation">
+    <!--
+    @sourceLanguage EN
+    @targetLanguage id-ID
+    @source Link to the Implementation Class
+    @subject http://www.tao.lu/Ontologies/TAOResultServer.rdf#Implementation
+    @predicate http://www.w3.org/2000/01/rdf-schema#label
+    -->
+    <rdfs:label xml:lang="id-ID"><![CDATA[Link to the Implementation Class]]></rdfs:label>
+    <!--
+    @sourceLanguage EN
+    @targetLanguage id-ID
+    @source Link to the Implementation Class
+    @subject http://www.tao.lu/Ontologies/TAOResultServer.rdf#Implementation
+    @predicate http://www.w3.org/2000/01/rdf-schema#comment
+    -->
+    <rdfs:comment xml:lang="id-ID"><![CDATA[Link to the Implementation Class]]></rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResultServer.rdf#void">
+    <!--
+    @sourceLanguage EN
+    @targetLanguage id-ID
+    @source No storage
+    @subject http://www.tao.lu/Ontologies/TAOResultServer.rdf#void
+    @predicate http://www.w3.org/2000/01/rdf-schema#label
+    -->
+    <rdfs:label xml:lang="id-ID"><![CDATA[No storage]]></rdfs:label>
+    <!--
+    @sourceLanguage EN
+    @targetLanguage id-ID
+    @source No storage 
+    @subject http://www.tao.lu/Ontologies/TAOResultServer.rdf#void
+    @predicate http://www.w3.org/2000/01/rdf-schema#comment
+    -->
+    <rdfs:comment xml:lang="id-ID"><![CDATA[No storage ]]></rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerRole">
+    <!--
+    @sourceLanguage EN
+    @targetLanguage id-ID
+    @source Result Server Manager
+    @subject http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerRole
+    @predicate http://www.w3.org/2000/01/rdf-schema#label
+    -->
+    <rdfs:label xml:lang="id-ID"><![CDATA[Result Server Manager]]></rdfs:label>
+    <!--
+    @sourceLanguage EN
+    @targetLanguage id-ID
+    @source Result Server Manager Role
+    @subject http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerRole
+    @predicate http://www.w3.org/2000/01/rdf-schema#comment
+    -->
+    <rdfs:comment xml:lang="id-ID"><![CDATA[Result Server Manager Role]]></rdfs:comment>
+  </rdf:Description>
+</rdf:RDF>
