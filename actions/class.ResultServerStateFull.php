@@ -191,10 +191,12 @@ class taoResultServer_actions_ResultServerStateFull extends tao_actions_SaSModul
         $element = $dom->createElement('agent');
         $dom->appendChild($element);
         foreach ($_SERVER as $key => $agentDetail){
-           $node = $dom->createElement($key);
+           if (is_string($agentDetail)) {
+            $node = $dom->createElement($key);
            $cdata = $dom->createCDATASection($agentDetail);
            $node->appendChild($cdata);
            $element->appendChild($node);
+            }
         }
         //$dom->formatOutput = true;
        // array_walk_recursive($_SERVER, array ($xml, 'addChild'));
