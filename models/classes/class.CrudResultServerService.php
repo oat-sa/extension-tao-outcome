@@ -17,12 +17,13 @@
  *
  * Copyright (c) 2013 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  *
- * @author "Patrick Plichart, <patrick@taotesting.com>"
- * @package taoResultServer
- *  
  * Crud services implements basic CRUD services, orginally intended for REST controllers/ HTTP exception handlers
  * Consequently the signatures and behaviors is closer to REST and throwing HTTP like exceptions
  * 
+ *
+ * @author "Patrick Plichart, <patrick@taotesting.com>"
+ * @package taoResultServer
+ *  
  */
 class taoResultServer_models_classes_CrudResultServerService extends tao_models_classes_CrudService
 {
