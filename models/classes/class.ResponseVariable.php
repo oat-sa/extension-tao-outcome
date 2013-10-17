@@ -97,6 +97,11 @@ class taoResultServer_models_classes_ResponseVariable extends taoResultServer_mo
     {
         return unserialize($this->candidateResponse);
     }
+    //alias
+    public function getValue()
+    {
+        return $this->getCandidateResponse();
+    }
 }
 
 ?>
