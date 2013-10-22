@@ -24,6 +24,7 @@ return array(
             dirname(__FILE__). '/models/ontology/aclrole.rdf'
 		)
     ),
+    'managementRole' => 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerRole',
 	'classLoaderPackages' => array( 
 		dirname(__FILE__).'/actions/',
 		dirname(__FILE__).'/helpers/'

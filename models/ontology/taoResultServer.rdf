@@ -39,11 +39,6 @@
 	<rdfs:subClassOf rdf:resource="http://www.tao.lu/Ontologies/TAO.rdf#TAOObject"/>
     </rdf:Description>
 
-
-
-
-
-
    <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResultServer.rdf#fileStorage">
 	<rdfs:label xml:lang="en-US"><![CDATA[tao logger]]></rdfs:label>
 	<rdfs:comment xml:lang="en-US"><![CDATA[Data about the storage is sent into the logger]]></rdfs:comment>
@@ -67,16 +62,11 @@
 	<rdf:type rdf:resource="http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServer"/>
    </rdf:Description>
 
-<!-- Management Role -->
+  <!-- Management Role -->
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerRole">
   	<rdf:type rdf:resource="http://www.tao.lu/Ontologies/TAO.rdf#ManagementRole"/>
   	<generis:includesRole rdf:resource="http://www.tao.lu/Ontologies/TAO.rdf#BackOfficeRole"/>
   	<rdfs:label xml:lang="en-US"><![CDATA[Result Server Manager]]></rdfs:label>
     <rdfs:comment xml:lang="en-US"><![CDATA[Result Server Manager Role]]></rdfs:comment>
   </rdf:Description>
-
-
-
-
-    <!--candidate for deletion-->
 </rdf:RDF>
