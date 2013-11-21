@@ -20,11 +20,14 @@ return array(
 	),
 	'install' => array(
         'rdf' => array(
-			dirname(__FILE__). '/models/ontology/taoResultServer.rdf',
-            dirname(__FILE__). '/models/ontology/aclrole.rdf'
+			dirname(__FILE__). '/models/ontology/taoResultServer.rdf'
 		)
     ),
     'managementRole' => 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerRole',
+    'acl' => array(
+        array('grant', 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerRole', array('ext'=>'taoResultServer')),
+        array('grant', 'http://www.tao.lu/Ontologies/TAO.rdf#DeliveryRole', array('ext'=>'taoResultServer', 'mod' => 'ResultServerStateFull'))
+    ),
 	'classLoaderPackages' => array( 
 		dirname(__FILE__).'/actions/',
 		dirname(__FILE__).'/helpers/'

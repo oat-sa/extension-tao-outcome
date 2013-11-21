@@ -31,13 +31,6 @@ class taoResultServer_actions_ResultServerMgt extends tao_actions_SaSModule {
 		return taoResultServer_models_classes_ResultServerAuthoringService::singleton();
 	}
 	
-	/* (non-PHPdoc)
-	 * @see tao_actions_CommonModule::_isAllowed()
-	*/
-	protected function _isAllowed() {
-        return tao_helpers_SysAdmin::isSysAdmin();	
-	}
-	
 	/**
 	 * constructor: initialize the service and the default data
 	 * @return Delivery
