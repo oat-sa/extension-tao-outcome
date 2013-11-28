@@ -21,7 +21,7 @@
 $todefine = array(
     'TAO_RESULTSERVER_CLASS'	=> 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServer',
     'TAO_RESULTSERVER_MODEL_PROP' =>'http://www.tao.lu/Ontologies/TAOResultServer.rdf#hasResultServerModel',
-    'TAO_RESULTSERVER_MODEL_IMPL_PROP' =>'http://www.tao.lu/Ontologies/TAOResultServer.rdf#Implementation',
+    'TAO_RESULTSERVER_MODEL_IMPL_PROP' =>'http://www.tao.lu/Ontologies/TAOResultServer.rdf#implementation',
     'TAO_DELIVERY_DEFAULT_RESULT_SERVER' => 'http://www.tao.lu/Ontologies/TAOResult.rdf#taoResultServer',
     'TAO_VOID_RESULT_SERVER' => 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#void',
     'PROPERTY_RESULTSERVER_ENDPOINT' => 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerEndpoint'

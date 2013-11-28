@@ -47,10 +47,10 @@
    </rdf:Description>
 
 
-     <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResultServer.rdf#Implementation">
+     <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResultServer.rdf#implementation">
     <rdfs:domain rdf:resource="http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerModel"/>
-    <rdfs:label xml:lang="en-US"><![CDATA[Link to the Implementation Class]]></rdfs:label>
-    <rdfs:comment xml:lang="en-US"><![CDATA[Link to the Implementation Class]]></rdfs:comment>
+    <rdfs:label xml:lang="en-US"><![CDATA[Link to the implementation Class]]></rdfs:label>
+    <rdfs:comment xml:lang="en-US"><![CDATA[Link to the implementation Class]]></rdfs:comment>
     <widget:widget rdf:resource="http://www.tao.lu/datatypes/WidgetDefinitions.rdf#TextBox"/>
     <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
     <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
