@@ -15,7 +15,7 @@
 		<?endif;?>
 		
 		<?if(has_data('message')):?>
-			helpers.createMessage("<?=get_data('message')?>");
+		  helpers.createMessage(<?=json_encode(get_data('message'))?>);
 		<?endif?>
 
 	});
