@@ -1,8 +1,8 @@
 /* auto generated content */
-/* lang: en-US */
+/* lang: zh-SG */
 define(function(){
  return {
-   langCode : 'en-US',
+   langCode : 'zh-SG',
    i18n_tr : []
  };
 });

@@ -20,11 +20,11 @@
 				</trees>
 				<actions>
 					
-					<action name="new class" js="generisActions.subClass" url="/taoResultServer/ResultServerMgt/addResultServerClass" context="class" />
-					<action name="new result server" js="generisActions.instanciate" url="/taoResultServer/ResultServerMgt/addResultServer" context="class" />
-					<action name="delete" js="generisActions.removeNode" url="/taoResultServer/ResultServerMgt/delete" context="resource" />
-					<action name="duplicate" js="generisActions.duplicateNode" url="/taoResultServer/ResultServerMgt/cloneInstance" context="instance" />
-					<action name="move" js="generisActions.moveNode" url="" context="instance" />
+					<action name="new class" js="subClass" url="/taoResultServer/ResultServerMgt/addResultServerClass" context="class" />
+					<action name="new result server" js="instanciate" url="/taoResultServer/ResultServerMgt/addResultServer" context="class" />
+					<action name="delete" js="removeNode" url="/taoResultServer/ResultServerMgt/delete" context="resource" />
+					<action name="duplicate" js="duplicateNode" url="/taoResultServer/ResultServerMgt/cloneInstance" context="instance" />
+					<action name="move" js="moveNode" url="" context="instance" />
 					
 				</actions>
     </section>
