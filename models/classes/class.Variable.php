@@ -25,7 +25,9 @@
  * test at all. For example, items that are organized with learning resources and presented 
  * individually in a formative context.
  */
-abstract class taoResultServer_models_classes_Variable {
+abstract class taoResultServer_models_classes_Variable 
+//implements JsonSerializable 
+    {
 
     /**
      * The purpose of an itemVariable is to report the value of the item variable with the given identifier.
@@ -107,6 +109,10 @@ abstract class taoResultServer_models_classes_Variable {
     public function getBaseType()
     {
         return $this->baseType;
+    }
+
+    public function toJson() {
+        return json_encode((array)$this);
     }
 }
 ?>
