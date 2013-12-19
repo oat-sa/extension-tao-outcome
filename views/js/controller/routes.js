@@ -19,5 +19,12 @@
  */
 define(function(){
     return {
+        'ResultServerMgt': {
+           // 'deps' : 'controller/migrate'
+            'actions': {
+                'migrate' : 'controller/migrate'
+            }
+            
+        }
     };
 });

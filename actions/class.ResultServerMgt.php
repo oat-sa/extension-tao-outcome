@@ -232,7 +232,12 @@ class taoResultServer_actions_ResultServerMgt extends tao_actions_SaSModule {
 	 * @return void
 	 */
 	public function index(){
-		$this->setView('index_resultserver.tpl');
+		$this->migrate();
+	}
+        
+        
+        public function migrate(){
+		$this->setView('migrate.tpl');
 	}
 
 }

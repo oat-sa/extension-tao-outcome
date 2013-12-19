@@ -110,7 +110,6 @@ abstract class taoResultServer_models_classes_Variable
     {
         return $this->baseType;
     }
-
     public function toJson() {
         return json_encode((array)$this);
     }

@@ -1,0 +1,72 @@
+/*  
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; under version 2
+ * of the License (non-upgradable).
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * 
+ * Copyright (c) 2013 Open Assessment Technologies S.A.
+ * 
+ */
+
+h1 {
+    font-size: 16px;
+}
+
+h2 {
+    font-size: 14px;
+}
+
+
+
+
+.button {
+    padding:    2px;
+    margin: 2px;
+    background-color:#aaa;
+    color:#fff;
+    width: 120px;
+    
+    height: 30px;
+    line-height: 30px;   //used for the vertical alignment
+    
+    vertical-align: middle;
+    text-align: center;
+    border-width:1px;
+    border-collapse: collapse;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px
+}
+.button:hover {
+    cursor: pointer;
+    background-color: #D00239;
+    color: #fff;
+}
+
+#sourceStorage {
+    display: block;
+    float: left
+}
+
+
+#targetStorage {
+    display: block;
+    float: left
+}
+#operations {
+    display: block;
+    float: left;
+    vertical-align: middle;
+}
+
+#resultStorageMigration {
+    
+}
