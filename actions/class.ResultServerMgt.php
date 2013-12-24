@@ -222,23 +222,9 @@ class taoResultServer_actions_ResultServerMgt extends tao_actions_SaSModule {
 			));
 		}
 	}
-	
-	
-	/**
-	 * Main action
-	 *
-	 * @access public
-     * @author CRP Henri Tudor - TAO Team - {@link http://www.tao.lu}
-	 * @return void
-	 */
-	public function index(){
-		$this->migrate();
-	}
         
-        
-        public function migrate(){
-		$this->setView('migrate.tpl');
-	}
-
+    public function migrate(){
+        $this->setView('migrate.tpl');
+    }
 }
 ?>
