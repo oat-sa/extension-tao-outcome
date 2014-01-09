@@ -222,8 +222,10 @@ class taoResultServer_actions_ResultServerMgt extends tao_actions_SaSModule {
 			));
 		}
 	}
-        
     public function migrate(){
+        
+        $resultStorages = $this->service->getResultStorages();
+        $this->setData('availableStorage', $resultStorages);
         $this->setView('migrate.tpl');
     }
 }

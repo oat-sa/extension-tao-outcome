@@ -30,7 +30,7 @@ class taoResultServer_models_classes_ResultServer
     private $resultServer; 
     
     /**
-     * @var taoResultServer_models_classes_ResultStorage A result storage
+     * @var taoResultServer_models_classes_WritableResultStorage A result storage
      */
     private $storageContainer; 
     

@@ -18,13 +18,14 @@
  * Copyright (c) 2013 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  *
  *
- * TODO move it in the taoResults
  * Implements the Services for the storage of item and test variables,
  * This implementations depends on results for the the physical storage
  * TODO : move the impl to results services
  * @author "Patrick Plichart, <patrick@taotesting.com>"
  */
-class taoResultServer_models_classes_ResultStorageContainer extends tao_models_classes_GenerisService implements taoResultServer_models_classes_ResultStorage
+class taoResultServer_models_classes_ResultStorageContainer 
+extends tao_models_classes_GenerisService 
+implements taoResultServer_models_classes_WritableResultStorage
 {
 
     private $implementations = array(); // array
@@ -46,7 +47,7 @@ class taoResultServer_models_classes_ResultStorageContainer extends tao_models_c
     }
     
     /*
-     * (non-PHPdoc) @see taoResultServer_models_classes_ResultStorage::storeRelatedTestTaker()
+     * (non-PHPdoc) @see taoResultServer_models_classes_WritableResultStorage::storeRelatedTestTaker()
      */
     public function storeRelatedTestTaker($deliveryResultIdentifier, $testTakerIdentifier)
     {
@@ -56,7 +57,7 @@ class taoResultServer_models_classes_ResultStorageContainer extends tao_models_c
     }
     
     /*
-     * (non-PHPdoc) @see taoResultServer_models_classes_ResultStorage::storeRelatedDelivery()
+     * (non-PHPdoc) @see taoResultServer_models_classes_WritableResultStorage::storeRelatedDelivery()
      */
     public function storeRelatedDelivery($deliveryResultIdentifier, $deliveryIdentifier)
     {
@@ -66,7 +67,7 @@ class taoResultServer_models_classes_ResultStorageContainer extends tao_models_c
     }
     
     /*
-     * (non-PHPdoc) @see taoResultServer_models_classes_ResultStorage::storeItemVariable()
+     * (non-PHPdoc) @see taoResultServer_models_classes_WritableResultStorage::storeItemVariable()
      */
     public function storeItemVariable($deliveryResultIdentifier, $test, $item, taoResultServer_models_classes_Variable $itemVariable, $callIdItem)
     {
@@ -76,7 +77,7 @@ class taoResultServer_models_classes_ResultStorageContainer extends tao_models_c
     }
     
     /*
-     * (non-PHPdoc) @see taoResultServer_models_classes_ResultStorage::storeTestVariable()
+     * (non-PHPdoc) @see taoResultServer_models_classes_WritableResultStorage::storeTestVariable()
      */
     public function storeTestVariable($deliveryResultIdentifier, $test, taoResultServer_models_classes_Variable $testVariable, $callIdTest)
     {
@@ -86,7 +87,7 @@ class taoResultServer_models_classes_ResultStorageContainer extends tao_models_c
     }
     
     /*
-     * (non-PHPdoc) @see taoResultServer_models_classes_ResultStorage::configure()
+     * (non-PHPdoc) @see taoResultServer_models_classes_WritableResultStorage::configure()
      */
     public function configure(core_kernel_classes_Resource $resultServer, $callOptions = array())
     {
@@ -98,7 +99,7 @@ class taoResultServer_models_classes_ResultStorageContainer extends tao_models_c
     }
     
     /*
-     * (non-PHPdoc) @see taoResultServer_models_classes_ResultStorage::spawnResult()
+     * (non-PHPdoc) @see taoResultServer_models_classes_WritableResultStorage::spawnResult()
      */
     public function spawnResult()
     {

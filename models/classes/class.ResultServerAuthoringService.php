@@ -164,6 +164,11 @@ class taoResultServer_models_classes_ResultServerAuthoringService extends tao_mo
         
         return $returnValue;
     }
+    
+    public function getResultStorages(){
+        $storageClass = new core_kernel_classes_Class(TAO_RESULTSERVER_MODEL_CLASS);
+        return $storageClass->getInstances(); 
+    }
 }
 
 ?>

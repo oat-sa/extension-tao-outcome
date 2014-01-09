@@ -18,7 +18,7 @@
  *
  */
 
-interface taoResultServer_models_classes_ResultStorage {
+interface taoResultServer_models_classes_WritableResultStorage {
 
     /**
      * Optionnally spawn a new result and returns

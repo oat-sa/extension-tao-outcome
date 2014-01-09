@@ -16,18 +16,17 @@ requirejs.config({
 
     <div id="sourceStorage">
         <h2><?=__('Source')?></h2>
-           <div>
-               <input type="checkbox" id="source1" name="source" value="0" disabled="disabled" />
-               <label for="source1"><?=__('No Storage')?></label>
-            </div>
-            <div>
-               <input type="checkbox" id="source2" name="source" value="1" checked="checked" />
-               <label for="source2"><?=__('Ontology Storage')?></label>
-            </div>
-            <div>
-               <input type="checkbox" id="source3" name="source" value="" checked="checked" />
-               <label for="source3"><?=__('Key Value Storage')?></label>
-            </div>
+            <?
+                foreach (get_data('availableStorage') as $storage) {
+            ?>
+                <div>
+                    <input type="checkbox" name="source" value="<?=$storage->getUri()?>"  />
+                    <label for="source1"><?=$storage->getLabel()?></label>
+                </div>
+            <?
+                }
+            ?>
+           
         
     </div>   
     <div id="operations">
@@ -40,20 +39,16 @@ requirejs.config({
     <div id="targetStorage">
         <h2><?=__('Target')?></h2>
 
-        <div>
-               <input type="checkbox" id="target1" name="source" value="0" disabled="disabled" />
-               <label for="target1"><?=__('No Storage')?></label>
-            </div>
-             <div>
-               <input type="checkbox" id="target2" name="source" value="1" checked="checked" />
-               <label for="target2"><?=__('Ontology Storage')?></label>
-            </div>
-            <div>
-               <input type="checkbox" id="target3" name="source" value="" checked="checked" />
-               <label for="target3"><?=__('Key Value Storage')?></label>
-            </div>
-
-    </div>   
+         <?
+                foreach (get_data('availableStorage') as $storage) {
+            ?>
+                <div>
+                    <input type="checkbox" name="source" value="<?=$storage->getUri()?>" />
+                    <label for="source1"><?=$storage->getLabel()?></label>
+                </div>
+            <?
+                }
+            ?>
     <div id="migrationProgress">
         
     </div>
