@@ -225,8 +225,15 @@ class taoResultServer_actions_ResultServerMgt extends tao_actions_SaSModule {
     public function migrate(){
         
         $resultStorages = $this->service->getResultStorages();
-        $this->setData('availableStorage', $resultStorages);
+        $this->setData('availableRStorage', $resultStorages['r']);
+        $this->setData('availableWStorage', $resultStorages['w']);
         $this->setView('migrate.tpl');
+    }
+    
+    public function migrateData(){
+        $sourceStorageUri= '';
+        $targetStorageUri= '';
+        
     }
 }
 ?>

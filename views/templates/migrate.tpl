@@ -15,9 +15,9 @@ requirejs.config({
     </div>
 
     <div id="sourceStorage">
-        <h2><?=__('Source')?></h2>
+        <h2><?=__('Source (Readable Storage)')?></h2>
             <?
-                foreach (get_data('availableStorage') as $storage) {
+                foreach (get_data('availableRStorage') as $storage) {
             ?>
                 <div>
                     <input type="checkbox" name="source" value="<?=$storage->getUri()?>"  />
@@ -37,10 +37,10 @@ requirejs.config({
     </div>
     
     <div id="targetStorage">
-        <h2><?=__('Target')?></h2>
+        <h2><?=__('Target (Writable Storage)')?></h2>
 
          <?
-                foreach (get_data('availableStorage') as $storage) {
+                foreach (get_data('availableWStorage') as $storage) {
             ?>
                 <div>
                     <input type="checkbox" name="source" value="<?=$storage->getUri()?>" />

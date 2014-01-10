@@ -164,10 +164,32 @@ class taoResultServer_models_classes_ResultServerAuthoringService extends tao_mo
         
         return $returnValue;
     }
-    
+    /**
+     * 
+     * @return array readable and writable storages of results
+     */
     public function getResultStorages(){
         $storageClass = new core_kernel_classes_Class(TAO_RESULTSERVER_MODEL_CLASS);
-        return $storageClass->getInstances(); 
+        
+        $readableStorages = array();
+        $writableStorages = array();
+        
+        foreach ($storageClass->getInstances() as $storage) {
+            $impl = $storage->getUniquePropertyValue(new core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_IMPL_PROP));
+            $interfaces = class_implements($impl->__toString());
+            if (in_array('taoResultServer_models_classes_ReadableResultStorage', $interfaces)) {
+                $readableStorages[] = $storage;
+            }
+            if (in_array('taoResultServer_models_classes_WritableResultStorage', $interfaces)) {
+                $writableStorages[] = $storage;
+            }
+        }
+        return array("r"    =>  $readableStorages, "w"  =>  $writableStorages); 
+    }
+    
+    
+    public function migrateData(core_kernel_classes_Resource $sourceStorage, core_kernel_classes_Resource $targetStorage){
+        
     }
 }
 
