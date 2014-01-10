@@ -28,22 +28,12 @@ return array(
         array('grant', 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerRole', array('ext'=>'taoResultServer')),
         array('grant', 'http://www.tao.lu/Ontologies/TAO.rdf#DeliveryRole', array('ext'=>'taoResultServer', 'mod' => 'ResultServerStateFull'))
     ),
-	'classLoaderPackages' => array( 
-		dirname(__FILE__).'/actions/',
-		dirname(__FILE__).'/helpers/'
-	 ),
  	'constants' => array(
 	 	# actions directory
 		"DIR_ACTIONS"			=> $extpath."actions".DIRECTORY_SEPARATOR,
 	
-		# models directory
-		"DIR_MODELS"			=> $extpath."models".DIRECTORY_SEPARATOR,
-	
 		# views directory
 		"DIR_VIEWS"				=> $extpath."views".DIRECTORY_SEPARATOR,
-	
-		# helpers directory
-		"DIR_HELPERS"			=> $extpath."helpers".DIRECTORY_SEPARATOR,
 	
 		# default module name
 		'DEFAULT_MODULE_NAME'	=> 'Result',
