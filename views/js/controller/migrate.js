@@ -23,28 +23,86 @@ define(['module', 'jquery','i18n', 'context', 'helpers'],
     
         var migrateRunner = {
             start : function(options){
-               $('.button').click(
+               $('.opButton').click(
                        
                             function(e) {
-                    
+                                
+                                
+                                var operation = $(this).attr("id");
+                                var source = []; 
+                                var target = [];
+                                
+                                //todo move
+                                var loaderPic = '/tao/views/img/ajax-loader.gif';
+                                var migrateDataUrl = '/taoResultServer/ResultServerMgt/migrateData';
+                                
+                                
+                                //clean any former feedback built in the dom
+                                $("#selSource").empty();
+                                $("#selTarget").empty();
+                                $("#selOperation").empty();
+                                
+                                $('#sourceStorage :checked').each(function() {
+                                    source.push($(this).val());
+                                    
+                                    //prepare html for confirmation
+                                    //check
+                                    
+                                    label = $(this).parent().text();
+                                    
+                                    //label = $("label[for='"+$(this).attr('id')+"']").text();
+                                    var li = $('<li />').html(label).appendTo("#selSource");
+                                     
+                                  });
+                                $('#targetStorage :checked').each(function() {
+                                    target.push($(this).val());
+                                    
+                                    label = $(this).parent().text();
+                                    //prepare html for confirmation
+                                    //label = $("label[for='"+$(this).attr('id')+"']").text();
+                                    var li = $('<li />').text(label).appendTo("#selTarget");
+                                  });
+                                  
+                                $('<label>'+operation+'</label>').appendTo("#selOperation");  
+
+                                $("#migrationProgress").attr("style", "visibility: visible")
                                 $('#migrationProgress').dialog({
                                         modal: true,
                                         width: 400,
                                         height: 300,
                                         buttons: [
                                                 {
-                                                        text: __('No'),
+                                                        text: __('Cancel'),
+                                                        
                                                         click: function() {
                                                                 $(this).dialog('close');
                                                         }
                                                 },
                                                 {
-                                                        text: __('Yes'),
+                                                        text: __('Migrate'),
                                                         click: function() {
-
+                                                            
+                                                            $('<img src="'+loaderPic+'" />').appendTo("#migrationProgress");
+                                                         
+                                                            
+                                                            $.ajax({
+                                                              url: migrateDataUrl,
+                                                              type: 'POST',
+                                                              data: {   
+                                                                   source: source,
+                                                                   target: target,
+                                                                   operation: operation
+                                                               },
+                                                              success: function(data){
+                                                                  $("#Container").find('img').remove();
+                                                              }
+                                                            });
+                                                            
+                                                            
                                                         }
                                                 }
-                                        ]
+                                        ],
+
                                 });
                             }
                );

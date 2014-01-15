@@ -1,5 +1,7 @@
+
 <link rel="stylesheet" type="text/css" media="screen" href="<?=TAOBASE_WWW?>css/style.css"/>
 <link rel="stylesheet" type="text/css" media="screen" href="<?=TAOBASE_WWW?>css/layout.css"/>
+
 <link rel="stylesheet" href="<?= BASE_WWW ?>css/migration.css" />
 
 <script type="text/javascript">
@@ -8,20 +10,27 @@ requirejs.config({
 });
 </script>
 
-<div id="resultStorageMigration">
+<div class="tao-scope" id="resultStorageMigration">
     
-    <div class="nav">
-           <h1><?=__('Results Data Migration Tool')?></h2>
-    </div>
-
-    <div id="sourceStorage">
-        <h2><?=__('Source (Readable Storage)')?></h2>
+   <div class="grid-row ">
+        <h2 class="col-12"><?=__('Results Data Migration Tool')?></h2>
+   </div>
+   <div class="grid-row">
+   <div class="col-5" id="sourceStorage">
+        <h3><?=__('Source (Readable Storage)')?></h3>
             <?
                 foreach (get_data('availableRStorage') as $storage) {
             ?>
                 <div>
-                    <input type="checkbox" name="source" value="<?=$storage->getUri()?>"  />
-                    <label for="source1"><?=$storage->getLabel()?></label>
+                    <label>
+                        <input type="checkbox" id="source<?=$storage->getUri()?>" value="<?=$storage->getUri()?>">
+                        <span class="icon-checkbox"></span>
+                        <?=$storage->getLabel()?>
+                    </label>
+                    <!--
+                    <input type="checkbox" name="source" id="source<?=$storage->getUri()?>" value="<?=$storage->getUri()?>"  />
+                    <label for="source<?=$storage->getUri()?>"><?=$storage->getLabel()?></label>
+                    !-->
                 </div>
             <?
                 }
@@ -29,27 +38,46 @@ requirejs.config({
            
         
     </div>   
-    <div id="operations">
-        
-                <div class="button" id="clone"><?=__('Clone Data')?></div>
-                <div class="button" id="migrate"><?=__('Migrate Data')?></div>
+    <div class="col-2" id="operations">
+                
+         <div class="btn-warning opButton" id="migrate"><?=__('Migrate Data')?></div>
+         <div class="btn-button opButton" id="clone"><?=__('Clone Data')?></div>
+               
         
     </div>
     
-    <div id="targetStorage">
-        <h2><?=__('Target (Writable Storage)')?></h2>
+    <div class="col-5" id="targetStorage">
+        <h3><?=__('Target (Writable Storage)')?></h3>
 
          <?
                 foreach (get_data('availableWStorage') as $storage) {
             ?>
                 <div>
-                    <input type="checkbox" name="source" value="<?=$storage->getUri()?>" />
-                    <label for="source1"><?=$storage->getLabel()?></label>
+                     <label>
+                        <input type="checkbox" id="target<?=$storage->getUri()?>" value="<?=$storage->getUri()?>">
+                        <span class="icon-checkbox"></span>
+                        <?=$storage->getLabel()?>
+                    </label>
+                    <!--
+                    <input type="checkbox" name="target" id="target<?=$storage->getUri()?>" value="<?=$storage->getUri()?>" />
+                    <label for="target<?=$storage->getUri()?>"><?=$storage->getLabel()?></label>
+                    -->
                 </div>
             <?
                 }
             ?>
-    <div id="migrationProgress">
+    </div>
+    </div ><!--//grid row!-->
+    <div id="migrationProgress" title="Data Migration">
+
+        <h3><?=__('Operation')?></h3>
+        <div id='selOperation'/>
         
+        <h3><?=__('Source')?></h3>
+        <div id='selSource'/>
+        
+        <h3><?=__('Target')?></h3>
+        <div id='selTarget'/>
+     
     </div>
 </div>

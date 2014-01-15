@@ -231,9 +231,19 @@ class taoResultServer_actions_ResultServerMgt extends tao_actions_SaSModule {
     }
     
     public function migrateData(){
-        $sourceStorageUri= '';
-        $targetStorageUri= '';
+
+        $sourceStorage= $this->getRequestParameter('source');
+        $targetStorage= $this->getRequestParameter('target');
+        $opType= $this->getRequestParameter('operation');
         
+        
+        
+        //check params
+      
+        $status = $this->service->migrateData($sourceStorage, $targetStorage, $opType);
+       
+        
+        echo $status;
     }
 }
 ?>

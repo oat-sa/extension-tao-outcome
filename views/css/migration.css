@@ -17,56 +17,30 @@
  * 
  */
 
-h1 {
-    font-size: 16px;
-}
-
-h2 {
-    font-size: 14px;
-}
-
-
-
-
-.button {
-    padding:    2px;
-    margin: 2px;
-    background-color:#aaa;
-    color:#fff;
-    width: 120px;
-    
-    height: 30px;
-    line-height: 30px;   //used for the vertical alignment
-    
-    vertical-align: middle;
-    text-align: center;
-    border-width:1px;
-    border-collapse: collapse;
-    -moz-border-radius: 5px;
-    -webkit-border-radius: 5px
-}
-.button:hover {
-    cursor: pointer;
-    background-color: #D00239;
-    color: #fff;
-}
-
 #sourceStorage {
     display: block;
     float: left
 }
 
-
 #targetStorage {
     display: block;
     float: left
 }
-#operations {
-    display: block;
-    float: left;
-    vertical-align: middle;
+
+#migrationProgress {
+    align:center;
+    visibility:hidden;
 }
 
-#resultStorageMigration {
-    
+#resultStorageMigration{
+    padding:20px;
+    align:center;
+}
+#operations{
+    padding-top: 20px;
+}
+#operations .opButton{
+    width:80%;
+    margin-bottom: 10px;
+    text-align: center;
 }
