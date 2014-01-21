@@ -48,6 +48,7 @@ abstract class taoResultServer_models_classes_Variable
      */
     private $baseType;
 
+    private $epoch;
     /**
      * @author  "Patrick Plichart, <patrick@taotesting.com>"
      * @param unknown $identifier
@@ -110,6 +111,19 @@ abstract class taoResultServer_models_classes_Variable
     {
         return $this->baseType;
     }
+    
+    public function setEpoch($epoch)
+    {
+         $this->epoch = $epoch;
+    }
+    public function getEpoch()
+    {
+         return $this->epoch;
+    }
+    public function isSetEpoch(){
+        return (isset($this->epoch));
+    }
+    
     public function toJson() {
         return json_encode((array)$this);
     }
