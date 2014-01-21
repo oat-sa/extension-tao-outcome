@@ -67,6 +67,12 @@ requirejs.config({
                 }
             ?>
     </div>
+       <div id="feedback">
+           <div class="feedback-success">
+                <span class="icon-success"></span>Migration Successful
+           </div>
+           
+       </div>
     </div ><!--//grid row!-->
     <div id="migrationProgress" title="Data Migration">
 

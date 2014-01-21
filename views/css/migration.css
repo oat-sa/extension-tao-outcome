@@ -31,6 +31,9 @@
     align:center;
     visibility:hidden;
 }
+#feedback {
+    visibility:hidden;
+}
 
 #resultStorageMigration{
     padding:20px;

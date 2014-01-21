@@ -283,12 +283,12 @@ class taoResultServer_models_classes_ResultServerAuthoringService extends tao_mo
             }
             
         }
-        
+     //todo multiple storage feedback statistics   
      //return feedback texts
      return array(
-        ["nbTestTakers"]=>  count($allTestTakerIds),
-        ["nbDeliveries"]=>  count($allDeliveryIds),
-        ["nbCallIds"]=>  count($callIds),
+        "nbTestTakers"  =>  count($allTestTakerIds),
+        "nbDeliveries"  =>  count($allDeliveryIds),
+        "nbCallIds"    =>  count($callIds)
          );   
         
     }

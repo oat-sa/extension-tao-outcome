@@ -98,6 +98,9 @@ define(['module', 'jquery','i18n', 'context', 'helpers'],
                                                               success: function(data){
                                                                   $(" #migrationProgress").empty();
                                                                   $('<label>'+data+'<label>').appendTo("#migrationProgress");
+                                                                  
+                                                                  $('#feedback').attr("style", "visibility: visible")
+                                                                  $('#migrationProgress').dialog('close');
                                                               }
                                                             });
                                                             
