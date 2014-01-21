@@ -42,6 +42,8 @@ define(['module', 'jquery','i18n', 'context', 'helpers'],
                                 $("#selTarget").empty();
                                 $("#selOperation").empty();
                                 
+                               
+                                
                                 $('#sourceStorage :checked').each(function() {
                                     source.push($(this).val());
                                     
@@ -68,8 +70,8 @@ define(['module', 'jquery','i18n', 'context', 'helpers'],
                                 $("#migrationProgress").attr("style", "visibility: visible")
                                 $('#migrationProgress').dialog({
                                         modal: true,
-                                        width: 400,
-                                        height: 300,
+                                        width: 500,
+                                        height: 430,
                                         buttons: [
                                                 {
                                                         text: __('Cancel'),
@@ -81,7 +83,7 @@ define(['module', 'jquery','i18n', 'context', 'helpers'],
                                                 {
                                                         text: __('Migrate'),
                                                         click: function() {
-                                                            
+                                                            $(" #migrationProgress").empty();
                                                             $('<img src="'+loaderPic+'" />').appendTo("#migrationProgress");
                                                          
                                                             
@@ -94,7 +96,8 @@ define(['module', 'jquery','i18n', 'context', 'helpers'],
                                                                    operation: operation
                                                                },
                                                               success: function(data){
-                                                                  $("#Container").find('img').remove();
+                                                                  $(" #migrationProgress").empty();
+                                                                  $('<label>'+data+'<label>').appendTo("#migrationProgress");
                                                               }
                                                             });
                                                             

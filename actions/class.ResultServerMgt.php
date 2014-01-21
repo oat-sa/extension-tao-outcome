@@ -241,9 +241,8 @@ class taoResultServer_actions_ResultServerMgt extends tao_actions_SaSModule {
         //check params
       
         $status = $this->service->migrateData($sourceStorage, $targetStorage, $opType);
-       
-        
-        echo $status;
+        print_r($status);
+        echo json_encode($status);
     }
 }
 ?>

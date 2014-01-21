@@ -40,7 +40,7 @@ requirejs.config({
     </div>   
     <div class="col-2" id="operations">
                 
-         <div class="btn-warning opButton" id="migrate"><?=__('Migrate Data')?></div>
+         <!--<div class="btn-warning opButton" id="migrate"><?=__('Migrate Data')?></div>-->
          <div class="btn-button opButton" id="clone"><?=__('Clone Data')?></div>
                
         

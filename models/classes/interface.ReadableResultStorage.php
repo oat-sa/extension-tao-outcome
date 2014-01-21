@@ -19,26 +19,17 @@
  */
 
 interface taoResultServer_models_classes_ReadableResultStorage {
+    
 
-    public function getDeliveryResultIdentifiers();
-
+    public function getVariables($callId);
+    public function getVariable($callId, $variableIdentifier);
     public function getTestTaker($deliveryResultIdentifier);
-
     public function getDelivery($deliveryResultIdentifier);
-
- 
-    /**
-     * @return taoResultServer_models_classes_Variable $variable
-     * 
-     */
-    public function getItemVariables($deliveryResultIdentifier);
     
     
-   /**
-     * @return taoResultServer_models_classes_Variable $variable
-     * 
-     */
-    public function getTestVariables($deliveryResultIdentifier);
+    public function getAllCallIds();
+    public function getAllTestTakerIds();
+    public function getAllDeliveryIds();
 
    
     

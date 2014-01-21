@@ -199,41 +199,97 @@ class taoResultServer_models_classes_ResultServerAuthoringService extends tao_mo
         $sourceImpl = array();
         $targetImpl = array();
         
+        
+        
         foreach ($sourceStorages as $sourceStorage) {
             $sourceStorageResource = new core_kernel_classes_Resource($sourceStorage);
-            $impl = $sourceStorageResource->getUniquePropertyValue(new core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_IMPL_PROP));
-            $interfaces = class_implements($impl->__toString());
+            $implLiteral = $sourceStorageResource->getUniquePropertyValue(new core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_IMPL_PROP));
+            $impl = $implLiteral->__toString(); 
+            $interfaces = class_implements($impl);
             if (!(in_array('taoResultServer_models_classes_ReadableResultStorage', $interfaces))) {
-                throw new common_exception_PreConditionFailure($sourceStorage. "does not immplent ReadableResultStorage");
+                throw new common_exception_PreConditionFailure($sourceStorage. "does not implement ReadableResultStorage");
             } else {
-                $sourceImpl[] = $impl;
+                $sourceImpl[] = new $impl;
             }
         }
         
         foreach ($targetStorages as $targetStorage) {
             $targetStorageResource = new core_kernel_classes_Resource($targetStorage);
-            $impl = $targetStorageResource->getUniquePropertyValue(new core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_IMPL_PROP));
-            $interfaces = class_implements($impl->__toString());
+            $implLiteral = $targetStorageResource->getUniquePropertyValue(new core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_IMPL_PROP));
+            $impl = $implLiteral->__toString(); 
+            $interfaces = class_implements($impl);
             if (!(in_array('taoResultServer_models_classes_WritableResultStorage', $interfaces))) {
-                throw new common_exception_PreConditionFailure($targetStorage. "does not immplent ReadableResultStorage");
+                throw new common_exception_PreConditionFailure($targetStorage. "does not implement ReadableResultStorage");
             } else {
-                $targetImpl[] = $impl;
+                $targetImpl[] = new $impl;
             }
         }
-        
-        foreach ($sourceImpl as $sImpl) {
+  
+        foreach ($sourceImpl as $storageSImpl) {
             
-            //read data 
-            foreach ($targetImpl as $tImpl) {
-                
-                
+            //migrate test taker data
+            $allTestTakerIds = $storageSImpl->getAllTestTakerIds();
+            foreach ($targetImpl as $storageTImpl) {
+                foreach ($allTestTakerIds as $resultIDentifier=>$testTakerId) {
+                    $storageTImpl->storeRelatedTestTaker($resultIDentifier, $testTakerId["testTakerIdentifier"]);
+                }
+            }
+           
+            
+             //migrate Delivery data
+            $allDeliveryIds = $storageSImpl->getAllTestTakerIds();
+            foreach ($targetImpl as $storageTImpl) {
+                foreach ($allDeliveryIds as $resultIDentifier=>$testTakerId) {
+                    $storageTImpl->storeRelatedTestTaker($resultIDentifier, $testTakerId["testTakerIdentifier"]);
+                }
+            }
+            
+            //migrate all service call submitted variables
+            $callIds = $storageSImpl->getAllCallIDs();//o(n)
+            foreach ($callIds as $callId){
+                $variables = $storageSImpl->getVariables($callId);
+                foreach ($variables as $variableIdentifier=>$variableObservations) {
+                     
+                        $observations = json_decode($variableObservations);
+                    
+                        
+                        foreach ($observations as $observation) {
+                           
+                            foreach ($targetImpl as $storageTImpl) {
+                               
+                                //switch item or test level variable ? 
+                                if (isset($observation->callIdItem)) {  //item level variable
+                                        $storageTImpl->storeItemVariable(
+                                        $observation->deliveryResultIdentifier,
+                                        $observation->test,
+                                        $observation->item,
+                                        unserialize($observation->variable),
+                                        $observation->callIdItem );
+                                } else { //test level variable
+                                        
+                                        $storageTImpl->storeTestVariable(
+                                        $observation->deliveryResultIdentifier,
+                                        $observation->test,
+                                        unserialize($observation->variable),
+                                        $observation->callIdTest );
+                                        
+                                    
+                                }
+                            }
+                            
+                        }
+                }
                 
             }
             
         }
         
-        
-        
+     //return feedback texts
+     return array(
+        ["nbTestTakers"]=>  count($allTestTakerIds),
+        ["nbDeliveries"]=>  count($allDeliveryIds),
+        ["nbCallIds"]=>  count($callIds),
+         );   
         
     }
 }
