@@ -237,10 +237,11 @@ class taoResultServer_models_classes_ResultServerAuthoringService extends tao_mo
            
             
              //migrate Delivery data
-            $allDeliveryIds = $storageSImpl->getAllTestTakerIds();
+            
+            $allDeliveryIds = $storageSImpl->getAllDeliveryIds();
             foreach ($targetImpl as $storageTImpl) {
-                foreach ($allDeliveryIds as $resultIDentifier=>$testTakerId) {
-                    $storageTImpl->storeRelatedTestTaker($resultIDentifier, $testTakerId["testTakerIdentifier"]);
+                foreach ($allDeliveryIds as $resultIDentifier=>$deliveryId) {
+                    $storageTImpl->storeRelatedDelivery($resultIDentifier, $deliveryId["deliveryIdentifier"]);
                 }
             }
             
@@ -266,7 +267,7 @@ class taoResultServer_models_classes_ResultServerAuthoringService extends tao_mo
                                         unserialize($observation->variable),
                                         $observation->callIdItem );
                                 } else { //test level variable
-                                        
+                                        //print_r($observation);
                                         $storageTImpl->storeTestVariable(
                                         $observation->deliveryResultIdentifier,
                                         $observation->test,
