@@ -35,20 +35,20 @@ class taoResultServer_models_classes_ResponseVariable extends taoResultServer_mo
      * 
      * @var array
      */
-    // private $choicesequence;
+    // public $choicesequence;
     /**
      * The correct response may be output as part of the report if desired.
      * Systems are not limited to reporting correct responses declared in responseDeclarations. For example, a correct response may be set by a templateRule or may simply have been suppressed from the declaration passed to the delivery engine (e.g., for security).
      * 
      * @var bool (todo should be a class)
      */
-    private $correctResponse;
+    public $correctResponse;
 
     /**
      *
      * @var string
      */
-    private $candidateResponse;
+    public $candidateResponse;
     /*
      * public function setChoiceSequence($choicesequence){ $this->choiceSequence = $choiceSequence; } public function getChoiceSequence(){ return $this->choiceSequence; }
      */

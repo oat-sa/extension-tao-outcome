@@ -36,29 +36,29 @@ class taoResultServer_models_classes_OutcomeVariable extends taoResultServer_mod
      * 
      * @var array {author, candidate, proctor, scorer, testConstructor, tutor}
      */
-    // private $views;
+    // public $views;
     /**
      *
      * @var string
      */
-    // private $interpretation;
+    // public $interpretation;
     /**
      *
      * @var uri
      */
-    // private $longInterpretation;
+    // public $longInterpretation;
     /**
      * taken from the corresponding outcomeDeclaration.
      * 
      * @var float
      */
-    private $normalMaximum;
+    public $normalMaximum;
 
     /**
      *
      * @var float
      */
-    private $normalMinimum;
+    public $normalMinimum;
 
     /**
      * If a mastery value is specified in the corresponding outcomeDeclaration it may be reported alongside the value of the outcomeVariable.
@@ -66,14 +66,14 @@ class taoResultServer_models_classes_OutcomeVariable extends taoResultServer_mod
      * 
      * @var float
      */
-    // private $masteryValue;
+    // public $masteryValue;
     /**
      * The value(s) of the outcome variable.
      * The order of the values is significant only if the outcome was declared with ordered cardinality.
      * 
      * @var array
      */
-    private $value;
+    public $value;
     /*
      * public function getViews(){ return $this->views; } public function addView($view){ if (!(in_array($cardinality, array("author","candidate","proctor", "scorer", "testConstructor", "tutor")))){ throw new common_exception_InvalidArgumentType("view"); } $this->views[] = $view; } public function setInterpretation($interpretation){ $this->interpretation = $interpretation; } public function getInterpretation(){ return $this->interpretation; } public function setLongInterpretation($longInterpretation){ $this->longInterpretation = $longInterpretation; } public function getLongInterpretation(){ return $this->longInterpretation; }
      */

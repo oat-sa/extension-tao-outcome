@@ -34,7 +34,7 @@ class taoResultServer_models_classes_TraceVariable extends taoResultServer_model
      * 
      * @var string
      */
-    private $trace;
+    public $trace;
 
     /**
      * @author  "Patrick Plichart, <patrick@taotesting.com>"

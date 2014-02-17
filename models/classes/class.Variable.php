@@ -33,12 +33,12 @@ abstract class taoResultServer_models_classes_Variable
      * The purpose of an itemVariable is to report the value of the item variable with the given identifier.
      * @var string
      */
-    private $identifier;
+    public $identifier;
     /**
      * The cardinality of the variable, taken from the corresponding declaration or definition.
      * @var string {single, multiple, ordered, record}
      */
-    private $cardinality;
+    public $cardinality;
 
     /**
      * The base type of the variable, taken from the corresponding declaration of definition.
@@ -46,9 +46,9 @@ abstract class taoResultServer_models_classes_Variable
      * 
      * @var baseType should move to an enumeration
      */
-    private $baseType;
+    public $baseType;
 
-    private $epoch;
+    public $epoch;
     /**
      * @author  "Patrick Plichart, <patrick@taotesting.com>"
      * @param unknown $identifier
