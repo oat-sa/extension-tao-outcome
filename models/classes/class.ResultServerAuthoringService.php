@@ -1,5 +1,4 @@
 <?php
-
 /**  
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,7 +17,9 @@
  * Copyright (c) 2008-2010 (original work) Deutsche Institut für Internationale Pädagogische Forschung (under the project TAO-TRANSFER);
  *               2009-2012 (update and modification) Public Research Centre Henri Tudor (under the project TAO-SUSTAIN & TAO-DEV);
  * 
- *
+ */
+
+/**
  * The Service class is an abstraction of each service instance. 
  * Used to centralize the behavior related to every servcie instances.
  * 
@@ -29,6 +30,8 @@
 class taoResultServer_models_classes_ResultServerAuthoringService extends tao_models_classes_GenerisService
 {
 
+    const DEFAULT_RESULTSERVER_KEY = 'default_resultserver';
+    
     /**
      *
      * @access protected
@@ -293,6 +296,31 @@ class taoResultServer_models_classes_ResultServerAuthoringService extends tao_mo
          );   
         
     }
-}
 
-?>
+    /**
+     * Return the default result server to use
+     * 
+     * @return core_kernel_classes_Resource
+     */
+    public function getDefaultResultServer()
+    {
+        $ext = common_ext_ExtensionsManager::singleton()->getExtensionById('taoResultServer');
+        if ($ext->hasConfig(self::DEFAULT_RESULTSERVER_KEY)) {
+            $uri = $ext->getConfig(self::DEFAULT_RESULTSERVER_KEY);
+        } else {
+            $uri = TAO_VOID_RESULT_SERVER;
+        }
+        
+        return new core_kernel_classes_Resource($uri);
+    }
+    
+    /**
+     * Sets the default result server to use
+     * 
+     * @param core_kernel_classes_Resource $resultServer
+     */
+    public function setDefaultResultServer(core_kernel_classes_Resource $resultServer) {
+        $ext = common_ext_ExtensionsManager::singleton()->getExtensionById('taoResultServer');
+        $ext->setConfig(self::DEFAULT_RESULTSERVER_KEY, $resultServer->getUri());
+    }
+}
