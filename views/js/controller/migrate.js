@@ -33,10 +33,9 @@ define(['module', 'jquery','i18n', 'context', 'helpers'],
                                 var target = [];
                                 
                                 //todo move
-                                var loaderPic = '/tao/views/img/ajax-loader.gif';
-                                var migrateDataUrl = '/taoResultServer/ResultServerMgt/migrateData';
-                                
-                                
+                                var loaderPic = context.root_url+'/tao/views/img/ajax-loader.gif';
+                                var migrateDataUrl = context.root_url+'/taoResultServer/ResultServerMgt/migrateData';
+
                                 //clean any former feedback built in the dom
                                 $("#selSource").empty();
                                 $("#selTarget").empty();
