@@ -19,7 +19,7 @@
  *
  *  
  * @package taoResultServer
- * @subpackage models_classes
+ 
  * @license GPLv2  
  * 
  * A session for a particular delivery execution/session on the corresponding result server

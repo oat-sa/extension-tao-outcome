@@ -20,7 +20,6 @@
  * 
  * @author "Patrick Plichart, <patrick@taotesting.com>"
  * @package taoResultServer
- * @subpackage
  */
 class taoResultServer_models_classes_LoggerStorage 
 extends tao_models_classes_GenerisService 

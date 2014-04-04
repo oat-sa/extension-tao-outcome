@@ -16,12 +16,16 @@
  * 
  * Copyright (c) 2013 Open Assessment Technologies
  * 
+ * 
+ */
+ 
+/**
+ * 
  * A session for a particular delivery execution/session on the corresponding result server
  * Statefull api for results submission from the client
  * 
  * 
  * @package taoResultServer
- * @subpackage actions
  * @license GPLv2  http://www.opensource.org/licenses/gpl-2.0.php
  */
  

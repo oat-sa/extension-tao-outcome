@@ -15,13 +15,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  * 
  * Copyright (c) 2013 Open Assessment Technologies S.A.
- * 
  *
- * 
+ */
+
+ /** 
  * ResultServer Controller provide actions performed from url resolution
  * 
  * @package taoResultServer
- * @subpackage actions
  * @license GPLv2  
  */
  

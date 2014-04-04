@@ -25,7 +25,7 @@
  * 
  * @author Joel Bout, <joel.bout@tudor.lu>
  * @package taoResultServer
- * @subpackage models_classes
+ 
  */
 class taoResultServer_models_classes_ResultServerAuthoringService extends tao_models_classes_GenerisService
 {
