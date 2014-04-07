@@ -252,29 +252,24 @@ class taoResultServer_models_classes_ResultServerAuthoringService extends tao_mo
             $callIds = $storageSImpl->getAllCallIDs();//o(n)
             foreach ($callIds as $callId){
                 $variables = $storageSImpl->getVariables($callId);
-                foreach ($variables as $variableIdentifier=>$variableObservations) {
-                     
-                        $observations = json_decode($variableObservations);
-                    
-                        
+                foreach ($variables as $variableIdentifier=>$observations) {
+
                         foreach ($observations as $observation) {
-                           
-                            foreach ($targetImpl as $storageTImpl) {
-                               
-                                //switch item or test level variable ? 
+                        
+                            foreach ($targetImpl as $storageTImpl) {                              
                                 if (isset($observation->callIdItem)) {  //item level variable
                                         $storageTImpl->storeItemVariable(
                                         $observation->deliveryResultIdentifier,
                                         $observation->test,
                                         $observation->item,
-                                        unserialize($observation->variable),
+                                        $observation->variable,
                                         $observation->callIdItem );
                                 } else { //test level variable
                                         //print_r($observation);
                                         $storageTImpl->storeTestVariable(
                                         $observation->deliveryResultIdentifier,
                                         $observation->test,
-                                        unserialize($observation->variable),
+                                        $observation->variable,
                                         $observation->callIdTest );
                                         
                                     
