@@ -124,8 +124,8 @@ class taoResultServer_models_classes_OutcomeVariable extends taoResultServer_mod
      * @return multitype:
      */
     public function getValue()
-    {
-        return $this->value;
+    {   
+        return base64_decode($this->value);
     }
 
     /**
@@ -135,8 +135,9 @@ class taoResultServer_models_classes_OutcomeVariable extends taoResultServer_mod
      * @param unknown $value            
      */
     public function setValue($value)
-    {
-        $this->value = $value;
+    {   
+        //null byte, binary 
+        $this->value = base64_encode($value);
     }
 }
 

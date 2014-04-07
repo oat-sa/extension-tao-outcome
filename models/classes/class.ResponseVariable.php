@@ -84,9 +84,9 @@ class taoResultServer_models_classes_ResponseVariable extends taoResultServer_mo
      */
     public function setCandidateResponse($candidateResponse)
     {
-        $this->candidateResponse = serialize($candidateResponse);
+        //binary and nullbyte safe
+        $this->candidateResponse = base64_encode($candidateResponse);
     }
-
     /**
      *
      * @access public
@@ -94,8 +94,9 @@ class taoResultServer_models_classes_ResponseVariable extends taoResultServer_mo
      * @return mixed
      */
     public function getCandidateResponse()
-    {
-        return unserialize($this->candidateResponse);
+    {   
+        //base64 binary and nullbyte safe
+        return base64_decode($this->candidateResponse);      
     }
     //alias
     public function getValue()
