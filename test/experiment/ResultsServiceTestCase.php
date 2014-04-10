@@ -1,6 +1,7 @@
 <?php
 
-require_once dirname(__FILE__) . '/../../tao/test/TaoTestRunner.php';
+//TODO simpletest testcase that need to be migrate to phpunit
+
 include_once dirname(__FILE__) . '/../includes/raw_start.php';
 
 class ResultsServiceTestCase extends UnitTestCase {
