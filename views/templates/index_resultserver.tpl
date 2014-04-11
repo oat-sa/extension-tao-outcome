@@ -1,5 +1,8 @@
-<?include('header.tpl')?>
+<?php
+use oat\tao\helpers\Template;
 
+Template::inc('header.tpl');
+?>
 <div class="main-container">
 	<div class="ext-home-container ui-state-highlight">
 		<h1><img src="<?=BASE_WWW?>img/resultServer.png" />&nbsp;&nbsp;<?=__("Result Server")?></h1>
@@ -7,5 +10,6 @@
 		<?=__("A delivery server is required for every delivery, it defines where the results of that delivery will be uploaded.")?> </p>
 	</div>
 </div>
-
-<?include('footer.tpl')?>
+<?php
+Template::inc('footer.tpl');
+?>
