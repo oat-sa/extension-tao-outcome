@@ -1,1 +1,5 @@
-<? include(TAO_TPL_PATH . 'form_context.tpl') ?>
+<?php
+use oat\tao\helpers\Template;
+
+Template::inc('form_context.tpl', 'tao');
+?>
