@@ -5,7 +5,7 @@ define(['jquery'], function($){
             this.parameters = parameters || {};
     }
 
-    ResultServerApi.prototype.submitItemVariables = function(itemId, serviceCallId, responses, scores, events, callback){
+    ResultServerApi.prototype.submitItemVariables = function(itemId, serviceCallId, responses, scores, events, params, callback){
             $.ajax({
                     url : this.endpoint + 'storeItemVariableSet',
                     data : {
