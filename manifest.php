@@ -10,12 +10,15 @@ $taopath = dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'tao'.DIRECTORY_SEPARA
 	
 return array(
 	'name' => 'taoResultServer',
+    'label' => 'Result core extension',
 	'description' => 'Results Server management and exposed interfaces for results data submission',
     'license' => 'GPL-2.0',
-    'version' => '1.0',
+    'version' => '2.6',
 	'author' => 'Open Assessment Technologies',
     //taoResults may be needed for the taoResults taoResultServerModel that uses taoResults db storage
-	'dependencies' => array('tao'),
+	'requires' => array(
+	    'tao' => '2.6'
+	),
 	'models' => array(
 		'http://www.tao.lu/Ontologies/TAOResultServer.rdf#'
 	),
