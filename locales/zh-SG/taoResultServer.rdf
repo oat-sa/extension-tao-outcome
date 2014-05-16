@@ -94,12 +94,12 @@
     -->
     <rdfs:comment xml:lang="zh-SG"><![CDATA[Data about the storage is sent into the logger]]></rdfs:comment>
   </rdf:Description>
-  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResultServer.rdf#Implementation">
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResultServer.rdf#implementation">
     <!--
     @sourceLanguage EN
     @targetLanguage zh-SG
     @source Link to the Implementation Class
-    @subject http://www.tao.lu/Ontologies/TAOResultServer.rdf#Implementation
+    @subject http://www.tao.lu/Ontologies/TAOResultServer.rdf#implementation
     @predicate http://www.w3.org/2000/01/rdf-schema#label
     -->
     <rdfs:label xml:lang="zh-SG"><![CDATA[Link to the Implementation Class]]></rdfs:label>
