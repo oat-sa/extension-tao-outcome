@@ -21,14 +21,52 @@
 interface taoResultServer_models_classes_ReadableResultStorage {
     
 
+    /**
+     * @param callId an item execution identifier
+     * @return array keys as variableIdentifier , values is an array of observations , 
+     * each observation is an object with deliveryResultIdentifier, test, taoResultServer_models_classes_Variable variable, callIdTest
+     * Array
+    (
+    [LtiOutcome] => Array
+        (
+            [0] => stdClass Object
+                (
+                    [deliveryResultIdentifier] => con-777:::rlid-777:::777777
+                    [test] => http://tao26/tao26.rdf#i1402389674744647
+                    [variable] => taoResultServer_models_classes_OutcomeVariable Object
+                        (
+                            [normalMaximum] => 
+                            [normalMinimum] => 
+                            [value] => MC41
+                            [identifier] => LtiOutcome
+                            [cardinality] => single
+                            [baseType] => float
+                            [epoch] => 0.10037600 1402390997
+                        )
+
+                    [callIdTest] => http://tao26/tao26.rdf#i14023907995907103
+                )
+
+        )
+
+    )
+     */
     public function getVariables($callId);
     public function getVariable($callId, $variableIdentifier);
     public function getTestTaker($deliveryResultIdentifier);
     public function getDelivery($deliveryResultIdentifier);
     
-    
+    /**
+     * @return array the list of item executions ids (across all results)
+     */
     public function getAllCallIds();
+    /**
+     * @return array each element is a two fields array deliveryResultIdentifier, testTakerIdentifier
+     */
     public function getAllTestTakerIds();
+    /**
+     * @return array each element is a two fields array deliveryResultIdentifier, deliveryIdentifier
+     */
     public function getAllDeliveryIds();
 
    
