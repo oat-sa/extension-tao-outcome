@@ -190,5 +190,23 @@ class taoResultServer_models_classes_ResultServerStateFull extends tao_models_cl
         $resultServer->getStorageInterface()->storeTestVariable(PHPSession::singleton()->getAttribute("resultServer_deliveryResultIdentifier"), $test, $testVariable, $callIdTest);
         return PHPSession::singleton()->getAttribute("resultServer_deliveryResultIdentifier");
     }
+    
+    public function getVariables($callId){
+        $resultServer = $this->restoreResultServer();
+        return $resultServer->getStorageInterface()->getVariables($callId) ;
+        
+    }    
+    public function getVariable($callId, $variableIdentifier){
+        $resultServer = $this->restoreResultServer();
+        return $resultServer->getStorageInterface()->getVariable($callId, $variableIdentifier) ;
+    }
+    public function getTestTaker($deliveryResultIdentifier){
+        $resultServer = $this->restoreResultServer();
+        return $resultServer->getStorageInterface()->getTestTaker($deliveryResultIdentifier) ;
+    }
+    public function getDelivery($deliveryResultIdentifier){
+        $resultServer = $this->restoreResultServer();
+        return $resultServer->getStorageInterface()->getDelivery($deliveryResultIdentifier) ;
+    }
 }
 ?>

@@ -98,6 +98,49 @@ implements taoResultServer_models_classes_WritableResultStorage
         }
     }
     
+    public function getVariables($callId){
+        
+        $returnData = array();
+        foreach ($this->implementations as $implementation) {
+            if ($implementation["object"] instanceof taoResultServer_models_classes_ReadableResultStorage){
+            $implData = $implementation["object"]->getVariables($callId);
+            $returnData = array_merge($implData,$returnData ) ;
+            }
+        }
+        return $returnData;
+    }
+    public function getVariable($callId, $variableIdentifier){   
+        $returnData = array();
+        foreach ($this->implementations as $implementation) {
+             if ($implementation["object"] instanceof taoResultServer_models_classes_ReadableResultStorage){
+            $implData = $implementation["object"]->getVariable($callId, $variableIdentifier);
+            $returnData = array_merge($implData,$returnData ) ;
+            }
+        return $returnData;
+        }
+    }
+    public function getTestTaker($deliveryResultIdentifier){   
+        $returnData = array();
+        foreach ($this->implementations as $implementation) {
+             if ($implementation["object"] instanceof taoResultServer_models_classes_ReadableResultStorage){
+       
+            $implData = $implementation["object"]->getTestTaker($deliveryResultIdentifier);
+            $returnData = array_merge($implData,$returnData ) ;
+             }
+        }
+        return $returnData;
+    }
+    public function getDelivery($deliveryResultIdentifier){   
+        $returnData = array();
+        foreach ($this->implementations as $implementation) {
+             if ($implementation["object"] instanceof taoResultServer_models_classes_ReadableResultStorage){
+                $implData = $implementation["object"]->getDelivery($deliveryResultIdentifier);
+                $returnData = array_merge($implData,$returnData ) ;
+             }
+        }
+        return $returnData;
+    }
+    
     /*
      * (non-PHPdoc) @see taoResultServer_models_classes_WritableResultStorage::spawnResult()
      */
