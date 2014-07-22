@@ -1,10 +1,4 @@
 {
-     "repositories": [
-      {
-		"type": "vcs",
-		"url": "git@github.com:oat-sa/oatbox-extension-installer.git"
-		}
-     ],
 
     "name": "oat-sa/extension-tao-resultserver",
      "authors" : [
@@ -41,7 +35,7 @@
 		"role": "Developer"
 		}
     ],
-    "description" : "TAO's extension to manage resultserver",
+    "description" : "extension to manage resultservers",
     "support": {
 		"forum": "http://forum.taotesting.com",
 		"issues": "http://forge.taotesting.com"
