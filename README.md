@@ -1,4 +1,4 @@
-extension-tao-resultserver
+extension-tao-outcome
 ==========================
 
-Tao extension to manage resultserver
+Tao extension to manage outcome
