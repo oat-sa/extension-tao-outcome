@@ -21,14 +21,17 @@
                 </trees>
                 <actions>
 
-                    <action name="new class" js="subClass" url="/taoResultServer/ResultServerMgt/addResultServerClass"
-                            context="class"/>
-                    <action name="new result server" js="instanciate"
-                            url="/taoResultServer/ResultServerMgt/addResultServer" context="class"/>
-                    <action name="delete" js="removeNode" url="/taoResultServer/ResultServerMgt/delete"
-                            context="resource"/>
-                    <action name="move" js="moveNode" url="" context="instance"/>
-                    <action name="migrate" url="/taoResultServer/ResultServerMgt/migrate" context="*"/>
+                    <action name="New class" js="subClass" url="/taoResultServer/ResultServerMgt/addResultServerClass" context="class" group="content">
+                        <icon id="icon-folder-open"/>
+                    </action>
+                    <action name="New result server" js="instanciate" url="/taoResultServer/ResultServerMgt/addResultServer" context="class"/>
+                    <action name="Delete" js="removeNode" url="/taoResultServer/ResultServerMgt/delete" context="resource" group="tree">
+                        <icon id="icon-eraser"/>
+                    </action>
+                    <action name="Move" js="moveNode" url="" context="instance" group="tree">
+                        <icon id="icon-move-item"/>
+                    </action>
+                    <action name="Migrate" url="/taoResultServer/ResultServerMgt/migrate" context="*"/>
 
                 </actions>
             </section>
