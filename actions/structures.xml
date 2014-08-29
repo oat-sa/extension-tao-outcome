@@ -24,15 +24,18 @@
                     <action name="New class" js="subClass" url="/taoResultServer/ResultServerMgt/addResultServerClass" context="class" group="content">
                         <icon id="icon-folder-open"/>
                     </action>
-                    <action name="New result server" js="instanciate" url="/taoResultServer/ResultServerMgt/addResultServer" context="class"/>
+                    <action name="New result server" js="instanciate" url="/taoResultServer/ResultServerMgt/addResultServer" context="class" group="tree">
+                        <icon id="icon-result-server"/>
+                    </action>                    
                     <action name="Delete" js="removeNode" url="/taoResultServer/ResultServerMgt/delete" context="resource" group="tree">
-                        <icon id="icon-eraser"/>
+                        <icon id="icon-bin"/>
                     </action>
                     <action name="Move" js="moveNode" url="" context="instance" group="tree">
                         <icon id="icon-move-item"/>
                     </action>
-                    <action name="Migrate" url="/taoResultServer/ResultServerMgt/migrate" context="*"/>
-
+                    <action name="Migrate" url="/taoResultServer/ResultServerMgt/migrate" context="*" group="tree">
+                        <icon id="icon-external"/>
+                    </action>   
                 </actions>
             </section>
         </sections>
