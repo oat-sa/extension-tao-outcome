@@ -51,9 +51,10 @@ class taoResultServer_models_classes_CrudResultServerService extends tao_models_
     }
 
     /**
-     * (non-PHPdoc) 
      * 
-     * @see tao_models_classes_CrudService::create()
+     * @author Patrick Plichart, <patrick@taotesting.com>
+     * @param array $propertiesValues
+     * @return core_kernel_classes_Resource
      */
     public function createFromArray(array $propertiesValues)
     {
