@@ -16,7 +16,7 @@
  * 
  * Copyright (c) 2008-2010 (original work) Deutsche Institut für Internationale Pädagogische Forschung (under the project TAO-TRANSFER);
  *               2009-2012 (update and modification) Public Research Centre Henri Tudor (under the project TAO-SUSTAIN & TAO-DEV);
- * 
+ *               2013-2014 (update and modification) Open Assessment Technologies SA
  */
 
 /**
@@ -24,10 +24,10 @@
  * Used to centralize the behavior related to every servcie instances.
  * 
  * @author Joel Bout, <joel.bout@tudor.lu>
- * @package taoResultServer
- 
+ * 
  */
-class taoResultServer_models_classes_ResultServerAuthoringService extends tao_models_classes_GenerisService
+class taoResultServer_models_classes_ResultServerAuthoringService 
+    extends tao_models_classes_ClassService
 {
 
     const DEFAULT_RESULTSERVER_KEY = 'default_resultserver';
@@ -52,6 +52,15 @@ class taoResultServer_models_classes_ResultServerAuthoringService extends tao_mo
         $this->resultServerClass = new core_kernel_classes_Class(TAO_RESULTSERVER_CLASS);
     }
 
+	/** (non-PHPdoc)
+	 * @see tao_models_classes_ClassService::getRootClass()
+	 */
+	public function getRootClass() {
+	    return $this->resultServerClass;
+
+	}
+
+    
     /**
      *
      * @access public
@@ -66,7 +75,7 @@ class taoResultServer_models_classes_ResultServerAuthoringService extends tao_mo
         $returnValue = null;
         
         if (is_null($clazz)) {
-            $clazz = $this->resultServerClass;
+            $clazz = $this->getRootClass();
         }
         
         if ($this->isResultServerClass($clazz)) {
@@ -112,7 +121,7 @@ class taoResultServer_models_classes_ResultServerAuthoringService extends tao_mo
         $returnValue = (bool) false;
         
         if (! is_null($clazz)) {
-            if ($this->isResultServerClass($clazz) && $clazz->getUri() != $this->resultServerClass->getUri()) {
+            if ($this->isResultServerClass($clazz) && $clazz->getUri() != $this->getRootClass()->getUri()) {
                 $returnValue = $clazz->delete();
             }
         }
@@ -131,10 +140,10 @@ class taoResultServer_models_classes_ResultServerAuthoringService extends tao_mo
     {
         $returnValue = (bool) false;
         
-        if ($clazz->getUri() == $this->resultServerClass->getUri()) {
+        if ($clazz->getUri() == $this->getRootClass()->getUri()) {
             $returnValue = true;
         } else {
-            foreach ($this->resultServerClass->getSubClasses(true) as $subclass) {
+            foreach ($this->getRootClass()->getSubClasses(true) as $subclass) {
                 if ($clazz->getUri() == $subclass->getUri()) {
                     $returnValue = true;
                     break;
@@ -156,8 +165,8 @@ class taoResultServer_models_classes_ResultServerAuthoringService extends tao_mo
     {
         $returnValue = null;
         
-        if (empty($uri) && ! is_null($this->resultServerClass)) {
-            $returnValue = $this->resultServerClass;
+        if (empty($uri) && ! is_null($this->getRootClass())) {
+            $returnValue = $this->getRootClass();
         } else {
             $clazz = new core_kernel_classes_Class($uri);
             if ($this->isResultServerClass($clazz)) {
