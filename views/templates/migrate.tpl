@@ -1,6 +1,8 @@
-
-<link rel="stylesheet" type="text/css" media="screen" href="<?=TAOBASE_WWW?>css/style.css"/>
-<link rel="stylesheet" type="text/css" media="screen" href="<?=TAOBASE_WWW?>css/layout.css"/>
+<?php
+use oat\tao\helpers\Template;
+?>
+<link rel="stylesheet" type="text/css" media="screen" href="<?=Template::css('style.css','tao')?>"/>
+<link rel="stylesheet" type="text/css" media="screen" href="<?= Template::css('layout.css','tao') ?>"/>
 
 <link rel="stylesheet" href="<?= BASE_WWW ?>css/migration.css" />
 
