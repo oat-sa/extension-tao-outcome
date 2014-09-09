@@ -17,74 +17,44 @@
  *
  * Copyright (c) 2013 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  *
+ */
+
+/**
  * Crud services implements basic CRUD services, orginally intended for REST controllers/ HTTP exception handlers
  * Consequently the signatures and behaviors is closer to REST and throwing HTTP like exceptions
- * 
  *
  * @author "Patrick Plichart, <patrick@taotesting.com>"
- * @package taoResultServer
- *  
+ *        
  */
 class taoResultServer_models_classes_CrudResultServerService extends tao_models_classes_CrudService
 {
 
-    protected $testClass = null;
-
     /**
-     *
-     * @access public
-     * @author "Patrick Plichart, <patrick@taotesting.com>"
+     * (non-PHPdoc)
+     * 
+     * @see tao_models_classes_CrudService::getClassService()
      */
-    public function __construct()
+    protected function getClassService()
     {
-        parent::__construct();
-        $this->testClass = new core_kernel_classes_Class(TAO_RESULTSERVER_CLASS);
+        return taoResultServer_models_classes_ResultServerAuthoringService::singleton();
     }
 
     /**
-     *
-     * @access public
-     * @author "Patrick Plichart, <patrick@taotesting.com>"
-     * @return core_kernel_classes_Class
-     */
-    public function getRootClass()
-    {
-        return $this->testClass;
-    }
-    /*
-     * (non-PHPdoc) @see tao_models_classes_CrudService::get()
-     */
-    public function get($uri)
-    {
-        return parent::get($uri);
-    }
-    /*
-     * (non-PHPdoc) @see tao_models_classes_CrudService::getAll()
-     */
-    public function getAll()
-    {
-        return parent::getAll();
-    }
-    
-    /*
-     * (non-PHPdoc) @see tao_models_classes_CrudService::delete()
+     * (non-PHPdoc) 
+     * 
+     * @see tao_models_classes_CrudService::delete()
      */
     public function delete($resource)
     {
-        taoResultServer_models_classes_ResultServerAuthoringService::singleton()->deleteResultServer(new core_kernel_classes_Resource($resource));
-        // parent::delete($resource);
+        $this->getClassService()->deleteResultServer(new core_kernel_classes_Resource($resource));
         return true;
     }
-    /*
-     * (non-PHPdoc) @see tao_models_classes_CrudService::deleteAll()
-     */
-    public function deleteAll()
-    {
-        return parent::deleteAll();
-    }
-    
-    /*
-     * (non-PHPdoc) @see tao_models_classes_CrudService::create()
+
+    /**
+     * 
+     * @author Patrick Plichart, <patrick@taotesting.com>
+     * @param array $propertiesValues
+     * @return core_kernel_classes_Resource
      */
     public function createFromArray(array $propertiesValues)
     {
@@ -98,14 +68,6 @@ class taoResultServer_models_classes_CrudResultServerService extends tao_models_
         unset($propertiesValues[RDF_TYPE]);
         $resource = parent::create($label, $type, $propertiesValues);
         return $resource;
-    }
-    /*
-     * (non-PHPdoc) @see tao_models_classes_CrudService::update()
-     */
-    public function update($uri, array $propertiesValues)
-    {
-        parent::update($uri, $propertiesValues);
-        // throw new common_exception_NotImplemented();
     }
 }
 
