@@ -59,8 +59,9 @@ class taoResultServer_actions_ResultServerMgt extends tao_actions_SaSModule {
 	 * Render json data to populate the result servers tree 
 	 * 'modelType' must be in the request parameters
 	 * @return void
-	 */
-	public function getResultServers(){
+     * @throws Exception
+     */
+    public function getResultServers(){
 		
 		if(!tao_helpers_Request::isAjax()){
 			throw new Exception("wrong request mode");
@@ -112,7 +113,7 @@ class taoResultServer_actions_ResultServerMgt extends tao_actions_SaSModule {
 	}
 	
 	/**
-	 * Edit a delviery instance
+	 * Edit a delivery instance
 	 * @return void
 	 */
 	public function editResultServer(){
@@ -143,8 +144,9 @@ class taoResultServer_actions_ResultServerMgt extends tao_actions_SaSModule {
 	/**
 	 * Add a resultServer instance        
 	 * @return void
-	 */
-	public function addResultServer(){
+     * @throws Exception
+     */
+    public function addResultServer(){
 		if(!tao_helpers_Request::isAjax()){
 			throw new Exception("wrong request mode");
 		}
@@ -161,8 +163,9 @@ class taoResultServer_actions_ResultServerMgt extends tao_actions_SaSModule {
 	/**
 	 * Add a resultServer subclass
 	 * @return void
-	 */
-	public function addResultServerClass(){
+     * @throws Exception
+     */
+    public function addResultServerClass(){
 		if(!tao_helpers_Request::isAjax()){
 			throw new Exception("wrong request mode");
 		}
@@ -178,8 +181,9 @@ class taoResultServer_actions_ResultServerMgt extends tao_actions_SaSModule {
 	/**
 	 * Delete a resultServer or a resultServer class
 	 * @return void
-	 */
-	public function delete(){
+     * @throws Exception
+     */
+    public function delete(){
 		if(!tao_helpers_Request::isAjax()){
 			throw new Exception("wrong request mode");
 		}
@@ -198,8 +202,9 @@ class taoResultServer_actions_ResultServerMgt extends tao_actions_SaSModule {
 	/**
 	 * Duplicate a resultServer instance
 	 * @return void
-	 */
-	public function cloneResultServer(){
+     * @throws Exception
+     */
+    public function cloneResultServer(){
 		if(!tao_helpers_Request::isAjax()){
 			throw new Exception("wrong request mode");
 		}
@@ -245,4 +250,3 @@ class taoResultServer_actions_ResultServerMgt extends tao_actions_SaSModule {
         echo json_encode($status);
     }
 }
-?>

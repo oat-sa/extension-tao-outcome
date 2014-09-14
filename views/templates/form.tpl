@@ -3,12 +3,11 @@ use oat\tao\helpers\Template;
 
 Template::inc('header.tpl');
 ?>
-<div id="form-title" class="ui-widget-header ui-corner-top ui-state-default">
-	<?=get_data('formTitle')?>
-</div>
-<div id="form-container" class="ui-widget-content ui-corner-bottom">
-	<?=get_data('myForm')?>
-</div>
-<?php
-Template::inc('footer.tpl');
-?>
+    <div class="main-container">
+        <h2><?=get_data('formTitle')?></h2>
+        <div class="form-content">
+            <?=get_data('myForm')?>
+        </div>
+    </div>
+    <div class="data-container-wrapper"></div>
+<?php Template::inc('footer.tpl'); ?>
