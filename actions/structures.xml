@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE extension SYSTEM "../../tao/doc/structures.dtd">
+<!DOCTYPE structures SYSTEM "../../tao/doc/structures.dtd">
 <structures>
-    <structure id="settings" name="Settings" level="11" visible="false">
+    <structure id="settings" name="Settings" level="11" group="invisible">
         <description>Manage Result Servers</description>
         <sections>
             <section id="manage_resultservers" name="Result Server Manager"
