@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE extension SYSTEM "../../tao/doc/structures.dtd">
+<!DOCTYPE structures SYSTEM "../../tao/doc/structures.dtd">
 <structures>
-    <structure id="settings" name="Settings" level="11" visible="false">
+    <structure id="settings" name="Settings" level="11" group="invisible">
         <description>Manage Result Servers</description>
         <sections>
             <section id="manage_resultservers" name="Result Server Manager"
@@ -21,15 +21,21 @@
                 </trees>
                 <actions>
 
-                    <action name="new class" js="subClass" url="/taoResultServer/ResultServerMgt/addResultServerClass"
-                            context="class"/>
-                    <action name="new result server" js="instanciate"
-                            url="/taoResultServer/ResultServerMgt/addResultServer" context="class"/>
-                    <action name="delete" js="removeNode" url="/taoResultServer/ResultServerMgt/delete"
-                            context="resource"/>
-                    <action name="move" js="moveNode" url="" context="instance"/>
-                    <action name="migrate" url="/taoResultServer/ResultServerMgt/migrate" context="*"/>
-
+                    <action name="New class" js="subClass" url="/taoResultServer/ResultServerMgt/addResultServerClass" context="class" group="content">
+                        <icon id="icon-folder-open"/>
+                    </action>
+                    <action name="New result server" js="instanciate" url="/taoResultServer/ResultServerMgt/addResultServer" context="class" group="tree">
+                        <icon id="icon-result-server"/>
+                    </action>                    
+                    <action name="Delete" js="removeNode" url="/taoResultServer/ResultServerMgt/delete" context="resource" group="tree">
+                        <icon id="icon-bin"/>
+                    </action>
+                    <action name="Move" js="moveNode" url="" context="instance" group="tree">
+                        <icon id="icon-move-item"/>
+                    </action>
+                    <action name="Migrate" url="/taoResultServer/ResultServerMgt/migrate" context="*" group="tree">
+                        <icon id="icon-external"/>
+                    </action>   
                 </actions>
             </section>
         </sections>
