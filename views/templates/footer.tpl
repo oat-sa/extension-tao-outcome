@@ -7,14 +7,14 @@ require(['jquery', 'uiBootstrap', 'helpers'], function($, uiBootstrap, helpers){
                 }
         });
 
-        <?if(get_data('reload')):?>
+        <?php if(get_data('reload')):?>
                 uiBootstrap.initTrees();
-        <?endif;?>
+        <?php endif;?>
 
 
-        <?if(has_data('message')):?>
+        <?php if(has_data('message')):?>
                 helpers.createMessage(<?=json_encode(get_data('message'))?>);
-        <?endif?>
+        <?php endif?>
 
 	function setAuthoringModeButtons(){
 		var $advContainer = $('#action_advanced_mode');
@@ -22,8 +22,8 @@ require(['jquery', 'uiBootstrap', 'helpers'], function($, uiBootstrap, helpers){
 		if($advContainer.length && $simpleContainer.length){
 			$advContainer.hide();
 			$simpleContainer.hide();
-			<?if(get_data('uri') && get_data('classUri')):?>
-				<?if(get_data('authoringMode')=='advanced'):?>
+			<?php if(get_data('uri') && get_data('classUri')):?>
+				<?php if(get_data('authoringMode')=='advanced'):?>
 					$simpleContainer.insertAfter($advContainer);
 					$simpleContainer.show().off('click.taoDelivery').on('click.taoDelivery', function(e){
 						if(!confirm('Are you sure to switch back to the simple mode? \n The delivery process will be linearized.')){
@@ -34,10 +34,10 @@ require(['jquery', 'uiBootstrap', 'helpers'], function($, uiBootstrap, helpers){
 					});
 				<?else:?>
 					$advContainer.show();
-				<?endif;?>
+				<?php endif;?>
 			<?else:?>
 				$advContainer.show();
-			<?endif;?>
+			<?php endif;?>
 		}
 	}
 });
