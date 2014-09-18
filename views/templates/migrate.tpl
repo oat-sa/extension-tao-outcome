@@ -20,8 +20,8 @@ requirejs.config({
    <div class="grid-row">
    <div class="col-5" id="sourceStorage">
         <h3><?=__('Source (Readable Storage)')?></h3>
-            <?
-                foreach (get_data('availableRStorage') as $storage) {
+            <?php
+                foreach (get_data('availableRStorage') as $storage) :
             ?>
                 <div>
                     <label>
@@ -34,8 +34,8 @@ requirejs.config({
                     <label for="source<?=$storage->getUri()?>"><?=$storage->getLabel()?></label>
                     !-->
                 </div>
-            <?
-                }
+            <?php
+                endforeach;
             ?>
            
         
@@ -51,8 +51,8 @@ requirejs.config({
     <div class="col-5" id="targetStorage">
         <h3><?=__('Target (Writable Storage)')?></h3>
 
-         <?
-                foreach (get_data('availableWStorage') as $storage) {
+         <?php
+                foreach (get_data('availableWStorage') as $storage) :
             ?>
                 <div>
                      <label>
@@ -65,8 +65,8 @@ requirejs.config({
                     <label for="target<?=$storage->getUri()?>"><?=$storage->getLabel()?></label>
                     -->
                 </div>
-            <?
-                }
+            <?php
+                endforeach;
             ?>
     </div>
        <div id="feedback">

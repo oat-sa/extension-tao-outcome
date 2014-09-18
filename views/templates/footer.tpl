@@ -32,10 +32,10 @@ require(['jquery', 'uiBootstrap', 'helpers'], function($, uiBootstrap, helpers){
 							return true;
 						}
 					});
-				<?else:?>
+				<?php else:?>
 					$advContainer.show();
 				<?php endif;?>
-			<?else:?>
+			<?php else:?>
 				$advContainer.show();
 			<?php endif;?>
 		}
