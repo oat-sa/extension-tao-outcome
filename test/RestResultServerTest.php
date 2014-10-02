@@ -1,5 +1,7 @@
 <?php
-require_once dirname(__FILE__) . '/../../tao/test/RestTestCase.php';
+namespace oat\taoResultServer\test;
+
+use oat\tao\test\RestTestCase;
 
 class RestResultServerTest extends RestTestCase
 {
