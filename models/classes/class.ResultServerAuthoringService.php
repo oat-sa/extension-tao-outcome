@@ -243,7 +243,7 @@ class taoResultServer_models_classes_ResultServerAuthoringService
             $allTestTakerIds = $storageSImpl->getAllTestTakerIds();
             foreach ($targetImpl as $storageTImpl) {
                 foreach ($allTestTakerIds as $resultIDentifier=>$testTakerId) {
-                    $storageTImpl->storeRelatedTestTaker($resultIDentifier, $testTakerId["testTakerIdentifier"]);
+                    $storageTImpl->storeRelatedTestTaker($testTakerId["deliveryResultIdentifier"], $testTakerId["testTakerIdentifier"]);
                 }
             }
            
@@ -253,7 +253,7 @@ class taoResultServer_models_classes_ResultServerAuthoringService
             $allDeliveryIds = $storageSImpl->getAllDeliveryIds();
             foreach ($targetImpl as $storageTImpl) {
                 foreach ($allDeliveryIds as $resultIDentifier=>$deliveryId) {
-                    $storageTImpl->storeRelatedDelivery($resultIDentifier, $deliveryId["deliveryIdentifier"]);
+                    $storageTImpl->storeRelatedDelivery($deliveryId["deliveryResultIdentifier"], $deliveryId["deliveryIdentifier"]);
                 }
             }
             
