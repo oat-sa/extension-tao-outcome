@@ -61,6 +61,11 @@ interface taoResultServer_models_classes_ReadableResultStorage {
      */
     public function getAllCallIds();
     /**
+     * @param $deliveryResultIdentifier
+     * @return array the list of item executions ids (across all results)
+     */
+    public function getRelatedItemCallIds($deliveryResultIdentifier);
+    /**
      * @return array each element is a two fields array deliveryResultIdentifier, testTakerIdentifier
      */
     public function getAllTestTakerIds();
