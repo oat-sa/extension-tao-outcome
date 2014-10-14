@@ -1,12 +1,17 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: TAO v2.6-RC03\n"
-"PO-Revision-Date: 2014-06-20T16:26:21\n"
+"Project-Id-Version: TAO v2.7\n"
+"PO-Revision-Date: 2014-10-14T10:43:19\n"
 "Last-Translator: TAO Translation Team <translation@tao.lu>\n"
 "MIME-Version: 1.0\n"
 "Language: en-US\n"
+"sourceLanguage: en-US\n"
+"targetLanguage: en-US\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Basepath: ../../\n"
+"X-Poedit-KeywordsList: __\n"
+"X-Poedit-SearchPath-0: .\n"
 
 msgid "A delivery server is required for every delivery, it defines where the results of that delivery will be uploaded."
 msgstr ""
@@ -17,7 +22,10 @@ msgstr ""
 msgid "Clone Data"
 msgstr ""
 
-msgid "delete"
+msgid "Delete"
+msgstr ""
+
+msgid "Edit result server"
 msgstr ""
 
 msgid "Edit ResultServer"
@@ -33,22 +41,22 @@ msgstr ""
 msgid "Migrate"
 msgstr ""
 
-msgid "migrate"
-msgstr ""
-
 msgid "Migrate Data"
 msgstr ""
 
-msgid "move"
+msgid "Move"
 msgstr ""
 
-msgid "new class"
+msgid "New class"
 msgstr ""
 
-msgid "new result server"
+msgid "New result server"
 msgstr ""
 
 msgid "Operation"
+msgstr ""
+
+msgid "Properties"
 msgstr ""
 
 msgid "Result Server"
