@@ -101,7 +101,7 @@ class taoResultServer_actions_ResultServerMgt extends tao_actions_SaSModule {
 		if($myForm->isSubmited()){
 			if($myForm->isValid()){
 				if($clazz instanceof core_kernel_classes_Resource){
-					$this->setSessionAttribute("showNodeUri", tao_helpers_Uri::encode($clazz->getUri()));
+					$this->setData("selectNode", tao_helpers_Uri::encode($clazz->getUri()));
 				}
 				$this->setData('message', __('Result Server class saved'));
 				$this->setData('reload', true);
@@ -130,12 +130,12 @@ class taoResultServer_actions_ResultServerMgt extends tao_actions_SaSModule {
 				$binder = new tao_models_classes_dataBinding_GenerisFormDataBinder($resultServer);
 				
 				$resultServer = $binder->bind($myForm->getValues());
+		        $this->setData("selectNode", tao_helpers_Uri::encode($resultServer->getUri()));
 				$this->setData('message', __('Result Server saved'));
 				$this->setData('reload', true);
 			}
 		}
 		
-		$this->setSessionAttribute("showNodeUri", tao_helpers_Uri::encode($resultServer->getUri()));
 		$this->setData('formTitle', __('Edit ResultServer'));
 		$this->setData('myForm', $myForm->render());
 		$this->setView('form_resultserver.tpl');
