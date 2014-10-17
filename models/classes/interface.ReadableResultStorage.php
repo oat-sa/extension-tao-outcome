@@ -53,6 +53,7 @@ interface taoResultServer_models_classes_ReadableResultStorage {
      */
     public function getVariables($callId);
     public function getVariable($callId, $variableIdentifier);
+    public function getVariableProperty($variableId, $property);
     public function getTestTaker($deliveryResultIdentifier);
     public function getDelivery($deliveryResultIdentifier);
     
