@@ -239,14 +239,8 @@ class taoResultServer_actions_ResultServerMgt extends tao_actions_SaSModule {
 
         $sourceStorage= $this->getRequestParameter('source');
         $targetStorage= $this->getRequestParameter('target');
-        $opType= $this->getRequestParameter('operation');
-        
-        
-        
-        //check params
-      
-        $status = $this->service->migrateData($sourceStorage, $targetStorage, $opType);
-        print_r($status);
-        echo json_encode($status);
+
+        $result = $this->service->migrateData($sourceStorage, $targetStorage);
+        echo json_encode($result);
     }
 }

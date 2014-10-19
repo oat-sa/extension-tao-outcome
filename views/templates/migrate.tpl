@@ -69,23 +69,22 @@ requirejs.config({
                 endforeach;
             ?>
     </div>
-       <div id="feedback">
-           <div class="feedback-success">
-                <span class="icon-success"></span>Migration Successful
-           </div>
-           
-       </div>
     </div ><!--//grid row!-->
     <div id="migrationProgress" title="Data Migration">
-
-        <h3><?=__('Operation')?></h3>
-        <div id='selOperation'/>
-        
-        <h3><?=__('Source')?></h3>
-        <div id='selSource'/>
-        
-        <h3><?=__('Target')?></h3>
-        <div id='selTarget'/>
-     
+        <div class="migrationInfo">
+            
+            <h3><?=__('Operation')?></h3>
+            <div id="selOperation"></div>
+            
+            <h3><?=__('Source')?></h3>
+            <div id="selSource"></div>
+            
+            <h3><?=__('Target')?></h3>
+            <div id="selTarget"></div>
+            
+        </div>
+        <div class="migrationProgress">
+            <span><?=__('Migration in progress, please wait...')?></span>
+        </div>
     </div>
 </div>
