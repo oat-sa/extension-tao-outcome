@@ -136,6 +136,7 @@ class taoResultServer_actions_ResultServerMgt extends tao_actions_SaSModule {
 			}
 		}
 		
+		$this->setSessionAttribute("showNodeUri", tao_helpers_Uri::encode($resultServer->getUri()));
 		$this->setData('formTitle', __('Edit ResultServer'));
 		$this->setData('myForm', $myForm->render());
 		$this->setView('form_resultserver.tpl');

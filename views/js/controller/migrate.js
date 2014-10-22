@@ -18,61 +18,67 @@
  *
  */
 
-define(['module', 'jquery','i18n', 'context', 'helpers'], 
-        function(module, $, __, context, helpers){
+define(['module', 'jquery','i18n', 'context', 'helpers', 'ui/feedback'], 
+        function(module, $, __, context, helpers, feedback){
     
         var migrateRunner = {
             start : function(options){
                $('.opButton').click(
                        
                             function(e) {
-                                
-                                
-                                var operation = $(this).attr("id");
-                                var source = []; 
-                                var target = [];
-                                
+
+                                var operation = $(this).attr("id"),
+                                    sources = [],
+                                    targets = [],
+                                    $source = $("#selSource"),
+                                    $target = $("#selTarget"),
+                                    $migrationDialog = $("#migrationProgress"),
+                                    $migrationInfo = $migrationDialog.children(".migrationInfo"),
+                                    source;
+
                                 //todo move
-                                var loaderPic = context.root_url+'/tao/views/img/ajax-loader.gif';
                                 var migrateDataUrl = context.root_url+'taoResultServer/ResultServerMgt/migrateData';
 
                                 //clean any former feedback built in the dom
-                                $("#selSource").empty();
-                                $("#selTarget").empty();
-                                $("#selOperation").empty();
-                                
-                               
-                                
-                                $('#sourceStorage :checked').each(function() {
-                                    source.push($(this).val());
-                                    
-                                    //prepare html for confirmation
-                                    //check
-                                    
-                                    label = $(this).parent().text();
-                                    
-                                    //label = $("label[for='"+$(this).attr('id')+"']").text();
-                                    var li = $('<li />').html(label).appendTo("#selSource");
-                                     
-                                  });
-                                $('#targetStorage :checked').each(function() {
-                                    target.push($(this).val());
-                                    
-                                    label = $(this).parent().text();
-                                    //prepare html for confirmation
-                                    //label = $("label[for='"+$(this).attr('id')+"']").text();
-                                    var li = $('<li />').text(label).appendTo("#selTarget");
-                                  });
-                                  
-                                $('<label>'+operation+'</label>').appendTo("#selOperation");  
+                                $source.empty();
+                                $target.empty();
 
-                                $("#migrationProgress").attr("style", "visibility: visible")
-                                $('#migrationProgress').dialog({
+                                $('#sourceStorage :checked').each(function() {
+                                    source = $(this).val();
+                                    sources.push(source);
+
+                                    $source
+                                        .append($("<li />", {id: source.replace(/[^a-z0-9-_]+/ig, "_")})
+                                        .html($(this).parent().text()));
+                                });
+                                if (!sources.length) {
+                                  feedback().error(__('Please select a migration source'));
+                                  return;
+                                }
+
+                                $("#targetStorage :checked").each(function() {
+                                    targets.push($(this).val());
+
+                                    $target.append($("<li />").text($(this).parent().text()));
+                                });
+                                if (!targets.length) {
+                                  feedback().error(__("Please select a destination target"));
+                                  return;
+                                }
+
+                                $("#selOperation").html("<label>"+operation+"</label>");
+
+                                $migrationInfo.children().show();
+
+                                $migrationDialog
+                                    .attr("style", "visibility: visible")
+                                    .dialog({
                                         modal: true,
                                         width: 500,
                                         height: 430,
                                         buttons: [
                                                 {
+                                                        id: "MigrationClose",
                                                         text: __('Cancel'),
                                                         
                                                         click: function() {
@@ -80,26 +86,53 @@ define(['module', 'jquery','i18n', 'context', 'helpers'],
                                                         }
                                                 },
                                                 {
+                                                        id: "MigrationStart",
                                                         text: __('Migrate'),
                                                         click: function() {
-                                                            $(" #migrationProgress").empty();
-                                                            $('<img src="'+loaderPic+'" />').appendTo("#migrationProgress");
-                                                         
-                                                            
+                                                            $migrationInfo.hide();
+                                                            $migrationDialog.children(".migrationResult").hide();
+                                                            $migrationDialog.children(".migrationProgress").show();
+                                                            $("#MigrationStart").addClass("disabled").off("click");
+
                                                             $.ajax({
                                                               url: migrateDataUrl,
-                                                              type: 'POST',
+                                                              type: "POST",
+                                                              dataType: "JSON",
                                                               data: {   
-                                                                   source: source,
-                                                                   target: target,
+                                                                   source: sources,
+                                                                   target: targets,
                                                                    operation: operation
-                                                               },
+                                                              },
                                                               success: function(data){
-                                                                  $(" #migrationProgress").empty();
-                                                                  $('<label>'+data+'<label>').appendTo("#migrationProgress");
-                                                                  
-                                                                  $('#feedback').attr("style", "visibility: visible")
-                                                                  $('#migrationProgress').dialog('close');
+
+                                                                  $migrationDialog.children(".migrationProgress").hide();
+
+                                                                  if (!data.success) {
+                                                                      info.show();
+                                                                      feedback().error(data.status);
+                                                                      return;
+                                                                  }
+
+                                                                  $migrationInfo.children(":not(#selSource)").hide();
+
+                                                                  var $ul = $("<ul/>", {class: "StorageResult"}),
+                                                                      id;
+                                                                  $.each(data.data, function(i, source){
+                                                                      id = source.uri.replace(/[^a-z0-9-_]+/ig, "_");
+                                                                      $ul.append($('<li />', {text: source.testTakers + __(" test takers")}));
+                                                                      $ul.append($('<li />', {text: source.deliveries + __(" deliveries")}));
+                                                                      $ul.append($('<li />', {text: source.callIds + __(" call ids")}));
+                                                                      $("#" + id).addClass("success").append($ul);
+                                                                  });
+
+                                                                  $("#selSource").prepend($("<h3/>", {text: data.status}));
+                                                                  $migrationInfo.show();
+                                                                  $("#MigrationClose").text(__("Close"));
+                                                                  feedback().success(data.status);
+                                                              },
+                                                              error : function(){
+                                                                  $migrationDialog.children(".migrationProgress").hide();
+                                                                  $migrationInfo.show();
                                                               }
                                                             });
                                                             
