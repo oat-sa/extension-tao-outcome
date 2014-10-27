@@ -53,6 +53,7 @@ interface taoResultServer_models_classes_ReadableResultStorage {
      */
     public function getVariables($callId);
     public function getVariable($callId, $variableIdentifier);
+    public function getVariableProperty($variableId, $property);
     public function getTestTaker($deliveryResultIdentifier);
     public function getDelivery($deliveryResultIdentifier);
     
@@ -61,6 +62,11 @@ interface taoResultServer_models_classes_ReadableResultStorage {
      */
     public function getAllCallIds();
     /**
+     * @param $deliveryResultIdentifier
+     * @return array the list of item executions ids (across all results)
+     */
+    public function getRelatedItemCallIds($deliveryResultIdentifier);
+    /**
      * @return array each element is a two fields array deliveryResultIdentifier, testTakerIdentifier
      */
     public function getAllTestTakerIds();
@@ -68,6 +74,13 @@ interface taoResultServer_models_classes_ReadableResultStorage {
      * @return array each element is a two fields array deliveryResultIdentifier, deliveryIdentifier
      */
     public function getAllDeliveryIds();
+
+    /**
+     * @param $columns list of columns on which to search array('http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfSubject','http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfDelivery')
+     * @param $filter list of valueto search array('http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfSubject' => array('test','myValue'))
+     * @return mixed test taker, delivery and delivery result that match the filter array(array('deliveryResultIdentifier' => '123', 'testTakerIdentifier' => '456', 'deliveryIdentifier' => '789'))
+     */
+    public function getResultByColumn($columns, $filter);
 
    
     
