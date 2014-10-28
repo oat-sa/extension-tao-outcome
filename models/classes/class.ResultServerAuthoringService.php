@@ -200,28 +200,51 @@ class taoResultServer_models_classes_ResultServerAuthoringService
     }
     
     /**
+     * Migrates data between source and target storage
      * 
      * @param array core_kernel_classes_Resource $sourceStorage 
      * @param array core_kernel_classes_Resource core_kernel_classes_Resource
-     * @param string operation type
      * 
+     * @return array
      */
-    public function migrateData( $sourceStorages, $targetStorages, $optype){
+    public function migrateData( $sourceStorages, $targetStorages){
         
         $sourceImpl = array();
         $targetImpl = array();
-        
-        
-        
+
+        $returnValue = array('success' => false);
+
+        // holds the result of each storage
+        $returnData  = array();
+
+        if (!is_array($sourceStorages) || !is_array($targetStorages)) {
+            // $sourceStorages must be an array of storages
+            $return['status'] = __('Invalid request');
+            return $return;
+        }
+        if (!is_array($targetStorages)) {
+            // $targetStorages must be an array of storages
+            $return['status'] = __('Invalid request');
+            return $return;
+        }
+
+        foreach ($sourceStorages as $sourceStorage) {
+            $returnData[] = array(
+                'uri' => $sourceStorage
+            );
+        }
+       
         foreach ($sourceStorages as $sourceStorage) {
             $sourceStorageResource = new core_kernel_classes_Resource($sourceStorage);
             $implLiteral = $sourceStorageResource->getUniquePropertyValue(new core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_IMPL_PROP));
             $impl = $implLiteral->__toString(); 
             $interfaces = class_implements($impl);
             if (!(in_array('taoResultServer_models_classes_ReadableResultStorage', $interfaces))) {
-                throw new common_exception_PreConditionFailure($sourceStorage. "does not implement ReadableResultStorage");
+                $return['status'] = __($sourceStorage. 'does not implement ReadableResultStorage');
+                return $return;
             } else {
                 $sourceImpl[] = new $impl;
+                $returnData[] = array('uri' => $sourceStorage);
             }
         }
         
@@ -231,14 +254,15 @@ class taoResultServer_models_classes_ResultServerAuthoringService
             $impl = $implLiteral->__toString(); 
             $interfaces = class_implements($impl);
             if (!(in_array('taoResultServer_models_classes_WritableResultStorage', $interfaces))) {
-                throw new common_exception_PreConditionFailure($targetStorage. "does not implement ReadableResultStorage");
+                $return['status'] = __($sourceStorage. 'does not implement ReadableResultStorage');
+                return $return;
             } else {
                 $targetImpl[] = new $impl;
             }
         }
-  
-        foreach ($sourceImpl as $storageSImpl) {
-            
+
+        foreach ($sourceImpl as $key => $storageSImpl) {
+
             //migrate test taker data
             $allTestTakerIds = $storageSImpl->getAllTestTakerIds();
             foreach ($targetImpl as $storageTImpl) {
@@ -248,7 +272,7 @@ class taoResultServer_models_classes_ResultServerAuthoringService
             }
            
             
-             //migrate Delivery data
+            //migrate Delivery data
             
             $allDeliveryIds = $storageSImpl->getAllDeliveryIds();
             foreach ($targetImpl as $storageTImpl) {
@@ -289,16 +313,17 @@ class taoResultServer_models_classes_ResultServerAuthoringService
                 }
                 
             }
-            
+
+            $returnData[$key]['testTakers'] = count($allTestTakerIds);
+            $returnData[$key]['deliveries'] = count($allDeliveryIds);
+            $returnData[$key]['callIds']    = count($callIds);
+
         }
-     //todo multiple storage feedback statistics   
-     //return feedback texts
-     return array(
-        "nbTestTakers"  =>  count($allTestTakerIds),
-        "nbDeliveries"  =>  count($allDeliveryIds),
-        "nbCallIds"    =>  count($callIds)
-         );   
-        
+
+        $returnValue['success'] = true;
+        $returnValue['status'] = __('Migration Successful');
+        $returnValue['data'] = $returnData;
+        return $returnValue;
     }
 
     /**

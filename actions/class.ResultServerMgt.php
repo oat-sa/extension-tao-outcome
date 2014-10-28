@@ -136,6 +136,7 @@ class taoResultServer_actions_ResultServerMgt extends tao_actions_SaSModule {
 			}
 		}
 		
+		$this->setSessionAttribute("showNodeUri", tao_helpers_Uri::encode($resultServer->getUri()));
 		$this->setData('formTitle', __('Edit ResultServer'));
 		$this->setData('myForm', $myForm->render());
 		$this->setView('form_resultserver.tpl');
@@ -241,12 +242,10 @@ class taoResultServer_actions_ResultServerMgt extends tao_actions_SaSModule {
         $targetStorage= $this->getRequestParameter('target');
         $opType= $this->getRequestParameter('operation');
         
-        
-        
+              
         //check params
       
         $status = $this->service->migrateData($sourceStorage, $targetStorage, $opType);
-        print_r($status);
-        echo json_encode($status);
+		$this->returnJson( $status );        
     }
 }
