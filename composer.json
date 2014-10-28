@@ -56,5 +56,10 @@
     "require": {
         "oat-sa/oatbox-extension-installer": "dev-master"
 
+    },
+    "autoload" : {
+        "psr-4" : {
+            "oat\\taoResultServer\\" : ""
+        }
     }
 }
