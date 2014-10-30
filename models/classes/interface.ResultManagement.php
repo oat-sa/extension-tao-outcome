@@ -17,9 +17,8 @@
  * Copyright (c) 2014 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  *
  */
-namespace oat\taoResultServer\models\classes;
 
-interface ResultManagement extends \taoResultServer_models_classes_ReadableResultStorage {
+interface taoResultServer_models_classes_ResultManagement extends \taoResultServer_models_classes_ReadableResultStorage {
 
     /**
      * Get only one property from a variable
