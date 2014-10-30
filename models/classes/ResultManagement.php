@@ -41,7 +41,7 @@ interface ResultManagement extends \taoResultServer_models_classes_ReadableResul
      * @param $options params to restrict results such as order, order direction, offset and limit
      * @return mixed test taker, delivery and delivery result that match the filter array(array('deliveryResultIdentifier' => '123', 'testTakerIdentifier' => '456', 'deliveryIdentifier' => '789'))
      */
-    public function getResultByColumn($columns, $filter, $options);
+    public function getResultByColumn($columns, $filter, $options = array());
 
     /**
      * @param $columns list of columns on which to search array('http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfSubject','http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfDelivery')
