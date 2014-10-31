@@ -1,18 +1,9 @@
 <?php
 use oat\tao\helpers\Template;
 ?>
-<link rel="stylesheet" type="text/css" media="screen" href="<?=Template::css('style.css','tao')?>"/>
-<link rel="stylesheet" type="text/css" media="screen" href="<?= Template::css('layout.css','tao') ?>"/>
-
 <link rel="stylesheet" href="<?= BASE_WWW ?>css/migration.css" />
 
-<script type="text/javascript">
-requirejs.config({
-    config: {}
-});
-</script>
-
-<div class="tao-scope" id="resultStorageMigration">
+<div id="resultStorageMigration" class="flex-container-full">
     
    <div class="grid-row ">
         <h2 class="col-12"><?=__('Results Data Migration Tool')?></h2>
@@ -43,7 +34,7 @@ requirejs.config({
     <div class="col-2" id="operations">
                 
          <!--<div class="btn-warning opButton" id="migrate"><?=__('Migrate Data')?></div>-->
-         <div class="btn-button opButton" id="clone"><?=__('Clone Data')?></div>
+         <button class="btn-info opButton" id="clone"><?=__('Clone Data')?></button>
                
         
     </div>
