@@ -29,48 +29,49 @@ interface taoResultServer_models_classes_WritableResultStorage {
      */
     public function spawnResult();
 
-    //public function __construct($callId, $test);
     /**
-     * @param deliveryResultIdentifier (example : lis_result_sourcedid)
-     * @param string testTakerIdentifier (uri recommended)
+     * Store a test taker related to a specific delivery execution
+     * @param string $deliveryResultIdentifier (mostly delivery execution uri)
+     * @param string $testTakerIdentifier (uri recommended)
      *
      */
     public function storeRelatedTestTaker($deliveryResultIdentifier, $testTakerIdentifier);
 
     /**
-     * @param string deliveryIdentifier (uri recommended)
+     * Store a delivery related to a specific delivery execution
+     * @param string $deliveryResultIdentifier (mostly delivery execution uri)
+     * @param string $deliveryIdentifier (uri recommended)
      */
     public function storeRelatedDelivery($deliveryResultIdentifier, $deliveryIdentifier);
 
     /**
      * Submit a specific Item Variable, (ResponseVariable and OutcomeVariable shall be used respectively for collected data and score/interpretation computation)
-     * @param string test (uri recommended)
-     * @param string item (uri recommended)
-     * @param taoResultServer_models_classes_ItemVariable itemVariable
-     * @param string callId contextual call id for the variable, ex. :  to distinguish the same variable output by the same item and that is presented several times in the same test
+     * and store it with all the dependencies
+     * @param string $deliveryResultIdentifier
+     * @param string $test (uri recommended)
+     * @param string $item (uri recommended)
+     * @param taoResultServer_models_classes_Variable $itemVariable the variable to store
+     * @param string $callIdItem contextual call id for the variable, ex. :  to distinguish the same variable output by the same item and that is presented several times in the same test
      * 
      */
     public function storeItemVariable($deliveryResultIdentifier, $test, $item, taoResultServer_models_classes_Variable $itemVariable, $callIdItem );
 
     /**
-     *  CreateResultValue(sourcedId,ResultValueRecord)
-     *  CreateLineItem(sourcedId,lineItemRecord:LineItemRecord)
+     * Submit a specific test Variable and store it
+     * @param string $deliveryResultIdentifier
+     * @param string $test
+     * @param taoResultServer_models_classes_Variable $testVariable
+     * @param $callIdTest
      */
     public function storeTestVariable($deliveryResultIdentifier, $test, taoResultServer_models_classes_Variable $testVariable, $callIdTest);
 
+
     /**
-     * The storage may configure itselfs based on the resultServer definition
+     * The storage may configure itself based on the resultServer definition
+     * @param core_kernel_classes_Resource $resultServer
+     * @param array $callOptions
      */
     public function configure(core_kernel_classes_Resource $resultServer, $callOptions = array());
-    
-    /** Submit a complete Item result
-    *
-    * @param taoResultServer_models_classes_ItemResult itemResult
-    * @param string callId an id for the item instanciation
-    */
-    //public function setItemResult($item, taoResultServer_models_classes_ItemResult $itemResult, $callId);
-    
-    //public function setTestResult($test, taoResultServer_models_classes_TestResult $testResult, $callId);
     
 }
 ?>
