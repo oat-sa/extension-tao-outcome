@@ -22,55 +22,134 @@ interface taoResultServer_models_classes_ReadableResultStorage {
     
 
     /**
-     * @param callId an item execution identifier
-     * @return array keys as variableIdentifier , values is an array of observations , 
-     * each observation is an object with deliveryResultIdentifier, test, taoResultServer_models_classes_Variable variable, callIdTest
+     * get the complete variables list stored for a call id (item or test)
+     * @param string $callId an execution identifier
+     * @return array that contains the variables related to the call id
      * Array
-    (
-    [LtiOutcome] => Array
-        (
-            [0] => stdClass Object
-                (
-                    [deliveryResultIdentifier] => con-777:::rlid-777:::777777
-                    [test] => http://tao26/tao26.rdf#i1402389674744647
-                    [variable] => taoResultServer_models_classes_OutcomeVariable Object
-                        (
-                            [normalMaximum] => 
-                            [normalMinimum] => 
-                            [value] => MC41
-                            [identifier] => LtiOutcome
-                            [cardinality] => single
-                            [baseType] => float
-                            [epoch] => 0.10037600 1402390997
-                        )
-
-                    [callIdTest] => http://tao26/tao26.rdf#i14023907995907103
-                )
-
-        )
-
-    )
+     *(
+     *   [uri] => Array
+     *   (
+     *       [0] => stdClass Object
+     *       (
+     *           [uri] => uri
+     *           [class] => taoResultServer_models_classes_ResponseVariable
+     *           [deliveryResultIdentifier] => http://tao.localdomain:8888/tao.rdf#i14176019092304877
+     *           [callIdItem] => http://tao.localdomain:8888/tao.rdf#i14176019092304877.item-1.0
+     *           [callIdTest] =>
+     *           [test] => http://tao.localdomain:8888/tao.rdf#i14175986702737865-
+     *           [item] => http://tao.localdomain:8888/tao.rdf#i141631732273405
+     *           [variable] => taoResultServer_models_classes_ResponseVariable Object
+     *           (
+     *               [correctResponse] =>
+     *               [candidateResponse] => MQ==
+     *               [identifier] => numAttempts
+     *               [cardinality] => single
+     *               [baseType] => integer
+     *               [epoch] => 0.28031200 1417601924
+     *           )
+     *
+     *       )
+     *
+     *   )
+     *
+     *   [uri2] => Array
+     *   (
+     *       [0] => stdClass Object
+     *       (
+     *           [uri] => uri2
+     *           [class] => taoResultServer_models_classes_OutcomeVariable
+     *           [deliveryResultIdentifier] => http://tao.localdomain:8888/tao.rdf#i14176019092304877
+     *           [callIdItem] => http://tao.localdomain:8888/tao.rdf#i14176019092304877.item-1.0
+     *           [callIdTest] =>
+     *           [test] => http://tao.localdomain:8888/tao.rdf#i14175986702737865-
+     *           [item] => http://tao.localdomain:8888/tao.rdf#i141631732273405
+     *           [variable] => taoResultServer_models_classes_OutcomeVariable Object
+     *           (
+     *               [normalMaximum] =>
+     *               [normalMinimum] =>
+     *               [value] => Y29tcGxldGVk
+     *               [identifier] => completionStatus
+     *               [cardinality] => single
+     *               [baseType] => identifier
+     *               [epoch] => 0.28939600 1417601924
+     *           )
+     *
+     *       )
+     *
+     *   )
+     *
+     *)
      */
     public function getVariables($callId);
 
+
+    /**
+     * Get The variable that match params
+     * @param string $callId an execution identifier
+     * @param string $variableIdentifier the identifier of the variable
+     * @return array variable that match call id and variable identifier
+     * Array
+     *(
+     *   [uri] => Array
+     *   (
+     *       [0] => stdClass Object
+     *       (
+     *           [uri] => uri
+     *           [class] => taoResultServer_models_classes_OutcomeVariable
+     *           [deliveryResultIdentifier] => MyDeliveryResultIdentifier#1
+     *           [callIdItem] => MyCallId#2
+     *           [callIdTest] =>
+     *           [test] => MyGreatTest#2
+     *           [item] => MyGreatItem#2
+     *           [variable] => taoResultServer_models_classes_OutcomeVariable Object
+     *           (
+     *               [normalMaximum] =>
+     *               [normalMinimum] =>
+     *               [value] => TXlWYWx1ZQ==
+     *               [identifier] => Identifier
+     *               [cardinality] => multiple
+     *               [baseType] => float
+     *               [epoch] => 0.58277800 1417621663
+     *           )
+     *
+     *       )
+     *
+     *   )
+     *
+     *)
+     */
     public function getVariable($callId, $variableIdentifier);
 
+    /**
+     * Get the test taker id related to one specific delivery execution
+     * @param string $deliveryResultIdentifier the identifier of the delivery execution
+     * @return string the uri of the test taker related to the delivery execution
+     */
     public function getTestTaker($deliveryResultIdentifier);
 
+
+    /**
+     * Get the delivery id related to one specific delivery execution
+     * @param string $deliveryResultIdentifier the identifier of the delivery execution
+     * @return string the uri of the delivery related to the delivery execution
+     */
     public function getDelivery($deliveryResultIdentifier);
     
     /**
-     * @return array the list of item executions ids (across all results)
+     * Get the entire list of call ids that are stored (item or test)
+     * @return array the list of executions ids (across all results)
      */
     public function getAllCallIds();
 
     /**
-     * @return array each element is a two fields array deliveryResultIdentifier, testTakerIdentifier
+     * get all the ids of test taker that have attempt a test
+     * @return array of all test taker ids array(array('deliveryResultIdentifier' => 123, 'testTakerIdentifier' => 456))
      */
     public function getAllTestTakerIds();
 
     /**
-     * @return array each element is a two fields array deliveryResultIdentifier, deliveryIdentifier
+     * get all the ids of delivery that are stored
+     * @return array of all delivery ids array(array('deliveryResultIdentifier' => 123, 'deliveryIdentifier' => 456))
      */
     public function getAllDeliveryIds();
 }
