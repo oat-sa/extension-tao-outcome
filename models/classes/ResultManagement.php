@@ -23,29 +23,32 @@ interface ResultManagement extends \taoResultServer_models_classes_ReadableResul
 
     /**
      * Get only one property from a variable
-     * @param $variableId
-     * @param $property
-     * @return mixed
+     * @param string $variableId on which we want the property
+     * @param string $property to retrieve
+     * @return int|string the property retrieved
      */
     public function getVariableProperty($variableId, $property);
 
     /**
-     * @param $deliveryResultIdentifier
-     * @return array the list of item executions ids (across all results)
+     * Get all the ids of the callItem for a specific delivery execution
+     * @param string $deliveryResultIdentifier The identifier of the delivery execution
+     * @return array the list of call item ids (across all results)
      */
     public function getRelatedItemCallIds($deliveryResultIdentifier);
 
     /**
-     * @param $columns list of columns on which to search array('http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfSubject','http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfDelivery')
-     * @param $filter list of value to search array('http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfSubject' => array('test','myValue'))
-     * @param $options params to restrict results such as order, order direction, offset and limit
-     * @return mixed test taker, delivery and delivery result that match the filter array(array('deliveryResultIdentifier' => '123', 'testTakerIdentifier' => '456', 'deliveryIdentifier' => '789'))
+     * Get the result information (test taker, delivery, delivery execution) from filters
+     * @param array $columns list of columns on which to search : array('http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfSubject','http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfDelivery')
+     * @param array $filter list of value to search : array('http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfSubject' => array('test','myValue'))
+     * @param array $options params to restrict results such as order, order direction, offset and limit
+     * @return array test taker, delivery and delivery result that match the filter : array(array('deliveryResultIdentifier' => '123', 'testTakerIdentifier' => '456', 'deliveryIdentifier' => '789'))
      */
     public function getResultByColumn($columns, $filter, $options = array());
 
     /**
-     * @param $columns list of columns on which to search array('http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfSubject','http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfDelivery')
-     * @param $filter list of value to search array('http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfSubject' => array('test','myValue'))
+     * Count the number of result that match the filter
+     * @param array $columns list of columns on which to search : array('http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfSubject','http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfDelivery')
+     * @param array $filter list of value to search : array('http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfSubject' => array('test','myValue'))
      * @return int the number of results that match filter
      */
     public function countResultByFilter($columns, $filter);
@@ -59,8 +62,8 @@ interface ResultManagement extends \taoResultServer_models_classes_ReadableResul
 
     /**
      * Remove the result and all the related variables
-     * @param $deliveryResultIdentifier
-     * @return bool
+     * @param string $deliveryResultIdentifier The identifier of the delivery execution
+     * @return boolean if the deletion was successful or not
      */
     public function deleteResult($deliveryResultIdentifier);
 
