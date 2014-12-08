@@ -53,12 +53,6 @@ interface ResultManagement extends \taoResultServer_models_classes_ReadableResul
      */
     public function countResultByFilter($columns, $filter);
 
-    /**
-     * Get the item from itemResult
-     * @param $itemResult
-     * @return core_kernel_classes_Resource
-     */
-    public function getItemFromItemResult($itemResult);
 
     /**
      * Remove the result and all the related variables
@@ -66,22 +60,6 @@ interface ResultManagement extends \taoResultServer_models_classes_ReadableResul
      * @return boolean if the deletion was successful or not
      */
     public function deleteResult($deliveryResultIdentifier);
-
-    /**
-     * prepare a data set as an associative array
-     * @param $deliveryResultIdentifier
-     * @param $filter
-     * @return array
-     */
-    public function getDeliveryItemVariables($deliveryResultIdentifier, $filter);
-
-    /**
-     * return all variables linked to the delviery result
-     * @param $deliveryResultIdentifier
-     * @param $filter
-     * @return array
-     */
-    public function getDeliveryResultVariables($deliveryResultIdentifier);
 
 }
 ?>
