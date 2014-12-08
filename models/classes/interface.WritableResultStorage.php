@@ -18,21 +18,41 @@
  *
  */
 
+/**
+ * The WritableResultStorage interface.
+ * 
+ * The WritableResultStorage interface describes all the methods to write results of deliveries
+ * taken by test takers into a specific Result Server implementation.
+ * 
+ * @author Joel Bout <joel@taotesting.com>
+ * @author Antoine Robin <antoine.robin@vesperiagroup.com>
+ * @author Jérôme Bogaerts <jerome@taotesting.com>
+ *
+ */
 interface taoResultServer_models_classes_WritableResultStorage {
 
     /**
-     * Optionnally spawn a new result and returns
-     * an identifier for it, use of the other services with an unknow identifier
-     * will trigger the spawning of a new result
-     * you may also provide your own identifier to the other services like a lis_result_sourcedid:GUID
-     * @return string deliveryResultIdentifier
+     * Initialize a new raw Delivery Result.
+     * 
+     * After initialization, the Delivery Result will be empty, and will not be linked
+     * to a Test Taker or a Delivery. 
+     * 
+     * Please note that it is the responisibility of the implementer to generate Delivery
+     * Result identifiers that are as unique as possible.
+     * 
+     * @return string The unique identifier of the initialized Delivery Result.
      */
     public function spawnResult();
 
     /**
-     * Store a test taker related to a specific delivery execution
-     * @param string $deliveryResultIdentifier (mostly delivery execution uri)
-     * @param string $testTakerIdentifier (uri recommended)
+     * Attach a given Test Taker to a Delivery Result.
+     * 
+     * A Delivery Result is always attached to a single Test Taker. This method enables
+     * the client code to register a given Test Taker, using its $testTakerIdentifier, to a
+     * given Delivery Result, using its $deliveryResultIdentifier.
+     * 
+     * @param string $deliveryResultIdentifier The identifier of the Delivery Result (usually a Delivery Execution URI).
+     * @param string $testTakerIdentifier The identifier of the Test Taker (usually a URI).
      *
      */
     public function storeRelatedTestTaker($deliveryResultIdentifier, $testTakerIdentifier);
