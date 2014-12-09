@@ -38,20 +38,18 @@ interface ResultManagement extends \taoResultServer_models_classes_ReadableResul
 
     /**
      * Get the result information (test taker, delivery, delivery execution) from filters
-     * @param array $columns list of columns on which to search : array('http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfSubject','http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfDelivery')
-     * @param array $filter list of value to search : array('http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfSubject' => array('test','myValue'))
+     * @param array $delivery list of delivery to search : array('test','myValue')
      * @param array $options params to restrict results such as order, order direction, offset and limit
      * @return array test taker, delivery and delivery result that match the filter : array(array('deliveryResultIdentifier' => '123', 'testTakerIdentifier' => '456', 'deliveryIdentifier' => '789'))
      */
-    public function getResultByColumn($columns, $filter, $options = array());
+    public function getResultByDelivery($delivery, $options = array());
 
     /**
      * Count the number of result that match the filter
-     * @param array $columns list of columns on which to search : array('http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfSubject','http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfDelivery')
-     * @param array $filter list of value to search : array('http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfSubject' => array('test','myValue'))
+     * @param array $delivery list of delivery to search : array('test','myValue')
      * @return int the number of results that match filter
      */
-    public function countResultByFilter($columns, $filter);
+    public function countResultByDelivery($delivery);
 
 
     /**
