@@ -87,32 +87,6 @@ class taoResultServer_actions_ResultServerMgt extends tao_actions_SaSModule {
 	}
 	
 	/**
-	 * Edit a resultServer class
-	 * @return void
-	 */
-	public function editResultServerClass(){
-		$clazz = $this->getCurrentClass();
-		
-		if($this->hasRequestParameter('property_mode')){
-			$this->setSessionAttribute('property_mode', $this->getRequestParameter('property_mode'));
-		}
-		
-		$myForm = $this->editClass($clazz, $this->service->getResultServerClass());
-		if($myForm->isSubmited()){
-			if($myForm->isValid()){
-				if($clazz instanceof core_kernel_classes_Resource){
-					$this->setData("selectNode", tao_helpers_Uri::encode($clazz->getUri()));
-				}
-				$this->setData('message', __('Result Server class saved'));
-				$this->setData('reload', true);
-			}
-		}
-		$this->setData('formTitle', __('Edit resultServer class'));
-		$this->setData('myForm', $myForm->render());
-		$this->setView('form.tpl');
-	}
-	
-	/**
 	 * Edit a delivery instance
 	 * @return void
 	 */

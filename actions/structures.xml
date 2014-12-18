@@ -17,7 +17,7 @@
                      />
                 </trees>
                 <actions>
-                    <action id="results-server-class-properties" name="Properties" url="/taoResultServer/ResultServerMgt/editResultServerClass" group="content" context="class">
+                    <action id="results-server-class-properties" name="Properties" url="/taoResultServer/ResultServerMgt/editClass" group="content" context="class">
                         <icon id="icon-edit"/>
                     </action>
                     <action id="results-server-properties" name="Edit result server" url="/taoResultServer/ResultServerMgt/editResultServer" group="content" context="instance">
