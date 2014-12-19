@@ -10,7 +10,7 @@
                     <tree name="Result Servers library"
                           className="Result Server"
                           dataUrl="/taoResultServer/ResultServerMgt/getResultServers"
-                          rootNode="http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServer"
+                          rootNode=""
                           selectClass="results-server-class-properties"
                           selectInstance="results-server-properties"
                           moveInstance="results-server-move"
