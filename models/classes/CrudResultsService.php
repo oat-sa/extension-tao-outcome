@@ -187,7 +187,6 @@ class CrudResultsService extends \tao_models_classes_CrudService {
                     throw new \common_exception_Error('readable resultinterface implementation '.$className.' not found');
                 }
                 return new $className();
-                continue;
             }
         }
 
