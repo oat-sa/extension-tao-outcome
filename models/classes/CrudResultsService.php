@@ -48,7 +48,7 @@ class CrudResultsService extends \tao_models_classes_CrudService {
         $deliveryExecution = new \core_kernel_classes_Resource($uri);
         $delivery = $deliveryExecution->getOnePropertyValue(new \core_kernel_classes_Property(PROPERTY_DELVIERYEXECUTION_DELIVERY));
 
-        $implementation = $this->getImplemetationClass($delivery);
+        $implementation = $this->getImplementationClass($delivery);
 
         foreach($implementation->getRelatedItemCallIds($uri) as $callId){
             $results = $implementation->getVariables($callId);
@@ -84,7 +84,7 @@ class CrudResultsService extends \tao_models_classes_CrudService {
             // delivery uri
             $delivery = $assembly->getUri();
 
-            $implementation = $this->getImplemetationClass($assembly);
+            $implementation = $this->getImplementationClass($assembly);
 
             // get delivery executions
 
@@ -155,19 +155,24 @@ class CrudResultsService extends \tao_models_classes_CrudService {
         // TODO: Implement getClassService() method.
     }
 
-    private function getImplemetationClass($delivery){
+
+    private function getImplementationClass($delivery){
+
+        if(is_null($delivery)){
+            throw new \common_exception_Error(__('This delivery doesn\'t exists'));
+        }
+
         $deliveryResultServer = $delivery->getOnePropertyValue(new \core_kernel_classes_Property(TAO_DELIVERY_RESULTSERVER_PROP));
 
         if(is_null($deliveryResultServer)){
-            return array('error' => __('This delivery has no Result Server'));
+            throw new \common_exception_Error(__('This delivery has no Result Server'));
         }
         $resultServerModel = $deliveryResultServer->getPropertyValues(new \core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_PROP));
 
         if(is_null($resultServerModel)){
-            return array('error' => __('This delivery has no readable Result Server'));
+            throw new \common_exception_Error(__('This delivery has no readable Result Server'));
         }
 
-        $hasImplementation = false;
         foreach($resultServerModel as $model){
             $model = new \core_kernel_classes_Class($model);
 
@@ -177,18 +182,17 @@ class CrudResultsService extends \tao_models_classes_CrudService {
 
             if (!is_null($implementationClass)
                 && class_exists($implementationClass->literal) && in_array('taoResultServer_models_classes_ReadableResultStorage',class_implements($implementationClass->literal))) {
-                $hasImplementation = true;
-                $implementationClass = $implementationClass->literal;
-                $implementation = new $implementationClass();
+                $className = $implementationClass->literal;
+                if (!class_exists($className)) {
+                    throw new \common_exception_Error('readable resultinterface implementation '.$className.' not found');
+                }
+                return new $className();
                 continue;
             }
         }
 
-        if(!$hasImplementation){
-            return array('error' => __('This delivery has no readable Result Server'));
-        }
+        throw new \common_exception_Error(__('This delivery has no readable Result Server'));
 
-        return $implementation;
     }
 }
 
