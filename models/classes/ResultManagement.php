@@ -32,9 +32,10 @@ interface ResultManagement extends \taoResultServer_models_classes_ReadableResul
     /**
      * Get all the ids of the callItem for a specific delivery execution
      * @param string $deliveryResultIdentifier The identifier of the delivery execution
+     * @param string $type The type of variable to get (item or test)
      * @return array the list of call item ids (across all results)
      */
-    public function getRelatedItemCallIds($deliveryResultIdentifier);
+    public function getRelatedObjectCallIds($deliveryResultIdentifier, $type);
 
     /**
      * Get the result information (test taker, delivery, delivery execution) from filters
