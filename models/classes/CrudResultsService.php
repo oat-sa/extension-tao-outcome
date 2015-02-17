@@ -50,7 +50,7 @@ class CrudResultsService extends \tao_models_classes_CrudService {
 
         $implementation = $this->getImplementationClass($delivery);
 
-        foreach($implementation->getRelatedObjectCallIds($uri) as $callId){
+        foreach($implementation->getRelatedItemCallIds($uri) as $callId){
             $results = $implementation->getVariables($callId);
             $resource = array();
                 foreach($results as $result){
