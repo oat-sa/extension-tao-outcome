@@ -37,6 +37,13 @@ interface ResultManagement extends \taoResultServer_models_classes_ReadableResul
     public function getRelatedItemCallIds($deliveryResultIdentifier);
 
     /**
+     * Get all the ids of the callTest for a specific delivery execution
+     * @param string $deliveryResultIdentifier The identifier of the delivery execution
+     * @return array the list of call test ids (across all results)
+     */
+    public function getRelatedTestCallIds($deliveryResultIdentifier);
+
+    /**
      * Get the result information (test taker, delivery, delivery execution) from filters
      * @param array $delivery list of delivery to search : array('test','myValue')
      * @param array $options params to restrict results such as order, order direction, offset and limit
