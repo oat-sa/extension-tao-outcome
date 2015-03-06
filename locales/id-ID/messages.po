@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: TAO v3.0\n"
-"PO-Revision-Date: 2014-10-21T07:53:09\n"
+"Project-Id-Version: TAO 3.0-RC04\n"
+"PO-Revision-Date: 2015-03-06T15:48:05\n"
 "Last-Translator: TAO Translation Team <translation@tao.lu>\n"
 "MIME-Version: 1.0\n"
 "Language: id-ID\n"
@@ -13,6 +13,15 @@ msgstr ""
 "X-Poedit-KeywordsList: __\n"
 "X-Poedit-SearchPath-0: .\n"
 
+msgid " call ids"
+msgstr ""
+
+msgid " deliveries"
+msgstr ""
+
+msgid " test takers"
+msgstr ""
+
 msgid "A delivery server is required for every delivery, it defines where the results of that delivery will be uploaded."
 msgstr ""
 
@@ -20,6 +29,9 @@ msgid "Cancel"
 msgstr ""
 
 msgid "Clone Data"
+msgstr ""
+
+msgid "Close"
 msgstr ""
 
 msgid "Delete"
@@ -31,7 +43,7 @@ msgstr ""
 msgid "Edit ResultServer"
 msgstr ""
 
-msgid "Edit resultServer class"
+msgid "Invalid request"
 msgstr ""
 
 #, tao-public
@@ -42,6 +54,12 @@ msgid "Migrate"
 msgstr ""
 
 msgid "Migrate Data"
+msgstr ""
+
+msgid "Migration in progress, please wait..."
+msgstr ""
+
+msgid "Migration Successful"
 msgstr ""
 
 msgid "Move"
@@ -56,13 +74,16 @@ msgstr ""
 msgid "Operation"
 msgstr ""
 
+msgid "Please select a destination target"
+msgstr ""
+
+msgid "Please select a migration source"
+msgstr ""
+
 msgid "Properties"
 msgstr ""
 
 msgid "Result Server"
-msgstr ""
-
-msgid "Result Server class saved"
 msgstr ""
 
 #, tao-public
@@ -98,6 +119,15 @@ msgid "Target (Writable Storage)"
 msgstr ""
 
 msgid "The Result Server Management section allows to add, edit and assign Delivery Result Server to Deliveries."
+msgstr ""
+
+msgid "This delivery doesn\'t exists"
+msgstr ""
+
+msgid "This delivery has no readable Result Server"
+msgstr ""
+
+msgid "This delivery has no Result Server"
 msgstr ""
 
 msgid "This extension enables the Results server"
