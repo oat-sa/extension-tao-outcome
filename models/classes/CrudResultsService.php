@@ -45,8 +45,8 @@ class CrudResultsService extends \tao_models_classes_CrudService {
 
     public function get($uri) {
         $returnData = array();
-        $deliveryExecution = new \core_kernel_classes_Resource($uri);
-        $delivery = $deliveryExecution->getOnePropertyValue(new \core_kernel_classes_Property(PROPERTY_DELVIERYEXECUTION_DELIVERY));
+        $deliveryExecution = \taoDelivery_models_classes_execution_ServiceProxy::singleton()->getDeliveryExecution($uri);
+        $delivery = $deliveryExecution->getDelivery();
 
         $implementation = $this->getImplementationClass($delivery);
 
