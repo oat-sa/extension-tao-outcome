@@ -46,8 +46,13 @@ interface ResultManagement extends \taoResultServer_models_classes_ReadableResul
     /**
      * Get the result information (test taker, delivery, delivery execution) from filters
      * @param array $delivery list of delivery to search : array('test','myValue')
-     * @param array $options params to restrict results such as order, order direction, offset and limit
-     * @return array test taker, delivery and delivery result that match the filter : array(array('deliveryResultIdentifier' => '123', 'testTakerIdentifier' => '456', 'deliveryIdentifier' => '789'))
+     * @param array $options params to restrict results array(
+     * "order"=> "deliveryResultIdentifier" || "testTakerIdentifier" || "deliveryIdentifier",
+     * "orderdir"=>"ASC" || "DESC",
+     * "offset"=> an int,
+     * "limit"=> an int
+     * )
+     * @return array of results that match the filter : array(array('deliveryResultIdentifier' => '123', 'testTakerIdentifier' => '456', 'deliveryIdentifier' => '789'))
      */
     public function getResultByDelivery($delivery, $options = array());
 
