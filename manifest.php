@@ -13,7 +13,7 @@ return array(
     'label' => 'Result core extension',
 	'description' => 'Results Server management and exposed interfaces for results data submission',
     'license' => 'GPL-2.0',
-    'version' => '2.6',
+    'version' => '2.6.1',
 	'author' => 'Open Assessment Technologies',
     //taoResults may be needed for the taoResults taoResultServerModel that uses taoResults db storage
 	'requires' => array(
@@ -27,6 +27,8 @@ return array(
 			dirname(__FILE__). '/models/ontology/taoResultServer.rdf'
 		)
     ),
+    'update' => 'taoResultServer_scripts_update_Updater',
+
     'managementRole' => 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerRole',
     'acl' => array(
         array('grant', 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerRole', array('ext'=>'taoResultServer')),
