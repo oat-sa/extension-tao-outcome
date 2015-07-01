@@ -53,6 +53,16 @@ class taoResultServer_models_classes_TraceVariable extends taoResultServer_model
     {
         return $this->trace;
     }
+    
+    /**
+     * Return value.
+     * @author  Aleh Hutnikau, <hutnikau@1pt.com>
+     * @return string
+     */
+    public function getValue()
+    {
+        return $this->getTrace();
+    }
 }
 
 ?>
