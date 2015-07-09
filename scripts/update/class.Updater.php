@@ -34,8 +34,8 @@ class taoResultServer_scripts_update_Updater extends \common_ext_ExtensionUpdate
         
         $currentVersion = $initialVersion;
         
-        if ($currentVersion == '2.6') {
-        	$currentVersion = '2.6.1';
+        if ($currentVersion == '2.6' || $currentVersion == '2.6.1') {
+        	$currentVersion = '2.7.0';
         }
         return $currentVersion;
     }
