@@ -49,8 +49,10 @@ class taoResultServer_models_classes_ResultServerStateFull extends tao_models_cl
     private $resultServer_deliveryResultIdentifier;
     
     /**
-     * Set result servers
-     * @param array $resultServerObject list of result server instances
+     * Set value if current class has a property given in $valueName parameter.
+     * @param string $valueName property name
+     * @param string $value property value
+     * @throws common_exception_MissingParameter
      */
     public function setValue($valueName, $value) 
     {
@@ -62,8 +64,9 @@ class taoResultServer_models_classes_ResultServerStateFull extends tao_models_cl
     }
     
     /**
-     * Get list of result server instances.
-     * @return array
+     * Get value if current class has a property given in $valueName parameter.
+     * @return mixed property value
+     * @throws common_exception_MissingParameter
      */
     public function getValue($valueName) 
     {
