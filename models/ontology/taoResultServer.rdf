@@ -36,7 +36,7 @@
      <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerModel">
 	<rdfs:label xml:lang="en-US"><![CDATA[Result Storage]]></rdfs:label>
 	<rdfs:comment xml:lang="en-US"><![CDATA[Result Storage]]></rdfs:comment>
-	<rdfs:subClassOf rdf:resource="http://www.tao.lu/Ontologies/TAO.rdf#TAOObject"/>
+	<rdfs:subClassOf rdf:resource="http://www.tao.lu/Ontologies/TAO.rdf#SystemObject"/>
     </rdf:Description>
 
    <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResultServer.rdf#fileStorage">
