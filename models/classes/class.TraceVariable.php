@@ -63,6 +63,11 @@ class taoResultServer_models_classes_TraceVariable extends taoResultServer_model
     {
         return $this->getTrace();
     }
+
+    public function setValue($value)
+    {
+        $this->setTrace($value);
+    }
 }
 
 ?>

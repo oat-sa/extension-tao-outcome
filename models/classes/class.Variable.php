@@ -48,6 +48,10 @@ abstract class taoResultServer_models_classes_Variable
      */
     public $baseType;
 
+    /**
+     * The epoch when the variable has been last modified
+     * @var string
+     */
     public $epoch;
     /**
      * @author  "Patrick Plichart, <patrick@taotesting.com>"
@@ -123,7 +127,10 @@ abstract class taoResultServer_models_classes_Variable
     public function isSetEpoch(){
         return (isset($this->epoch));
     }
-    
+
+    abstract public function getValue();
+    abstract public function setValue($value);
+
     public function toJson() {
         return json_encode((array)$this);
     }

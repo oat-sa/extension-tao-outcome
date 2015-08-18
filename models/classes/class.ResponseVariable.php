@@ -103,6 +103,10 @@ class taoResultServer_models_classes_ResponseVariable extends taoResultServer_mo
     {
         return $this->getCandidateResponse();
     }
+
+    public function setValue($value){
+        $this->setCandidateResponse($value);
+    }
 }
 
 ?>
