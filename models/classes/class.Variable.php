@@ -53,9 +53,10 @@ abstract class taoResultServer_models_classes_Variable
      * @var string
      */
     public $epoch;
+
     /**
      * @author  "Patrick Plichart, <patrick@taotesting.com>"
-     * @param unknown $identifier
+     * @param string $identifier
      */
     public function setIdentifier($identifier)
     {
@@ -100,7 +101,7 @@ abstract class taoResultServer_models_classes_Variable
 
     /**
      * @author  "Patrick Plichart, <patrick@taotesting.com>"
-     * @param unknown $baseType
+     * @param string $baseType
      */
     public function setBaseType($baseType)
     {
@@ -109,28 +110,55 @@ abstract class taoResultServer_models_classes_Variable
 
     /**
      * @author  "Patrick Plichart, <patrick@taotesting.com>"
-     * @return baseType
+     * @return string $baseType
      */
     public function getBaseType()
     {
         return $this->baseType;
     }
-    
+
+    /**
+     * Set the epoch of the variable
+     * @param $epoch string
+     */
     public function setEpoch($epoch)
     {
          $this->epoch = $epoch;
     }
+
+    /**
+     * Get the epoch of a variable
+     * @return string
+     */
     public function getEpoch()
     {
          return $this->epoch;
     }
+
+    /**
+     * Allow to know if the epoch is set or not
+     * @return bool
+     */
     public function isSetEpoch(){
         return (isset($this->epoch));
     }
 
+    /**
+     * get the value of the variable
+     * @return mixed
+     */
     abstract public function getValue();
+
+    /**
+     * set the value of the variable
+     * @param $value mixed
+     */
     abstract public function setValue($value);
 
+    /**
+     * Get the json representation of the variable
+     * @return string
+     */
     public function toJson() {
         return json_encode((array)$this);
     }

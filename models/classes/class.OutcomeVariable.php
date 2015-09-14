@@ -31,23 +31,6 @@ class taoResultServer_models_classes_OutcomeVariable extends taoResultServer_mod
 {
 
     /**
-     * The views (if any) declared for the outcome must be copied to the report to enable systems that render the report to hide information not relevant in a specific situation.
-     * If no values are given, the outcome's value should be considered relevant in all views.
-     * 
-     * @var array {author, candidate, proctor, scorer, testConstructor, tutor}
-     */
-    // public $views;
-    /**
-     *
-     * @var string
-     */
-    // public $interpretation;
-    /**
-     *
-     * @var uri
-     */
-    // public $longInterpretation;
-    /**
      * taken from the corresponding outcomeDeclaration.
      * 
      * @var float
@@ -60,13 +43,7 @@ class taoResultServer_models_classes_OutcomeVariable extends taoResultServer_mod
      */
     public $normalMinimum;
 
-    /**
-     * If a mastery value is specified in the corresponding outcomeDeclaration it may be reported alongside the value of the outcomeVariable.
-     * In some cases, the mastery value may not be an attribute of the item itself, but be determined by the context in which the item is delivered, for example, by examining the candidates in a specific cohort. The mastery value may be reported with the outcome value even when there is no corresponding value in the declaration.
-     * 
-     * @var float
-     */
-    // public $masteryValue;
+
     /**
      * The value(s) of the outcome variable.
      * The order of the values is significant only if the outcome was declared with ordered cardinality.
@@ -74,8 +51,9 @@ class taoResultServer_models_classes_OutcomeVariable extends taoResultServer_mod
      * @var array
      */
     public $value;
-    /*
-     * public function getViews(){ return $this->views; } public function addView($view){ if (!(in_array($cardinality, array("author","candidate","proctor", "scorer", "testConstructor", "tutor")))){ throw new common_exception_InvalidArgumentType("view"); } $this->views[] = $view; } public function setInterpretation($interpretation){ $this->interpretation = $interpretation; } public function getInterpretation(){ return $this->interpretation; } public function setLongInterpretation($longInterpretation){ $this->longInterpretation = $longInterpretation; } public function getLongInterpretation(){ return $this->longInterpretation; }
+
+    /**
+     * @param float $normalMaximum
      */
     public function setNormalMaximum($normalMaximum)
     {
@@ -86,7 +64,7 @@ class taoResultServer_models_classes_OutcomeVariable extends taoResultServer_mod
      *
      * @access public 
      * @author "Patrick Plichart, <patrick@taotesting.com>"
-     * @return number
+     * @return float
      */
     public function getNormalMaximum()
     {
@@ -97,7 +75,7 @@ class taoResultServer_models_classes_OutcomeVariable extends taoResultServer_mod
      *
      * @access public 
      * @author "Patrick Plichart, <patrick@taotesting.com>"
-     * @param unknown $normalMinimum            
+     * @param float $normalMinimum
      */
     public function setNormalMinimum($normalMinimum)
     {
@@ -108,20 +86,15 @@ class taoResultServer_models_classes_OutcomeVariable extends taoResultServer_mod
      *
      * @access public
      * @author "Patrick Plichart, <patrick@taotesting.com>"
-     * @return number
+     * @return float
      */
     public function getNormalMinimum()
     {
         return $this->normalMinimum;
     }
-    /*
-     * public function setMasteryValue($masteryValue){ $this->masteryValue = $masteryValue; } public function getMasteryValue(){ return $this->masteryValue; }
-     */
+
     /**
-     *
-     * @access public
-     * @author "Patrick Plichart, <patrick@taotesting.com>"
-     * @return multitype:
+     * {@inheritdoc}
      */
     public function getValue()
     {   
@@ -129,10 +102,7 @@ class taoResultServer_models_classes_OutcomeVariable extends taoResultServer_mod
     }
 
     /**
-     *
-     * @access public
-     * @author "Patrick Plichart, <patrick@taotesting.com>"
-     * @param unknown $value            
+     * {@inheritdoc}
      */
     public function setValue($value)
     {   
