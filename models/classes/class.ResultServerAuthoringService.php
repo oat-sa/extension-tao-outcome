@@ -222,18 +222,8 @@ class taoResultServer_models_classes_ResultServerAuthoringService
             $return['status'] = __('Invalid request');
             return $return;
         }
-        if (!is_array($targetStorages)) {
-            // $targetStorages must be an array of storages
-            $return['status'] = __('Invalid request');
-            return $return;
-        }
 
-        foreach ($sourceStorages as $sourceStorage) {
-            $returnData[] = array(
-                'uri' => $sourceStorage
-            );
-        }
-       
+
         foreach ($sourceStorages as $sourceStorage) {
             $sourceStorageResource = new core_kernel_classes_Resource($sourceStorage);
             $implLiteral = $sourceStorageResource->getUniquePropertyValue(new core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_IMPL_PROP));
@@ -254,7 +244,7 @@ class taoResultServer_models_classes_ResultServerAuthoringService
             $impl = $implLiteral->__toString(); 
             $interfaces = class_implements($impl);
             if (!(in_array('taoResultServer_models_classes_WritableResultStorage', $interfaces))) {
-                $return['status'] = __($sourceStorage. 'does not implement ReadableResultStorage');
+                $return['status'] = __($targetStorage. 'does not implement WritableResultStorage');
                 return $return;
             } else {
                 $targetImpl[] = new $impl;
@@ -266,17 +256,16 @@ class taoResultServer_models_classes_ResultServerAuthoringService
             //migrate test taker data
             $allTestTakerIds = $storageSImpl->getAllTestTakerIds();
             foreach ($targetImpl as $storageTImpl) {
-                foreach ($allTestTakerIds as $resultIDentifier=>$testTakerId) {
+                foreach ($allTestTakerIds as $testTakerId) {
                     $storageTImpl->storeRelatedTestTaker($testTakerId["deliveryResultIdentifier"], $testTakerId["testTakerIdentifier"]);
                 }
             }
            
             
             //migrate Delivery data
-            
             $allDeliveryIds = $storageSImpl->getAllDeliveryIds();
             foreach ($targetImpl as $storageTImpl) {
-                foreach ($allDeliveryIds as $resultIDentifier=>$deliveryId) {
+                foreach ($allDeliveryIds as $deliveryId) {
                     $storageTImpl->storeRelatedDelivery($deliveryId["deliveryResultIdentifier"], $deliveryId["deliveryIdentifier"]);
                 }
             }
