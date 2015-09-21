@@ -30,13 +30,6 @@ class taoResultServer_models_classes_ResponseVariable extends taoResultServer_mo
 {
 
     /**
-     * When a response variable is bound to an interaction that supports the shuffling of choices, the sequence of choices experienced by the candidate will vary between test instances.
-     * When shuffling is in effect, the sequence of choices should be reported as a sequence of choice identifiers using this attribute.
-     * 
-     * @var array
-     */
-    // public $choicesequence;
-    /**
      * The correct response may be output as part of the report if desired.
      * Systems are not limited to reporting correct responses declared in responseDeclarations. For example, a correct response may be set by a templateRule or may simply have been suppressed from the declaration passed to the delivery engine (e.g., for security).
      * 
@@ -49,9 +42,7 @@ class taoResultServer_models_classes_ResponseVariable extends taoResultServer_mo
      * @var string
      */
     public $candidateResponse;
-    /*
-     * public function setChoiceSequence($choicesequence){ $this->choiceSequence = $choiceSequence; } public function getChoiceSequence(){ return $this->choiceSequence; }
-     */
+
     
     /**
      * substitued for the db storage into a GENERIS_TRUE/FALSE
@@ -98,10 +89,20 @@ class taoResultServer_models_classes_ResponseVariable extends taoResultServer_mo
         //base64 binary and nullbyte safe
         return base64_decode($this->candidateResponse);      
     }
-    //alias
+
+    /**
+     * {@inheritdoc}
+     */
     public function getValue()
     {
         return $this->getCandidateResponse();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setValue($value){
+        $this->setCandidateResponse($value);
     }
 }
 
