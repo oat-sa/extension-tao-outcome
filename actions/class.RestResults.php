@@ -23,6 +23,8 @@ use oat\taoResultServer\models\classes\CrudResultsService;
 class taoResultServer_actions_RestResults extends \tao_actions_CommonRestModule {
 
     public function __construct(){
+        $ext = common_ext_ExtensionsManager::singleton()->getExtensionById('taoDelivery');
+        $ext = common_ext_ExtensionsManager::singleton()->getExtensionById('taoOutcomeUi');
         parent::__construct();
         $this->service = CrudResultsService::singleton();
     }
