@@ -68,12 +68,8 @@ class taoResultServer_actions_ResultServerMgt extends tao_actions_SaSModule {
 		}
 		$options = array(
 			'instances' => true,
-			'labelFilter' => '',
 			'chunk' => false
 		);
-		if($this->hasRequestParameter('filter')){
-			$options['labelFilter'] = $this->getRequestParameter('filter');
-		}
 		if($this->hasRequestParameter('classUri')){
 			$clazz = $this->getCurrentClass();
 			$options['chunk'] = true;
