@@ -20,6 +20,7 @@
 
 namespace oat\taoResultServer\models\classes;
 use oat\taoOutcomeUi\model\ResultsService;
+use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 
 /**
  * .Crud services implements basic CRUD services, orginally intended for REST controllers/ HTTP exception handlers
@@ -79,7 +80,7 @@ class CrudResultsService extends \tao_models_classes_CrudService {
     public function getAll()
     {
         $resources = array();
-        $deliveryService = \taoDelivery_models_classes_DeliveryAssemblyService::singleton();
+        $deliveryService = DeliveryAssemblyService::singleton();
         foreach ($deliveryService->getAllAssemblies() as $assembly) {
             // delivery uri
             $delivery = $assembly->getUri();
