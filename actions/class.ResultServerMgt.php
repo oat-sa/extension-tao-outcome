@@ -67,15 +67,9 @@ class taoResultServer_actions_ResultServerMgt extends tao_actions_SaSModule {
 			throw new Exception("wrong request mode");
 		}
 		$options = array(
-			'subclasses' => true, 
-			'instances' => true, 
-			'highlightUri' => '', 
-			'labelFilter' => '', 
+			'instances' => true,
 			'chunk' => false
 		);
-		if($this->hasRequestParameter('filter')){
-			$options['labelFilter'] = $this->getRequestParameter('filter');
-		}
 		if($this->hasRequestParameter('classUri')){
 			$clazz = $this->getCurrentClass();
 			$options['chunk'] = true;
