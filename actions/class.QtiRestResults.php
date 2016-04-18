@@ -63,7 +63,12 @@ class taoResultServer_actions_QtiRestResults extends \tao_actions_CommonRestModu
         try {
             $this->service->setParameters($this->getParameters());
             $data = $this->service->getDeliveryExecution();
-            echo $this->returnValidXmlSuccess($data);
+            if (empty($data)) {
+                common_Logger::e('Empty delivery execution');
+                throw new common_exception_NoContent('No data to output.');
+            } else {
+                echo $this->returnValidXmlSuccess($data);
+            }
         } catch (Exception $e) {
             $this->returnFailure($e);
         }
