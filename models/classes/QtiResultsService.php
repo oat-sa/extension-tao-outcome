@@ -26,14 +26,25 @@ class QtiResultsService extends \tao_models_classes_CrudService
 {
     const QTI_NS = 'http://www.imsglobal.org/xsd/imsqti_result_v2p1';
 
+    /**
+     * Test taker of delivery execution
+     * @var \core_kernel_classes_Resource
+     */
     protected $testtaker;
+
+    /**
+     * Delivery of delivery execution
+     * @var \core_kernel_classes_Resource
+     */
     protected $delivery;
 
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
+    /**
+     * Set parameters to service, find valid resource
+     *
+     * @param $parameters
+     * @return $this
+     * @throws \common_exception_InvalidArgumentType
+     */
     public function setParameters($parameters)
     {
         $testtakerUri = $parameters[PROPERTY_DELVIERYEXECUTION_SUBJECT];
@@ -60,20 +71,18 @@ class QtiResultsService extends \tao_models_classes_CrudService
         // Unused
     }
 
+    /**
+     * Return delivery execution as xml of testtaker based on delivery
+     *
+     * @return string
+     */
     public function getDeliveryExecution()
     {
         $serviceManager = ServiceManager::getServiceManager();
 
-        /*
-         * 1. Retrieve the delivery executions related to this
-         *    $deliveryUri <-> $testTakerUri combination.
-         */
         $deliveryService = $serviceManager->get('taoDelivery/' . \taoDelivery_models_classes_execution_ServiceProxy::CONFIG_KEY);
         $deliveryExecutions = $deliveryService->getUserExecutions($this->delivery, $this->testtaker->getUri());
 
-        /*
-         * 2. Get Test/Item Results for $deliveryExecutions.
-         */
         $resultService = new CrudResultsService();
 
         foreach ($deliveryExecutions as $deliveryExecution) {
@@ -171,11 +180,6 @@ class QtiResultsService extends \tao_models_classes_CrudService
 
                 $assessmentResultElt->appendChild($itemElement);
             }
-
-            \common_Logger::d($dom->saveXML());
-
-            // Do whatever you want with the DOMDocument representing the results
-            // for this delivery execution e.g. import the root node in your XML response...
 
             return $dom->saveXML();
         }
