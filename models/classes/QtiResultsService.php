@@ -86,10 +86,46 @@ class QtiResultsService extends \tao_models_classes_CrudService
             $assessmentResultElt = $dom->createElementNS(self::QTI_NS, 'assessmentResult');
             $dom->appendChild($assessmentResultElt);
 
+            /** Context */
             $contextElt = $dom->createElementNS(self::QTI_NS, 'context');
             $contextElt->setAttribute('sourceID', $this->testtaker->getUri());
             $assessmentResultElt->appendChild($contextElt);
 
+            /** Test Result */
+            foreach ($testResults as $testResultIdentifier => $testResult) {
+                $identifierParts = explode('.', $testResultIdentifier);
+                $testIdentifier = array_pop($identifierParts);
+
+                $testResultElement = $dom->createElementNS(self::QTI_NS, 'testResult');
+                $testResultElement->setAttribute('identifier', $testIdentifier);
+                $testResultElement->setAttribute('dateStamp', $testResult[0]['epoch']);
+
+                /** Item Variable */
+                foreach ($testResult as $itemVariable) {
+
+                    $isResponseVariable = $itemVariable['type']->getUri() === 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResponseVariable';
+                    $testVariableElement = $dom->createElementNS(self::QTI_NS, ($isResponseVariable) ? 'responseVariable' : 'outcomeVariable');
+                    $testVariableElement->setAttribute('identifier', $itemVariable['identifier']);
+                    $testVariableElement->setAttribute('cardinality', $itemVariable['cardinality']);
+                    $testVariableElement->setAttribute('baseType', $itemVariable['basetype']);
+
+                    $valueElement = $dom->createElementNS(self::QTI_NS, 'value', $itemVariable['value']);
+
+                    if ($isResponseVariable) {
+                        $candidateResponseElement = $dom->createElementNS(self::QTI_NS, 'candidateResponse');
+                        $candidateResponseElement->appendChild($valueElement);
+                        $testVariableElement->appendChild($candidateResponseElement);
+                    } else {
+                        $testVariableElement->appendChild($valueElement);
+                    }
+
+                    $testResultElement->appendChild($testVariableElement);
+                }
+
+                $assessmentResultElt->appendChild($testResultElement);
+            }
+
+            /** Item Result */
             foreach ($itemResults as $itemResultIdentifier => $itemResult) {
 
                 // Retrieve identifier.
@@ -97,35 +133,43 @@ class QtiResultsService extends \tao_models_classes_CrudService
                 $occurenceNumber = array_pop($identifierParts);
                 $refIdentifier = array_pop($identifierParts);
 
-                $itemResultElt = $dom->createElementNS(self::QTI_NS, 'itemResult');
-                $itemResultElt->setAttribute('identifier', $refIdentifier);
-                $itemResultElt->setAttribute('dateStamp', $itemResult[0]['epoch']);
-                $itemResultElt->setAttribute('sessionStatus', 'final');
+                $itemElement = $dom->createElementNS(self::QTI_NS, 'itemResult');
+                $itemElement->setAttribute('identifier', $refIdentifier);
+                $itemElement->setAttribute('dateStamp', $itemResult[0]['epoch']);
+                $itemElement->setAttribute('sessionStatus', 'final');
 
+                /** Item variables */
                 foreach ($itemResult as $itemVariable) {
 
-
                     $isResponseVariable = $itemVariable['type']->getUri() === 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResponseVariable';
-                    $itemVariableElt = $dom->createElementNS(self::QTI_NS, ($isResponseVariable) ? 'responseVariable' : 'outcomeVariable');
-                    $itemVariableElt->setAttribute('identifier', $itemVariable['identifier']);
-                    $itemVariableElt->setAttribute('cardinality', $itemVariable['cardinality']);
-                    $itemVariableElt->setAttribute('baseType', $itemVariable['basetype']);
 
-                    $valueElt = $dom->createElementNS(self::QTI_NS, 'value');
-                    $valueElt->textContent = $itemVariable['value'];
-
-                    if ($isResponseVariable) {
-                        $candidateResponseElt = $dom->createElementNS(self::QTI_NS, 'candidateResponse');
-                        $candidateResponseElt->appendChild($valueElt);
-                        $itemVariableElt->appendChild($candidateResponseElt);
+                    if ($itemVariable['identifier']=='comment') {
+                        /** Comment */
+                        $itemVariableElement = $dom->createElementNS(self::QTI_NS, 'candidateComment', $itemVariable['value']);
                     } else {
-                        $itemVariableElt->appendChild($valueElt);
+                        /** Item variable */
+                        $itemVariableElement = $dom->createElementNS(self::QTI_NS, ($isResponseVariable) ? 'responseVariable' : 'outcomeVariable');
+                        $itemVariableElement->setAttribute('identifier', $itemVariable['identifier']);
+                        $itemVariableElement->setAttribute('cardinality', $itemVariable['cardinality']);
+                        $itemVariableElement->setAttribute('baseType', $itemVariable['basetype']);
+
+                        $valueElement = $dom->createElementNS(self::QTI_NS, 'value', $itemVariable['value']);
+
+                        if ($isResponseVariable) {
+                            /** Response variable */
+                            $candidateResponseElement = $dom->createElementNS(self::QTI_NS, 'candidateResponse');
+                            $candidateResponseElement->appendChild($valueElement);
+                            $itemVariableElement->appendChild($candidateResponseElement);
+                        } else {
+                            /** Outcome variable */
+                            $itemVariableElement->appendChild($valueElement);
+                        }
                     }
 
-                    $itemResultElt->appendChild($itemVariableElt);
+                    $itemElement->appendChild($itemVariableElement);
                 }
 
-                $assessmentResultElt->appendChild($itemResultElt);
+                $assessmentResultElt->appendChild($itemElement);
             }
 
             \common_Logger::d($dom->saveXML());

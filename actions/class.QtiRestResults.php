@@ -18,7 +18,7 @@
  *
  */
 
-//http://tao.dev/taoResultServer/QtiRestResults?testtaker=http%3A%2F%2Ftao.local%2Fmytao.rdf%23i1460560178726251&delivery=http%3A%2F%2Ftao.local%2Fmytao.rdf%23i1460560209646275
+//http://tao.dev/taoResultServer/QtiRestResults?testtaker=http%3A%2F%2Ftao.local%2Fmytao.rdf%23i1460560178726251&delivery=http%3A%2F%2Ftao.local%2Fmytao.rdf%23i14607116346750186
 
 use oat\taoResultServer\models\classes\QtiResultsService;
 
@@ -35,6 +35,25 @@ class taoResultServer_actions_QtiRestResults extends \tao_actions_CommonRestModu
     }
 
     /**
+     * Return a xml output as 200 rest response
+     *
+     * @param $data
+     * @return mixed
+     * @throws Exception
+     */
+    protected function returnValidXmlSuccess($data)
+    {
+        $doc = @simplexml_load_string($data);
+
+        if ($doc) {
+            return $data;
+        } else {
+            common_Logger::i('invalid xml result');
+            throw new Exception('Xml output is malformed.');
+        }
+    }
+
+    /**
      * Override tao_actions_CommonRestModule::get to route only to getDeliveryExecution
      *
      * @param null $uri
@@ -44,7 +63,7 @@ class taoResultServer_actions_QtiRestResults extends \tao_actions_CommonRestModu
         try {
             $this->service->setParameters($this->getParameters());
             $data = $this->service->getDeliveryExecution();
-            $this->returnSuccess($data);
+            echo $this->returnValidXmlSuccess($data);
         } catch (Exception $e) {
             $this->returnFailure($e);
         }
