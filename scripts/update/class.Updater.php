@@ -41,6 +41,7 @@ class taoResultServer_scripts_update_Updater extends \common_ext_ExtensionUpdate
             || $currentVersion == '2.8.1') {
         	$currentVersion = '2.8.2';
         }
-        return $currentVersion;
+
+        $this->skip($currentVersion, '2.10.0');
     }
 }
