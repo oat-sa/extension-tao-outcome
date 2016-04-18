@@ -31,6 +31,10 @@ use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
  */
 class CrudResultsService extends \tao_models_classes_CrudService {
 
+    const GROUP_BY_DELIVERY = 0;
+    const GROUP_BY_TEST = 1;
+    const GROUP_BY_ITEM = 2;
+
     protected $resultClass = null;
     protected $resultService = null;
 
@@ -44,14 +48,20 @@ class CrudResultsService extends \tao_models_classes_CrudService {
         return $this->resultClass;
     }
 
-    public function get($uri) {
+    public function get($uri, $groupBy = self::GROUP_BY_DELIVERY) {
         $returnData = array();
         $deliveryExecution = \taoDelivery_models_classes_execution_ServiceProxy::singleton()->getDeliveryExecution($uri);
         $delivery = $deliveryExecution->getDelivery();
 
         $implementation = $this->getImplementationClass($delivery);
+        
+        if ($groupBy === self::GROUP_BY_DELIVERY || $groupBy === self::GROUP_BY_ITEM) {
+            $calls = $implementation->getRelatedItemCallIds($uri);
+        } else {
+            $calls = $implementation->getRelatedTestCallIds($uri);
+        }
 
-        foreach($implementation->getRelatedItemCallIds($uri) as $callId){
+        foreach($calls as $callId){
             $results = $implementation->getVariables($callId);
             $resource = array();
                 foreach($results as $result){
@@ -71,7 +81,11 @@ class CrudResultsService extends \tao_models_classes_CrudService {
                         $resource['basetype'] = $result->variable->getBaseType();
                     }
 
-                    $returnData[$uri][] = $resource;
+                    if ($groupBy === self::GROUP_BY_DELIVERY) {
+                        $returnData[$uri][] = $resource;
+                    } else {
+                        $returnData[$callId][] = $resource;
+                    }
                 }
         }
         return $returnData;
