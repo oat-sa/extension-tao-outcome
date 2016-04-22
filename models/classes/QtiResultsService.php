@@ -97,7 +97,7 @@ class QtiResultsService extends \tao_models_classes_CrudService
 
             /** Context */
             $contextElt = $dom->createElementNS(self::QTI_NS, 'context');
-            $contextElt->setAttribute('sourceID', $this->testtaker->getUri());
+            $contextElt->setAttribute('sourcedID', $this->testtaker->getUri());
             $assessmentResultElt->appendChild($contextElt);
 
             /** Test Result */
@@ -107,7 +107,7 @@ class QtiResultsService extends \tao_models_classes_CrudService
 
                 $testResultElement = $dom->createElementNS(self::QTI_NS, 'testResult');
                 $testResultElement->setAttribute('identifier', $testIdentifier);
-                $testResultElement->setAttribute('dateStamp', $testResult[0]['epoch']);
+                $testResultElement->setAttribute('datestamp', $testResult[0]['epoch']);
 
                 /** Item Variable */
                 foreach ($testResult as $itemVariable) {
@@ -144,11 +144,11 @@ class QtiResultsService extends \tao_models_classes_CrudService
 
                 $itemElement = $dom->createElementNS(self::QTI_NS, 'itemResult');
                 $itemElement->setAttribute('identifier', $refIdentifier);
-                $itemElement->setAttribute('dateStamp', $itemResult[0]['epoch']);
+                $itemElement->setAttribute('datestamp', $itemResult[0]['epoch']);
                 $itemElement->setAttribute('sessionStatus', 'final');
 
                 /** Item variables */
-                foreach ($itemResult as $itemVariable) {
+                foreach ($itemResult as $key => $itemVariable) {
 
                     $isResponseVariable = $itemVariable['type']->getUri() === 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResponseVariable';
 
@@ -161,6 +161,9 @@ class QtiResultsService extends \tao_models_classes_CrudService
                         $itemVariableElement->setAttribute('identifier', $itemVariable['identifier']);
                         $itemVariableElement->setAttribute('cardinality', $itemVariable['cardinality']);
                         $itemVariableElement->setAttribute('baseType', $itemVariable['basetype']);
+
+                        \common_Logger::i($key);
+                        \common_Logger::d($itemVariable['value']);
 
                         $valueElement = $dom->createElementNS(self::QTI_NS, 'value', $itemVariable['value']);
 
