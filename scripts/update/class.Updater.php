@@ -14,7 +14,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2014 (original work) Open Assessment Technologies SA;
+ * Copyright (c) 2014-2016 (original work) Open Assessment Technologies SA;
  *
  *
  */
@@ -22,6 +22,7 @@
 /**
  * 
  * @author Joel Bout <joel@taotesting.com>
+ * @author Jérôme Bogaerts <jerome@taotesting.com>
  */
 class taoResultServer_scripts_update_Updater extends \common_ext_ExtensionUpdater {
 
@@ -31,8 +32,6 @@ class taoResultServer_scripts_update_Updater extends \common_ext_ExtensionUpdate
      * @return string $versionUpdatedTo
      */
     public function update($initialVersion) {
-        
-        $this->skip('2.6','2.8.3');
-        return null;
+        $this->skip('2.6', '2.9.0');
     }
 }
