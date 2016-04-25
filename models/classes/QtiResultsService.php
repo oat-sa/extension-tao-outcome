@@ -97,7 +97,7 @@ class QtiResultsService extends \tao_models_classes_CrudService
 
             /** Context */
             $contextElt = $dom->createElementNS(self::QTI_NS, 'context');
-            $contextElt->setAttribute('sourcedID', $this->testtaker->getUri());
+            $contextElt->setAttribute('sourcedId', \tao_helpers_Uri::getUniqueId($this->testtaker->getUri()));
             $assessmentResultElt->appendChild($contextElt);
 
             /** Test Result */
@@ -107,7 +107,10 @@ class QtiResultsService extends \tao_models_classes_CrudService
 
                 $testResultElement = $dom->createElementNS(self::QTI_NS, 'testResult');
                 $testResultElement->setAttribute('identifier', $testIdentifier);
-                $testResultElement->setAttribute('datestamp', $testResult[0]['epoch']);
+                $testResultElement->setAttribute('datestamp', \tao_helpers_Date::displayeDate(
+                    $testResult[0]['epoch'],
+                    \tao_helpers_Date::FORMAT_ISO8601
+                ));
 
                 /** Item Variable */
                 foreach ($testResult as $itemVariable) {
@@ -144,7 +147,10 @@ class QtiResultsService extends \tao_models_classes_CrudService
 
                 $itemElement = $dom->createElementNS(self::QTI_NS, 'itemResult');
                 $itemElement->setAttribute('identifier', $refIdentifier);
-                $itemElement->setAttribute('datestamp', $itemResult[0]['epoch']);
+                $itemElement->setAttribute('datestamp', \tao_helpers_Date::displayeDate(
+                    $itemResult[0]['epoch'],
+                    \tao_helpers_Date::FORMAT_ISO8601
+                ));
                 $itemElement->setAttribute('sessionStatus', 'final');
 
                 /** Item variables */
