@@ -21,6 +21,7 @@
 namespace oat\taoResultServer\models\classes;
 
 use oat\oatbox\service\ServiceManager;
+use qtism\common\enums\Cardinality;
 
 class QtiResultsService extends \tao_models_classes_CrudService
 {
@@ -168,19 +169,38 @@ class QtiResultsService extends \tao_models_classes_CrudService
                         $itemVariableElement->setAttribute('cardinality', $itemVariable['cardinality']);
                         $itemVariableElement->setAttribute('baseType', $itemVariable['basetype']);
 
-                        \common_Logger::i($key);
-                        \common_Logger::d($itemVariable['value']);
+                        /** Split multiple response */
+                        if ($itemVariable['cardinality']!==Cardinality::getNameByConstant(Cardinality::SINGLE)) {
+                            $values = explode(';', substr($itemVariable['value'], 1, -1));
+                            $returnValue = [];
+                            foreach ($values as $value) {
+                                $valueElement = substr(trim($value), 1, -1);
+                                $returnValue[] = $this->createCDATANode($dom, 'value', $valueElement);
+                            }
+                        } else {
+                            $returnValue = $this->createCDATANode($dom, 'value', $itemVariable['value']);
+                        }
 
-                        $valueElement = $dom->createElementNS(self::QTI_NS, 'value', $itemVariable['value']);
-
+                        /** Get response parent element */
                         if ($isResponseVariable) {
                             /** Response variable */
-                            $candidateResponseElement = $dom->createElementNS(self::QTI_NS, 'candidateResponse');
-                            $candidateResponseElement->appendChild($valueElement);
-                            $itemVariableElement->appendChild($candidateResponseElement);
+                            $responseElement = $dom->createElementNS(self::QTI_NS, 'candidateResponse');
                         } else {
                             /** Outcome variable */
-                            $itemVariableElement->appendChild($valueElement);
+                            $responseElement = $itemVariableElement;
+                        }
+
+                        /** Write a reponse node foreach answer  */
+                        if (is_array($returnValue)) {
+                            foreach ($returnValue as $valueElement) {
+                                $responseElement->appendChild($valueElement);
+                            }
+                        } else {
+                            $responseElement->appendChild($returnValue);
+                        }
+
+                        if ($isResponseVariable) {
+                            $itemVariableElement->appendChild($responseElement);
                         }
                     }
 
@@ -215,5 +235,18 @@ class QtiResultsService extends \tao_models_classes_CrudService
         throw new \common_exception_NoImplementation();
     }
 
+    /**
+     * @param $dom \DOMDocument
+     * @param $tag Xml tag to create
+     * @param $data Data to escape
+     * @return \DOMElement
+     */
+    protected function createCDATANode($dom, $tag, $data)
+    {
+        $node =  $dom->createCDATASection($data);
+        $returnValue = $dom->createElementNS(self::QTI_NS, $tag);
+        $returnValue->appendChild($node);
+        return $returnValue;
+    }
 
 }
