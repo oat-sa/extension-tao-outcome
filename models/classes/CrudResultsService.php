@@ -21,7 +21,6 @@
 namespace oat\taoResultServer\models\classes;
 use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
-use qtism\runtime\common\ResponseVariable;
 
 /**
  * .Crud services implements basic CRUD services, orginally intended for REST controllers/ HTTP exception handlers
