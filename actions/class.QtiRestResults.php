@@ -21,7 +21,6 @@
 //http://tao.dev/taoResultServer/QtiRestResults?testtaker=http%3A%2F%2Ftao.local%2Fmytao.rdf%23i1460560178726251&delivery=http%3A%2F%2Ftao.local%2Fmytao.rdf%23i14607116346750186
 
 use oat\taoResultServer\models\classes\QtiResultsService;
-use oat\oatbox\service\ServiceManager;
 
 class taoResultServer_actions_QtiRestResults extends \tao_actions_CommonRestModule
 {
@@ -29,17 +28,20 @@ class taoResultServer_actions_QtiRestResults extends \tao_actions_CommonRestModu
     const DELIVERY = 'delivery';
     const DELIVERY_EXECUTION = 'deliveryExecution';
 
-    protected $deliveryExecution;
+    protected $service;
 
     /**
-     * taoResultServer_actions_QtiRestResults constructor.
-     * Pass model service to handle http call business
+     * Return the service for Qti Result
+     *
+     * @return QtiResultsService
      */
-    public function __construct()
+    protected function getQtiResultService()
     {
-        parent::__construct();
-        $this->service = QtiResultsService::singleton();
-        $this->service->setServiceLocator(ServiceManager::getServiceManager());
+        if (!$this->service) {
+            $this->service = QtiResultsService::singleton();
+            $this->service->setServiceLocator($this->getServiceManager());
+        }
+        return $this->service;
     }
 
     /**
@@ -53,9 +55,8 @@ class taoResultServer_actions_QtiRestResults extends \tao_actions_CommonRestModu
     {
         try {
             $deliveryExecution = $this->getValidDeliveryExecutionFromParameters();
-            $data = $this->service->getDeliveryExecution($deliveryExecution);
+            $data = $this->getQtiResultService()->getDeliveryExecutionXml($deliveryExecution);
             if (empty($data)) {
-                common_Logger::e('Empty delivery execution');
                 throw new common_exception_NotFound('No data to output.');
             } else {
                 echo $this->returnValidXmlSuccess($data);
@@ -76,36 +77,18 @@ class taoResultServer_actions_QtiRestResults extends \tao_actions_CommonRestModu
     protected function getValidDeliveryExecutionFromParameters()
     {
         if ($this->hasRequestParameter(self::TESTTAKER) && $this->hasRequestParameter(self::DELIVERY)) {
-            $deliveryExecution = $this->service->getDeliveryExecutionByTestTakerAndDelivery(
-                $this->validFromUri($this->getRequestParameter(self::DELIVERY), __FUNCTION__),
-                $this->validFromUri($this->getRequestParameter(self::TESTTAKER), __FUNCTION__)
+            return $this->getQtiResultService()->getDeliveryExecutionByTestTakerAndDelivery(
+                $this->getRequestParameter(self::DELIVERY),
+                $this->getRequestParameter(self::TESTTAKER)
             );
         } elseif ($this->hasRequestParameter(self::DELIVERY_EXECUTION)) {
-            $deliveryExecution = $this->service->getDeliveryExecutionByResource(
-                $this->validFromUri($this->getRequestParameter(self::DELIVERY_EXECUTION), __FUNCTION__)
+            return $this->getQtiResultService()->getDeliveryExecutionById(
+                $this->getRequestParameter(self::DELIVERY_EXECUTION)
             );
         } else {
             throw new common_exception_MissingParameter(self::TESTTAKER . ' coupled with ' . self::DELIVERY .
                 ', or ' . self::DELIVERY_EXECUTION, $this->getRequestURI());
         }
-
-        return $deliveryExecution;
-    }
-
-    /**
-     * Check if $uri is a valid uri & create resource from $uri
-     *
-     * @param $uri
-     * @param string $function
-     * @return core_kernel_classes_Resource
-     * @throws common_exception_InvalidArgumentType
-     */
-    protected function validFromUri($uri, $function = __FUNCTION__)
-    {
-        if (!\common_Utils::isUri($uri)) {
-            throw new \common_exception_InvalidArgumentType('QtiRestResults', $function, '', 'uri', $uri);
-        }
-        return new core_kernel_classes_Resource($uri);
     }
 
     /**

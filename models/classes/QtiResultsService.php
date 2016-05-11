@@ -50,27 +50,35 @@ class QtiResultsService extends \tao_models_classes_CrudService implements Servi
     /**
      * Get last delivery execution from $delivery & $testtaker uri
      *
-     * @param \core_kernel_classes_Resource $delivery
-     * @param \core_kernel_classes_Resource $testtaker
+     * @param $delivery
+     * @param $testtaker
      * @return mixed
+     * @throws
      */
-    public function getDeliveryExecutionByTestTakerAndDelivery(
-        \core_kernel_classes_Resource $delivery,
-        \core_kernel_classes_Resource $testtaker
-    ) {
-        $deliveryExecutions = $this->getDeliveryExecutionService()->getUserExecutions($delivery, $testtaker->getUri());
+    public function getDeliveryExecutionByTestTakerAndDelivery($delivery, $testtaker)
+    {
+        $delivery = new \core_kernel_classes_Resource($delivery);
+        $deliveryExecutions = $this->getDeliveryExecutionService()->getUserExecutions($delivery, $testtaker);
+        if (empty($deliveryExecutions)) {
+            throw new \common_exception_NotFound('Provided parameters don\'t match with any delivery execution.');
+        }
         return array_pop($deliveryExecutions);
     }
 
     /**
      * Get Delivery execution from resource
      *
-     * @param \core_kernel_classes_Resource $deliveryExecution
-     * @return \taoDelivery_models_classes_execution_DeliveryExecution
+     * @param $deliveryExecutionId
+     * @return mixed
+     * @throws \common_exception_NotFound
      */
-    public function getDeliveryExecutionByResource(\core_kernel_classes_Resource $deliveryExecution)
+    public function getDeliveryExecutionById($deliveryExecutionId)
     {
-        return \taoDelivery_models_classes_execution_ServiceProxy::singleton()->getDeliveryExecution($deliveryExecution->getUri());
+        $deliveryExecution = $this->getDeliveryExecutionService()->getDeliveryExecution($deliveryExecutionId);
+        if (!$deliveryExecution->exists()) {
+            throw new \common_exception_NotFound('Provided parameters don\'t match with any delivery execution.');
+        }
+        return $deliveryExecution;
     }
 
     /**
@@ -78,7 +86,7 @@ class QtiResultsService extends \tao_models_classes_CrudService implements Servi
      *
      * @return string
      */
-    public function getDeliveryExecution(DeliveryExecutionInterface $deliveryExecution)
+    public function getDeliveryExecutionXml(DeliveryExecutionInterface $deliveryExecution)
     {
         $resultService = new CrudResultsService();
 
