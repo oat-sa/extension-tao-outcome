@@ -24,14 +24,71 @@ use oat\taoResultServer\models\classes\QtiResultsService;
 
 class taoResultServer_actions_QtiRestResults extends \tao_actions_CommonRestModule
 {
+    const TESTTAKER = 'testtaker';
+    const DELIVERY = 'delivery';
+    const DELIVERY_EXECUTION = 'deliveryExecution';
+
+    protected $service;
+
     /**
-     * taoResultServer_actions_QtiRestResults constructor.
-     * Pass model service to handle http call business
+     * Return the service for Qti Result
+     *
+     * @return QtiResultsService
      */
-    public function __construct()
+    protected function getQtiResultService()
     {
-        parent::__construct();
-        $this->service = QtiResultsService::singleton();
+        if (!$this->service) {
+            $this->service = QtiResultsService::singleton();
+            $this->service->setServiceLocator($this->getServiceManager());
+        }
+        return $this->service;
+    }
+
+    /**
+     * Override tao_actions_CommonRestModule::get to route only to getDeliveryExecution
+     * Valid parameters & get delivery execution
+     *
+     * @param null $uri
+     * @return void
+     */
+    protected function get($uri = null)
+    {
+        try {
+            $deliveryExecution = $this->getValidDeliveryExecutionFromParameters();
+            $data = $this->getQtiResultService()->getDeliveryExecutionXml($deliveryExecution);
+            if (empty($data)) {
+                throw new common_exception_NotFound('No data to output.');
+            } else {
+                echo $this->returnValidXmlSuccess($data);
+            }
+        } catch (Exception $e) {
+            $this->returnFailure($e);
+        }
+    }
+
+    /**
+     * Valid parameters TESTTAKER uri and DELIVERY uri couple
+     * OR DELIVERYEXECUTION uri
+     *
+     * @return core_kernel_classes_Resource|mixed
+     * @throws common_exception_InvalidArgumentType
+     * @throws common_exception_MissingParameter
+     */
+    protected function getValidDeliveryExecutionFromParameters()
+    {
+        if ($this->hasRequestParameter(self::TESTTAKER) && $this->hasRequestParameter(self::DELIVERY)) {
+            return $this->getQtiResultService()->getDeliveryExecutionByTestTakerAndDelivery(
+                $this->getRequestParameter(self::DELIVERY),
+                $this->getRequestParameter(self::TESTTAKER)
+            );
+        } elseif ($this->hasRequestParameter(self::DELIVERY_EXECUTION)) {
+            return $this->getQtiResultService()->getDeliveryExecutionById(
+                $this->getRequestParameter(self::DELIVERY_EXECUTION)
+            );
+        } else {
+            throw new common_exception_MissingParameter(self::TESTTAKER . ' coupled with ' . self::DELIVERY .
+                ', or ' . self::DELIVERY_EXECUTION, $this->getRequestURI());
+        }
     }
 
     /**
@@ -43,6 +100,7 @@ class taoResultServer_actions_QtiRestResults extends \tao_actions_CommonRestModu
      */
     protected function returnValidXmlSuccess($data)
     {
+
         $doc = @simplexml_load_string($data);
 
         if ($doc) {
@@ -52,51 +110,4 @@ class taoResultServer_actions_QtiRestResults extends \tao_actions_CommonRestModu
             throw new Exception('Xml output is malformed.');
         }
     }
-
-    /**
-     * Override tao_actions_CommonRestModule::get to route only to getDeliveryExecution
-     *
-     * @param null $uri
-     * @return void
-     */
-    protected function get($uri = null){
-        try {
-            $this->service->setParameters($this->getParameters());
-            $data = $this->service->getDeliveryExecution();
-            if (empty($data)) {
-                common_Logger::e('Empty delivery execution');
-                throw new common_exception_NoContent('No data to output.');
-            } else {
-                echo $this->returnValidXmlSuccess($data);
-            }
-        } catch (Exception $e) {
-            $this->returnFailure($e);
-        }
-    }
-
-    /**
-     * Optionnaly a specific rest controller may declare
-     * aliases for parameters used for the rest communication
-     */
-    protected function getParametersAliases()
-    {
-        return array(
-            "testtaker" => PROPERTY_DELVIERYEXECUTION_SUBJECT,
-            "delivery"  => PROPERTY_DELVIERYEXECUTION_DELIVERY
-        );
-    }
-
-    /**
-     * Optionnal Requirements for parameters to be sent on every service
-     */
-    protected function getParametersRequirements()
-    {
-        return array(
-            "get" => array(
-                PROPERTY_DELVIERYEXECUTION_SUBJECT,
-                PROPERTY_DELVIERYEXECUTION_DELIVERY
-            )
-        );
-    }
-
 }
