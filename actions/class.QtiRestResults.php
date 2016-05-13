@@ -22,7 +22,7 @@
 
 use oat\taoResultServer\models\classes\QtiResultsService;
 
-class taoResultServer_actions_QtiRestResults extends \tao_actions_CommonRestModule
+class taoResultServer_actions_QtiRestResults extends tao_actions_RestController
 {
     const TESTTAKER = 'testtaker';
     const DELIVERY = 'delivery';
@@ -45,16 +45,32 @@ class taoResultServer_actions_QtiRestResults extends \tao_actions_CommonRestModu
     }
 
     /**
-     * Override tao_actions_CommonRestModule::get to route only to getDeliveryExecution
+     * Entry point of taoQtiRestResult api
+     * For the moment only get method is allowed
+     *
+     * @throws common_exception_BadRequest
+     */
+    public function index()
+    {
+        try {
+            if ($this->getRequestMethod()!='GET') {
+                throw new common_exception_BadRequest($this->getRequestURI());
+            }
+            $this->get();
+        } catch (Exception $e) {
+            $this->returnFailure($e);
+        }
+    }
+
+    /**
      * Valid parameters & get delivery execution
      *
-     * @param null $uri
      * @throws Exception
      * @throws common_exception_MissingParameter
      * @throws common_exception_NotFound
      * @return void
      */
-    protected function get($uri = null)
+    protected function get()
     {
         $deliveryExecution = $this->getValidDeliveryExecutionFromParameters();
         $data = $this->getQtiResultService()->getDeliveryExecutionXml($deliveryExecution);
