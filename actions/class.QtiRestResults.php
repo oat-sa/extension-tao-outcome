@@ -22,7 +22,7 @@
 
 use oat\taoResultServer\models\classes\QtiResultsService;
 
-class taoResultServer_actions_QtiRestResults extends \tao_actions_CommonRestModule
+class taoResultServer_actions_QtiRestResults extends tao_actions_RestController
 {
     const TESTTAKER = 'testtaker';
     const DELIVERY = 'delivery';
@@ -45,22 +45,27 @@ class taoResultServer_actions_QtiRestResults extends \tao_actions_CommonRestModu
     }
 
     /**
-     * Override tao_actions_CommonRestModule::get to route only to getDeliveryExecution
+     * Entry point of taoQtiRestResult api
      * Valid parameters & get delivery execution
      *
-     * @param null $uri
-     * @return void
+     * @throws common_exception_BadRequest
      */
-    protected function get($uri = null)
+    public function index()
     {
         try {
+            if ($this->getRequestMethod()!='GET') {
+                throw new common_exception_BadRequest($this->getRequestURI());
+            }
+
             $deliveryExecution = $this->getValidDeliveryExecutionFromParameters();
             $data = $this->getQtiResultService()->getDeliveryExecutionXml($deliveryExecution);
+
+            // Empty data?
             if (empty($data)) {
                 throw new common_exception_NotFound('No data to output.');
-            } else {
-                echo $this->returnValidXmlSuccess($data);
             }
+
+            $this->returnValidXml($data);
         } catch (Exception $e) {
             $this->returnFailure($e);
         }
@@ -92,22 +97,20 @@ class taoResultServer_actions_QtiRestResults extends \tao_actions_CommonRestModu
     }
 
     /**
-     * Return a xml output as 200 rest response
+     * Valid the xml output
      *
      * @param $data
-     * @return mixed
+     * @return void
      * @throws Exception
      */
-    protected function returnValidXmlSuccess($data)
+    protected function returnValidXml($data)
     {
-
         $doc = @simplexml_load_string($data);
-
-        if ($doc) {
-            return $data;
-        } else {
+        if (!$doc) {
             common_Logger::i('invalid xml result');
             throw new Exception('Xml output is malformed.');
         }
+        echo $data;
+        exit(0);
     }
 }
