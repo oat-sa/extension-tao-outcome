@@ -46,7 +46,7 @@ class taoResultServer_actions_QtiRestResults extends tao_actions_RestController
 
     /**
      * Entry point of taoQtiRestResult api
-     * For the moment only get method is allowed
+     * Valid parameters & get delivery execution
      *
      * @throws common_exception_BadRequest
      */
@@ -56,28 +56,19 @@ class taoResultServer_actions_QtiRestResults extends tao_actions_RestController
             if ($this->getRequestMethod()!='GET') {
                 throw new common_exception_BadRequest($this->getRequestURI());
             }
-            $this->get();
+
+            $deliveryExecution = $this->getValidDeliveryExecutionFromParameters();
+            $data = $this->getQtiResultService()->getDeliveryExecutionXml($deliveryExecution);
+
+            // Empty data?
+            if (empty($data)) {
+                throw new common_exception_NotFound('No data to output.');
+            }
+
+            $this->returnValidXml($data);
         } catch (Exception $e) {
             $this->returnFailure($e);
         }
-    }
-
-    /**
-     * Valid parameters & get delivery execution
-     *
-     * @throws Exception
-     * @throws common_exception_MissingParameter
-     * @throws common_exception_NotFound
-     * @return void
-     */
-    protected function get()
-    {
-        $deliveryExecution = $this->getValidDeliveryExecutionFromParameters();
-        $data = $this->getQtiResultService()->getDeliveryExecutionXml($deliveryExecution);
-        if (empty($data)) {
-            throw new common_exception_NotFound('No data to output.');
-        }
-        $this->returnValidXml($data);
     }
 
     /**
