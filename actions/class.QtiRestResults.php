@@ -22,81 +22,95 @@
 
 use oat\taoResultServer\models\classes\QtiResultsService;
 
-class taoResultServer_actions_QtiRestResults extends \tao_actions_CommonRestModule
+class taoResultServer_actions_QtiRestResults extends tao_actions_RestController
 {
-    /**
-     * taoResultServer_actions_QtiRestResults constructor.
-     * Pass model service to handle http call business
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->service = QtiResultsService::singleton();
-    }
+    const TESTTAKER = 'testtaker';
+    const DELIVERY = 'delivery';
+    const DELIVERY_EXECUTION = 'deliveryExecution';
+
+    protected $service;
 
     /**
-     * Return a xml output as 200 rest response
+     * Return the service for Qti Result
      *
-     * @param $data
-     * @return mixed
-     * @throws Exception
+     * @return QtiResultsService
      */
-    protected function returnValidXmlSuccess($data)
+    protected function getQtiResultService()
     {
-        $doc = @simplexml_load_string($data);
-
-        if ($doc) {
-            return $data;
-        } else {
-            common_Logger::i('invalid xml result');
-            throw new Exception('Xml output is malformed.');
+        if (!$this->service) {
+            $this->service = QtiResultsService::singleton();
+            $this->service->setServiceLocator($this->getServiceManager());
         }
+        return $this->service;
     }
 
     /**
-     * Override tao_actions_CommonRestModule::get to route only to getDeliveryExecution
+     * Entry point of taoQtiRestResult api
+     * Valid parameters & get delivery execution
      *
-     * @param null $uri
-     * @return void
+     * @throws common_exception_BadRequest
      */
-    protected function get($uri = null){
+    public function index()
+    {
         try {
-            $this->service->setParameters($this->getParameters());
-            $data = $this->service->getDeliveryExecution();
-            if (empty($data)) {
-                common_Logger::e('Empty delivery execution');
-                throw new common_exception_NoContent('No data to output.');
-            } else {
-                echo $this->returnValidXmlSuccess($data);
+            if ($this->getRequestMethod()!='GET') {
+                throw new common_exception_BadRequest($this->getRequestURI());
             }
+
+            $deliveryExecution = $this->getValidDeliveryExecutionFromParameters();
+            $data = $this->getQtiResultService()->getDeliveryExecutionXml($deliveryExecution);
+
+            // Empty data?
+            if (empty($data)) {
+                throw new common_exception_NotFound('No data to output.');
+            }
+
+            $this->returnValidXml($data);
         } catch (Exception $e) {
             $this->returnFailure($e);
         }
     }
 
     /**
-     * Optionnaly a specific rest controller may declare
-     * aliases for parameters used for the rest communication
+     * Valid parameters TESTTAKER uri and DELIVERY uri couple
+     * OR DELIVERYEXECUTION uri
+     *
+     * @return core_kernel_classes_Resource|mixed
+     * @throws common_exception_InvalidArgumentType
+     * @throws common_exception_MissingParameter
      */
-    protected function getParametersAliases()
+    protected function getValidDeliveryExecutionFromParameters()
     {
-        return array(
-            "testtaker" => PROPERTY_DELVIERYEXECUTION_SUBJECT,
-            "delivery"  => PROPERTY_DELVIERYEXECUTION_DELIVERY
-        );
+        if ($this->hasRequestParameter(self::TESTTAKER) && $this->hasRequestParameter(self::DELIVERY)) {
+            return $this->getQtiResultService()->getDeliveryExecutionByTestTakerAndDelivery(
+                $this->getRequestParameter(self::DELIVERY),
+                $this->getRequestParameter(self::TESTTAKER)
+            );
+        } elseif ($this->hasRequestParameter(self::DELIVERY_EXECUTION)) {
+            return $this->getQtiResultService()->getDeliveryExecutionById(
+                $this->getRequestParameter(self::DELIVERY_EXECUTION)
+            );
+        } else {
+            throw new common_exception_MissingParameter(self::TESTTAKER . ' coupled with ' . self::DELIVERY .
+                ', or ' . self::DELIVERY_EXECUTION, $this->getRequestURI());
+        }
     }
 
     /**
-     * Optionnal Requirements for parameters to be sent on every service
+     * Valid the xml output
+     *
+     * @param $data
+     * @return void
+     * @throws Exception
      */
-    protected function getParametersRequirements()
+    protected function returnValidXml($data)
     {
-        return array(
-            "get" => array(
-                PROPERTY_DELVIERYEXECUTION_SUBJECT,
-                PROPERTY_DELVIERYEXECUTION_DELIVERY
-            )
-        );
+        $doc = @simplexml_load_string($data);
+        if (!$doc) {
+            common_Logger::i('invalid xml result');
+            throw new Exception('Xml output is malformed.');
+        }
+        echo $data;
+        exit(0);
     }
-
 }
