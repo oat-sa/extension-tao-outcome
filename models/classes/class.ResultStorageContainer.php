@@ -65,7 +65,14 @@ implements taoResultServer_models_classes_WritableResultStorage
             $implementation["object"]->storeRelatedDelivery($deliveryResultIdentifier, $deliveryIdentifier);
         }
     }
-    
+
+    public function storeRelatedDeliveryExecution($deliveryResultIdentifier, $executionIdentifier)
+    {
+        foreach ($this->implementations as $implementation) {
+            $implementation["object"]->storeRelatedDeliveryExecution($deliveryResultIdentifier, $executionIdentifier);
+        }
+    }
+
     /*
      * (non-PHPdoc) @see taoResultServer_models_classes_WritableResultStorage::storeItemVariable()
      */
@@ -140,7 +147,17 @@ implements taoResultServer_models_classes_WritableResultStorage
         }
         return $returnData;
     }
-    
+    public function getDeliveryExecution($deliveryResultIdentifier){
+        $returnData = array();
+        foreach ($this->implementations as $implementation) {
+             if ($implementation["object"] instanceof taoResultServer_models_classes_ReadableResultStorage){
+                $implData = $implementation["object"]->getDeliveryExecution($deliveryResultIdentifier);
+                $returnData = array_merge($implData, $returnData) ;
+             }
+        }
+        return $returnData;
+    }
+
     /*
      * (non-PHPdoc) @see taoResultServer_models_classes_WritableResultStorage::spawnResult()
      */

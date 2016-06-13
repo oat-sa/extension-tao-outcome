@@ -202,6 +202,22 @@ class taoResultServer_models_classes_ResultServerStateFull extends tao_models_cl
         }
     }
 
+    /**
+     * @param string $executionIdentifier
+     * @return string result identifier
+     * @throws common_exception_MissingParameter
+     */
+    public function storeRelatedDeliveryExecution($executionIdentifier)
+    {
+        $resultServer = $this->restoreResultServer();
+        if ($executionIdentifier) {
+            $resultServer->getStorageInterface()->storeRelatedDeliveryExecution($this->getValue("resultServer_deliveryResultIdentifier"), $executionIdentifier);
+            return $this->getValue("resultServer_deliveryResultIdentifier");
+        } else {
+            throw new common_exception_MissingParameter("executionIdentifier");
+        }
+    }
+
     public function storeItemVariable($test, $item, taoResultServer_models_classes_Variable $itemVariable, $callIdItem)
     {
         $resultServer = $this->restoreResultServer();
@@ -258,6 +274,10 @@ class taoResultServer_models_classes_ResultServerStateFull extends tao_models_cl
     public function getDelivery($deliveryResultIdentifier){
         $resultServer = $this->restoreResultServer();
         return $resultServer->getStorageInterface()->getDelivery($deliveryResultIdentifier) ;
+    }
+    public function getDeliveryExecution($deliveryResultIdentifier){
+        $resultServer = $this->restoreResultServer();
+        return $resultServer->getStorageInterface()->getDeliveryExecution($deliveryResultIdentifier) ;
     }
 }
 ?>
