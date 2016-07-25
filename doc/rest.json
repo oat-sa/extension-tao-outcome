@@ -1,0 +1,156 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "QTI Result REST API",
+        "description": "It allows you to query for a delivery execution."
+    },
+    "schemes": [
+        "http",
+        "https"
+    ],
+    "paths": {
+        "/taoResultServer/QtiRestResults/index": {
+            "get": {
+                "description": "Get result based on a test taker and a delivery or only a delivery execution.",
+                "summary": "Delivery execution results",
+                "consumes": [
+                    "application/json",
+                    "text/xml",
+                    "application/xml",
+                    "application/rdf+xml"
+                ],
+                "produces": [
+                    "application/json",
+                    "application/xml",
+                    "text/xml"
+                ],
+                "parameters": [
+                    {
+                        "name": "testtaker",
+                        "in": "query",
+                        "description": "Test taker identifier in URI format.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "delivery",
+                        "in": "query",
+                        "description": "Delivery identifier in URI format.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "deliveryExecution",
+                        "in": "query",
+                        "description": "Delivery execution identifier in URI format.",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response in XML format. The XML output complies with the QTI 2.1 Results Reporting Standard, which is available [here](http://www.imsglobal.org/question/qtiv2p1/imsqti_resultv2p1.html)"
+                    },
+                    "400": {
+                        "description": "Bad request if you send invalid parameters.",
+                        "examples": {
+                            "application/json": {
+                                "success": false,
+                                "errorCode": 0,
+                                "errorMsg": "At least one mandatory parameter was required but found missing in your request",
+                                "version": "3.1.0"
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/errorModel"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "examples": {
+                            "application/json": {
+                                "success": false,
+                                "errorCode": 401,
+                                "errorMsg": "You are not authorized to access this functionality.",
+                                "version": "3.1.0"
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/errorModel"
+                        }
+                    },
+                    "404": {
+                        "description": "Delivery execution not found.",
+                        "examples": {
+                            "application/json": {
+                                "success": false,
+                                "errorCode": 0,
+                                "errorMsg": "Provided parameters don't match with any delivery execution.",
+                                "version": "3.1.0"
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/errorModel"
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable",
+                        "examples": {
+                            "application/json": {
+                                "success": false,
+                                "errorCode": 0,
+                                "errorMsg": "The requested content encoding cannot be satisfied",
+                                "version": "3.1.0"
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/errorModel"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "basic_auth": []
+                    }
+                ]
+            }
+        }
+    },
+    "securityDefinitions": {
+        "basic_auth": {
+            "type": "basic"
+        }
+    },
+    "definitions": {
+        "errorModel": {
+            "type": "object",
+            "description": "contain error",
+            "required": [
+                "success",
+                "version",
+                "errorCode",
+                "errorMsg"
+            ],
+            "properties": {
+                "success": {
+                    "type": "boolean",
+                    "description": "false on failure",
+                    "default": false
+                },
+                "version": {
+                    "type": "string",
+                    "description": "tao version"
+                },
+                "errorCode": {
+                    "type": "integer",
+                    "description": "error code"
+                },
+                "errorMsg": {
+                    "type": "string",
+                    "description": "error description"
+                }
+            }
+        }
+    }
+}
