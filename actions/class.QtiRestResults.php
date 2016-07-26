@@ -45,66 +45,102 @@ class taoResultServer_actions_QtiRestResults extends tao_actions_RestController
     }
 
     /**
-     * Entry point of taoQtiRestResult api
-     * Valid parameters & get delivery execution
+     * It's based on TestTaker and Delivery. Parameters are in URI format.
+     * It fetches the latest Delivery Execution.
      *
-     * @throws common_exception_BadRequest
+     * There are two endpoints because of swagger. In this way, it's possible to describe the parameters properly.
+     *
+     * @author Gyula Szucs, <gyula@taotesting.com>
      */
-    public function index()
+    public function getLatest()
     {
-        try {
-            if ($this->getRequestMethod()!='GET') {
-                throw new common_exception_BadRequest($this->getRequestURI());
-            }
+        try
+        {
+            $this->checkMethod();
 
-            $deliveryExecution = $this->getValidDeliveryExecutionFromParameters();
-            $data = $this->getQtiResultService()->getDeliveryExecutionXml($deliveryExecution);
+            $this->validateParams(array(self::TESTTAKER, self::DELIVERY));
 
-            // Empty data?
-            if (empty($data)) {
-                throw new common_exception_NotFound('No data to output.');
-            }
+            $deliveryExecution = $this->getQtiResultService()->getDeliveryExecutionByTestTakerAndDelivery(
+                $this->getRequestParameter(self::DELIVERY),
+                $this->getRequestParameter(self::TESTTAKER)
+            );
 
-            $this->returnValidXml($data);
+            $this->returnValidXml($this->getQtiResultService()->getDeliveryExecutionXml($deliveryExecution));
         } catch (Exception $e) {
             $this->returnFailure($e);
         }
     }
 
     /**
-     * Valid parameters TESTTAKER uri and DELIVERY uri couple
-     * OR DELIVERYEXECUTION uri
+     * It requires only Delivery Execution in URI format.
      *
-     * @return core_kernel_classes_Resource|mixed
-     * @throws common_exception_InvalidArgumentType
-     * @throws common_exception_MissingParameter
+     * @author Gyula Szucs, <gyula@taotesting.com>
      */
-    protected function getValidDeliveryExecutionFromParameters()
+    public function byDeliveryExecution()
     {
-        if ($this->hasRequestParameter(self::TESTTAKER) && $this->hasRequestParameter(self::DELIVERY)) {
-            return $this->getQtiResultService()->getDeliveryExecutionByTestTakerAndDelivery(
-                $this->getRequestParameter(self::DELIVERY),
-                $this->getRequestParameter(self::TESTTAKER)
-            );
-        } elseif ($this->hasRequestParameter(self::DELIVERY_EXECUTION)) {
-            return $this->getQtiResultService()->getDeliveryExecutionById(
+        try
+        {
+            $this->checkMethod();
+
+            $this->validateParams(array(self::DELIVERY_EXECUTION));
+
+            $deliveryExecution = $this->getQtiResultService()->getDeliveryExecutionById(
                 $this->getRequestParameter(self::DELIVERY_EXECUTION)
             );
-        } else {
-            throw new common_exception_MissingParameter(self::TESTTAKER . ' coupled with ' . self::DELIVERY .
-                ', or ' . self::DELIVERY_EXECUTION, $this->getRequestURI());
+
+            $this->returnValidXml($this->getQtiResultService()->getDeliveryExecutionXml($deliveryExecution));
+        } catch (Exception $e) {
+            $this->returnFailure($e);
         }
     }
 
     /**
-     * Valid the xml output
+     * Checks the required request method.
      *
-     * @param $data
-     * @return void
+     * @author Gyula Szucs, <gyula@taotesting.com>
+     * @throws common_exception_MethodNotAllowed
+     */
+    protected function checkMethod()
+    {
+        if ($this->getRequestMethod()!='GET') {
+            throw new common_exception_MethodNotAllowed($this->getRequestURI());
+        }
+    }
+
+    /**
+     * Validates the given parameters.
+     *
+     * @author Gyula Szucs, <gyula@taotesting.com>
+     * @param array $params
+     * @throws common_exception_MissingParameter
+     * @throws common_exception_ValidationFailed
+     */
+    protected function validateParams(array $params)
+    {
+        foreach ($params as $param) {
+            if (!$this->hasRequestParameter($param)) {
+                throw new common_exception_MissingParameter($param .' is missing from the request.', $this->getRequestURI());
+            }
+
+            if (empty($this->getRequestParameter($param))) {
+                throw new common_exception_ValidationFailed($param .' cannot be empty');
+            }
+        }
+    }
+
+    /**
+     * Return XML response if it is valid.
+     *
+     * @param string $data
      * @throws Exception
+     * @throws common_exception_NotFound
      */
     protected function returnValidXml($data)
     {
+        if (empty($data)) {
+            throw new common_exception_NotFound('Delivery execution not found.');
+        }
+
         $doc = @simplexml_load_string($data);
         if (!$doc) {
             common_Logger::i('invalid xml result');
