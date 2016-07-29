@@ -128,16 +128,9 @@
                 "tags": [
                     "result"
                 ],
-                "consumes": [
-                    "application/json",
-                    "text/xml",
-                    "application/xml",
-                    "application/rdf+xml"
-                ],
                 "produces": [
                     "application/json",
-                    "application/xml",
-                    "text/xml"
+                    "application/xml"
                 ],
                 "parameters": [
                     {
