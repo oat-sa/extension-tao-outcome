@@ -36,7 +36,7 @@ class QtiResultsService extends \tao_models_classes_CrudService implements Servi
     /**
      * Get the implementation of delivery execution service
      *
-     * @return \taoDelivery_models_classes_execution_DeliveryExecution
+     * @return \taoDelivery_models_classes_execution_Service
      */
     protected function getDeliveryExecutionService()
     {
