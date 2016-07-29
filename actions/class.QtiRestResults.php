@@ -146,6 +146,10 @@ class taoResultServer_actions_QtiRestResults extends tao_actions_RestController
             common_Logger::i('invalid xml result');
             throw new Exception('Xml output is malformed.');
         }
+
+        // force XML content type header
+        header('Content-Type: application/xml');
+
         echo $data;
         exit(0);
     }
