@@ -19,7 +19,6 @@
  */
 
 namespace oat\taoResultServer\models\classes;
-use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 
 /**
@@ -36,12 +35,10 @@ class CrudResultsService extends \tao_models_classes_CrudService {
     const GROUP_BY_ITEM = 2;
 
     protected $resultClass = null;
-    protected $resultService = null;
 
     public function __construct() {
         parent::__construct();
         $this->resultClass = new \core_kernel_classes_Class(TAO_DELIVERY_RESULT);
-        $this->resultService = ResultsService::singleton();
     }
 
     public function getRootClass() {

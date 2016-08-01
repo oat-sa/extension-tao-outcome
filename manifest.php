@@ -9,12 +9,12 @@ $extpath = dirname(__FILE__).DIRECTORY_SEPARATOR;
 $taopath = dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'tao'.DIRECTORY_SEPARATOR;
 	
 return array(
-	'name' => 'taoResultServer',
+    'name' => 'taoResultServer',
     'label' => 'Result core extension',
-	'description' => 'Results Server management and exposed interfaces for results data submission',
+    'description' => 'Results Server management and exposed interfaces for results data submission',
     'license' => 'GPL-2.0',
-    'version' => '2.10.1',
-	'author' => 'Open Assessment Technologies',
+    'version' => '2.10.2',
+    'author' => 'Open Assessment Technologies',
     //taoResults may be needed for the taoResults taoResultServerModel that uses taoResults db storage
 	'requires' => array(
 	    'tao' => '>=3.2.0'
