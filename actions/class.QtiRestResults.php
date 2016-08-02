@@ -123,7 +123,7 @@ class taoResultServer_actions_QtiRestResults extends tao_actions_RestController
             }
 
             if (empty($this->getRequestParameter($param))) {
-                throw new common_exception_ValidationFailed($param .' cannot be empty');
+                throw new common_exception_ValidationFailed($param, $param .' cannot be empty');
             }
         }
     }

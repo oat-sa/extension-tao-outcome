@@ -33,7 +33,7 @@ class taoResultServer_scripts_update_Updater extends \common_ext_ExtensionUpdate
      */
     public function update($initialVersion) {
 
-        $this->skip('2.6', '2.10.2');
+        $this->skip('2.6', '2.11.0');
 
     }
 }
