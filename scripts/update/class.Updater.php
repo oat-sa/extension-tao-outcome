@@ -18,7 +18,8 @@
  *
  *
  */
-
+use oat\taoResultServer\models\classes\ResultServerService;
+use oat\taoResultServer\models\classes\implementation\OntologyService;
 /**
  * 
  * @author Joel Bout <joel@taotesting.com>
@@ -34,6 +35,11 @@ class taoResultServer_scripts_update_Updater extends \common_ext_ExtensionUpdate
     public function update($initialVersion) {
 
         $this->skip('2.6', '2.10.2');
+
+        if ($this->isVersion('2.10.2')) {
+            $this->getServiceManager()->register(ResultServerService::SERVICE_ID, new OntologyService());
+            $this->setVersion('2.11.0');
+        }
 
     }
 }

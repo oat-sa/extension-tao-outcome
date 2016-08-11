@@ -63,7 +63,6 @@ interface ResultManagement extends \taoResultServer_models_classes_ReadableResul
      */
     public function countResultByDelivery($delivery);
 
-
     /**
      * Remove the result and all the related variables
      * @param string $deliveryResultIdentifier The identifier of the delivery execution
@@ -72,4 +71,3 @@ interface ResultManagement extends \taoResultServer_models_classes_ReadableResul
     public function deleteResult($deliveryResultIdentifier);
 
 }
-?>

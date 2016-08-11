@@ -49,17 +49,23 @@ class CrudResultsService extends \tao_models_classes_CrudService {
         $returnData = array();
         $deliveryExecution = \taoDelivery_models_classes_execution_ServiceProxy::singleton()->getDeliveryExecution($uri);
         $delivery = $deliveryExecution->getDelivery();
-
-        $implementation = $this->getImplementationClass($delivery);
+    
+        $resultService = $this->getServiceLocator()->get(ResultServerService::SERVICE_ID);
+        $implementation = $resultService->getResultStorage($delivery->getUri());
+        return $this->format($implementation, $uri);
+    }
+        
+    public function format(\taoResultServer_models_classes_ReadableResultStorage $resultStorage, $resultIdentifier, $groupBy = self::GROUP_BY_DELIVERY) {
+        $returnData = array();
         
         if ($groupBy === self::GROUP_BY_DELIVERY || $groupBy === self::GROUP_BY_ITEM) {
-            $calls = $implementation->getRelatedItemCallIds($uri);
+            $calls = $resultStorage->getRelatedItemCallIds($resultIdentifier);
         } else {
-            $calls = $implementation->getRelatedTestCallIds($uri);
+            $calls = $resultStorage->getRelatedTestCallIds($resultIdentifier);
         }
 
         foreach($calls as $callId){
-            $results = $implementation->getVariables($callId);
+            $results = $resultStorage->getVariables($callId);
             $resource = array();
                 foreach($results as $result){
                     $result = array_pop($result);
@@ -79,7 +85,7 @@ class CrudResultsService extends \tao_models_classes_CrudService {
                     }
 
                     if ($groupBy === self::GROUP_BY_DELIVERY) {
-                        $returnData[$uri][] = $resource;
+                        $returnData[$resultIdentifier][] = $resource;
                     } else {
                         $returnData[$callId][] = $resource;
                     }
@@ -96,7 +102,8 @@ class CrudResultsService extends \tao_models_classes_CrudService {
             // delivery uri
             $delivery = $assembly->getUri();
 
-            $implementation = $this->getImplementationClass($assembly);
+            $resultService = $this->getServiceLocator()->get(ResultServerService::SERVICE_ID);
+            $implementation = $resultService->getResultStorage($delivery);
 
             // get delivery executions
 
@@ -167,44 +174,4 @@ class CrudResultsService extends \tao_models_classes_CrudService {
         // TODO: Implement getClassService() method.
     }
 
-
-    private function getImplementationClass($delivery){
-
-        if(is_null($delivery)){
-            throw new \common_exception_Error(__('This delivery doesn\'t exists'));
-        }
-
-        $deliveryResultServer = $delivery->getOnePropertyValue(new \core_kernel_classes_Property(TAO_DELIVERY_RESULTSERVER_PROP));
-
-        if(is_null($deliveryResultServer)){
-            throw new \common_exception_Error(__('This delivery has no Result Server'));
-        }
-        $resultServerModel = $deliveryResultServer->getPropertyValues(new \core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_PROP));
-
-        if(is_null($resultServerModel)){
-            throw new \common_exception_Error(__('This delivery has no readable Result Server'));
-        }
-
-        foreach($resultServerModel as $model){
-            $model = new \core_kernel_classes_Class($model);
-
-            /** @var $implementationClass \core_kernel_classes_Literal*/
-            $implementationClass = $model->getOnePropertyValue(new \core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_IMPL_PROP));
-
-
-            if (!is_null($implementationClass)
-                && class_exists($implementationClass->literal) && in_array('taoResultServer_models_classes_ReadableResultStorage',class_implements($implementationClass->literal))) {
-                $className = $implementationClass->literal;
-                if (!class_exists($className)) {
-                    throw new \common_exception_Error('readable resultinterface implementation '.$className.' not found');
-                }
-                return new $className();
-            }
-        }
-
-        throw new \common_exception_Error(__('This delivery has no readable Result Server'));
-
-    }
 }
-
-?>
