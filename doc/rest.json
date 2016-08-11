@@ -121,7 +121,7 @@
                 ]
             }
         },
-        "/taoResultServer/QtiRestResults/byDeliveryExecution": {
+        "/taoResultServer/QtiRestResults/getQtiResultXml": {
             "get": {
                 "description": "Get a delivery execution by its identifier.",
                 "summary": "Delivery execution by its identifier.",
@@ -133,10 +133,17 @@
                     "application/xml"
                 ],
                 "parameters": [
-                    {
-                        "name": "deliveryExecution",
+                	{
+                        "name": "delivery",
                         "in": "query",
-                        "description": "Delivery execution identifier in URI format.",
+                        "description": "Delivery identifier in URI format.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "result",
+                        "in": "query",
+                        "description": "Result identifier (by default same as delivery execution id).",
                         "required": true,
                         "type": "string"
                     }

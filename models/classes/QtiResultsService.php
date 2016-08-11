@@ -80,7 +80,7 @@ class QtiResultsService extends \tao_models_classes_CrudService implements Servi
         }
         return $deliveryExecution;
     }
-
+    
     /**
      * Return delivery execution as xml of testtaker based on delivery
      *
@@ -88,20 +88,29 @@ class QtiResultsService extends \tao_models_classes_CrudService implements Servi
      */
     public function getDeliveryExecutionXml(DeliveryExecutionInterface $deliveryExecution)
     {
-        $resultService = new CrudResultsService();
+        return $this->getQtiResultXml($deliveryExecution->getDelivery()->getUri(), $deliveryExecution->getUri());
+    }
+    
+    public function getQtiResultXml($deliveryId, $resultId)
+    {
+        $delivery = new \core_kernel_classes_Resource($deliveryId);
+        $resultService = $this->getServiceLocator()->get(ResultServerService::SERVICE_ID);
+        $resultServer = $resultService->getResultStorage($deliveryId);
+
+        $crudService = new CrudResultsService();
 
         $dom = new \DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $itemResults = $resultService->get($deliveryExecution->getUri(), CrudResultsService::GROUP_BY_ITEM);
-        $testResults = $resultService->get($deliveryExecution->getUri(), CrudResultsService::GROUP_BY_TEST);
+        $itemResults = $crudService->format($resultServer, $resultId, CrudResultsService::GROUP_BY_ITEM);
+        $testResults = $crudService->format($resultServer, $resultId, CrudResultsService::GROUP_BY_TEST);
 
         $assessmentResultElt = $dom->createElementNS(self::QTI_NS, 'assessmentResult');
         $dom->appendChild($assessmentResultElt);
 
         /** Context */
         $contextElt = $dom->createElementNS(self::QTI_NS, 'context');
-        $contextElt->setAttribute('sourcedId', \tao_helpers_Uri::getUniqueId($deliveryExecution->getUserIdentifier()));
+        $contextElt->setAttribute('sourcedId', \tao_helpers_Uri::getUniqueId($resultServer->getTestTaker($resultId)));
         $assessmentResultElt->appendChild($contextElt);
 
         /** Test Result */
