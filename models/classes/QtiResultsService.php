@@ -134,7 +134,7 @@ class QtiResultsService extends \tao_models_classes_CrudService implements Servi
                 $testVariableElement->setAttribute('cardinality', $itemVariable['cardinality']);
                 $testVariableElement->setAttribute('baseType', $itemVariable['basetype']);
 
-                $valueElement = $dom->createElementNS(self::QTI_NS, 'value', trim($itemVariable['value']));
+                $valueElement = $this->createCDATANode($dom, 'value', trim($itemVariable['value']));
 
                 if ($isResponseVariable) {
                     $candidateResponseElement = $dom->createElementNS(self::QTI_NS, 'candidateResponse');
