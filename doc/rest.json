@@ -15,7 +15,7 @@
         "/taoResultServer/QtiRestResults/getLatest": {
             "get": {
                 "description": "Get the latest delivery execution for a test taker and a delivery.",
-                "summary": "Latest delivery execution by test taker and delivery",
+                "summary": "Latest QTI result by test taker and delivery",
                 "tags": [
                     "result"
                 ],
