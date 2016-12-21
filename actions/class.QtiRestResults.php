@@ -20,7 +20,7 @@
 
 //http://tao.dev/taoResultServer/QtiRestResults?testtaker=http%3A%2F%2Ftao.local%2Fmytao.rdf%23i1460560178726251&delivery=http%3A%2F%2Ftao.local%2Fmytao.rdf%23i14607116346750186
 
-use oat\taoResultServer\models\classes\QtiResultsService;
+use oat\taoResultServer\models\classes\ResultService;
 
 class taoResultServer_actions_QtiRestResults extends tao_actions_RestController
 {
@@ -48,15 +48,14 @@ class taoResultServer_actions_QtiRestResults extends tao_actions_RestController
     }
 
     /**
-     * Return the service for Qti Result
+     * Return the service for Result
      *
-     * @return QtiResultsService
+     * @return ResultService
      */
     protected function getQtiResultService()
     {
         if (!$this->service) {
-            $this->service = QtiResultsService::singleton();
-            $this->service->setServiceLocator($this->getServiceManager());
+            $this->service = $this->getServiceManager()->get(ResultService::SERVICE_ID);
         }
         return $this->service;
     }

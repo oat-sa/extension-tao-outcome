@@ -14,24 +14,31 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2013 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
+ * Copyright (c) 2016 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  *
  */
 
 namespace oat\taoResultServer\models\classes;
 
+use oat\oatbox\PhpSerializeStateless;
 use oat\taoDelivery\model\execution\DeliveryExecution as DeliveryExecutionInterface;
 use qtism\common\enums\Cardinality;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 
-class QtiResultsService extends \tao_models_classes_CrudService implements ServiceLocatorAwareInterface
+class QtiResultsService extends \tao_models_classes_CrudService
+    implements ServiceLocatorAwareInterface, ResultService
 {
     use ServiceLocatorAwareTrait;
+    use PhpSerializeStateless;
 
     protected $deliveryExecutionService;
 
     const QTI_NS = 'http://www.imsglobal.org/xsd/imsqti_result_v2p1';
+
+    public function __construct()
+    {
+    }
 
     /**
      * Get the implementation of delivery execution service
@@ -112,7 +119,7 @@ class QtiResultsService extends \tao_models_classes_CrudService implements Servi
         $contextElt = $dom->createElementNS(self::QTI_NS, 'context');
         $contextElt->setAttribute('sourcedId', \tao_helpers_Uri::getUniqueId($resultServer->getTestTaker($resultId)));
         $assessmentResultElt->appendChild($contextElt);
-
+        
         /** Test Result */
         foreach ($testResults as $testResultIdentifier => $testResult) {
             $identifierParts = explode('.', $testResultIdentifier);
