@@ -82,7 +82,9 @@ class QtiResultsService extends \tao_models_classes_CrudService
     public function getDeliveryExecutionById($deliveryExecutionId)
     {
         $deliveryExecution = $this->getDeliveryExecutionService()->getDeliveryExecution($deliveryExecutionId);
-        if (!$deliveryExecution->exists()) {
+        try {
+            $deliveryExecution->getDelivery();
+        } catch (\common_exception_NotFound $e) {
             throw new \common_exception_NotFound('Provided parameters don\'t match with any delivery execution.');
         }
         return $deliveryExecution;
@@ -95,7 +97,7 @@ class QtiResultsService extends \tao_models_classes_CrudService
      */
     public function getDeliveryExecutionXml(DeliveryExecutionInterface $deliveryExecution)
     {
-        return $this->getQtiResultXml($deliveryExecution->getDelivery()->getUri(), $deliveryExecution->getUri());
+        return $this->getQtiResultXml($deliveryExecution->getDelivery()->getUri(), $deliveryExecution->getIdentifier());
     }
     
     public function getQtiResultXml($deliveryId, $resultId)
