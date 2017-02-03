@@ -14,29 +14,36 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2013 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
+ * Copyright (c) 2016 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  *
  */
 
 namespace oat\taoResultServer\models\classes;
 
+use oat\oatbox\PhpSerializeStateless;
 use oat\taoDelivery\model\execution\DeliveryExecution as DeliveryExecutionInterface;
 use qtism\common\enums\Cardinality;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 
-class QtiResultsService extends \tao_models_classes_CrudService implements ServiceLocatorAwareInterface
+class QtiResultsService extends \tao_models_classes_CrudService
+    implements ServiceLocatorAwareInterface, ResultService
 {
     use ServiceLocatorAwareTrait;
+    use PhpSerializeStateless;
 
     protected $deliveryExecutionService;
 
     const QTI_NS = 'http://www.imsglobal.org/xsd/imsqti_result_v2p1';
 
+    public function __construct()
+    {
+    }
+
     /**
      * Get the implementation of delivery execution service
      *
-     * @return \taoDelivery_models_classes_execution_DeliveryExecution
+     * @return \taoDelivery_models_classes_execution_Service
      */
     protected function getDeliveryExecutionService()
     {
@@ -75,12 +82,14 @@ class QtiResultsService extends \tao_models_classes_CrudService implements Servi
     public function getDeliveryExecutionById($deliveryExecutionId)
     {
         $deliveryExecution = $this->getDeliveryExecutionService()->getDeliveryExecution($deliveryExecutionId);
-        if (!$deliveryExecution->exists()) {
+        try {
+            $deliveryExecution->getDelivery();
+        } catch (\common_exception_NotFound $e) {
             throw new \common_exception_NotFound('Provided parameters don\'t match with any delivery execution.');
         }
         return $deliveryExecution;
     }
-
+    
     /**
      * Return delivery execution as xml of testtaker based on delivery
      *
@@ -88,22 +97,31 @@ class QtiResultsService extends \tao_models_classes_CrudService implements Servi
      */
     public function getDeliveryExecutionXml(DeliveryExecutionInterface $deliveryExecution)
     {
-        $resultService = new CrudResultsService();
+        return $this->getQtiResultXml($deliveryExecution->getDelivery()->getUri(), $deliveryExecution->getIdentifier());
+    }
+    
+    public function getQtiResultXml($deliveryId, $resultId)
+    {
+        $delivery = new \core_kernel_classes_Resource($deliveryId);
+        $resultService = $this->getServiceLocator()->get(ResultServerService::SERVICE_ID);
+        $resultServer = $resultService->getResultStorage($deliveryId);
+
+        $crudService = new CrudResultsService();
 
         $dom = new \DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $itemResults = $resultService->get($deliveryExecution->getUri(), CrudResultsService::GROUP_BY_ITEM);
-        $testResults = $resultService->get($deliveryExecution->getUri(), CrudResultsService::GROUP_BY_TEST);
+        $itemResults = $crudService->format($resultServer, $resultId, CrudResultsService::GROUP_BY_ITEM);
+        $testResults = $crudService->format($resultServer, $resultId, CrudResultsService::GROUP_BY_TEST);
 
         $assessmentResultElt = $dom->createElementNS(self::QTI_NS, 'assessmentResult');
         $dom->appendChild($assessmentResultElt);
 
         /** Context */
         $contextElt = $dom->createElementNS(self::QTI_NS, 'context');
-        $contextElt->setAttribute('sourcedId', \tao_helpers_Uri::getUniqueId($deliveryExecution->getUserIdentifier()));
+        $contextElt->setAttribute('sourcedId', \tao_helpers_Uri::getUniqueId($resultServer->getTestTaker($resultId)));
         $assessmentResultElt->appendChild($contextElt);
-
+        
         /** Test Result */
         foreach ($testResults as $testResultIdentifier => $testResult) {
             $identifierParts = explode('.', $testResultIdentifier);
@@ -125,7 +143,7 @@ class QtiResultsService extends \tao_models_classes_CrudService implements Servi
                 $testVariableElement->setAttribute('cardinality', $itemVariable['cardinality']);
                 $testVariableElement->setAttribute('baseType', $itemVariable['basetype']);
 
-                $valueElement = $dom->createElementNS(self::QTI_NS, 'value', trim($itemVariable['value']));
+                $valueElement = $this->createCDATANode($dom, 'value', trim($itemVariable['value']));
 
                 if ($isResponseVariable) {
                     $candidateResponseElement = $dom->createElementNS(self::QTI_NS, 'candidateResponse');
