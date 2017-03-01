@@ -25,7 +25,7 @@
  * test at all. For example, items that are organized with learning resources and presented 
  * individually in a formative context.
  */
-abstract class taoResultServer_models_classes_Variable 
+abstract class taoResultServer_models_classes_Variable implements \oat\oatbox\ArrayCastable
 //implements JsonSerializable 
     {
 
@@ -161,6 +161,19 @@ abstract class taoResultServer_models_classes_Variable
      */
     public function toJson() {
         return json_encode((array)$this);
+    }
+    
+    public function __toArray()
+    {
+        $array = (array)$this;
+        $array['class'] = get_class($this);
+        
+        return $array;
+    }
+    
+    public static function fromArray($array)
+    {
+        return call_user_func([$array['class'], 'fromArray'], $array);
     }
 }
 ?>

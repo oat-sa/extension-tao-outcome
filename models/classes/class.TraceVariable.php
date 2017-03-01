@@ -72,6 +72,18 @@ class taoResultServer_models_classes_TraceVariable extends taoResultServer_model
     {
         $this->setTrace($value);
     }
+    
+    public static function fromArray($array)
+    {
+        $variable = new static();
+        $variable->setIdentifier($array['identifier']);
+        $variable->setCardinality($array['cardinality']);
+        $variable->setBaseType($array['baseType']);
+        $variable->setEpoch($array['epoch']);
+        $variable->setTrace($array['trace']);
+        
+        return $variable;
+    }
 }
 
 ?>
