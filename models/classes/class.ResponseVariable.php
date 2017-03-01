@@ -104,6 +104,19 @@ class taoResultServer_models_classes_ResponseVariable extends taoResultServer_mo
     public function setValue($value){
         $this->setCandidateResponse($value);
     }
+    
+    public static function fromArray($array)
+    {
+        $variable = new static();
+        $variable->setIdentifier($array['identifier']);
+        $variable->setCardinality($array['cardinality']);
+        $variable->setBaseType($array['baseType']);
+        $variable->setEpoch($array['epoch']);
+        $variable->candidateResponse  = $array['candidateResponse'];
+        $variable->correctResponse = $array['correctResponse'];
+        
+        return $variable;
+    }
 }
 
 ?>

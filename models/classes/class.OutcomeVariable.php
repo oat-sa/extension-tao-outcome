@@ -109,6 +109,20 @@ class taoResultServer_models_classes_OutcomeVariable extends taoResultServer_mod
         //null byte, binary 
         $this->value = base64_encode($value);
     }
+    
+    public static function fromArray($array)
+    {
+        $variable = new static();
+        $variable->setIdentifier($array['identifier']);
+        $variable->setCardinality($array['cardinality']);
+        $variable->setBaseType($array['baseType']);
+        $variable->setEpoch($array['epoch']);
+        $variable->setNormalMaximum($array['normalMaximum']);
+        $variable->setNormalMinimum($array['normalMinimum']);
+        $variable->value = $array['value'];
+        
+        return $variable;
+    }
 }
 
 ?>
