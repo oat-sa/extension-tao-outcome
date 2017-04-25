@@ -1,7 +1,7 @@
 <?php
 use oat\tao\helpers\Template;
 ?>
-<link rel="stylesheet" href="<?= BASE_WWW ?>css/migration.css" />
+<link rel="stylesheet" href="<?= Template::css('migration.css', 'taoResultServer') ?>" />
 
 <div id="resultStorageMigration" class="flex-container-full">
     
