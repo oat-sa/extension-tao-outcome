@@ -54,11 +54,6 @@ class taoResultServer_scripts_update_Updater extends \common_ext_ExtensionUpdate
             $this->setVersion('2.12.0');
         }
 
-        $this->skip('2.12.0', '3.0.0');
-        // remove result server rest api
-        if ($this->isVersion('3.0.0')) {
-            AclProxy::revokeRule(new AccessRule(AccessRule::GRANT, TaoRoles::ANONYMOUS, ['ext'=>'taoResultServer', 'mod' => 'RestResultServer']));
-            $this->setVersion('3.0.1');
-        }
+        $this->skip('2.12.0', '3.0.2');
     }
 }
