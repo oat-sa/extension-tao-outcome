@@ -22,6 +22,9 @@
 use oat\taoResultServer\models\classes\ResultServerService;
 use oat\taoResultServer\models\classes\implementation\OntologyService;
 use oat\taoResultServer\scripts\install\RegisterResultService;
+use oat\tao\model\accessControl\func\AclProxy;
+use oat\tao\model\accessControl\func\AccessRule;
+use oat\tao\model\user\TaoRoles;
 /**
  * 
  * @author Joel Bout <joel@taotesting.com>
@@ -51,6 +54,6 @@ class taoResultServer_scripts_update_Updater extends \common_ext_ExtensionUpdate
             $this->setVersion('2.12.0');
         }
 
-        $this->skip('2.12.0', '3.0.0');
+        $this->skip('2.12.0', '3.0.2');
     }
 }
