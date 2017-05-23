@@ -23,6 +23,10 @@
  * TODO : move the impl to results services
  * @author "Patrick Plichart, <patrick@taotesting.com>"
  */
+
+use oat\oatbox\service\ServiceManager;
+use oat\taoResultServer\models\classes\ResultServerService;
+
 class taoResultServer_models_classes_ResultStorageContainer 
 extends tao_models_classes_GenerisService 
 implements taoResultServer_models_classes_WritableResultStorage
@@ -33,14 +37,14 @@ implements taoResultServer_models_classes_WritableResultStorage
     /**
      *
      * @author "Lionel Lecaque, <lionel@taotesting.com>"
-     * @param unknown $implementations            
+     * @param array $implementations
      */
     public function __construct($implementations = array())
     {
         parent::__construct();
+        $resultServerService = ServiceManager::getServiceManager()->get(ResultServerService::SERVICE_ID);
         foreach ($implementations as $key => $implementationParams) {
-            $implementationClassName = $implementationParams["className"];
-            $implementations[$key]["object"] = new $implementationClassName();
+            $implementations[$key]["object"] = $resultServerService->instantiateResultStorage($implementationParams["className"]);
         }
         $this->implementations = $implementations;
         // retrieve implementations
