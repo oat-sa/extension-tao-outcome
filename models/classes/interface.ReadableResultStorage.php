@@ -82,6 +82,12 @@ interface taoResultServer_models_classes_ReadableResultStorage {
      */
     public function getVariables($callId);
 
+    /**
+     * Get the complete variables list stored for delivery execution
+     * @param $deliveryResultIdentifier
+     * @return mixed
+     */
+    public function getDeliveryVariables($deliveryResultIdentifier);
 
     /**
      * Get The variable that match params
