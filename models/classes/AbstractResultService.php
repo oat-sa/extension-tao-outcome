@@ -20,20 +20,14 @@
 namespace oat\taoResultServer\models\classes;
 
 use oat\oatbox\service\ConfigurableService;
-use oat\generis\model\OntologyAwareTrait;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorAwareTrait;
 
 /**
  * Class AbstractResultService
  * @package oat\taoResultServer\models\classes\implementation
  * @author Aleh Hutnikau, <hutnikau@1pt.com>
  */
-abstract class AbstractResultService extends ConfigurableService implements ResultServerService, ServiceLocatorAwareInterface
+abstract class AbstractResultService extends ConfigurableService
 {
-    use OntologyAwareTrait;
-    use ServiceLocatorAwareTrait;
-
     /**
      * @param $class
      * @return \taoResultServer_models_classes_WritableResultStorage
