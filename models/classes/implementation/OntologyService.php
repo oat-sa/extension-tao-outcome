@@ -86,11 +86,11 @@ class OntologyService extends AbstractResultService
         foreach($resultServerModel as $model){
             $model = new \core_kernel_classes_Class($model);
 
-            /** @var $implementationClass \core_kernel_classes_Literal*/
-            $implementationClass = $model->getOnePropertyValue($this->getProperty(TAO_RESULTSERVER_MODEL_IMPL_PROP));
+            /** @var $implementation \core_kernel_classes_Literal*/
+            $implementation = $model->getOnePropertyValue($this->getProperty(TAO_RESULTSERVER_MODEL_IMPL_PROP));
 
-            if (!is_null($implementationClass) && class_exists($implementationClass->literal)) {
-                $implementations[] = $this->instantiateResultStorage($implementationClass->literal);
+            if ($implementation !== null && $this->getServiceManager()->has($implementation->literal)) {
+                $implementations[] = $this->instantiateResultStorage($implementation->literal);
             }
         }
 

@@ -20,6 +20,7 @@
 namespace oat\taoResultServer\models\classes;
 
 use oat\oatbox\service\ConfigurableService;
+use \taoResultServer_models_classes_WritableResultStorage as WritableResultStorage;
 
 /**
  * Class AbstractResultService
@@ -29,23 +30,23 @@ use oat\oatbox\service\ConfigurableService;
 abstract class AbstractResultService extends ConfigurableService
 {
     /**
-     * @param $class
-     * @return \taoResultServer_models_classes_WritableResultStorage
+     * @param string $service
+     * @return WritableResultStorage
      * @throws \common_exception_Error
      */
-    public function instantiateResultStorage($class)
+    public function instantiateResultStorage($service)
     {
-        if (
-            !class_exists($class) ||
-            !is_subclass_of($class, \taoResultServer_models_classes_WritableResultStorage::class)
-        ) {
+        $storage = null;
+        if (class_exists($service)) { //some old serialized session can has class name instead of service id
+            $storage = new $service();
+        } elseif($this->getServiceManager()->has($service)) {
+            $storage = $this->getServiceManager()->get($service);
+        }
+
+        if ($storage === null || !$storage instanceof WritableResultStorage) {
             throw new \common_exception_Error(__('This delivery has no readable Result Server'));
         }
-        if (is_subclass_of($class, ConfigurableService::class) && defined($class.'::SERVICE_ID')) {
-            $storage = $this->getServiceManager()->get($class::SERVICE_ID);
-        } else {
-            $storage = new $class();
-        }
+
         return $storage;
     }
 }

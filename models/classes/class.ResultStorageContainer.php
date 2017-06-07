@@ -44,7 +44,7 @@ implements taoResultServer_models_classes_WritableResultStorage
         parent::__construct();
         $resultServerService = ServiceManager::getServiceManager()->get(ResultServerService::SERVICE_ID);
         foreach ($implementations as $key => $implementationParams) {
-            $implementations[$key]["object"] = $resultServerService->instantiateResultStorage($implementationParams["className"]);
+            $implementations[$key]["object"] = $resultServerService->instantiateResultStorage($implementationParams["serviceId"]);
         }
         $this->implementations = $implementations;
         // retrieve implementations
