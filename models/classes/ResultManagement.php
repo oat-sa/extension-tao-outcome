@@ -70,4 +70,10 @@ interface ResultManagement extends \taoResultServer_models_classes_ReadableResul
      */
     public function deleteResult($deliveryResultIdentifier);
 
+    /**
+     * Get the complete variables list stored for delivery execution
+     * @param $deliveryResultIdentifier
+     * @return mixed
+     */
+    public function getDeliveryVariables($deliveryResultIdentifier);
 }
