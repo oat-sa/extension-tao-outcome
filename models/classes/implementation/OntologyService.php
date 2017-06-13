@@ -19,15 +19,17 @@
  */
 namespace oat\taoResultServer\models\classes\implementation;
 
-use oat\oatbox\service\ConfigurableService;
 use taoResultServer_models_classes_ResultServerStateFull;
 use oat\generis\model\OntologyAwareTrait;
-use oat\taoResultServer\models\classes\ResultServerService;
+use oat\taoResultServer\models\classes\ResultServiceTrait;
+use oat\oatbox\service\ConfigurableService;
 
-class OntologyService extends ConfigurableService implements ResultServerService {
+class OntologyService extends ConfigurableService
+{
     
     use OntologyAwareTrait;
-    
+    use ResultServiceTrait;
+
     const OPTION_DEFAULT_MODEL = 'default';
     
     const PROPERTY_RESULT_SERVER = 'http://www.tao.lu/Ontologies/TAODelivery.rdf#DeliveryResultServer';
@@ -81,28 +83,25 @@ class OntologyService extends ConfigurableService implements ResultServerService
         if(is_null($resultServerModel)){
             throw new \common_exception_Error(__('This delivery has no readable Result Server'));
         }
-        
+
         $implementations = array();
         foreach($resultServerModel as $model){
-            $model = new \core_kernel_classes_Class($model);
-        
-            /** @var $implementationClass \core_kernel_classes_Literal*/
-            $implementationClass = $model->getOnePropertyValue($this->getProperty(TAO_RESULTSERVER_MODEL_IMPL_PROP));
-        
-            if (!is_null($implementationClass) && class_exists($implementationClass->literal)) {
-                $className = $implementationClass->literal;
-                $implementations[] = new $className();
+            $model = $this->getClass($model);
+
+            /** @var $implementation \core_kernel_classes_Literal*/
+            $implementation = $model->getOnePropertyValue($this->getProperty(TAO_RESULTSERVER_MODEL_IMPL_PROP));
+
+            if ($implementation !== null) {
+                $implementations[] = $this->instantiateResultStorage($implementation->literal);
             }
         }
-        
+
         if (empty($implementations)) {
             throw new \common_exception_Error(__('This delivery has no readable Result Server'));
         } elseif (count($implementations) == 1) {
             return reset($implementations);
         } else {
-            return new StorageAggregation($implementations); 
+            return new StorageAggregation($implementations);
         }
-        
     }
-    
 }
