@@ -21,13 +21,15 @@ namespace oat\taoResultServer\models\classes\implementation;
 
 use taoResultServer_models_classes_ResultServerStateFull;
 use oat\generis\model\OntologyAwareTrait;
-use oat\taoResultServer\models\classes\AbstractResultService;
+use oat\taoResultServer\models\classes\ResultServiceTrait;
+use oat\oatbox\service\ConfigurableService;
 
-class OntologyService extends AbstractResultService
+class OntologyService extends ConfigurableService
 {
     
     use OntologyAwareTrait;
-    
+    use ResultServiceTrait;
+
     const OPTION_DEFAULT_MODEL = 'default';
     
     const PROPERTY_RESULT_SERVER = 'http://www.tao.lu/Ontologies/TAODelivery.rdf#DeliveryResultServer';
@@ -84,12 +86,12 @@ class OntologyService extends AbstractResultService
 
         $implementations = array();
         foreach($resultServerModel as $model){
-            $model = new \core_kernel_classes_Class($model);
+            $model = $this->getClass($model);
 
             /** @var $implementation \core_kernel_classes_Literal*/
             $implementation = $model->getOnePropertyValue($this->getProperty(TAO_RESULTSERVER_MODEL_IMPL_PROP));
 
-            if ($implementation !== null && $this->getServiceManager()->has($implementation->literal)) {
+            if ($implementation !== null) {
                 $implementations[] = $this->instantiateResultStorage($implementation->literal);
             }
         }

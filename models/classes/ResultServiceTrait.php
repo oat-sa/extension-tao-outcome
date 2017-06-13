@@ -19,15 +19,14 @@
  */
 namespace oat\taoResultServer\models\classes;
 
-use oat\oatbox\service\ConfigurableService;
 use \taoResultServer_models_classes_WritableResultStorage as WritableResultStorage;
 
 /**
- * Class AbstractResultService
+ * Class ResultServiceTrait
  * @package oat\taoResultServer\models\classes\implementation
  * @author Aleh Hutnikau, <hutnikau@1pt.com>
  */
-abstract class AbstractResultService extends ConfigurableService
+trait ResultServiceTrait
 {
     /**
      * @param string $serviceId

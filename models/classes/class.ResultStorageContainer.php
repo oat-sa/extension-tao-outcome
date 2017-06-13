@@ -26,11 +26,14 @@
 
 use oat\oatbox\service\ServiceManager;
 use oat\taoResultServer\models\classes\ResultServerService;
+use oat\taoResultServer\models\classes\ResultServiceTrait;
 
 class taoResultServer_models_classes_ResultStorageContainer 
 extends tao_models_classes_GenerisService 
 implements taoResultServer_models_classes_WritableResultStorage
 {
+
+    use ResultServiceTrait;
 
     /** @var array */
     private $implementations = [];
@@ -185,13 +188,20 @@ implements taoResultServer_models_classes_WritableResultStorage
     {
         if (!$this->initialized) {
             $initializedImplementations = [];
-            $resultServerService = ServiceManager::getServiceManager()->get(ResultServerService::SERVICE_ID);
             foreach ($this->implementations as $key => $implementationParams) {
-                $initializedImplementations[$key]["object"] = $resultServerService->instantiateResultStorage($implementationParams["serviceId"]);
+                $initializedImplementations[$key]["object"] = $this->instantiateResultStorage($implementationParams["serviceId"]);
             }
             $this->implementations = $initializedImplementations;
             $this->initialized = true;
         }
-        return $this->getImplementations();
+        return $this->implementations;
+    }
+
+    /**
+     * @return ServiceManager
+     */
+    protected function getServiceManager()
+    {
+        return ServiceManager::getServiceManager();
     }
 }
