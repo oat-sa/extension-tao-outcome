@@ -30,21 +30,21 @@ use \taoResultServer_models_classes_WritableResultStorage as WritableResultStora
 abstract class AbstractResultService extends ConfigurableService
 {
     /**
-     * @param string $service
+     * @param string $serviceId
      * @return WritableResultStorage
      * @throws \common_exception_Error
      */
-    public function instantiateResultStorage($service)
+    public function instantiateResultStorage($serviceId)
     {
         $storage = null;
-        if (class_exists($service)) { //some old serialized session can has class name instead of service id
-            $storage = new $service();
-        } elseif($this->getServiceManager()->has($service)) {
-            $storage = $this->getServiceManager()->get($service);
+        if (class_exists($serviceId)) { //some old serialized session can has class name instead of service id
+            $storage = new $serviceId();
+        } elseif($this->getServiceManager()->has($serviceId)) {
+            $storage = $this->getServiceManager()->get($serviceId);
         }
 
         if ($storage === null || !$storage instanceof WritableResultStorage) {
-            throw new \common_exception_Error(__('This delivery has no readable Result Server'));
+            throw new \common_exception_Error('Configured result storage is not writable.');
         }
 
         return $storage;
