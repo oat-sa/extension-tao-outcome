@@ -23,52 +23,58 @@
  * TODO : move the impl to results services
  * @author "Patrick Plichart, <patrick@taotesting.com>"
  */
+
+use oat\oatbox\service\ServiceManager;
+use oat\taoResultServer\models\classes\ResultServerService;
+use oat\taoResultServer\models\classes\ResultServiceTrait;
+
 class taoResultServer_models_classes_ResultStorageContainer 
 extends tao_models_classes_GenerisService 
 implements taoResultServer_models_classes_WritableResultStorage
 {
 
-    private $implementations = array(); // array
-    
+    use ResultServiceTrait;
+
+    /** @var array */
+    private $implementations = [];
+
+    /** @var bool whether implementations are initialized */
+    private $initialized = false;
+
     /**
      *
      * @author "Lionel Lecaque, <lionel@taotesting.com>"
-     * @param unknown $implementations            
+     * @param array $implementations
      */
     public function __construct($implementations = array())
     {
         parent::__construct();
-        foreach ($implementations as $key => $implementationParams) {
-            $implementationClassName = $implementationParams["className"];
-            $implementations[$key]["object"] = new $implementationClassName();
-        }
         $this->implementations = $implementations;
-        // retrieve implementations
     }
-    
+
     /*
      * (non-PHPdoc) @see taoResultServer_models_classes_WritableResultStorage::storeRelatedTestTaker()
      */
     public function storeRelatedTestTaker($deliveryResultIdentifier, $testTakerIdentifier)
     {
-        foreach ($this->implementations as $implementation) {
+        foreach ($this->getImplementations() as $implementation) {
             $implementation["object"]->storeRelatedTestTaker($deliveryResultIdentifier, $testTakerIdentifier);
         }
     }
-    
+
     /*
      * (non-PHPdoc) @see taoResultServer_models_classes_WritableResultStorage::storeRelatedDelivery()
      */
     public function storeRelatedDelivery($deliveryResultIdentifier, $deliveryIdentifier)
     {
-        foreach ($this->implementations as $implementation) {
+        foreach ($this->getImplementations() as $implementation) {
             $implementation["object"]->storeRelatedDelivery($deliveryResultIdentifier, $deliveryIdentifier);
         }
     }
 
     public function storeRelatedDeliveryExecution($deliveryResultIdentifier, $executionIdentifier)
     {
-        foreach ($this->implementations as $implementation) {
+        foreach ($this->getImplementations() as $implementation) {
             $implementation["object"]->storeRelatedDeliveryExecution($deliveryResultIdentifier, $executionIdentifier);
         }
     }
@@ -76,84 +82,91 @@ implements taoResultServer_models_classes_WritableResultStorage
     /*
      * (non-PHPdoc) @see taoResultServer_models_classes_WritableResultStorage::storeItemVariable()
      */
-    public function storeItemVariable($deliveryResultIdentifier, $test, $item, taoResultServer_models_classes_Variable $itemVariable, $callIdItem)
-    {
-        foreach ($this->implementations as $implementation) {
-            $implementation["object"]->storeItemVariable($deliveryResultIdentifier, $test, $item, $itemVariable, $callIdItem);
+    public function storeItemVariable(
+        $deliveryResultIdentifier,
+        $test,
+        $item,
+        taoResultServer_models_classes_Variable $itemVariable,
+        $callIdItem
+    ) {
+        foreach ($this->getImplementations() as $implementation) {
+            $implementation["object"]->storeItemVariable($deliveryResultIdentifier, $test, $item, $itemVariable,
+                $callIdItem);
         }
     }
-    
+
     /*
      * (non-PHPdoc) @see taoResultServer_models_classes_WritableResultStorage::storeTestVariable()
      */
-    public function storeTestVariable($deliveryResultIdentifier, $test, taoResultServer_models_classes_Variable $testVariable, $callIdTest)
-    {
-        foreach ($this->implementations as $implementation) {
+    public function storeTestVariable(
+        $deliveryResultIdentifier,
+        $test,
+        taoResultServer_models_classes_Variable $testVariable,
+        $callIdTest
+    ) {
+        foreach ($this->getImplementations() as $implementation) {
             $implementation["object"]->storeTestVariable($deliveryResultIdentifier, $test, $testVariable, $callIdTest);
         }
     }
-    
+
     /*
      * (non-PHPdoc) @see taoResultServer_models_classes_WritableResultStorage::configure()
      */
     public function configure(core_kernel_classes_Resource $resultServer, $callOptions = array())
     {
-        foreach ($this->implementations as $implementation) {
+        foreach ($this->getImplementations() as $implementation) {
             if (isset($implementation["params"])) {
                 $implementation["object"]->configure($resultServer, $implementation["params"]);
             }
         }
     }
-    
-    public function getVariables($callId){
-        
+
+    public function getVariables($callId)
+    {
+
         $returnData = array();
-        foreach ($this->implementations as $implementation) {
-            if ($implementation["object"] instanceof taoResultServer_models_classes_ReadableResultStorage){
-            $implData = $implementation["object"]->getVariables($callId);
-            $returnData = array_merge($implData,$returnData ) ;
+        foreach ($this->getImplementations() as $implementation) {
+            if ($implementation["object"] instanceof taoResultServer_models_classes_ReadableResultStorage) {
+                $implData = $implementation["object"]->getVariables($callId);
+                $returnData = array_merge($implData, $returnData);
             }
         }
         return $returnData;
     }
-    public function getVariable($callId, $variableIdentifier){   
+
+    public function getVariable($callId, $variableIdentifier)
+    {
         $returnData = array();
-        foreach ($this->implementations as $implementation) {
-             if ($implementation["object"] instanceof taoResultServer_models_classes_ReadableResultStorage){
-            $implData = $implementation["object"]->getVariable($callId, $variableIdentifier);
-            $returnData = array_merge($implData,$returnData ) ;
+        foreach ($this->getImplementations() as $implementation) {
+            if ($implementation["object"] instanceof taoResultServer_models_classes_ReadableResultStorage) {
+                $implData = $implementation["object"]->getVariable($callId, $variableIdentifier);
+                $returnData = array_merge($implData, $returnData);
             }
-        return $returnData;
+            return $returnData;
         }
     }
-    public function getTestTaker($deliveryResultIdentifier){   
+
+    public function getTestTaker($deliveryResultIdentifier)
+    {
         $returnData = array();
-        foreach ($this->implementations as $implementation) {
-             if ($implementation["object"] instanceof taoResultServer_models_classes_ReadableResultStorage){
-       
-            $implData = $implementation["object"]->getTestTaker($deliveryResultIdentifier);
-            $returnData = array_merge($implData,$returnData ) ;
-             }
+        foreach ($this->getImplementations() as $implementation) {
+            if ($implementation["object"] instanceof taoResultServer_models_classes_ReadableResultStorage) {
+
+                $implData = $implementation["object"]->getTestTaker($deliveryResultIdentifier);
+                $returnData = array_merge($implData, $returnData);
+            }
         }
         return $returnData;
     }
-    public function getDelivery($deliveryResultIdentifier){   
+
+    public function getDelivery($deliveryResultIdentifier)
+    {
         $returnData = array();
-        foreach ($this->implementations as $implementation) {
-             if ($implementation["object"] instanceof taoResultServer_models_classes_ReadableResultStorage){
+        foreach ($this->getImplementations() as $implementation) {
+            if ($implementation["object"] instanceof taoResultServer_models_classes_ReadableResultStorage) {
                 $implData = $implementation["object"]->getDelivery($deliveryResultIdentifier);
-                $returnData = array_merge($implData,$returnData ) ;
-             }
-        }
-        return $returnData;
-    }
-    public function getDeliveryExecution($deliveryResultIdentifier){
-        $returnData = array();
-        foreach ($this->implementations as $implementation) {
-             if ($implementation["object"] instanceof taoResultServer_models_classes_ReadableResultStorage){
-                $implData = $implementation["object"]->getDeliveryExecution($deliveryResultIdentifier);
-                $returnData = array_merge($implData, $returnData) ;
-             }
+                $returnData = array_merge($implData, $returnData);
+            }
         }
         return $returnData;
     }
@@ -166,12 +179,36 @@ implements taoResultServer_models_classes_WritableResultStorage
         // should be improved by changing the interface,
         // currently the first found implementation will generate an Id
         // to be used as a result identifier across all implementations,
-        foreach ($this->implementations as $implementation) {
+        foreach ($this->getImplementations() as $implementation) {
             $spawnedIdentifier = $implementation["object"]->spawnResult();
-            if ((! is_null($spawnedIdentifier)) and $spawnedIdentifier != "") {
+            if ((!is_null($spawnedIdentifier)) and $spawnedIdentifier != "") {
                 return $spawnedIdentifier;
             }
         }
     }
+
+    /**
+     * Initialize and return storage implementations
+     * @return array
+     */
+    protected function getImplementations()
+    {
+        if (!$this->initialized) {
+            $initializedImplementations = [];
+            foreach ($this->implementations as $key => $implementationParams) {
+                $initializedImplementations[$key]["object"] = $this->instantiateResultStorage($implementationParams["serviceId"]);
+            }
+            $this->implementations = $initializedImplementations;
+            $this->initialized = true;
+        }
+        return $this->implementations;
+    }
+
+    /**
+     * @return ServiceManager
+     */
+    protected function getServiceManager()
+    {
+        return ServiceManager::getServiceManager();
+    }
 }
-?>

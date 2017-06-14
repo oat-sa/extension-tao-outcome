@@ -82,7 +82,6 @@ interface taoResultServer_models_classes_ReadableResultStorage {
      */
     public function getVariables($callId);
 
-
     /**
      * Get The variable that match params
      * @param string $callId an execution identifier
