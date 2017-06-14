@@ -34,9 +34,8 @@ interface ResultServerService {
     /**
      * Returns the storage engine of the result server
      *
-     * @param string $deliveryId
      * @throws \common_exception_Error
      * @return \taoResultServer_models_classes_ReadableResultStorage
      */
-    public function getResultStorage($deliveryId);
+    public function getResultStorage();
 }
