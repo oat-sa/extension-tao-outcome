@@ -29,6 +29,11 @@ class taoResultServer_models_classes_ResultServer
      */
     private $resultServer; 
     
+    /**
+     * @var taoResultServer_models_classes_WritableResultStorage A result storage
+     */
+    private $storageContainer; 
+    
     private $implementations;
 
     /**
@@ -73,13 +78,13 @@ class taoResultServer_models_classes_ResultServer
     /**
      * @access public
      * @author "Patrick Plichart, <patrick@taotesting.com>"
-     * @param string $serviceId
-     * @param array $options
+     * @param unknown $className
+     * @param unknown $options
      */
-    public function addImplementation($serviceId, $options = array())
+    public function addImplementation($className, $options = array())
     {
         $this->implementations[] = array(
-            "serviceId" => $serviceId,
+            "className" => $className,
             "params" => $options
         );
     }

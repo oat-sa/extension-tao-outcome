@@ -113,7 +113,7 @@ class taoResultServer_models_classes_ResultServerStateFull extends tao_models_cl
                 }
             }
             
-            if ($callOptions === null && $initializedResultServer !== null) {
+            if (is_null($callOptions) and (! (is_null($initializedResultServer)))) {
                 // the policy is that if the result server has already been intialized and configured further calls without callOptions will reuse the same calloptions
             } else {
                 $listResultServers[$resultServerUri] = new taoResultServer_models_classes_ResultServer($resultServerUri, $callOptions);
