@@ -133,7 +133,14 @@ interface taoResultServer_models_classes_ReadableResultStorage {
      * @return string the uri of the delivery related to the delivery execution
      */
     public function getDelivery($deliveryResultIdentifier);
-    
+
+    /**
+     * Get the delivery execution id related to one specific results
+     * @param string $deliveryResultIdentifier the identifier of the delivery execution
+     * @return string the uri of the delivery related to the delivery execution
+     */
+    public function getDeliveryExecution($deliveryResultIdentifier);
+
     /**
      * Get the entire list of call ids that are stored (item or test)
      * @return array the list of executions ids (across all results)

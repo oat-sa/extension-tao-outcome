@@ -65,6 +65,13 @@ interface taoResultServer_models_classes_WritableResultStorage {
     public function storeRelatedDelivery($deliveryResultIdentifier, $deliveryIdentifier);
 
     /**
+     * Store a delivery execution related to a specific result id 
+     * @param string $deliveryResultIdentifier (mostly delivery execution uri)
+     * @param string $executionIdentifier (uri recommended)
+     */
+    public function storeRelatedDeliveryExecution($deliveryResultIdentifier, $executionIdentifier);
+
+    /**
      * Submit a specific Item Variable, (ResponseVariable and OutcomeVariable shall be used respectively for collected data and score/interpretation computation)
      * and store it with all the dependencies
      * @param string $deliveryResultIdentifier

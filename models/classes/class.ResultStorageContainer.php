@@ -72,6 +72,13 @@ implements taoResultServer_models_classes_WritableResultStorage
         }
     }
 
+    public function storeRelatedDeliveryExecution($deliveryResultIdentifier, $executionIdentifier)
+    {
+        foreach ($this->getImplementations() as $implementation) {
+            $implementation["object"]->storeRelatedDeliveryExecution($deliveryResultIdentifier, $executionIdentifier);
+        }
+    }
+
     /*
      * (non-PHPdoc) @see taoResultServer_models_classes_WritableResultStorage::storeItemVariable()
      */
