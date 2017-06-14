@@ -56,6 +56,7 @@ class OntologyService extends ConfigurableService
     
         //a unique identifier for the delivery
         taoResultServer_models_classes_ResultServerStateFull::singleton()->storeRelatedDelivery($compiledDelivery->getUri());
+        taoResultServer_models_classes_ResultServerStateFull::singleton()->storeRelatedDeliveryExecution($executionIdentifier);
     }
     
     /**
