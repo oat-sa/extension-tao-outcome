@@ -38,6 +38,9 @@ implements taoResultServer_models_classes_WritableResultStorage
     /** @var array */
     private $implementations = [];
 
+    /** @var array */
+    private $implementationsConfig = [];
+
     /** @var bool whether implementations are initialized */
     private $initialized = false;
 
@@ -49,7 +52,7 @@ implements taoResultServer_models_classes_WritableResultStorage
     public function __construct($implementations = array())
     {
         parent::__construct();
-        $this->implementations = $implementations;
+        $this->implementationsConfig = $implementations;
     }
 
     /*
@@ -107,9 +110,9 @@ implements taoResultServer_models_classes_WritableResultStorage
      */
     public function configure(core_kernel_classes_Resource $resultServer, $callOptions = array())
     {
-        foreach ($this->getImplementations() as $implementation) {
-            if (isset($implementation["params"])) {
-                $implementation["object"]->configure($resultServer, $implementation["params"]);
+        foreach ($this->getImplementations() as $key => $implementation) {
+            if (isset($this->implementationsConfig[$key]['params'])) {
+                $implementation["object"]->configure($resultServer, $this->implementationsConfig[$key]['params']);
             }
         }
     }
@@ -188,7 +191,7 @@ implements taoResultServer_models_classes_WritableResultStorage
     {
         if (!$this->initialized) {
             $initializedImplementations = [];
-            foreach ($this->implementations as $key => $implementationParams) {
+            foreach ($this->implementationsConfig as $key => $implementationParams) {
                 $initializedImplementations[$key]["object"] = $this->instantiateResultStorage($implementationParams["serviceId"]);
             }
             $this->implementations = $initializedImplementations;

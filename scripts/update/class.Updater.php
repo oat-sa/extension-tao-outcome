@@ -21,7 +21,6 @@
 
 use oat\taoResultServer\models\classes\ResultServerService;
 use oat\taoResultServer\models\classes\implementation\OntologyService;
-use oat\taoResultServer\scripts\install\RegisterResultService;
 use oat\tao\model\accessControl\func\AclProxy;
 use oat\tao\model\accessControl\func\AccessRule;
 use oat\tao\model\user\TaoRoles;
@@ -61,7 +60,7 @@ class taoResultServer_scripts_update_Updater extends \common_ext_ExtensionUpdate
             if (!$service instanceof ResultService) {
                 $this->getServiceManager()->register(QtiResultsService::SERVICE_ID, new QtiResultsService());
             }
-            $this->setVersion('3.2.1');
+            $this->setVersion('3.2.2');
         }
     }
 }
