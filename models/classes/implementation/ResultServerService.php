@@ -36,7 +36,7 @@ class ResultServerService extends ConfigurableService implements ResultServerSer
     use OntologyAwareTrait;
     use ResultServiceTrait;
 
-    const OPTION_RESULT_SERVER_URI = 'result_server_uri';
+    const OPTION_RESULT_STORAGE = 'result_storage';
 
     /**
      * Starts or resume a taoResultServerStateFull session for results submission
@@ -46,9 +46,9 @@ class ResultServerService extends ConfigurableService implements ResultServerSer
      */
     public function initResultServer($compiledDelivery, $executionIdentifier)
     {
-        $resultServer = $this->getResource($this->getOption(self::OPTION_RESULT_SERVER_URI));
+        $resultServerId = $this->getOption(self::OPTION_RESULT_STORAGE);
 
-        taoResultServer_models_classes_ResultServerStateFull::singleton()->initResultServer($resultServer->getUri());
+        taoResultServer_models_classes_ResultServerStateFull::singleton()->initResultServer($resultServerId);
     
         //a unique identifier for data collected through this delivery execution
         //in the case of LTI, we should use the sourceId
@@ -72,31 +72,7 @@ class ResultServerService extends ConfigurableService implements ResultServerSer
      */
     public function getResultStorage()
     {
-        $resultServer = $this->getResource($this->getOption(self::OPTION_RESULT_SERVER_URI));
-        $resultServerModel = $resultServer->getPropertyValues($this->getProperty(TAO_RESULTSERVER_MODEL_PROP));
-
-        if (is_null($resultServerModel)) {
-            throw new \common_exception_Error('Result server '.$resultServer.' has no readable model');
-        }
-
-        $implementations = [];
-        foreach ($resultServerModel as $model) {
-            $model = $this->getClass($model);
-
-            /** @var $implementation \core_kernel_classes_Literal*/
-            $implementation = $model->getOnePropertyValue($this->getProperty(TAO_RESULTSERVER_MODEL_IMPL_PROP));
-
-            if ($implementation !== null) {
-                $implementations[] = $this->instantiateResultStorage($implementation->literal);
-            }
-        }
-
-        if (empty($implementations)) {
-            throw new \common_exception_Error('Result server '.$resultServer.' has no readable models');
-        } elseif (count($implementations) == 1) {
-            return reset($implementations);
-        } else {
-            return new StorageAggregation($implementations);
-        }
+        $resultServerId = $this->getOption(self::OPTION_RESULT_STORAGE);
+        return $this->instantiateResultStorage($resultServerId);
     }
 }
