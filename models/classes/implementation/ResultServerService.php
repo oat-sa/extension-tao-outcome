@@ -27,12 +27,22 @@ use oat\taoResultServer\models\classes\ResultServerService as ResultServerServic
 
 /**
  * Class ResultServerService
+ *
+ * Configuration example (taoResultServer/resultservice.conf.php):
+ * ```php
+ *
+ * use oat\taoResultServer\models\classes\implementation\ResultServerService;
+ * return new ResultServerService([
+ *     ResultServerService::OPTION_RESULT_STORAGE => 'taoOutcomeRds/RdsResultStorage'
+ * ]);
+ *
+ * ```
+ *
  * @package oat\taoResultServer\models\classes\implementation
  * @author Aleh Hutnikau, <hutnikau@1pt.com>
  */
 class ResultServerService extends ConfigurableService implements ResultServerServiceInterface
 {
-    
     use OntologyAwareTrait;
     use ResultServiceTrait;
 
@@ -46,21 +56,14 @@ class ResultServerService extends ConfigurableService implements ResultServerSer
      */
     public function initResultServer($compiledDelivery, $executionIdentifier)
     {
-        $resultServerId = $this->getOption(self::OPTION_RESULT_STORAGE);
-
-        taoResultServer_models_classes_ResultServerStateFull::singleton()->initResultServer($resultServerId);
-    
-        //a unique identifier for data collected through this delivery execution
-        //in the case of LTI, we should use the sourceId
-
+        taoResultServer_models_classes_ResultServerStateFull::singleton()->initResultServer($this->getOption(self::OPTION_RESULT_STORAGE));
         taoResultServer_models_classes_ResultServerStateFull::singleton()->spawnResult($executionIdentifier, $executionIdentifier);
         \common_Logger::i("Spawning/resuming result identifier related to process execution ".$executionIdentifier);
 
-        //set up the related test taker
-        //a unique identifier for the test taker
+        //link test taker identifier with results
         taoResultServer_models_classes_ResultServerStateFull::singleton()->storeRelatedTestTaker(\common_session_SessionManager::getSession()->getUserUri());
     
-        //a unique identifier for the delivery
+        //link delivery identifier with results
         taoResultServer_models_classes_ResultServerStateFull::singleton()->storeRelatedDelivery($compiledDelivery->getUri());
     }
     
