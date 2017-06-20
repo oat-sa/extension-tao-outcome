@@ -60,7 +60,9 @@ class taoResultServer_scripts_update_Updater extends \common_ext_ExtensionUpdate
             if (!$service instanceof ResultService) {
                 $this->getServiceManager()->register(QtiResultsService::SERVICE_ID, new QtiResultsService());
             }
-            $this->setVersion('3.2.2');
+            $this->setVersion('3.2.1');
         }
+
+        $this->skip('3.2.1', '3.2.2');
     }
 }
