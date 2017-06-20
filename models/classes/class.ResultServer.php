@@ -33,15 +33,18 @@ class taoResultServer_models_classes_ResultServer
 
     /**
      *
-     * @param array callOptions an array of parameters sent to the results storage configuration
      * @param mixed $resultServer
+     * @param array $additionalStorages
+     *              $additionalStorages['implementation'] - service id or class name of result storage
+     *              $additionalStorages['parameters'] - parameters to be used during configuration of result storage (@see \taoResultServer_models_classes_WritableResultStorage::configure)
      * @param string uri or resource
+     * @throws \common_Exception if no models exist for given result server
      */
     public function __construct($resultServer, $additionalStorages = array())
     {
         $this->implementations = array();
-        
-        if (is_object($resultServer) and (get_class($resultServer) == 'core_kernel_classes_Resource')) {
+
+        if (is_object($resultServer) && $resultServer instanceof core_kernel_classes_Resource) {
             $this->resultServer = $resultServer;
         } else {
             if (common_Utils::isUri($resultServer)) {
@@ -66,7 +69,7 @@ class taoResultServer_models_classes_ResultServer
             }
         }
         
-        common_Logger::i("Result Server Initialized using defintion:" . $this->resultServer->getUri());
+        common_Logger::i("Result Server Initialized using definition:" . $this->resultServer->getUri());
         // sets the details required depending on the type of storage
     }
 

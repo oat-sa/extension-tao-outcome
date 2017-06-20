@@ -83,8 +83,6 @@ class taoResultServer_models_classes_ResultServerStateFull extends tao_models_cl
     
     /**
      * constructor: initialize the service and the default data
-     * 
-     * @return Delivery
      */
     public function __construct()
     {
@@ -128,7 +126,7 @@ class taoResultServer_models_classes_ResultServerStateFull extends tao_models_cl
      *
      * @author "Patrick Plichart, <patrick@taotesting.com>"
      * @throws common_exception_PreConditionFailure
-     * @return Ambiguous
+     * @return \taoResultServer_models_classes_ResultServer
      */
     private function restoreResultServer()
     {
@@ -154,7 +152,7 @@ class taoResultServer_models_classes_ResultServerStateFull extends tao_models_cl
     {
         if ($deliveryResultIdentifier == null) {
             $resultServer = $this->restoreResultServer();
-            if (($this->getValue("resultServer_deliveryExecutionIdentifier")) !== null and (($this->getValue("resultServer_deliveryExecutionIdentifier")) == $deliveryExecutionIdentifier)) {
+            if ($this->getValue("resultServer_deliveryExecutionIdentifier") == $deliveryExecutionIdentifier) {
                 $resultServer_deliveryResultIdentifier = $this->getValue("resultServer_deliveryResultIdentifier");
             } else {
                 $resultServer_deliveryResultIdentifier = $resultServer->getStorageInterface()->spawnResult();

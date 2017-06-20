@@ -25,7 +25,6 @@
  */
 
 use oat\oatbox\service\ServiceManager;
-use oat\taoResultServer\models\classes\ResultServerService;
 use oat\taoResultServer\models\classes\ResultServiceTrait;
 
 class taoResultServer_models_classes_ResultStorageContainer 
