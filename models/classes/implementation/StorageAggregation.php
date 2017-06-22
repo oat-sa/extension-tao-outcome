@@ -171,7 +171,12 @@ class StorageAggregation implements
     {
         return $this->getOneImplementation(StorageManage::class)->countResultByDelivery($delivery);
     }
-    
+
+    public function getDeliveryVariables($delivery)
+    {
+        return $this->getOneImplementation(StorageManage::class)->getDeliveryVariables($delivery);
+    }
+
     public function deleteResult($deliveryResultIdentifier)
     {
         $success = null;
