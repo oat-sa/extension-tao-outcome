@@ -20,24 +20,23 @@
 
 namespace oat\taoResultServer\models\classes;
 
-use oat\oatbox\PhpSerializeStateless;
 use oat\taoDelivery\model\execution\DeliveryExecution as DeliveryExecutionInterface;
 use qtism\common\enums\Cardinality;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorAwareTrait;
+use oat\oatbox\service\ConfigurableService;
+use oat\oatbox\service\ServiceManager;
 
-class QtiResultsService extends \tao_models_classes_CrudService
-    implements ServiceLocatorAwareInterface, ResultService
+class QtiResultsService extends ConfigurableService implements ResultService
 {
-    use ServiceLocatorAwareTrait;
-    use PhpSerializeStateless;
-
     protected $deliveryExecutionService;
 
     const QTI_NS = 'http://www.imsglobal.org/xsd/imsqti_result_v2p1';
 
-    public function __construct()
+    /**
+     * @deprecated
+     */
+    public static function singleton()
     {
+        return ServiceManager::getServiceManager()->get(self::SERVICE_ID);
     }
 
     /**
@@ -245,30 +244,5 @@ class QtiResultsService extends \tao_models_classes_CrudService
         $returnValue = $dom->createElementNS(self::QTI_NS, $tag);
         $returnValue->appendChild($node);
         return $returnValue;
-    }
-
-    public function delete($uri)
-    {
-        throw new \common_exception_NoImplementation();
-    }
-
-    public function deleteAll()
-    {
-        throw new \common_exception_NoImplementation();
-    }
-
-    public function create($label = "", $type = null, $propertiesValues = array())
-    {
-        throw new \common_exception_NoImplementation();
-    }
-
-    public function update($uri, $propertiesValues = array())
-    {
-        throw new \common_exception_NoImplementation();
-    }
-
-    protected function getClassService()
-    {
-        // Unused
     }
 }
