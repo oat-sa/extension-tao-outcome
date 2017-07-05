@@ -21,11 +21,10 @@
 
 use oat\taoResultServer\models\classes\ResultServerService;
 use oat\taoResultServer\models\classes\implementation\OntologyService;
-use oat\tao\model\accessControl\func\AclProxy;
-use oat\tao\model\accessControl\func\AccessRule;
-use oat\tao\model\user\TaoRoles;
 use oat\taoResultServer\models\classes\QtiResultsService;
 use oat\taoResultServer\models\classes\ResultService;
+use oat\taoResultServer\models\classes\implementation\ResultIdService;
+
 /**
  * 
  * @author Joel Bout <joel@taotesting.com>
@@ -64,5 +63,10 @@ class taoResultServer_scripts_update_Updater extends \common_ext_ExtensionUpdate
         }
 
         $this->skip('3.2.1', '3.2.4');
+
+        if ($this->isVersion('3.2.4')) {
+            $this->getServiceManager()->register(ResultIdService::SERVICE_ID, new ResultIdService());
+            $this->setVersion('3.3.0');
+        }
     }
 }

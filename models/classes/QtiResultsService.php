@@ -24,6 +24,7 @@ use oat\taoDelivery\model\execution\DeliveryExecution as DeliveryExecutionInterf
 use qtism\common\enums\Cardinality;
 use oat\oatbox\service\ConfigurableService;
 use oat\oatbox\service\ServiceManager;
+use oat\taoResultServer\models\classes\ResultIdService;
 
 class QtiResultsService extends ConfigurableService implements ResultService
 {
@@ -101,7 +102,8 @@ class QtiResultsService extends ConfigurableService implements ResultService
     
     public function getQtiResultXml($deliveryId, $resultId)
     {
-        $delivery = new \core_kernel_classes_Resource($deliveryId);
+        $resultId = $this->getServiceManager()->get(ResultIdService::SERVICE_ID)->getDeliveryExecutionId($resultId);
+
         $resultService = $this->getServiceLocator()->get(ResultServerService::SERVICE_ID);
         $resultServer = $resultService->getResultStorage($deliveryId);
 
