@@ -44,6 +44,8 @@ class taoResultServer_models_classes_ResultServer
     {
         $this->implementations = [];
 
+        $resultServer = null;
+
         if (common_Utils::isUri($resultServerId)) {
             $resultServer = new core_kernel_classes_Resource($resultServerId);
         }
@@ -97,6 +99,7 @@ class taoResultServer_models_classes_ResultServer
     public function getStorageInterface()
     {
         $storageContainer = new taoResultServer_models_classes_ResultStorageContainer($this->implementations);
+        $storageContainer->setServiceManager(ServiceManager::getServiceManager());
         if ($this->resultServer !== null) {
             $storageContainer->configure($this->resultServer);
         }
