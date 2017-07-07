@@ -72,7 +72,7 @@ class CrudResultsService extends \tao_models_classes_CrudService {
                     if(isset($result->variable)){
                         $resource['value'] = $result->variable->getValue();
                         $resource['identifier'] = $result->variable->getIdentifier();
-                        if(get_class($result->variable) === CLASS_RESPONSE_VARIABLE){
+                        if($result->variable instanceof \taoResultServer_models_classes_ResponseVariable){
                             $type = "http://www.tao.lu/Ontologies/TAOResult.rdf#ResponseVariable";
                         }
                         else{
