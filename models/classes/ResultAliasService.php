@@ -20,27 +20,31 @@
 
 namespace oat\taoResultServer\models\classes;
 
+use oat\oatbox\service\ConfigurableService;
+
 /**
- * Interface ResultIdService
+ * Class ResultAliasService
+ *
+ * Default implementation of service treats delivery execution id as result id and vice versa.
+ *
  * @package oat\taoResultServer\models\classes
+ * @author Aleh Hutnikau, <hutnikau@1pt.com>
  */
-interface ResultIdService
+class ResultAliasService extends ConfigurableService implements ResultAliasServiceInterface
 {
-    const SERVICE_ID = 'taoResultServer/ResultIdService';
+    /**
+     * @inheritdoc
+     */
+    public function getResultAlias($deliveryExecutionId)
+    {
+        return $deliveryExecutionId;
+    }
 
     /**
-     * Get result identifier by delivery execution identifier.
-     *
-     * @param $deliveryExecutionId
-     * @return string|null
+     * @inheritdoc
      */
-    public function getResultId($deliveryExecutionId);
-
-    /**
-     * Get delivery execution identifier by result identifier
-     *
-     * @param $resultId
-     * @return mixed
-     */
-    public function getDeliveryExecutionId($resultId);
+    public function getDeliveryExecutionId($aliasId)
+    {
+        return $aliasId;
+    }
 }

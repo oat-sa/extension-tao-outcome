@@ -18,31 +18,33 @@
  *
  */
 
-namespace oat\taoResultServer\models\classes\implementation;
-
-use oat\taoResultServer\models\classes\ResultIdService as ResultIdServiceInterface;
-use oat\oatbox\service\ConfigurableService;
+namespace oat\taoResultServer\models\classes;
 
 /**
- * class ResultIdService
+ * Service is used to map delivery execution id and result aliases.
+ * In tao delivery execution identifier and result identifier are equal
+ * but some external services may have their own result identifiers (as LTI result id).
  *
+ * Interface ResultIdService
  * @package oat\taoResultServer\models\classes
  */
-class ResultIdService extends ConfigurableService implements ResultIdServiceInterface
+interface ResultAliasServiceInterface
 {
-    /**
-     * @inheritdoc
-     */
-    public function getResultId($deliveryExecutionId)
-    {
-        return $deliveryExecutionId;
-    }
+    const SERVICE_ID = 'taoResultServer/ResultAliasService';
 
     /**
-     * @inheritdoc
+     * Get result alias by delivery execution identifier.
+     *
+     * @param $deliveryExecutionId
+     * @return string|null
      */
-    public function getDeliveryExecutionId($resultId)
-    {
-        return $resultId;
-    }
+    public function getResultAlias($deliveryExecutionId);
+
+    /**
+     * Get delivery execution identifier by result alias
+     *
+     * @param $aliasId
+     * @return mixed
+     */
+    public function getDeliveryExecutionId($aliasId);
 }

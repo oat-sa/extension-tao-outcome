@@ -23,7 +23,7 @@ use oat\taoResultServer\models\classes\ResultServerService;
 use oat\taoResultServer\models\classes\implementation\OntologyService;
 use oat\taoResultServer\models\classes\QtiResultsService;
 use oat\taoResultServer\models\classes\ResultService;
-use oat\taoResultServer\models\classes\implementation\ResultIdService;
+use oat\taoResultServer\models\classes\ResultAliasService;
 
 /**
  * 
@@ -65,7 +65,7 @@ class taoResultServer_scripts_update_Updater extends \common_ext_ExtensionUpdate
         $this->skip('3.2.1', '3.2.4');
 
         if ($this->isVersion('3.2.4')) {
-            $this->getServiceManager()->register(ResultIdService::SERVICE_ID, new ResultIdService());
+            $this->getServiceManager()->register(ResultAliasService::SERVICE_ID, new ResultAliasService());
             $this->setVersion('3.3.0');
         }
     }
