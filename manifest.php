@@ -27,6 +27,7 @@ return array(
 			dirname(__FILE__). '/models/ontology/taoResultServer.rdf'
 		),
         'php' => array(
+            \oat\taoResultServer\scripts\install\RegisterFileSystem::class
         )
     ),
     'update' => 'taoResultServer_scripts_update_Updater',
