@@ -89,7 +89,7 @@ class taoResultServer_models_classes_ResultServer
     /**
      * @access public
      * @author "Patrick Plichart, <patrick@taotesting.com>"
-     * @return taoResultServer_models_classes_ResultStorageContainer
+     * @return oat\taoResultServer\models\classes\implementation\StorageWrapper
      */
     public function getStorageInterface()
     {
