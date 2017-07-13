@@ -29,6 +29,7 @@ interface VariableManager
      * 
      * Additional persistence behaviour to be performed on a Result Variable at storage time.
      * 
+     * @param \taoResultServer_models_classes_Variable $variable
      * @throws oat\taoResultServer\models\classes\VariableManagementException In case an error occurs.
      */
     public function persist(\taoResultServer_models_classes_Variable $variable);
@@ -38,15 +39,27 @@ interface VariableManager
      * 
      * Additional persistence behaviour to be performed on a Result Variable at retrieval time.
      * 
+     * @param \taoResultServer_models_classes_Variable $variable
      * @throws oat\taoResultServer\models\classes\VariableManagementException In case an error occurs.
      */
     public function retrieve(\taoResultServer_models_classes_Variable $variable);
+    
+    /**
+     * Retrieve Variable Property Value Behaviour.
+     * 
+     * Additional persistence behaviour to be performed on a Result Variable Property Value at retrieval time.
+     * 
+     * @param \taoResultServer_models_classes_Variable $variable
+     * @throws oat\taoResultServer\models\classes\VariableManagementException In case an error occurs.
+     */
+    public function retrieveProperty($variableBaseType, $propertyName, $propertyValue);
     
     /**
      * Delete Result Behaviour
      * 
      * Additional persistence behaviour to be performed on a whole Result at deletion time.
      * 
+     * @param \taoResultServer_models_classes_Variable $variable
      * @throws oat\taoResultServer\models\classes\VariableManagementException In case an error occurs.
      */
     public function delete($deliveryResultIdentifier);

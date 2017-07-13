@@ -17,31 +17,25 @@
  * Copyright (c) 2017 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  *
  */
+ 
+namespace oat\taoResultServer\scripts\install;
 
-namespace oat\taoResultServer\models\classes\implementation;
+use oat\oatbox\extension\InstallAction;
+use oat\taoResultServer\models\classes\implementation\FileSystemVariableManager;
 
-use oat\taoResultServer\models\classes\VariableManager;
-use oat\oatbox\service\ConfigurableService;
-
-class DefaultVariableManager extends ConfigurableService implements VariableManager
+class EnableFileSystemStorage extends InstallAction
 {
-    public function persist(\taoResultServer_models_classes_Variable $variable)
+    public function __invoke($params)
     {
-        return;
-    }
-    
-    public function retrieve(\taoResultServer_models_classes_Variable $variable)
-    {
-        return;
-    }
-    
-    public function retrieveProperty($variableBaseType, $propertyName, $propertyValue)
-    {
-        return;
-    }
-    
-    public function delete($deliveryResultIdentifier)
-    {
-        return;
+        $variableManager = new FileSystemVariableManager();
+        $serviceManager = $this->getServiceManager();
+        
+        $serviceManager->propagate($variableManager);
+        $serviceManager->register(FileSystemVariableManager::SERVICE_ID, $variableManager);
+        
+        return new \common_report_Report(
+            \common_report_Report::TYPE_SUCCESS,
+            "File system storage enabled."
+        );
     }
 }

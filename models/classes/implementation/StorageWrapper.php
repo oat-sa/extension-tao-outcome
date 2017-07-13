@@ -184,7 +184,12 @@ class StorageWrapper implements ServiceLocatorAwareInterface, StorageRead, Stora
     public function getVariableProperty($variableId, $property)
     {
         if (($storage = $this->getImplementation()) instanceof StorageManage) {
-            return $storage->getVariableProperty($variableId, $property);
+            // Retrieve info to be given to the VariableManager in force...
+            $baseType = $storage->getVariableProperty($variableId, 'baseType');
+            $propertyValue = $storage->getVariableProperty($variableId, $property);
+            
+            // Ask the VariableManager for a possible transformation...
+            return $this->getVariableManager()->retrieveProperty($baseType, $property, $propertyValue);
         } else {
             return null;
         }

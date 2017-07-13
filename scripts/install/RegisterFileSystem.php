@@ -21,9 +21,9 @@
 namespace oat\taoResultServer\scripts\install;
 
 use oat\oatbox\filesystem\FileSystemService;
-use oat\oatbox\extension\AbstractAction;
+use oat\oatbox\extension\InstallAction;
 
-class RegisterFileSystem extends AbstractAction
+class RegisterFileSystem extends InstallAction
 {
     public function __invoke($params)
     {
