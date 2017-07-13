@@ -20,6 +20,8 @@
  * @package taoResultServer
  */
 
+use oat\taoResultServer\models\classes\implementation\StorageWrapper;
+use oat\taoResultServer\models\classes\implementation\StorageAggregation;
 
 class taoResultServer_models_classes_ResultServer
 {
@@ -91,9 +93,19 @@ class taoResultServer_models_classes_ResultServer
      */
     public function getStorageInterface()
     {
-        $storageContainer = new taoResultServer_models_classes_ResultStorageContainer($this->implementations);
-        $storageContainer->configure($this->resultServer);
-        return $storageContainer;
+        $serviceManager = \oat\oatbox\service\ServiceManager::getServiceManager();
+        $resultService = $serviceManager->get(\oat\taoResultServer\models\classes\ResultServerService::SERVICE_ID);
+        $resultStorages = [];
+        foreach ($this->implementations as $impl) {
+            $resultStorage = $resultService->instantiateResultStorage($impl['serviceId']);
+            $resultStorage->configure($this->resultServer, $impl['params']);
+            $resultStorages[] = $resultStorage;
+        }
+        
+        $wrapper = new StorageWrapper(new StorageAggregation($resultStorages));
+        $serviceManager->propagate($wrapper);
+        
+        return $wrapper;
     }
 }
 ?>

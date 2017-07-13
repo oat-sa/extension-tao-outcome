@@ -27,16 +27,19 @@ class DefaultVariableManager extends ConfigurableService
 {
     public function persist(\taoResultServer_models_classes_Variable $variable)
     {
+        \common_Logger::i('----> PERSIST');
         return;
     }
     
     public function retrieve(\taoResultServer_models_classes_Variable $variable)
     {
+        \common_Logger::i('----> RETRIEVE');
         return;
     }
     
-    public function delete(\taoResultServer_models_classes_Variable $variable)
+    public function delete($deliveryResultIdentifier)
     {
+        \common_Logger::i('-----> DELETE');
         return;
     }
 }

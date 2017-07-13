@@ -43,11 +43,11 @@ interface VariableManager
     public function retrieve(\taoResultServer_models_classes_Variable $variable);
     
     /**
-     * Delete Variable Behaviour
+     * Delete Result Behaviour
      * 
-     * Additional persistence behaviour to be performed on a Result Variable at deletion time.
+     * Additional persistence behaviour to be performed on a whole Result at deletion time.
      * 
      * @throws oat\taoResultServer\models\classes\VariableManagementException In case an error occurs.
      */
-    public function delete(\taoResultServer_models_classes_Variable $variable);
+    public function delete($deliveryResultIdentifier);
 }
