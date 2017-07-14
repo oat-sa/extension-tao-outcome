@@ -20,6 +20,12 @@
  
 namespace oat\taoResultServer\models\classes;
 
+/**
+ * Variable Management Exception
+ * 
+ * Exception to be throw by VariableManager implementations in case
+ * of unexpected error.
+ */
 class VariableManagementException extends \common_Exception
 {
 

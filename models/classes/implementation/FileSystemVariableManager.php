@@ -24,6 +24,12 @@ use oat\taoResultServer\models\classes\VariableManager;
 use oat\oatbox\service\ConfigurableService;
 use oat\oatbox\filesystem\FileSystemService;
 
+/**
+ * File System Variable Manager
+ * 
+ * This class aims at managing Results File Values on abstract file systems. Files are stored
+ * in the taoResultServer file system.
+ */
 class FileSystemVariableManager extends ConfigurableService implements VariableManager
 {
     public function persist(\taoResultServer_models_classes_Variable $variable, $deliveryResultIdentifier)

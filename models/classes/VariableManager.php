@@ -20,6 +20,14 @@
  
 namespace oat\taoResultServer\models\classes;
 
+/**
+ * Variable Manager Interface
+ * 
+ * Services implementing this interface claim that they are able to extend the behaviour
+ * of TAO in terms of Result Variable Storage. By implementing the methods of this interface
+ * it is possible to perform additional processing on Result Variables and their content at
+ * persistence, retrieval and deletion time.
+ */
 interface VariableManager
 {
     const SERVICE_ID = 'taoResultServer/variableManager';

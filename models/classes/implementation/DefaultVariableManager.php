@@ -23,6 +23,13 @@ namespace oat\taoResultServer\models\classes\implementation;
 use oat\taoResultServer\models\classes\VariableManager;
 use oat\oatbox\service\ConfigurableService;
 
+/**
+ * Default Variable Manager
+ * 
+ * This Variable Manager aims at implementing the default behaviour in terms
+ * of Result Variable Values. It does not apply any additional behaviour to
+ * the usual way to store results in TAO.
+ */
 class DefaultVariableManager extends ConfigurableService implements VariableManager
 {
     public function persist(\taoResultServer_models_classes_Variable $variable, $deliveryResultIdentifier)
