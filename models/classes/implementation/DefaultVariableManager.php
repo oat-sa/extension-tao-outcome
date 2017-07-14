@@ -25,19 +25,19 @@ use oat\oatbox\service\ConfigurableService;
 
 class DefaultVariableManager extends ConfigurableService implements VariableManager
 {
-    public function persist(\taoResultServer_models_classes_Variable $variable)
+    public function persist(\taoResultServer_models_classes_Variable $variable, $deliveryResultIdentifier)
     {
         return;
     }
     
-    public function retrieve(\taoResultServer_models_classes_Variable $variable)
+    public function retrieve(\taoResultServer_models_classes_Variable $variable, $deliveryResultIdentifier)
     {
         return;
     }
     
     public function retrieveProperty($variableBaseType, $propertyName, $propertyValue)
     {
-        return;
+        return $propertyValue;
     }
     
     public function delete($deliveryResultIdentifier)

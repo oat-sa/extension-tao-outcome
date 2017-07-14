@@ -30,9 +30,10 @@ interface VariableManager
      * Additional persistence behaviour to be performed on a Result Variable at storage time.
      * 
      * @param \taoResultServer_models_classes_Variable $variable
+     * @param string $deliveryResultIdentifier
      * @throws oat\taoResultServer\models\classes\VariableManagementException In case an error occurs.
      */
-    public function persist(\taoResultServer_models_classes_Variable $variable);
+    public function persist(\taoResultServer_models_classes_Variable $variable, $deliveryResultIdentifier);
     
     /**
      * Retrieve Variable Behaviour
@@ -40,9 +41,10 @@ interface VariableManager
      * Additional persistence behaviour to be performed on a Result Variable at retrieval time.
      * 
      * @param \taoResultServer_models_classes_Variable $variable
+     * @param string $deliveryResultIdentifier
      * @throws oat\taoResultServer\models\classes\VariableManagementException In case an error occurs.
      */
-    public function retrieve(\taoResultServer_models_classes_Variable $variable);
+    public function retrieve(\taoResultServer_models_classes_Variable $variable, $deliveryResultIdentifier);
     
     /**
      * Retrieve Variable Property Value Behaviour.

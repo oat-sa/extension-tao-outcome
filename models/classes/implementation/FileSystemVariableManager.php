@@ -26,7 +26,7 @@ use oat\oatbox\filesystem\FileSystemService;
 
 class FileSystemVariableManager extends ConfigurableService implements VariableManager
 {
-    public function persist(\taoResultServer_models_classes_Variable $variable)
+    public function persist(\taoResultServer_models_classes_Variable $variable, $deliveryResultIdentifier)
     {
         if ($variable->baseType === 'file') {
             $fsId = uniqid();
@@ -44,7 +44,7 @@ class FileSystemVariableManager extends ConfigurableService implements VariableM
         }
     }
     
-    public function retrieve(\taoResultServer_models_classes_Variable $variable)
+    public function retrieve(\taoResultServer_models_classes_Variable $variable, $deliveryResultIdentifier)
     {
         if ($variable->baseType === 'file') {
             $fileSystem = $this->getServiceManager()->get(FileSystemService::SERVICE_ID)->getFileSystem('taoResultServer');

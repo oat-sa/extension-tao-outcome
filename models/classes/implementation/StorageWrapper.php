@@ -60,7 +60,7 @@ class StorageWrapper implements ServiceLocatorAwareInterface, StorageRead, Stora
             
             foreach ($variables as $variable) {
                 foreach ($variable as $v) {
-                    $variableManager->retrieve($v->variable);
+                    $variableManager->retrieve($v->variable, $v->deliveryResultIdentifier);
                 }
             }
             
@@ -79,7 +79,7 @@ class StorageWrapper implements ServiceLocatorAwareInterface, StorageRead, Stora
             
             foreach ($variables as $variable) {
                 foreach ($variable as $v) {
-                    $variableManager->retrieve($v->variable);
+                    $variableManager->retrieve($v->variable, $v->deliveryResultIdentifier);
                 }
             }
             
@@ -161,7 +161,7 @@ class StorageWrapper implements ServiceLocatorAwareInterface, StorageRead, Stora
     public function storeItemVariable($deliveryResultIdentifier, $test, $item, \taoResultServer_models_classes_Variable $itemVariable, $callIdItem)
     {
         if (($storage = $this->getImplementation()) instanceof StorageWrite) {
-            $this->getVariableManager()->persist($itemVariable);
+            $this->getVariableManager()->persist($itemVariable, $deliveryResultIdentifier);
             $storage->storeItemVariable($deliveryResultIdentifier, $test, $item, $itemVariable, $callIdItem);
         }
     }
@@ -169,7 +169,7 @@ class StorageWrapper implements ServiceLocatorAwareInterface, StorageRead, Stora
     public function storeTestVariable($deliveryResultIdentifier, $test, \taoResultServer_models_classes_Variable $testVariable, $callIdTest)
     {
         if (($storage = $this->getImplementation()) instanceof StorageWrite) {
-            $this->getVariableManager()->persist($testVariable);
+            $this->getVariableManager()->persist($testVariable, $deliveryResultIdentifier);
             $storage->storeTestVariable($deliveryResultIdentifier, $test, $testVariable, $callIdTest);
         }
     }
