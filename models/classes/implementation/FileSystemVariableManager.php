@@ -29,17 +29,23 @@ class FileSystemVariableManager extends ConfigurableService implements VariableM
     public function persist(\taoResultServer_models_classes_Variable $variable, $deliveryResultIdentifier)
     {
         if ($variable->baseType === 'file') {
-            $fsId = uniqid();
+            $path = self::buildPath(
+                $deliveryResultIdentifier,
+                self::buildIdentifier()
+            );
+            
+            \common_Logger::i('GENERATED PATH : ' . $path);
+            
             $fileSystem = $this->getServiceManager()->get(FileSystemService::SERVICE_ID)->getFileSystem('taoResultServer');
             
             if ($variable instanceof \taoResultServer_models_classes_ResponseVariable) {
                 $data = $variable->getCandidateResponse();
-                $variable->setCandidateResponse($fsId);
-                $fileSystem->write($fsId, $data);
+                $variable->setCandidateResponse($path);
+                $fileSystem->write($path, $data);
             } elseif ($variable instanceof \taoResultServer_models_classes_OutcomeVariable) {
                 $data = $variable->getValue();
-                $variable->value->setValue($fsId);
-                $fileSystem->write($fsId, $data);
+                $variable->setValue($path);
+                $fileSystem->write($path, $data);
             }
         }
     }
@@ -50,11 +56,9 @@ class FileSystemVariableManager extends ConfigurableService implements VariableM
             $fileSystem = $this->getServiceManager()->get(FileSystemService::SERVICE_ID)->getFileSystem('taoResultServer');
             
             if ($variable instanceof \taoResultServer_models_classes_ResponseVariable) {
-                $fsId = $variable->getCandidateResponse();
-                $variable->setCandidateResponse($fileSystem->read($fsId));
+                $variable->setCandidateResponse($fileSystem->read($variable->getCandidateResponse()));
             } elseif ($variable instanceof \taoResultServer_models_classes_OutcomeVariable) {
-                $fsId = $variable->getValue();
-                $variable->setValue($fileSystem->read($fsId));
+                $variable->setValue($fileSystem->read($variable->getValue()));
             }
         }
     }
@@ -71,7 +75,24 @@ class FileSystemVariableManager extends ConfigurableService implements VariableM
      
     public function delete($deliveryResultIdentifier)
     {
-        // @todo TO BE IMPLEMENTED LATER ON AFTER FIRST REVIEW.
-        return;
+        $path = self::buildPath($deliveryResultIdentifier);
+        $fileSystem = $this->getServiceManager()->get(FileSystemService::SERVICE_ID)->getFileSystem('taoResultServer');
+        $fileSystem->deleteDir($path);
+    }
+    
+    private static function buildPath($deliveryResultIdentifier, $identifier = '')
+    {
+        $path = md5($deliveryResultIdentifier);
+        
+        if (empty($identifier) === false) {
+            $path .= "/${identifier}";
+        }
+        
+        return $path;
+    }
+    
+    private static function buildIdentifier()
+    {
+        return md5(uniqid(true) . rand(0, 10000));
     }
 }
