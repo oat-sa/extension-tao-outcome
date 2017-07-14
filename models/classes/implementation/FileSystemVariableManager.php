@@ -104,8 +104,10 @@ class FileSystemVariableManager extends ConfigurableService implements VariableM
     {
         $path = md5($deliveryResultIdentifier);
         
+        $slashPosition = 1;
         for ($i = 1; $i < 4; $i++) {
-            $path = substr_replace($path, '/', $i, 0);
+            $path = substr_replace($path, '/', $slashPosition, 0);
+            $slashPosition += 2;
         }
         
         if (empty($identifier) === false) {
