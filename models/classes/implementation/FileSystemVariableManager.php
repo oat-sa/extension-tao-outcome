@@ -21,6 +21,7 @@
 namespace oat\taoResultServer\models\classes\implementation;
 
 use oat\taoResultServer\models\classes\VariableManager;
+use oat\taoResultServer\models\classes\VariableManagementException;
 use oat\oatbox\service\ConfigurableService;
 use oat\oatbox\filesystem\FileSystemService;
 
@@ -34,38 +35,47 @@ class FileSystemVariableManager extends ConfigurableService implements VariableM
 {
     public function persist(\taoResultServer_models_classes_Variable $variable, $deliveryResultIdentifier)
     {
-        if ($variable->baseType === 'file') {
-            $path = self::buildPath(
-                $deliveryResultIdentifier,
-                self::buildIdentifier()
-            );
-            
-            \common_Logger::i('GENERATED PATH : ' . $path);
-            
-            $fileSystem = $this->getServiceManager()->get(FileSystemService::SERVICE_ID)->getFileSystem('taoResultServer');
-            
-            if ($variable instanceof \taoResultServer_models_classes_ResponseVariable) {
-                $data = $variable->getCandidateResponse();
-                $variable->setCandidateResponse($path);
-                $fileSystem->write($path, $data);
-            } elseif ($variable instanceof \taoResultServer_models_classes_OutcomeVariable) {
-                $data = $variable->getValue();
-                $variable->setValue($path);
-                $fileSystem->write($path, $data);
+        try {
+            if ($variable->baseType === 'file') {
+                $path = self::buildPath(
+                    $deliveryResultIdentifier,
+                    self::buildIdentifier()
+                );
+                
+                \common_Logger::i('GENERATED PATH : ' . $path);
+                
+                $fileSystem = $this->getServiceManager()->get(FileSystemService::SERVICE_ID)->getFileSystem('taoResultServer');
+                
+                if ($variable instanceof \taoResultServer_models_classes_ResponseVariable) {
+                    $data = $variable->getCandidateResponse();
+                    $variable->setCandidateResponse($path);
+                    $fileSystem->write($path, $data);
+                } elseif ($variable instanceof \taoResultServer_models_classes_OutcomeVariable) {
+                    $data = $variable->getValue();
+                    $variable->setValue($path);
+                    $fileSystem->write($path, $data);
+                }
             }
+        } catch (\Exception $e) {
+            throw new VariableManagementException("An error occured while persisting a variable with identifier '${deliveryResultIdentifier}'.", 0, $e);
         }
+        
     }
     
     public function retrieve(\taoResultServer_models_classes_Variable $variable, $deliveryResultIdentifier)
     {
-        if ($variable->baseType === 'file') {
-            $fileSystem = $this->getServiceManager()->get(FileSystemService::SERVICE_ID)->getFileSystem('taoResultServer');
-            
-            if ($variable instanceof \taoResultServer_models_classes_ResponseVariable) {
-                $variable->setCandidateResponse($fileSystem->read($variable->getCandidateResponse()));
-            } elseif ($variable instanceof \taoResultServer_models_classes_OutcomeVariable) {
-                $variable->setValue($fileSystem->read($variable->getValue()));
+        try {
+            if ($variable->baseType === 'file') {
+                $fileSystem = $this->getServiceManager()->get(FileSystemService::SERVICE_ID)->getFileSystem('taoResultServer');
+                
+                if ($variable instanceof \taoResultServer_models_classes_ResponseVariable) {
+                    $variable->setCandidateResponse($fileSystem->read($variable->getCandidateResponse()));
+                } elseif ($variable instanceof \taoResultServer_models_classes_OutcomeVariable) {
+                    $variable->setValue($fileSystem->read($variable->getValue()));
+                }
             }
+        } catch (\Exception $e) {
+            throw new VariableManagementException("An error occured while retrieving a variable with identifier '${deliveryResultIdentifier}'.", 0, $e);
         }
     }
     
@@ -81,14 +91,22 @@ class FileSystemVariableManager extends ConfigurableService implements VariableM
      
     public function delete($deliveryResultIdentifier)
     {
-        $path = self::buildPath($deliveryResultIdentifier);
-        $fileSystem = $this->getServiceManager()->get(FileSystemService::SERVICE_ID)->getFileSystem('taoResultServer');
-        $fileSystem->deleteDir($path);
+        try {
+            $path = self::buildPath($deliveryResultIdentifier);
+            $fileSystem = $this->getServiceManager()->get(FileSystemService::SERVICE_ID)->getFileSystem('taoResultServer');
+            $fileSystem->deleteDir($path);
+        } catch (\Exception $e) {
+            throw new VariableManagementException("An error occured while deleting a variable with identifier '${deliveryResultIdentifier}'.", 0, $e);
+        }
     }
     
     private static function buildPath($deliveryResultIdentifier, $identifier = '')
     {
         $path = md5($deliveryResultIdentifier);
+        
+        for ($i = 1; $i < 4; $i++) {
+            $path = substr_replace($path, '/', $i, 0);
+        }
         
         if (empty($identifier) === false) {
             $path .= "/${identifier}";
