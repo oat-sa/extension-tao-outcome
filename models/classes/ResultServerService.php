@@ -35,7 +35,7 @@ interface ResultServerService {
      * Returns the storage engine of the result server
      *
      * @throws \common_exception_Error
-     * @return \taoResultServer_models_classes_ReadableResultStorage
+     * @return \taoResultServer_models_classes_ReadableResultStorage|\taoResultServer_models_classes_WritableResultStorage|oat\taoResultServer\models\classes\ResultManagement
      */
     public function getResultStorage();
 }
