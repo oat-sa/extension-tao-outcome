@@ -14,7 +14,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2016 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
+ * Copyright (c) 2016-2017 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  *
  */
 namespace oat\taoResultServer\models\classes\implementation;
@@ -23,8 +23,9 @@ use taoResultServer_models_classes_ResultServerStateFull;
 use oat\generis\model\OntologyAwareTrait;
 use oat\taoResultServer\models\classes\ResultServiceTrait;
 use oat\oatbox\service\ConfigurableService;
+use oat\taoResultServer\models\classes\ResultServerService;
 
-class OntologyService extends ConfigurableService
+class OntologyService extends ConfigurableService implements ResultServerService
 {
     
     use OntologyAwareTrait;
@@ -63,7 +64,7 @@ class OntologyService extends ConfigurableService
      * 
      * @param string $deliveryId
      * @throws \common_exception_Error
-     * @return \taoResultServer_models_classes_ReadableResultStorage
+     * @return \taoResultServer_models_classes_ReadableResultStorage|\taoResultServer_models_classes_WritableResultStorage|oat\taoResultServer\models\classes\ResultManagement
      */
     public function getResultStorage($deliveryId)
     {
