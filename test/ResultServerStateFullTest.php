@@ -215,26 +215,6 @@ class ResultServerStateFullTest extends TaoPhpUnitTestRunner
     
     
     }
-
-    public function testGetVariables()
-    {
-        $additionalStorage = array(
-            'implementation' => 'taoResultServer_models_classes_ResultStorageContainer',
-            'parameters' => null
-            
-            
-        );
-        
-        $this->service->initResultServer('http://www.tao.lu/Ontologies/TAOResultServer.rdf#void',array($additionalStorage));
-        $this->service->spawnResult('testcase_deliveryexecId','testcase_deliveryresultId');
-        
-        $res = $this->service->getVariables('test');
-        $this->assertEmpty($res);
-        
-        $this->markTestIncomplete('need to test that return value is correct');
-        
-    
-    }
 }
 
 ?>

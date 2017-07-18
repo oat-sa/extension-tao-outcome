@@ -14,8 +14,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2014-2016 (original work) Open Assessment Technologies SA;
- *
+ * Copyright (c) 2014-2017 (original work) Open Assessment Technologies SA;
  *
  */
 
@@ -26,6 +25,9 @@ use oat\tao\model\accessControl\func\AccessRule;
 use oat\tao\model\user\TaoRoles;
 use oat\taoResultServer\models\classes\QtiResultsService;
 use oat\taoResultServer\models\classes\ResultService;
+use oat\oatbox\filesystem\FileSystemService;
+use oat\taoResultServer\models\classes\implementation\DefaultVariableManager;
+
 /**
  * 
  * @author Joel Bout <joel@taotesting.com>
@@ -64,5 +66,20 @@ class taoResultServer_scripts_update_Updater extends \common_ext_ExtensionUpdate
         }
 
         $this->skip('3.2.1', '3.2.5');
+        
+        if ($this->isVersion('3.2.5')) {
+            // Create a file system for the extension.
+            $serviceManager = $this->getServiceManager();
+            $service = $serviceManager->get(FileSystemService::SERVICE_ID);
+            $service->createFileSystem('taoResultServer');
+            $serviceManager->register(FileSystemService::SERVICE_ID, $service);
+            
+            // Register VariableManager service.
+            $variableManager = new DefaultVariableManager();
+            $serviceManager->propagate($variableManager);
+            $serviceManager->register(DefaultVariableManager::SERVICE_ID, $variableManager);
+            
+            $this->setVersion('3.3.0');
+        }
     }
 }

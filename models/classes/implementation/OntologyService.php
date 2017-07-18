@@ -97,12 +97,19 @@ class OntologyService extends ConfigurableService implements ResultServerService
             }
         }
 
+        $implementation = null;
+
         if (empty($implementations)) {
             throw new \common_exception_Error(__('This delivery has no readable Result Server'));
         } elseif (count($implementations) == 1) {
-            return reset($implementations);
+            $implementation = reset($implementations);
         } else {
-            return new StorageAggregation($implementations);
+            $implementation = new StorageAggregation($implementations);
         }
+        
+        $storageWrapper = new StorageWrapper($implementation);
+        $this->getServiceManager()->propagate($storageWrapper);
+        
+        return $storageWrapper;
     }
 }
