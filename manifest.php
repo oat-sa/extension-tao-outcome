@@ -13,11 +13,10 @@ return array(
     'label' => 'Result core extension',
     'description' => 'Results Server management and exposed interfaces for results data submission',
     'license' => 'GPL-2.0',
-    'version' => '3.3.0',
+    'version' => '3.3.1',
     'author' => 'Open Assessment Technologies',
     //taoResults may be needed for the taoResults taoResultServerModel that uses taoResults db storage
 	'requires' => array(
-        'taoDelivery' => '>=6.7.0',
         'tao' => '>=9.0.0'
 	),
 	'models' => array(
