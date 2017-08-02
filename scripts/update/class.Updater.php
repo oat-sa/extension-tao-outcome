@@ -32,10 +32,10 @@ use oat\taoResultServer\models\classes\ResultAliasService;
  */
 class taoResultServer_scripts_update_Updater extends \common_ext_ExtensionUpdater {
 
-	/**
-     * 
-     * @param string $currentVersion
-     * @return string $versionUpdatedTo
+    /**
+     *
+     * @param string $initialVersion
+     * @return string|void
      */
     public function update($initialVersion) {
 
@@ -62,11 +62,11 @@ class taoResultServer_scripts_update_Updater extends \common_ext_ExtensionUpdate
             $this->setVersion('3.2.1');
         }
 
-        $this->skip('3.2.1', '3.2.4');
+        $this->skip('3.2.1', '3.3.1');
 
-        if ($this->isVersion('3.2.4')) {
+        if ($this->isVersion('3.3.1')) {
             $this->getServiceManager()->register(ResultAliasService::SERVICE_ID, new ResultAliasService());
-            $this->setVersion('3.3.0');
+            $this->setVersion('3.4.0');
         }
     }
 }
