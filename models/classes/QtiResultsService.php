@@ -21,7 +21,6 @@
 namespace oat\taoResultServer\models\classes;
 
 use oat\taoDelivery\model\execution\DeliveryExecution as DeliveryExecutionInterface;
-use oat\taoDelivery\model\execution\ServiceProxy;
 use qtism\common\enums\Cardinality;
 use oat\oatbox\service\ConfigurableService;
 use oat\oatbox\service\ServiceManager;
@@ -108,6 +107,11 @@ class QtiResultsService extends ConfigurableService implements ResultService
      */
     public function getQtiResultXml($deliveryId, $resultId)
     {
+        $deId = $this->getServiceManager()->get(ResultAliasServiceInterface::SERVICE_ID)->getDeliveryExecutionId($resultId);
+        if ($deId === null) {
+            $deId = $resultId;
+        }
+
         $resultService = $this->getServiceLocator()->get(ResultServerService::SERVICE_ID);
         $resultServer = $resultService->getResultStorage($deliveryId);
 
@@ -116,15 +120,15 @@ class QtiResultsService extends ConfigurableService implements ResultService
         $dom = new \DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $itemResults = $crudService->format($resultServer, $resultId, CrudResultsService::GROUP_BY_ITEM);
-        $testResults = $crudService->format($resultServer, $resultId, CrudResultsService::GROUP_BY_TEST);
+        $itemResults = $crudService->format($resultServer, $deId, CrudResultsService::GROUP_BY_ITEM);
+        $testResults = $crudService->format($resultServer, $deId, CrudResultsService::GROUP_BY_TEST);
 
         $assessmentResultElt = $dom->createElementNS(self::QTI_NS, 'assessmentResult');
         $dom->appendChild($assessmentResultElt);
 
         /** Context */
         $contextElt = $dom->createElementNS(self::QTI_NS, 'context');
-        $contextElt->setAttribute('sourcedId', \tao_helpers_Uri::getUniqueId($resultServer->getTestTaker($resultId)));
+        $contextElt->setAttribute('sourcedId', \tao_helpers_Uri::getUniqueId($resultServer->getTestTaker($deId)));
         $assessmentResultElt->appendChild($contextElt);
         
         /** Test Result */
