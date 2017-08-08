@@ -37,7 +37,7 @@ class ResultAliasService extends ConfigurableService implements ResultAliasServi
      */
     public function getResultAlias($deliveryExecutionId)
     {
-        return [$deliveryExecutionId];
+        return $deliveryExecutionId;
     }
 
     /**

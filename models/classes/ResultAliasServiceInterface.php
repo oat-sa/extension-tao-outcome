@@ -36,7 +36,7 @@ interface ResultAliasServiceInterface
      * Get result alias by delivery execution identifier.
      *
      * @param $deliveryExecutionId
-     * @return array
+     * @return string|null
      */
     public function getResultAlias($deliveryExecutionId);
 
