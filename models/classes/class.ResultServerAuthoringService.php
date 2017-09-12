@@ -19,6 +19,8 @@
  *               2013-2014 (update and modification) Open Assessment Technologies SA
  */
 
+use oat\taoResultServer\models\classes\ResultServerService;
+
 /**
  * The Service class is an abstraction of each service instance. 
  * Used to centralize the behavior related to every servcie instances.
@@ -49,7 +51,7 @@ class taoResultServer_models_classes_ResultServerAuthoringService
     {
         parent::__construct();
         
-        $this->resultServerClass = new core_kernel_classes_Class(TAO_RESULTSERVER_CLASS);
+        $this->resultServerClass = new core_kernel_classes_Class(ResultServerService::SERVER_CLASS);
     }
 
 	/** (non-PHPdoc)
@@ -181,13 +183,13 @@ class taoResultServer_models_classes_ResultServerAuthoringService
      * @return array readable and writable storages of results
      */
     public function getResultStorages(){
-        $storageClass = new core_kernel_classes_Class(TAO_RESULTSERVER_MODEL_CLASS);
+        $storageClass = new core_kernel_classes_Class(ResultServerService::MODEL_CLASS);
         
         $readableStorages = array();
         $writableStorages = array();
         
         foreach ($storageClass->getInstances() as $storage) {
-            $impl = $storage->getUniquePropertyValue(new core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_IMPL_PROP));
+            $impl = $storage->getUniquePropertyValue(new core_kernel_classes_Property(ResultServerService::MODEL_IMPL_PROP));
             $interfaces = class_implements($impl->__toString());
             if (in_array('taoResultServer_models_classes_ReadableResultStorage', $interfaces)) {
                 $readableStorages[] = $storage;
@@ -226,7 +228,7 @@ class taoResultServer_models_classes_ResultServerAuthoringService
 
         foreach ($sourceStorages as $sourceStorage) {
             $sourceStorageResource = new core_kernel_classes_Resource($sourceStorage);
-            $implLiteral = $sourceStorageResource->getUniquePropertyValue(new core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_IMPL_PROP));
+            $implLiteral = $sourceStorageResource->getUniquePropertyValue(new core_kernel_classes_Property(ResultServerService::MODEL_IMPL_PROP));
             $impl = $implLiteral->__toString(); 
             $interfaces = class_implements($impl);
             if (!(in_array('taoResultServer_models_classes_ReadableResultStorage', $interfaces))) {
@@ -240,7 +242,7 @@ class taoResultServer_models_classes_ResultServerAuthoringService
         
         foreach ($targetStorages as $targetStorage) {
             $targetStorageResource = new core_kernel_classes_Resource($targetStorage);
-            $implLiteral = $targetStorageResource->getUniquePropertyValue(new core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_IMPL_PROP));
+            $implLiteral = $targetStorageResource->getUniquePropertyValue(new core_kernel_classes_Property(ResultServerService::MODEL_IMPL_PROP));
             $impl = $implLiteral->__toString(); 
             $interfaces = class_implements($impl);
             if (!(in_array('taoResultServer_models_classes_WritableResultStorage', $interfaces))) {
@@ -326,7 +328,7 @@ class taoResultServer_models_classes_ResultServerAuthoringService
         if ($ext->hasConfig(self::DEFAULT_RESULTSERVER_KEY)) {
             $uri = $ext->getConfig(self::DEFAULT_RESULTSERVER_KEY);
         } else {
-            $uri = TAO_VOID_RESULT_SERVER;
+            $uri = ResultServerService::RESULT_SERVER;
         }
         
         return new core_kernel_classes_Resource($uri);

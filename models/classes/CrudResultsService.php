@@ -40,7 +40,7 @@ class CrudResultsService extends \tao_models_classes_CrudService {
 
     public function __construct() {
         parent::__construct();
-        $this->resultClass = new \core_kernel_classes_Class(TAO_DELIVERY_RESULT);
+        $this->resultClass = new \core_kernel_classes_Class(ResultService::DELIVERY_RESULT);
     }
 
     public function getRootClass() {

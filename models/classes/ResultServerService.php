@@ -22,7 +22,13 @@ namespace oat\taoResultServer\models\classes;
 interface ResultServerService {
     
     const SERVICE_ID = 'taoResultServer/resultservice';
-    
+
+    const SERVER_CLASS	= 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServer';
+    const MODEL_CLASS = 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerModel';
+    const MODEL_PROP ='http://www.tao.lu/Ontologies/TAOResultServer.rdf#hasResultServerModel';
+    const MODEL_IMPL_PROP = 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#implementation';
+    const RESULT_SERVER = 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#void';
+
     /**
      * For legacy non stateless storage
      * 

@@ -18,6 +18,12 @@
  *
  * 
  */
+
+/**
+ * This constants are deprecated
+ *
+ * @deprecated
+ */
 $todefine = array(
     'TAO_DELIVERY_RESULT'			=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#DeliveryResult',
     'PROPERTY_RESULT_OF_SUBJECT'	=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfSubject',
