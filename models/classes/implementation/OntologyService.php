@@ -79,7 +79,7 @@ class OntologyService extends ConfigurableService implements ResultServerService
         if(is_null($deliveryResultServer)){
             throw new \common_exception_Error(__('This delivery has no Result Server'));
         }
-        $resultServerModel = $deliveryResultServer->getPropertyValues($this->getProperty(ResultServerService::MODEL_PROP));
+        $resultServerModel = $deliveryResultServer->getPropertyValues($this->getProperty(ResultServerService::PROPERTY_MODEL_PROP));
 
         if(is_null($resultServerModel)){
             throw new \common_exception_Error(__('This delivery has no readable Result Server'));
@@ -90,7 +90,7 @@ class OntologyService extends ConfigurableService implements ResultServerService
             $model = $this->getClass($model);
 
             /** @var $implementation \core_kernel_classes_Literal*/
-            $implementation = $model->getOnePropertyValue($this->getProperty(ResultServerService::MODEL_IMPL_PROP));
+            $implementation = $model->getOnePropertyValue($this->getProperty(ResultServerService::PROPERTY_MODEL_IMPL_PROP));
 
             if ($implementation !== null) {
                 $implementations[] = $this->instantiateResultStorage($implementation->literal);
