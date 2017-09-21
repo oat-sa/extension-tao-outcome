@@ -29,11 +29,11 @@ interface ResultService extends PhpSerializable
 
     const CONFIG_ID = 'qtiResultsService';
 
-    const PROPERTY_DELIVERY_RESULT	='http://www.tao.lu/Ontologies/TAOResult.rdf#DeliveryResult';
+    const DELIVERY_RESULT_CLASS_URI ='http://www.tao.lu/Ontologies/TAOResult.rdf#DeliveryResult';
 
-    const PROPERTY_SUBJECT	='http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfSubject';
+    const SUBJECT_CLASS_URI ='http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfSubject';
 
-    const PROPERTY_DELIVERY	='http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfDelivery';
+    const DELIVERY_CLASS_URI ='http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfDelivery';
 
     /**
      * Get last delivery execution from $delivery & $testtaker uri
