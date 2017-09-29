@@ -52,14 +52,14 @@ class taoResultServer_models_classes_ResultServer
             }
         }
         // the static storages
-        if ($this->resultServer->getUri() != ResultServerService::PROPERTY_RESULT_SERVER) {
-            $resultServerModels = $this->resultServer->getPropertyValues(new core_kernel_classes_Property(ResultServerService::PROPERTY_MODEL_PROP));
+        if ($this->resultServer->getUri() != ResultServerService::INSTANCE_RESULT_SERVER) {
+            $resultServerModels = $this->resultServer->getPropertyValues(new core_kernel_classes_Property(ResultServerService::PROPERTY_HAS_MODEL));
             if ((! isset($resultServerModels)) or (count($resultServerModels) == 0)) {
                 throw new common_Exception("The result server is not correctly configured (Resource definition)");
             }
             foreach ($resultServerModels as $resultServerModelUri) {
                 $resultServerModel = new core_kernel_classes_Resource($resultServerModelUri);
-                $this->addImplementation($resultServerModel->getUniquePropertyValue(new core_kernel_classes_Property(ResultServerService::PROPERTY_MODEL_IMPL_PROP))->literal);
+                $this->addImplementation($resultServerModel->getUniquePropertyValue(new core_kernel_classes_Property(ResultServerService::PROPERTY_MODEL_IMPL))->literal);
             }
         }
         if (! is_null($additionalStorages)) {

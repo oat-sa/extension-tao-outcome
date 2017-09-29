@@ -9,7 +9,7 @@ class RestResultServerTest extends RestTestCase
     public function serviceProvider(){
         \common_ext_ExtensionsManager::singleton()->getExtensionById('taoResultServer');
         return array(
-            array('taoResultServer/RestResultServer',ResultServerService::PROPERTY_SERVER_CLASS)
+            array('taoResultServer/RestResultServer',ResultServerService::CLASS_URI)
         );
     }
     
