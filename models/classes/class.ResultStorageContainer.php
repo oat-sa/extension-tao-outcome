@@ -86,8 +86,22 @@ implements taoResultServer_models_classes_WritableResultStorage
         $callIdItem
     ) {
         foreach ($this->getImplementations() as $implementation) {
-            $implementation["object"]->storeItemVariable($deliveryResultIdentifier, $test, $item, $itemVariable,
-                $callIdItem);
+            $implementation["object"]->storeItemVariable($deliveryResultIdentifier, $test, $item, $itemVariable, $callIdItem);
+        }
+    }
+    
+    /*
+     * (non-PHPdoc) @see taoResultServer_models_classes_WritableResultStorage::storeItemVariable()
+     */
+    public function storeItemVariables(
+        $deliveryResultIdentifier,
+        $test,
+        $item,
+        array $itemVariables,
+        $callIdItem
+    ) {
+        foreach ($this->getImplementations() as $implementation) {
+            $implementation["object"]->storeItemVariables($deliveryResultIdentifier, $test, $item, $itemVariables, $callIdItem);
         }
     }
 
