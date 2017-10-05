@@ -222,9 +222,14 @@ class taoResultServer_models_classes_ResultServerStateFull extends tao_models_cl
     {
         $resultServer = $this->restoreResultServer();
         $storageInterface = $resultServer->getStorageInterface();
-        foreach ($itemVariableSet as $itemVariable) {
-            $storageInterface->storeItemVariable($this->getValue("resultServer_deliveryResultIdentifier"), $test, $item, $itemVariable, $callIdItem);
-        }
+        $storageInterface->storeItemVariables(
+            $this->getValue("resultServer_deliveryResultIdentifier"),
+            $test,
+            $item,
+            $itemVariableSet,
+            $callIdItem
+        );
+
         return $this->getValue("resultServer_deliveryResultIdentifier");
     }
 
