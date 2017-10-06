@@ -100,7 +100,8 @@ interface taoResultServer_models_classes_WritableResultStorage {
      */
     public function storeTestVariable($deliveryResultIdentifier, $test, taoResultServer_models_classes_Variable $testVariable, $callIdTest);
 
-
+    public function storeTestVariables($deliveryResultIdentifier, $test, array $testVariables, $callIdTest);
+    
     /**
      * Configure
      * 
