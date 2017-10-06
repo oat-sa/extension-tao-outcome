@@ -19,6 +19,8 @@
  *
  */
 
+use oat\generis\model\OntologyRdf;
+
 /**
  * Crud services implements basic CRUD services, orginally intended for REST controllers/ HTTP exception handlers
  * Consequently the signatures and behaviors is closer to REST and throwing HTTP like exceptions
@@ -61,11 +63,11 @@ class taoResultServer_models_classes_CrudResultServerService extends tao_models_
         if (! isset($propertiesValues[RDFS_LABEL])) {
             $propertiesValues[RDFS_LABEL] = "";
         }
-        $type = isset($propertiesValues[RDF_TYPE]) ? $propertiesValues[RDF_TYPE] : $this->getRootClass();
+        $type = isset($propertiesValues[OntologyRdf::RDF_TYPE]) ? $propertiesValues[OntologyRdf::RDF_TYPE] : $this->getRootClass();
         $label = $propertiesValues[RDFS_LABEL];
         // hmmm
         unset($propertiesValues[RDFS_LABEL]);
-        unset($propertiesValues[RDF_TYPE]);
+        unset($propertiesValues[OntologyRdf::RDF_TYPE]);
         $resource = parent::create($label, $type, $propertiesValues);
         return $resource;
     }
