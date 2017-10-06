@@ -118,6 +118,13 @@ implements taoResultServer_models_classes_WritableResultStorage
             $implementation["object"]->storeTestVariable($deliveryResultIdentifier, $test, $testVariable, $callIdTest);
         }
     }
+    
+    public function storeTestVariables($deliveryResultIdentifier, $test, array $testVariables, $callIdTest)
+    {
+        foreach ($this->getImplementations() as $implementation) {
+            $implementation["object"]->storeTestVariables($deliveryResultIdentifier, $test, $testVariables, $callIdTest);
+        }
+    }
 
     /*
      * (non-PHPdoc) @see taoResultServer_models_classes_WritableResultStorage::configure()

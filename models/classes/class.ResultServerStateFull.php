@@ -253,7 +253,7 @@ class taoResultServer_models_classes_ResultServerStateFull extends tao_models_cl
         return $this->getValue("resultServer_deliveryResultIdentifier");
     }
     
-    public function storeTestVariableSet($test, $item, array $testVariableSet, $callIdTest)
+    public function storeTestVariableSet($test, array $testVariableSet, $callIdTest)
     {
         $resultServer = $this->restoreResultServer();
         $resultServer->getStorageInterface()->storeTestVariables(
