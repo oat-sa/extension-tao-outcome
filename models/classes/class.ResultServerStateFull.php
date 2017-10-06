@@ -218,7 +218,7 @@ class taoResultServer_models_classes_ResultServerStateFull extends tao_models_cl
      * @return string The identifier of the delivery result.
      * @throws Exception
      */
-    public function storeItemVariableSet($test, $item, $itemVariableSet, $callIdItem)
+    public function storeItemVariableSet($test, $item, array $itemVariableSet, $callIdItem)
     {
         $resultServer = $this->restoreResultServer();
         $storageInterface = $resultServer->getStorageInterface();
@@ -243,7 +243,26 @@ class taoResultServer_models_classes_ResultServerStateFull extends tao_models_cl
     public function storeTestVariable($test, taoResultServer_models_classes_Variable $testVariable, $callIdTest)
     {
         $resultServer = $this->restoreResultServer();
-        $resultServer->getStorageInterface()->storeTestVariable($this->getValue("resultServer_deliveryResultIdentifier"), $test, $testVariable, $callIdTest);
+        $resultServer->getStorageInterface()->storeTestVariable(
+            $this->getValue("resultServer_deliveryResultIdentifier"), 
+            $test, 
+            $testVariable, 
+            $callIdTest
+        );
+        
+        return $this->getValue("resultServer_deliveryResultIdentifier");
+    }
+    
+    public function storeTestVariableSet($test, $item, array $testVariableSet, $callIdTest)
+    {
+        $resultServer = $this->restoreResultServer();
+        $resultServer->getStorageInterface()->storeTestVariables(
+            $this->getValue("resultServer_deliveryResultIdentifier"),
+            $test,
+            $testVariableSet,
+            $callIdTest
+        );
+        
         return $this->getValue("resultServer_deliveryResultIdentifier");
     }
     
