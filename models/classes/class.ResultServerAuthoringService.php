@@ -328,7 +328,7 @@ class taoResultServer_models_classes_ResultServerAuthoringService
         if ($ext->hasConfig(self::DEFAULT_RESULTSERVER_KEY)) {
             $uri = $ext->getConfig(self::DEFAULT_RESULTSERVER_KEY);
         } else {
-            $uri = ResultServerService::INSTANCE_RESULT_SERVER;
+            $uri = ResultServerService::INSTANCE_VOID_RESULT_SERVER;
         }
         
         return new core_kernel_classes_Resource($uri);
