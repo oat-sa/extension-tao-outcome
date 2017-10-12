@@ -52,7 +52,7 @@ class taoResultServer_models_classes_ResultServer
             }
         }
         // the static storages
-        if ($this->resultServer->getUri() != ResultServerService::INSTANCE_RESULT_SERVER) {
+        if ($this->resultServer->getUri() != ResultServerService::INSTANCE_VOID_RESULT_SERVER) {
             $resultServerModels = $this->resultServer->getPropertyValues(new core_kernel_classes_Property(ResultServerService::PROPERTY_HAS_MODEL));
             if ((! isset($resultServerModels)) or (count($resultServerModels) == 0)) {
                 throw new common_Exception("The result server is not correctly configured (Resource definition)");

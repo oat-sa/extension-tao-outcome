@@ -31,7 +31,7 @@ interface ResultServerService {
 
     const PROPERTY_MODEL_IMPL = 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#implementation';
 
-    const INSTANCE_RESULT_SERVER = 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#void';
+    const INSTANCE_VOID_RESULT_SERVER = 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#void';
 
     /**
      * For legacy non stateless storage

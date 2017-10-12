@@ -33,14 +33,14 @@ class OntologyService extends ConfigurableService implements ResultServerService
 
     const OPTION_DEFAULT_MODEL = 'default';
     
-    const INSTANCE_RESULT_SERVER = 'http://www.tao.lu/Ontologies/TAODelivery.rdf#DeliveryResultServer';
+    const INSTANCE_VOID_RESULT_SERVER = 'http://www.tao.lu/Ontologies/TAODelivery.rdf#DeliveryResultServer';
 
     public function initResultServer($compiledDelivery, $executionIdentifier){
     
         //starts or resume a taoResultServerStateFull session for results submission
     
         //retrieve the result server definition
-        $resultServer = $compiledDelivery->getUniquePropertyValue($this->getProperty(self::INSTANCE_RESULT_SERVER));
+        $resultServer = $compiledDelivery->getUniquePropertyValue($this->getProperty(self::INSTANCE_VOID_RESULT_SERVER));
         //callOptions are required in the case of a LTI basic storage
     
         taoResultServer_models_classes_ResultServerStateFull::singleton()->initResultServer($resultServer->getUri());
@@ -74,7 +74,7 @@ class OntologyService extends ConfigurableService implements ResultServerService
         
         $delivery = $this->getResource($deliveryId);
         
-        $deliveryResultServer = $delivery->getOnePropertyValue($this->getProperty(self::INSTANCE_RESULT_SERVER));
+        $deliveryResultServer = $delivery->getOnePropertyValue($this->getProperty(self::INSTANCE_VOID_RESULT_SERVER));
         
         if(is_null($deliveryResultServer)){
             throw new \common_exception_Error(__('This delivery has no Result Server'));
