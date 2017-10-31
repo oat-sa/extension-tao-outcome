@@ -41,7 +41,7 @@ class OntologyService extends ConfigurableService implements ResultServerService
         $resultServer = \taoResultServer_models_classes_ResultServerAuthoringService::singleton()->getDefaultResultServer();
         //callOptions are required in the case of a LTI basic storage
     
-        taoResultServer_models_classes_ResultServerStateFull::singleton()->initResultServer($resultServer->getUri());
+        taoResultServer_models_classes_ResultServerStateFull::singleton()->initResultServer($resultServer->getUri(), $options);
     
         //a unique identifier for data collected through this delivery execution
         //in the case of LTI, we should use the sourceId

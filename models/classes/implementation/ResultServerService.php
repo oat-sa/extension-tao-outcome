@@ -53,10 +53,12 @@ class ResultServerService extends ConfigurableService implements ResultServerSer
      *
      * @param $compiledDelivery
      * @param $executionIdentifier
+     * @param array $options additional result server options @see \taoResultServer_models_classes_ResultServer::__construct()
+     * @throws
      */
-    public function initResultServer($compiledDelivery, $executionIdentifier)
+    public function initResultServer($compiledDelivery, $executionIdentifier, $options = [])
     {
-        taoResultServer_models_classes_ResultServerStateFull::singleton()->initResultServer($this->getOption(self::OPTION_RESULT_STORAGE));
+        taoResultServer_models_classes_ResultServerStateFull::singleton()->initResultServer($this->getOption(self::OPTION_RESULT_STORAGE), $options);
         taoResultServer_models_classes_ResultServerStateFull::singleton()->spawnResult($executionIdentifier, $executionIdentifier);
         \common_Logger::i("Spawning/resuming result identifier related to process execution ".$executionIdentifier);
 
@@ -71,7 +73,7 @@ class ResultServerService extends ConfigurableService implements ResultServerSer
      * Returns the storage engine of the result server
      * 
      * @throws \common_exception_Error
-     * @return \taoResultServer_models_classes_ReadableResultStorage
+     * @return \taoResultServer_models_classes_WritableResultStorage
      */
     public function getResultStorage()
     {
