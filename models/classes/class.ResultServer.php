@@ -1,4 +1,7 @@
 <?php
+
+use oat\taoResultServer\models\classes\ResultServerService;
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License

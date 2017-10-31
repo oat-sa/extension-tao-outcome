@@ -14,7 +14,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2016 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
+ * Copyright (c) 2016-2017 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  *
  */
 namespace oat\taoResultServer\models\classes\implementation;
@@ -23,8 +23,9 @@ use taoResultServer_models_classes_ResultServerStateFull;
 use oat\generis\model\OntologyAwareTrait;
 use oat\taoResultServer\models\classes\ResultServiceTrait;
 use oat\oatbox\service\ConfigurableService;
+use oat\taoResultServer\models\classes\ResultServerService;
 
-class OntologyService extends ConfigurableService
+class OntologyService extends ConfigurableService implements ResultServerService
 {
     
     use OntologyAwareTrait;
@@ -60,7 +61,7 @@ class OntologyService extends ConfigurableService
      * Returns the storage engine of the result server
      * 
      * @throws \common_exception_Error
-     * @return \taoResultServer_models_classes_ReadableResultStorage
+     * @return \taoResultServer_models_classes_ReadableResultStorage|\taoResultServer_models_classes_WritableResultStorage|oat\taoResultServer\models\classes\ResultManagement
      */
     public function getResultStorage()
     {
@@ -69,7 +70,7 @@ class OntologyService extends ConfigurableService
         if(is_null($deliveryResultServer)){
             throw new \common_exception_Error(__('This delivery has no Result Server'));
         }
-        $resultServerModel = $deliveryResultServer->getPropertyValues($this->getProperty(TAO_RESULTSERVER_MODEL_PROP));
+        $resultServerModel = $deliveryResultServer->getPropertyValues($this->getProperty(ResultServerService::PROPERTY_HAS_MODEL));
 
         if(is_null($resultServerModel)){
             throw new \common_exception_Error(__('This delivery has no readable Result Server'));
@@ -80,7 +81,7 @@ class OntologyService extends ConfigurableService
             $model = $this->getClass($model);
 
             /** @var $implementation \core_kernel_classes_Literal*/
-            $implementation = $model->getOnePropertyValue($this->getProperty(TAO_RESULTSERVER_MODEL_IMPL_PROP));
+            $implementation = $model->getOnePropertyValue($this->getProperty(ResultServerService::PROPERTY_MODEL_IMPL));
 
             if ($implementation !== null) {
                 $implementations[] = $this->instantiateResultStorage($implementation->literal);

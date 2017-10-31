@@ -42,13 +42,13 @@ class QtiResultsService extends ConfigurableService implements ResultService
     /**
      * Get the implementation of delivery execution service
      *
-     * @return \taoDelivery_models_classes_execution_Service
+     * @return ServiceProxy
+     * @throws \Zend\ServiceManager\Exception\ServiceNotFoundException
      */
     protected function getDeliveryExecutionService()
     {
         if (!$this->deliveryExecutionService) {
-            $this->deliveryExecutionService = $this->getServiceLocator()
-                ->get('taoDelivery/' . \taoDelivery_models_classes_execution_ServiceProxy::CONFIG_KEY);
+            $this->deliveryExecutionService = $this->getServiceLocator()->get(ServiceProxy::SERVICE_ID);
         }
         return $this->deliveryExecutionService;
     }
@@ -56,9 +56,9 @@ class QtiResultsService extends ConfigurableService implements ResultService
     /**
      * Get last delivery execution from $delivery & $testtaker uri
      *
-     * @param $delivery
-     * @param $testtaker
-     * @return mixed
+     * @param string $delivery uri
+     * @param string $testtaker uri
+     * @return \oat\taoDelivery\model\execution\DeliveryExecutionInterface
      * @throws
      */
     public function getDeliveryExecutionByTestTakerAndDelivery($delivery, $testtaker)
@@ -75,7 +75,7 @@ class QtiResultsService extends ConfigurableService implements ResultService
      * Get Delivery execution from resource
      *
      * @param $deliveryExecutionId
-     * @return mixed
+     * @return DeliveryExecutionInterface
      * @throws \common_exception_NotFound
      */
     public function getDeliveryExecutionById($deliveryExecutionId)
@@ -88,20 +88,30 @@ class QtiResultsService extends ConfigurableService implements ResultService
         }
         return $deliveryExecution;
     }
-    
+
     /**
      * Return delivery execution as xml of testtaker based on delivery
      *
+     * @param DeliveryExecutionInterface $deliveryExecution
      * @return string
      */
     public function getDeliveryExecutionXml(DeliveryExecutionInterface $deliveryExecution)
     {
         return $this->getQtiResultXml($deliveryExecution->getDelivery()->getUri(), $deliveryExecution->getIdentifier());
     }
-    
+
+    /**
+     * @param $deliveryId
+     * @param $resultId
+     * @return string
+     */
     public function getQtiResultXml($deliveryId, $resultId)
     {
-        $delivery = new \core_kernel_classes_Resource($deliveryId);
+        $deId = $this->getServiceManager()->get(ResultAliasServiceInterface::SERVICE_ID)->getDeliveryExecutionId($resultId);
+        if ($deId === null) {
+            $deId = $resultId;
+        }
+
         $resultService = $this->getServiceLocator()->get(ResultServerService::SERVICE_ID);
         $resultServer = $resultService->getResultStorage($deliveryId);
 
@@ -110,15 +120,15 @@ class QtiResultsService extends ConfigurableService implements ResultService
         $dom = new \DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $itemResults = $crudService->format($resultServer, $resultId, CrudResultsService::GROUP_BY_ITEM);
-        $testResults = $crudService->format($resultServer, $resultId, CrudResultsService::GROUP_BY_TEST);
+        $itemResults = $crudService->format($resultServer, $deId, CrudResultsService::GROUP_BY_ITEM);
+        $testResults = $crudService->format($resultServer, $deId, CrudResultsService::GROUP_BY_TEST);
 
         $assessmentResultElt = $dom->createElementNS(self::QTI_NS, 'assessmentResult');
         $dom->appendChild($assessmentResultElt);
 
         /** Context */
         $contextElt = $dom->createElementNS(self::QTI_NS, 'context');
-        $contextElt->setAttribute('sourcedId', \tao_helpers_Uri::getUniqueId($resultServer->getTestTaker($resultId)));
+        $contextElt->setAttribute('sourcedId', \tao_helpers_Uri::getUniqueId($resultServer->getTestTaker($deId)));
         $assessmentResultElt->appendChild($contextElt);
         
         /** Test Result */
@@ -233,9 +243,9 @@ class QtiResultsService extends ConfigurableService implements ResultService
     }
 
     /**
-     * @param $dom \DOMDocument
-     * @param $tag Xml tag to create
-     * @param $data Data to escape
+     * @param \DOMDocument $dom
+     * @param string $tag Xml tag to create
+     * @param string $data Data to escape
      * @return \DOMElement
      */
     protected function createCDATANode($dom, $tag, $data)

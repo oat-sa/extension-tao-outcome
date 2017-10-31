@@ -131,10 +131,24 @@ class StorageAggregation implements
         }
     }
     
+    public function storeItemVariables($deliveryResultIdentifier, $test, $item, array $itemVariables, $callIdItem)
+    {
+        foreach ($this->getAllImplementations(StorageWrite::class) as $impl) {
+            $impl->storeItemVariables($deliveryResultIdentifier, $test, $item, $itemVariables, $callIdItem);
+        }
+    }
+    
     public function storeTestVariable($deliveryResultIdentifier, $test, taoResultServer_models_classes_Variable $testVariable, $callIdTest)
     {
         foreach ($this->getAllImplementations(StorageWrite::class) as $impl) {
             $impl->storeTestVariable($deliveryResultIdentifier, $test, $testVariable, $callIdTest);
+        }
+    }
+    
+    public function storeTestVariables($deliveryResultIdentifier, $test, array $testVariables, $callIdTest)
+    {
+        foreach ($this->getAllImplementations(StorageWrite::class) as $impl) {
+            $impl->storeTestVariables($deliveryResultIdentifier, $test, $testVariables, $callIdTest);
         }
     }
     
