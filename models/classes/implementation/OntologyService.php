@@ -33,7 +33,7 @@ class OntologyService extends ConfigurableService implements ResultServerService
 
     const OPTION_DEFAULT_MODEL = 'default';
     
-    public function initResultServer($compiledDelivery, $executionIdentifier){
+    public function initResultServer($compiledDelivery, $executionIdentifier, $options = []){
     
         //starts or resume a taoResultServerStateFull session for results submission
     

@@ -38,8 +38,9 @@ interface ResultServerService {
      * 
      * @param \core_kernel_classes_Resource $compiledDelivery
      * @param string $executionIdentifier
+     * @param array $options additional result server options @see \taoResultServer_models_classes_ResultServer::__construct()
      */
-    public function initResultServer($compiledDelivery, $executionIdentifier);
+    public function initResultServer($compiledDelivery, $executionIdentifier, $options = []);
 
     /**
      * Returns the storage engine of the result server
