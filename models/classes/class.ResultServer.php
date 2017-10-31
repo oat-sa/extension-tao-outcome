@@ -55,10 +55,9 @@ class taoResultServer_models_classes_ResultServer
         }
 
         if ($resultServer instanceof core_kernel_classes_Resource) {
-            $this->resultServer = $resultServer;
             // the static storages
-            if ($this->resultServer->getUri() != ResultServerService::INSTANCE_VOID_RESULT_SERVER) {
-                $resultServerModels = $this->resultServer->getPropertyValues(new core_kernel_classes_Property(ResultServerService::PROPERTY_HAS_MODEL));
+            if ($resultServer->getUri() != ResultServerService::INSTANCE_VOID_RESULT_SERVER) {
+                $resultServerModels = $resultServer->getPropertyValues(new core_kernel_classes_Property(ResultServerService::PROPERTY_HAS_MODEL));
                 if ((! isset($resultServerModels)) or (count($resultServerModels) == 0)) {
                     throw new common_Exception("The result server is not correctly configured (Resource definition)");
                 }
@@ -104,9 +103,7 @@ class taoResultServer_models_classes_ResultServer
     {
         $storageContainer = new taoResultServer_models_classes_ResultStorageContainer($this->implementations);
         $storageContainer->setServiceManager(ServiceManager::getServiceManager());
-        if ($this->resultServer !== null) {
-            $storageContainer->configure($this->resultServer);
-        }
+        $storageContainer->configure();
         return $storageContainer;
     }
 }

@@ -128,11 +128,11 @@ implements taoResultServer_models_classes_WritableResultStorage
     /*
      * (non-PHPdoc) @see taoResultServer_models_classes_WritableResultStorage::configure()
      */
-    public function configure(core_kernel_classes_Resource $resultServer, $callOptions = array())
+    public function configure($callOptions = array())
     {
         foreach ($this->getImplementations() as $key => $implementation) {
             if (isset($this->implementationsConfig[$key]['params'])) {
-                $implementation["object"]->configure($resultServer, $this->implementationsConfig[$key]['params']);
+                $implementation["object"]->configure($this->implementationsConfig[$key]['params']);
             }
         }
     }
