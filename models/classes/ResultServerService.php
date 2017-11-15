@@ -45,8 +45,9 @@ interface ResultServerService {
     /**
      * Returns the storage engine of the result server
      *
+     * @param string $deliveryId @deprecated. Should be removed after \oat\taoResultServer\models\classes\implementation\OntologyService will be removed
      * @throws \common_exception_Error
-     * @return \taoResultServer_models_classes_ReadableResultStorage|\taoResultServer_models_classes_WritableResultStorage|oat\taoResultServer\models\classes\ResultManagement
+     * @return \taoResultServer_models_classes_ReadableResultStorage|\taoResultServer_models_classes_WritableResultStorage|\oat\taoResultServer\models\classes\ResultManagement
      */
-    public function getResultStorage();
+    public function getResultStorage($deliveryId);
 }
