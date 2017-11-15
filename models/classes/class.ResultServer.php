@@ -23,6 +23,7 @@ use oat\taoResultServer\models\classes\ResultServerService;
  * @package taoResultServer
  */
 
+use oat\oatbox\service\ServiceManager;
 
 class taoResultServer_models_classes_ResultServer
 {
@@ -36,41 +37,47 @@ class taoResultServer_models_classes_ResultServer
 
     /**
      *
-     * @param array callOptions an array of parameters sent to the results storage configuration
-     * @param mixed $resultServer
+     * @param mixed $resultServerId - result storage uri, resource or service id
+     * @param array $additionalStorages
+     *              $additionalStorages['implementation'] - service id or class name of result storage
+     *              $additionalStorages['parameters'] - parameters to be used during configuration of result storage (@see \taoResultServer_models_classes_WritableResultStorage::configure)
      * @param string uri or resource
+     * @throws \common_Exception if no models exist for given result server
      */
-    public function __construct($resultServer, $additionalStorages = array())
+    public function __construct($resultServerId, $additionalStorages = [])
     {
-        $this->implementations = array();
-        
-        if (is_object($resultServer) and (get_class($resultServer) == 'core_kernel_classes_Resource')) {
-            $this->resultServer = $resultServer;
+        $this->implementations = [];
+
+        $resultServer = null;
+
+        if (common_Utils::isUri($resultServerId)) {
+            $resultServer = new core_kernel_classes_Resource($resultServerId);
+        }
+
+        if ($resultServer instanceof core_kernel_classes_Resource) {
+            // the static storages
+            if ($resultServer->getUri() != ResultServerService::INSTANCE_VOID_RESULT_SERVER) {
+                $resultServerModels = $resultServer->getPropertyValues(new core_kernel_classes_Property(ResultServerService::PROPERTY_HAS_MODEL));
+                if ((! isset($resultServerModels)) or (count($resultServerModels) == 0)) {
+                    throw new common_Exception("The result server is not correctly configured (Resource definition)");
+                }
+                foreach ($resultServerModels as $resultServerModelUri) {
+                    $resultServerModel = new core_kernel_classes_Resource($resultServerModelUri);
+                    $this->addImplementation($resultServerModel->getUniquePropertyValue(new core_kernel_classes_Property(ResultServerService::PROPERTY_MODEL_IMPL))->literal);
+                }
+            }
         } else {
-            if (common_Utils::isUri($resultServer)) {
-                $this->resultServer = new core_kernel_classes_Resource($resultServer);
-            }
+            $this->addImplementation($resultServerId);
         }
-        // the static storages
-        if ($this->resultServer->getUri() != ResultServerService::INSTANCE_VOID_RESULT_SERVER) {
-            $resultServerModels = $this->resultServer->getPropertyValues(new core_kernel_classes_Property(ResultServerService::PROPERTY_HAS_MODEL));
-            if ((! isset($resultServerModels)) or (count($resultServerModels) == 0)) {
-                throw new common_Exception("The result server is not correctly configured (Resource definition)");
-            }
-            foreach ($resultServerModels as $resultServerModelUri) {
-                $resultServerModel = new core_kernel_classes_Resource($resultServerModelUri);
-                $this->addImplementation($resultServerModel->getUniquePropertyValue(new core_kernel_classes_Property(ResultServerService::PROPERTY_MODEL_IMPL))->literal);
-            }
-        }
-        if (! is_null($additionalStorages)) {
+
+        if ($additionalStorages !== null) {
             // the dynamic storages
             foreach ($additionalStorages as $additionalStorage) {
                 $this->addImplementation($additionalStorage["implementation"], $additionalStorage["parameters"]);
             }
         }
-        
-        common_Logger::i("Result Server Initialized using defintion:" . $this->resultServer->getUri());
-        // sets the details required depending on the type of storage
+
+        common_Logger::i("Result Server Initialized using definition: " . $resultServerId);
     }
 
     /**
@@ -95,8 +102,8 @@ class taoResultServer_models_classes_ResultServer
     public function getStorageInterface()
     {
         $storageContainer = new taoResultServer_models_classes_ResultStorageContainer($this->implementations);
-        $storageContainer->configure($this->resultServer);
+        $storageContainer->setServiceManager(ServiceManager::getServiceManager());
+        $storageContainer->configure();
         return $storageContainer;
     }
 }
-?>

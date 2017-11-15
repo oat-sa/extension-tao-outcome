@@ -107,10 +107,8 @@ interface taoResultServer_models_classes_WritableResultStorage {
      * 
      * The storage may configure itself based on the resultServer definition
      * 
-     * @param core_kernel_classes_Resource $resultServer
      * @param array $callOptions
      */
-    public function configure(core_kernel_classes_Resource $resultServer, $callOptions = array());
+    public function configure($callOptions = array());
     
 }
-?>

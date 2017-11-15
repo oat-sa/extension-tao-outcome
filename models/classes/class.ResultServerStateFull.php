@@ -83,8 +83,6 @@ class taoResultServer_models_classes_ResultServerStateFull extends tao_models_cl
     
     /**
      * constructor: initialize the service and the default data
-     * 
-     * @return Delivery
      */
     public function __construct()
     {
@@ -94,29 +92,29 @@ class taoResultServer_models_classes_ResultServerStateFull extends tao_models_cl
     /**
      *
      * @author "Patrick Plichart, <patrick@taotesting.com>"
-     * @param string $resultServerUri            
+     * @param string $resultServer
      * @param string $callOptions            
      * @throws common_exception_MissingParameter
      */
-    public function initResultServer($resultServerUri, $callOptions = null)
+    public function initResultServer($resultServer, $callOptions = null)
     {
-        if (common_Utils::isUri($resultServerUri)) {
-            PHPSession::singleton()->setAttribute("resultServerUri", $resultServerUri);
+        if (common_Utils::isUri($resultServer) || $this->getServiceLocator()->has($resultServer)) {
+            PHPSession::singleton()->setAttribute("resultServerUri", $resultServer);
             
             // check if a resultServer has already been intialized for this definition
             $initializedResultServer = null;
             $listResultServers = array();
             if ($this->getValue("resultServerObject") !== null) {
                 $listResultServers = $this->getValue("resultServerObject");
-                if (isset($listResultServers[$resultServerUri])) {
-                    $initializedResultServer = $listResultServers[$resultServerUri];
+                if (isset($listResultServers[$resultServer])) {
+                    $initializedResultServer = $listResultServers[$resultServer];
                 }
             }
             
             if ($callOptions === null && $initializedResultServer !== null) {
                 // the policy is that if the result server has already been intialized and configured further calls without callOptions will reuse the same calloptions
             } else {
-                $listResultServers[$resultServerUri] = new taoResultServer_models_classes_ResultServer($resultServerUri, $callOptions);
+                $listResultServers[$resultServer] = new taoResultServer_models_classes_ResultServer($resultServer, $callOptions);
                 PHPSession::singleton()->setAttribute("resultServerObject", $listResultServers);
             }
         } else {
@@ -128,7 +126,7 @@ class taoResultServer_models_classes_ResultServerStateFull extends tao_models_cl
      *
      * @author "Patrick Plichart, <patrick@taotesting.com>"
      * @throws common_exception_PreConditionFailure
-     * @return Ambiguous
+     * @return \taoResultServer_models_classes_ResultServer
      */
     private function restoreResultServer()
     {
@@ -154,7 +152,7 @@ class taoResultServer_models_classes_ResultServerStateFull extends tao_models_cl
     {
         if ($deliveryResultIdentifier == null) {
             $resultServer = $this->restoreResultServer();
-            if (($this->getValue("resultServer_deliveryExecutionIdentifier")) !== null and (($this->getValue("resultServer_deliveryExecutionIdentifier")) == $deliveryExecutionIdentifier)) {
+            if ($this->getValue("resultServer_deliveryExecutionIdentifier") == $deliveryExecutionIdentifier) {
                 $resultServer_deliveryResultIdentifier = $this->getValue("resultServer_deliveryResultIdentifier");
             } else {
                 $resultServer_deliveryResultIdentifier = $resultServer->getStorageInterface()->spawnResult();

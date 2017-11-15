@@ -68,7 +68,7 @@ class taoResultServer_scripts_update_Updater extends \common_ext_ExtensionUpdate
             $this->getServiceManager()->register(ResultAliasService::SERVICE_ID, new ResultAliasService());
             $this->setVersion('3.4.0');
         }
-        
-        $this->skip('3.4.0', '4.1.2');
+
+        $this->skip('3.4.0', '4.2.0');
     }
 }

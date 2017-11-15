@@ -24,12 +24,11 @@
  * @author "Patrick Plichart, <patrick@taotesting.com>"
  */
 
-use oat\oatbox\service\ServiceManager;
-use oat\taoResultServer\models\classes\ResultServerService;
+use oat\oatbox\service\ConfigurableService;
 use oat\taoResultServer\models\classes\ResultServiceTrait;
 
 class taoResultServer_models_classes_ResultStorageContainer 
-extends tao_models_classes_GenerisService 
+extends ConfigurableService
 implements taoResultServer_models_classes_WritableResultStorage
 {
 
@@ -51,7 +50,7 @@ implements taoResultServer_models_classes_WritableResultStorage
      */
     public function __construct($implementations = array())
     {
-        parent::__construct();
+        parent::__construct([]);
         $this->implementationsConfig = $implementations;
     }
 
@@ -129,11 +128,11 @@ implements taoResultServer_models_classes_WritableResultStorage
     /*
      * (non-PHPdoc) @see taoResultServer_models_classes_WritableResultStorage::configure()
      */
-    public function configure(core_kernel_classes_Resource $resultServer, $callOptions = array())
+    public function configure($callOptions = array())
     {
         foreach ($this->getImplementations() as $key => $implementation) {
             if (isset($this->implementationsConfig[$key]['params'])) {
-                $implementation["object"]->configure($resultServer, $this->implementationsConfig[$key]['params']);
+                $implementation["object"]->configure($this->implementationsConfig[$key]['params']);
             }
         }
     }
@@ -219,13 +218,5 @@ implements taoResultServer_models_classes_WritableResultStorage
             $this->initialized = true;
         }
         return $this->implementations;
-    }
-
-    /**
-     * @return ServiceManager
-     */
-    protected function getServiceManager()
-    {
-        return ServiceManager::getServiceManager();
     }
 }
