@@ -20,6 +20,7 @@
 namespace oat\taoResultServer\models\classes;
 
 use \taoResultServer_models_classes_WritableResultStorage as WritableResultStorage;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
 
 /**
  * Class ResultServiceTrait
@@ -40,6 +41,10 @@ trait ResultServiceTrait
             $storage = new $serviceId();
         } elseif($this->getServiceManager()->has($serviceId)) {
             $storage = $this->getServiceManager()->get($serviceId);
+        }
+
+        if ($storage instanceof ServiceLocatorAwareInterface) {
+            $storage->setServiceLocator($this->getServiceLocator());
         }
 
         if ($storage === null || !$storage instanceof WritableResultStorage) {
