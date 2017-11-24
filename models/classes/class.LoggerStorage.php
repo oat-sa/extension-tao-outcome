@@ -86,9 +86,9 @@ implements taoResultServer_models_classes_WritableResultStorage
     /*
      * (non-PHPdoc) @see taoResultServer_models_classes_WritableResultStorage::configure()
      */
-    public function configure(core_kernel_classes_Resource $resultServer, $callOptions = array())
+    public function configure($callOptions = array())
     {
-        common_logger::i("LoggerStorage - configuration:" . $resultServer . " configuration:" . serialize($callOptions));
+        common_logger::i("LoggerStorage - configuration:" . serialize($callOptions));
     }
     
     /*

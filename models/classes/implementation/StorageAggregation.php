@@ -152,10 +152,10 @@ class StorageAggregation implements
         }
     }
     
-    public function configure(\core_kernel_classes_Resource $resultServer, $callOptions = array())
+    public function configure($callOptions = array())
     {
         foreach ($this->getAllImplementations(StorageWrite::class) as $impl) {
-            $success = $impl->configure($resultServer, $callOptions);
+            $success = $impl->configure($callOptions);
         }
     }
     

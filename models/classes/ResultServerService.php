@@ -38,15 +38,16 @@ interface ResultServerService {
      * 
      * @param \core_kernel_classes_Resource $compiledDelivery
      * @param string $executionIdentifier
+     * @param array $options additional result server options @see \taoResultServer_models_classes_ResultServer::__construct()
      */
-    public function initResultServer($compiledDelivery, $executionIdentifier);
+    public function initResultServer($compiledDelivery, $executionIdentifier, $options = []);
 
     /**
      * Returns the storage engine of the result server
      *
-     * @param string $deliveryId
+     * @param string $deliveryId @deprecated. Should be removed after \oat\taoResultServer\models\classes\implementation\OntologyService will be removed
      * @throws \common_exception_Error
-     * @return \taoResultServer_models_classes_ReadableResultStorage|\taoResultServer_models_classes_WritableResultStorage|oat\taoResultServer\models\classes\ResultManagement
+     * @return \taoResultServer_models_classes_ReadableResultStorage|\taoResultServer_models_classes_WritableResultStorage|\oat\taoResultServer\models\classes\ResultManagement
      */
     public function getResultStorage($deliveryId);
 }
