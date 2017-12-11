@@ -22,21 +22,32 @@ namespace oat\taoResultServer\models\classes;
 interface ResultServerService {
     
     const SERVICE_ID = 'taoResultServer/resultservice';
-    
+
+    const CLASS_URI	= 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServer';
+
+    const PROPERTY_MODEL = 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerModel';
+
+    const PROPERTY_HAS_MODEL ='http://www.tao.lu/Ontologies/TAOResultServer.rdf#hasResultServerModel';
+
+    const PROPERTY_MODEL_IMPL = 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#implementation';
+
+    const INSTANCE_VOID_RESULT_SERVER = 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#void';
+
     /**
      * For legacy non stateless storage
      * 
      * @param \core_kernel_classes_Resource $compiledDelivery
      * @param string $executionIdentifier
+     * @param array $options additional result server options @see \taoResultServer_models_classes_ResultServer::__construct()
      */
-    public function initResultServer($compiledDelivery, $executionIdentifier);
+    public function initResultServer($compiledDelivery, $executionIdentifier, $options = []);
 
     /**
      * Returns the storage engine of the result server
      *
-     * @param string $deliveryId
+     * @param string $deliveryId @deprecated. Should be removed after \oat\taoResultServer\models\classes\implementation\OntologyService will be removed
      * @throws \common_exception_Error
-     * @return \taoResultServer_models_classes_ReadableResultStorage|\taoResultServer_models_classes_WritableResultStorage|oat\taoResultServer\models\classes\ResultManagement
+     * @return \taoResultServer_models_classes_ReadableResultStorage|\taoResultServer_models_classes_WritableResultStorage|\oat\taoResultServer\models\classes\ResultManagement
      */
     public function getResultStorage($deliveryId);
 }

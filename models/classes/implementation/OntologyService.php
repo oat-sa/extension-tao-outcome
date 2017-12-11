@@ -25,6 +25,11 @@ use oat\taoResultServer\models\classes\ResultServiceTrait;
 use oat\oatbox\service\ConfigurableService;
 use oat\taoResultServer\models\classes\ResultServerService;
 
+/**
+ * Class OntologyService
+ * @package oat\taoResultServer\models\classes\implementation
+ * @deprecated ResultServerService should be used instead
+ */
 class OntologyService extends ConfigurableService implements ResultServerService
 {
     
@@ -32,18 +37,22 @@ class OntologyService extends ConfigurableService implements ResultServerService
     use ResultServiceTrait;
 
     const OPTION_DEFAULT_MODEL = 'default';
-    
+    /** @deprecated */
     const PROPERTY_RESULT_SERVER = 'http://www.tao.lu/Ontologies/TAODelivery.rdf#DeliveryResultServer';
 
-    public function initResultServer($compiledDelivery, $executionIdentifier){
+    public function initResultServer($compiledDelivery, $executionIdentifier, $options = []){
     
         //starts or resume a taoResultServerStateFull session for results submission
     
         //retrieve the result server definition
-        $resultServer = $compiledDelivery->getUniquePropertyValue($this->getProperty(self::PROPERTY_RESULT_SERVER));
+        try {
+            $resultServer = $compiledDelivery->getUniquePropertyValue($this->getProperty(self::PROPERTY_RESULT_SERVER));
+        } catch (\core_kernel_classes_EmptyProperty $e) {
+            $resultServer = \taoResultServer_models_classes_ResultServerAuthoringService::singleton()->getDefaultResultServer();
+        }
         //callOptions are required in the case of a LTI basic storage
     
-        taoResultServer_models_classes_ResultServerStateFull::singleton()->initResultServer($resultServer->getUri());
+        taoResultServer_models_classes_ResultServerStateFull::singleton()->initResultServer($resultServer->getUri(), $options);
     
         //a unique identifier for data collected through this delivery execution
         //in the case of LTI, we should use the sourceId
@@ -61,25 +70,25 @@ class OntologyService extends ConfigurableService implements ResultServerService
     
     /**
      * Returns the storage engine of the result server
-     * 
+     *
      * @param string $deliveryId
      * @throws \common_exception_Error
      * @return \taoResultServer_models_classes_ReadableResultStorage|\taoResultServer_models_classes_WritableResultStorage|oat\taoResultServer\models\classes\ResultManagement
      */
-    public function getResultStorage($deliveryId)
+    public function getResultStorage($deliveryId = null)
     {
-        if(is_null($deliveryId)){
-            throw new \common_exception_Error(__('This delivery doesn\'t exists'));
+        if ($deliveryId !== null) {
+            $delivery = $this->getResource($deliveryId);
+            $deliveryResultServer = $delivery->getOnePropertyValue($this->getProperty(self::PROPERTY_RESULT_SERVER));
         }
-        
-        $delivery = $this->getResource($deliveryId);
-        
-        $deliveryResultServer = $delivery->getOnePropertyValue($this->getProperty(self::PROPERTY_RESULT_SERVER));
-        
+        if (!$deliveryResultServer) {
+            $deliveryResultServer = \taoResultServer_models_classes_ResultServerAuthoringService::singleton()->getDefaultResultServer();
+        }
+
         if(is_null($deliveryResultServer)){
             throw new \common_exception_Error(__('This delivery has no Result Server'));
         }
-        $resultServerModel = $deliveryResultServer->getPropertyValues($this->getProperty(TAO_RESULTSERVER_MODEL_PROP));
+        $resultServerModel = $deliveryResultServer->getPropertyValues($this->getProperty(ResultServerService::PROPERTY_HAS_MODEL));
 
         if(is_null($resultServerModel)){
             throw new \common_exception_Error(__('This delivery has no readable Result Server'));
@@ -90,7 +99,7 @@ class OntologyService extends ConfigurableService implements ResultServerService
             $model = $this->getClass($model);
 
             /** @var $implementation \core_kernel_classes_Literal*/
-            $implementation = $model->getOnePropertyValue($this->getProperty(TAO_RESULTSERVER_MODEL_IMPL_PROP));
+            $implementation = $model->getOnePropertyValue($this->getProperty(ResultServerService::PROPERTY_MODEL_IMPL));
 
             if ($implementation !== null) {
                 $implementations[] = $this->instantiateResultStorage($implementation->literal);

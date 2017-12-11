@@ -32,6 +32,8 @@
 interface taoResultServer_models_classes_WritableResultStorage {
 
     /**
+     * Spawn Result
+     * 
      * Initialize a new raw Delivery Result.
      * 
      * After initialization, the Delivery Result will be empty, and will not be linked
@@ -45,6 +47,8 @@ interface taoResultServer_models_classes_WritableResultStorage {
     public function spawnResult();
 
     /**
+     * Store Related Test Taker
+     * 
      * Attach a given Test Taker to a Delivery Result.
      * 
      * A Delivery Result is always attached to a single Test Taker. This method enables
@@ -58,15 +62,21 @@ interface taoResultServer_models_classes_WritableResultStorage {
     public function storeRelatedTestTaker($deliveryResultIdentifier, $testTakerIdentifier);
 
     /**
+     * Store Related Delivery
+     * 
      * Store a delivery related to a specific delivery execution
+     * 
      * @param string $deliveryResultIdentifier (mostly delivery execution uri)
      * @param string $deliveryIdentifier (uri recommended)
      */
     public function storeRelatedDelivery($deliveryResultIdentifier, $deliveryIdentifier);
 
     /**
+     * Store Item Variable
+     * 
      * Submit a specific Item Variable, (ResponseVariable and OutcomeVariable shall be used respectively for collected data and score/interpretation computation)
      * and store it with all the dependencies
+     * 
      * @param string $deliveryResultIdentifier
      * @param string $test (uri recommended)
      * @param string $item (uri recommended)
@@ -74,10 +84,15 @@ interface taoResultServer_models_classes_WritableResultStorage {
      * @param string $callIdItem contextual call id for the variable, ex. :  to distinguish the same variable output by the same item and that is presented several times in the same test
      * 
      */
-    public function storeItemVariable($deliveryResultIdentifier, $test, $item, taoResultServer_models_classes_Variable $itemVariable, $callIdItem );
+    public function storeItemVariable($deliveryResultIdentifier, $test, $item, taoResultServer_models_classes_Variable $itemVariable, $callIdItem);
+    
+    public function storeItemVariables($deliveryResultIdentifier, $test, $item, array $itemVariables, $callIdItem);
 
     /**
+     * Store Test Variable
+     * 
      * Submit a specific test Variable and store it
+     * 
      * @param string $deliveryResultIdentifier
      * @param string $test
      * @param taoResultServer_models_classes_Variable $testVariable
@@ -85,13 +100,15 @@ interface taoResultServer_models_classes_WritableResultStorage {
      */
     public function storeTestVariable($deliveryResultIdentifier, $test, taoResultServer_models_classes_Variable $testVariable, $callIdTest);
 
-
+    public function storeTestVariables($deliveryResultIdentifier, $test, array $testVariables, $callIdTest);
+    
     /**
+     * Configure
+     * 
      * The storage may configure itself based on the resultServer definition
-     * @param core_kernel_classes_Resource $resultServer
+     * 
      * @param array $callOptions
      */
-    public function configure(core_kernel_classes_Resource $resultServer, $callOptions = array());
+    public function configure($callOptions = array());
     
 }
-?>

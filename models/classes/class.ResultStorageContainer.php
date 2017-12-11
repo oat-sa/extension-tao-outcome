@@ -24,12 +24,11 @@
  * @author "Patrick Plichart, <patrick@taotesting.com>"
  */
 
-use oat\oatbox\service\ServiceManager;
-use oat\taoResultServer\models\classes\ResultServerService;
+use oat\oatbox\service\ConfigurableService;
 use oat\taoResultServer\models\classes\ResultServiceTrait;
 
 class taoResultServer_models_classes_ResultStorageContainer 
-extends tao_models_classes_GenerisService 
+extends ConfigurableService
 implements taoResultServer_models_classes_WritableResultStorage
 {
 
@@ -51,7 +50,7 @@ implements taoResultServer_models_classes_WritableResultStorage
      */
     public function __construct($implementations = array())
     {
-        parent::__construct();
+        parent::__construct([]);
         $this->implementationsConfig = $implementations;
     }
 
@@ -86,8 +85,22 @@ implements taoResultServer_models_classes_WritableResultStorage
         $callIdItem
     ) {
         foreach ($this->getImplementations() as $implementation) {
-            $implementation["object"]->storeItemVariable($deliveryResultIdentifier, $test, $item, $itemVariable,
-                $callIdItem);
+            $implementation["object"]->storeItemVariable($deliveryResultIdentifier, $test, $item, $itemVariable, $callIdItem);
+        }
+    }
+    
+    /*
+     * (non-PHPdoc) @see taoResultServer_models_classes_WritableResultStorage::storeItemVariable()
+     */
+    public function storeItemVariables(
+        $deliveryResultIdentifier,
+        $test,
+        $item,
+        array $itemVariables,
+        $callIdItem
+    ) {
+        foreach ($this->getImplementations() as $implementation) {
+            $implementation["object"]->storeItemVariables($deliveryResultIdentifier, $test, $item, $itemVariables, $callIdItem);
         }
     }
 
@@ -104,15 +117,22 @@ implements taoResultServer_models_classes_WritableResultStorage
             $implementation["object"]->storeTestVariable($deliveryResultIdentifier, $test, $testVariable, $callIdTest);
         }
     }
+    
+    public function storeTestVariables($deliveryResultIdentifier, $test, array $testVariables, $callIdTest)
+    {
+        foreach ($this->getImplementations() as $implementation) {
+            $implementation["object"]->storeTestVariables($deliveryResultIdentifier, $test, $testVariables, $callIdTest);
+        }
+    }
 
     /*
      * (non-PHPdoc) @see taoResultServer_models_classes_WritableResultStorage::configure()
      */
-    public function configure(core_kernel_classes_Resource $resultServer, $callOptions = array())
+    public function configure($callOptions = array())
     {
         foreach ($this->getImplementations() as $key => $implementation) {
             if (isset($this->implementationsConfig[$key]['params'])) {
-                $implementation["object"]->configure($resultServer, $this->implementationsConfig[$key]['params']);
+                $implementation["object"]->configure($this->implementationsConfig[$key]['params']);
             }
         }
     }
@@ -198,13 +218,5 @@ implements taoResultServer_models_classes_WritableResultStorage
             $this->initialized = true;
         }
         return $this->implementations;
-    }
-
-    /**
-     * @return ServiceManager
-     */
-    protected function getServiceManager()
-    {
-        return ServiceManager::getServiceManager();
     }
 }

@@ -51,6 +51,20 @@ implements taoResultServer_models_classes_WritableResultStorage
     }
     
     /*
+     * (non-PHPdoc) @see taoResultServer_models_classes_WritableResultStorage::storeItemVariables()
+     */
+    public function storeItemVariables($deliveryResultIdentifier, $test, $item, array $itemVariables, $callIdItem)
+    {
+        $varContents = array_map(
+            function ($value) {
+                return serialize($value);
+            },
+            $itemVariables
+        );
+        common_logger::i("LoggerStorage - StoreItemVariables :" . $test . " item:" . $item . " callid:" . $callIdItem . "variables:" . implode(' - ', $varContents) . " into " . $deliveryResultIdentifier);
+    }
+    
+    /*
      * (non-PHPdoc) @see taoResultServer_models_classes_WritableResultStorage::storeTestVariable()
      */
     public function storeTestVariable($deliveryResultIdentifier, $test, taoResultServer_models_classes_Variable $testVariable, $callIdTest)
@@ -58,12 +72,23 @@ implements taoResultServer_models_classes_WritableResultStorage
         common_logger::i("LoggerStorage - StoreTestVariable :" . $test . " callid:" . $callIdTest . "variable:" . serialize($testVariable) . " into " . $deliveryResultIdentifier);
     }
     
+    public function storeTestVariables($deliveryResultIdentifier, $test, array $testVariables, $callIdTest)
+    {
+         $varContents = array_map(
+            function ($value) {
+                return serialize($value);
+            },
+            $testVariables
+        );
+        common_logger::i("LoggerStorage - StoreTestVariable :" . $test . " callid:" . $callIdTest . "variables:" . implode(' - ', $varContents) . " into " . $deliveryResultIdentifier);
+    }
+    
     /*
      * (non-PHPdoc) @see taoResultServer_models_classes_WritableResultStorage::configure()
      */
-    public function configure(core_kernel_classes_Resource $resultServer, $callOptions = array())
+    public function configure($callOptions = array())
     {
-        common_logger::i("LoggerStorage - configuration:" . $resultServer . " configuration:" . serialize($callOptions));
+        common_logger::i("LoggerStorage - configuration:" . serialize($callOptions));
     }
     
     /*
