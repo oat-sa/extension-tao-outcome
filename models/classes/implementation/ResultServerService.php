@@ -19,7 +19,7 @@
  */
 namespace oat\taoResultServer\models\classes\implementation;
 
-use taoResultServer_models_classes_ResultServerStateFull;
+use taoResultServer_models_classes_ResultServer;
 use oat\generis\model\OntologyAwareTrait;
 use oat\taoResultServer\models\classes\ResultServiceTrait;
 use oat\oatbox\service\ConfigurableService;
@@ -54,19 +54,22 @@ class ResultServerService extends ConfigurableService implements ResultServerSer
      * @param $compiledDelivery
      * @param $executionIdentifier
      * @param array $options additional result server options @see \taoResultServer_models_classes_ResultServer::__construct()
+     * @throws \common_Exception
      * @throws
      */
     public function initResultServer($compiledDelivery, $executionIdentifier, $options = [])
     {
-        taoResultServer_models_classes_ResultServerStateFull::singleton()->initResultServer($this->getOption(self::OPTION_RESULT_STORAGE), $options);
-        taoResultServer_models_classes_ResultServerStateFull::singleton()->spawnResult($executionIdentifier, $executionIdentifier);
-        \common_Logger::i("Spawning/resuming result identifier related to process execution ".$executionIdentifier);
+        $rs = new taoResultServer_models_classes_ResultServer($this->getOption(self::OPTION_RESULT_STORAGE), $options);
+
+        $resultIdentifier = $rs->getStorageInterface()->spawnResult($executionIdentifier);
+        \common_Logger::i('Spawning/resuming result identifier related to process execution ' .$executionIdentifier);
 
         //link test taker identifier with results
-        taoResultServer_models_classes_ResultServerStateFull::singleton()->storeRelatedTestTaker(\common_session_SessionManager::getSession()->getUserUri());
-    
+        $rs->getStorageInterface()->storeRelatedTestTaker($executionIdentifier, \common_session_SessionManager::getSession()->getUserUri());
+
+
         //link delivery identifier with results
-        taoResultServer_models_classes_ResultServerStateFull::singleton()->storeRelatedDelivery($compiledDelivery->getUri());
+        $rs->getStorageInterface()->storeRelatedDelivery($executionIdentifier, $compiledDelivery->getUri());
     }
     
     /**
@@ -80,5 +83,16 @@ class ResultServerService extends ConfigurableService implements ResultServerSer
     {
         $resultServerId = $this->getOption(self::OPTION_RESULT_STORAGE);
         return $this->instantiateResultStorage($resultServerId);
+    }
+
+    /**
+     * @param $executionIdentifier
+     * @param null $compiledDelivery
+     * @param array $options
+     * @return taoResultServer_models_classes_ResultServer
+     */
+    public function getResultServer($executionIdentifier, $compiledDelivery = null, array $options = []){
+        return new taoResultServer_models_classes_ResultServer($this->getOption(self::OPTION_RESULT_STORAGE), $options);
+
     }
 }

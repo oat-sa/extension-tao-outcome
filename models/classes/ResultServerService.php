@@ -50,4 +50,13 @@ interface ResultServerService {
      * @return \taoResultServer_models_classes_ReadableResultStorage|\taoResultServer_models_classes_WritableResultStorage|\oat\taoResultServer\models\classes\ResultManagement
      */
     public function getResultStorage($deliveryId);
+
+    /**
+     * @param $executionIdentifier
+     * @param null $compiledDelivery
+     * @param array $options
+     * @return \taoResultServer_models_classes_ResultServer
+     */
+    public function getResultServer($executionIdentifier, $compiledDelivery = null, array $options = []);
+
 }

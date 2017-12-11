@@ -125,33 +125,24 @@ class taoResultServer_models_classes_ResultServerStateFull extends tao_models_cl
     /**
      *
      * @author "Patrick Plichart, <patrick@taotesting.com>"
-     * @throws common_exception_PreConditionFailure
      * @return \taoResultServer_models_classes_ResultServer
      */
-    private function restoreResultServer()
+    private function restoreResultServer($deliveryExecutionIdentifier)
     {
-        if ($this->getValue('resultServerUri') !== null) {
-            $resultServerUri = $this->getValue('resultServerUri');
-            if ($this->getValue('resultServerObject')) {
-                $callOptionsList = $this->getValue('resultServerObject');
-                if (isset($callOptionsList[$resultServerUri])) {
-                    return $callOptionsList[$resultServerUri];
-                }
-            }
-        } else {
-            throw new common_exception_PreConditionFailure("The result server hasn't been initalized");
-        }
+        /** @var \oat\taoResultServer\models\classes\ResultServerService $s */
+        $s = $this->getServiceLocator()->get(\oat\taoResultServer\models\classes\ResultServerService::SERVICE_ID);
+        return  $s->getResultServer($deliveryExecutionIdentifier);
     }
 
     /**
      *
      * @example http://tao-dev/taoResultServer/ResultServerStateFull/spawnResult
-     * @return type
+     * @return string
      */
     public function spawnResult($deliveryExecutionIdentifier, $deliveryResultIdentifier = null)
     {
         if ($deliveryResultIdentifier == null) {
-            $resultServer = $this->restoreResultServer();
+            $resultServer = $this->restoreResultServer($deliveryExecutionIdentifier);
             if ($this->getValue("resultServer_deliveryExecutionIdentifier") == $deliveryExecutionIdentifier) {
                 $resultServer_deliveryResultIdentifier = $this->getValue("resultServer_deliveryResultIdentifier");
             } else {
@@ -160,44 +151,9 @@ class taoResultServer_models_classes_ResultServerStateFull extends tao_models_cl
         } else {
             $resultServer_deliveryResultIdentifier = $deliveryResultIdentifier;
         }
-        PHPSession::singleton()->setAttribute("resultServer_deliveryResultIdentifier", $resultServer_deliveryResultIdentifier);
-        PHPSession::singleton()->setAttribute("resultServer_deliveryExecutionIdentifier", $deliveryExecutionIdentifier);
+//        PHPSession::singleton()->setAttribute("resultServer_deliveryResultIdentifier", $resultServer_deliveryResultIdentifier);
+//        PHPSession::singleton()->setAttribute("resultServer_deliveryExecutionIdentifier", $deliveryExecutionIdentifier);
         return $resultServer_deliveryResultIdentifier;
-    }
-
-    /**
-     * http://tao-dev/taoResultServer/ResultServerStateFull/storeRelatedTestTaker?testTakerIdentifier=15
-     * 
-     * @param string $testTakerIdentifier may be different from a uri
-     * @return type
-     */
-    public function storeRelatedTestTaker($testTakerIdentifier)
-    {
-        if ($testTakerIdentifier != "") {
-            $resultServer = $this->restoreResultServer();
-            $resultServer->getStorageInterface()->storeRelatedTestTaker($this->getValue("resultServer_deliveryResultIdentifier"), $testTakerIdentifier);
-            return $this->getValue("resultServer_deliveryResultIdentifier");
-        } else {
-            throw new common_exception_MissingParameter("testTakerIdentifier");
-        }
-    }
-
-    /**
-     *
-     * @example http://tao-dev/taoResultServer/ResultServerStateFull/storeRelatedDelivery?deliveryIdentifier=12
-     * @param type $deliveryResultIdentifier            
-     * @param type $deliveryIdentifier            
-     * @return type
-     */
-    public function storeRelatedDelivery($deliveryIdentifier)
-    {
-        $resultServer = $this->restoreResultServer();
-        if ($deliveryIdentifier != "") {
-            $resultServer->getStorageInterface()->storeRelatedDelivery($this->getValue("resultServer_deliveryResultIdentifier"), $deliveryIdentifier);
-            return $this->getValue("resultServer_deliveryResultIdentifier");
-        } else {
-            throw new common_exception_MissingParameter("deliveryIdentifier");
-        }
     }
 
     public function storeItemVariable($test, $item, taoResultServer_models_classes_Variable $itemVariable, $callIdItem)
@@ -220,8 +176,9 @@ class taoResultServer_models_classes_ResultServerStateFull extends tao_models_cl
     {
         $resultServer = $this->restoreResultServer();
         $storageInterface = $resultServer->getStorageInterface();
+        $resultIdentifier = $this->getValue("resultServer_deliveryResultIdentifier");
         $storageInterface->storeItemVariables(
-            $this->getValue("resultServer_deliveryResultIdentifier"),
+            $resultIdentifier,
             $test,
             $item,
             $itemVariableSet,
@@ -241,8 +198,9 @@ class taoResultServer_models_classes_ResultServerStateFull extends tao_models_cl
     public function storeTestVariable($test, taoResultServer_models_classes_Variable $testVariable, $callIdTest)
     {
         $resultServer = $this->restoreResultServer();
+        $resultIdentifier = $this->getValue("resultServer_deliveryResultIdentifier");
         $resultServer->getStorageInterface()->storeTestVariable(
-            $this->getValue("resultServer_deliveryResultIdentifier"), 
+            $resultIdentifier,
             $test, 
             $testVariable, 
             $callIdTest
@@ -254,32 +212,35 @@ class taoResultServer_models_classes_ResultServerStateFull extends tao_models_cl
     public function storeTestVariableSet($test, array $testVariableSet, $callIdTest)
     {
         $resultServer = $this->restoreResultServer();
+        $resultIdentifier = $this->getValue("resultServer_deliveryResultIdentifier");
         $resultServer->getStorageInterface()->storeTestVariables(
-            $this->getValue("resultServer_deliveryResultIdentifier"),
+            $resultIdentifier,
             $test,
             $testVariableSet,
             $callIdTest
         );
         
-        return $this->getValue("resultServer_deliveryResultIdentifier");
+        return $resultIdentifier;
     }
     
     public function getVariables($callId){
-        $resultServer = $this->restoreResultServer();
+        $resultServer = $this->restoreResultServer(explode('.', $callId)[0]);
         return $resultServer->getStorageInterface()->getVariables($callId) ;
         
-    }    
+    }
+
     public function getVariable($callId, $variableIdentifier){
-        $resultServer = $this->restoreResultServer();
+        $resultServer = $this->restoreResultServer(explode('.', $callId));
         return $resultServer->getStorageInterface()->getVariable($callId, $variableIdentifier) ;
     }
+
     public function getTestTaker($deliveryResultIdentifier){
-        $resultServer = $this->restoreResultServer();
+        $resultServer = $this->restoreResultServer($deliveryResultIdentifier);
         return $resultServer->getStorageInterface()->getTestTaker($deliveryResultIdentifier) ;
     }
+
     public function getDelivery($deliveryResultIdentifier){
-        $resultServer = $this->restoreResultServer();
+        $resultServer = $this->restoreResultServer($deliveryResultIdentifier);
         return $resultServer->getStorageInterface()->getDelivery($deliveryResultIdentifier) ;
     }
 }
-?>

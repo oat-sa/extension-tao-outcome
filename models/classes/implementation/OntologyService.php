@@ -19,7 +19,8 @@
  */
 namespace oat\taoResultServer\models\classes\implementation;
 
-use taoResultServer_models_classes_ResultServerStateFull;
+use oat\taoDelivery\model\execution\ServiceProxy;
+use taoResultServer_models_classes_ResultServer;
 use oat\generis\model\OntologyAwareTrait;
 use oat\taoResultServer\models\classes\ResultServiceTrait;
 use oat\oatbox\service\ConfigurableService;
@@ -32,42 +33,75 @@ use oat\taoResultServer\models\classes\ResultServerService;
  */
 class OntologyService extends ConfigurableService implements ResultServerService
 {
-    
+
     use OntologyAwareTrait;
     use ResultServiceTrait;
+
+    /**
+     * @var taoResultServer_models_classes_ResultServer[]
+     */
+    private $localcache = [];
+
+    const CACHE_PREFIX = 'RS_';
 
     const OPTION_DEFAULT_MODEL = 'default';
     /** @deprecated */
     const PROPERTY_RESULT_SERVER = 'http://www.tao.lu/Ontologies/TAODelivery.rdf#DeliveryResultServer';
 
     public function initResultServer($compiledDelivery, $executionIdentifier, $options = []){
-    
-        //starts or resume a taoResultServerStateFull session for results submission
-    
+
         //retrieve the result server definition
-        try {
-            $resultServer = $compiledDelivery->getUniquePropertyValue($this->getProperty(self::PROPERTY_RESULT_SERVER));
-        } catch (\core_kernel_classes_EmptyProperty $e) {
-            $resultServer = \taoResultServer_models_classes_ResultServerAuthoringService::singleton()->getDefaultResultServer();
-        }
-        //callOptions are required in the case of a LTI basic storage
-    
-        taoResultServer_models_classes_ResultServerStateFull::singleton()->initResultServer($resultServer->getUri(), $options);
-    
+
+        $rs = $this->getResultServer($executionIdentifier, $compiledDelivery, $options);
+
         //a unique identifier for data collected through this delivery execution
         //in the case of LTI, we should use the sourceId
-    
-    
-        taoResultServer_models_classes_ResultServerStateFull::singleton()->spawnResult($executionIdentifier, $executionIdentifier);
-        \common_Logger::i("Spawning/resuming result identifier related to process execution ".$executionIdentifier);
+
+        $rs->getStorageInterface()->spawnResult();
+
+        \common_Logger::i('Spawning/resuming result identifier related to process execution ' . $executionIdentifier);
         //set up the related test taker
         //a unique identifier for the test taker
-        taoResultServer_models_classes_ResultServerStateFull::singleton()->storeRelatedTestTaker(\common_session_SessionManager::getSession()->getUserUri());
-    
+        $rs->getStorageInterface()->storeRelatedTestTaker($executionIdentifier, \common_session_SessionManager::getSession()->getUserUri());
+
         //a unique identifier for the delivery
-        taoResultServer_models_classes_ResultServerStateFull::singleton()->storeRelatedDelivery($compiledDelivery->getUri());
+        $rs->getStorageInterface()->storeRelatedDelivery($executionIdentifier, $compiledDelivery->getUri());
+        return $rs;
     }
-    
+
+    /**
+     * @param $executionIdentifier
+     * @param null $compiledDelivery
+     * @param array $options
+     * @return taoResultServer_models_classes_ResultServer
+     * @throws \common_Exception
+     * @throws \common_exception_NotFound
+     */
+    public function getResultServer($executionIdentifier, $compiledDelivery = null, array $options = [])
+    {
+        if (!isset ($this->localcache[$executionIdentifier])) {
+            if ($this->getCache()->has(self::CACHE_PREFIX . $executionIdentifier)) {
+                $rs = $this->getCache()->get(self::CACHE_PREFIX . $executionIdentifier);
+            } else {
+                if (!$compiledDelivery) {
+                    $deliveryExecution = ServiceProxy::singleton()->getDeliveryExecution($executionIdentifier);
+                    $compiledDelivery = $deliveryExecution->getDelivery();
+                }
+
+                try {
+                    /** @var taoResultServer_models_classes_ResultServer $resultServer */
+                    $resultServer = $compiledDelivery->getUniquePropertyValue($this->getProperty(self::PROPERTY_RESULT_SERVER));
+                } catch (\core_kernel_classes_EmptyProperty $e) {
+                    $resultServer = \taoResultServer_models_classes_ResultServerAuthoringService::singleton()->getDefaultResultServer();
+                }
+
+                $rs = new taoResultServer_models_classes_ResultServer($resultServer->getUri(), $options);
+            }
+            $this->localcache[$executionIdentifier] = $rs;
+        }
+        return $this->localcache[$executionIdentifier];
+    }
+
     /**
      * Returns the storage engine of the result server
      *
@@ -114,4 +148,14 @@ class OntologyService extends ConfigurableService implements ResultServerService
             return new StorageAggregation($implementations);
         }
     }
+
+    /**
+     * @return \common_cache_KeyValueCache
+     */
+    private function getCache(){
+        /** @var \common_persistence_Manager $pm */
+        $pm =  $this->getServiceManager()->get(\common_persistence_Manager::SERVICE_ID);
+        return $pm->getPersistenceById('cache');
+    }
+
 }
