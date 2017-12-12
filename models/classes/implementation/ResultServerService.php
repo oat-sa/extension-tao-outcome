@@ -59,7 +59,7 @@ class ResultServerService extends ConfigurableService implements ResultServerSer
      */
     public function initResultServer($compiledDelivery, $executionIdentifier, $options = [])
     {
-        $rs = new taoResultServer_models_classes_ResultServer($this->getOption(self::OPTION_RESULT_STORAGE), $options);
+        $rs = $this->getResultServer($executionIdentifier, null, $options);
 
         $resultIdentifier = $rs->getStorageInterface()->spawnResult($executionIdentifier);
         \common_Logger::i('Spawning/resuming result identifier related to process execution ' .$executionIdentifier);

@@ -48,6 +48,16 @@ class OntologyService extends ConfigurableService implements ResultServerService
     /** @deprecated */
     const PROPERTY_RESULT_SERVER = 'http://www.tao.lu/Ontologies/TAODelivery.rdf#DeliveryResultServer';
 
+    /**
+     * @param \core_kernel_classes_Resource $compiledDelivery
+     * @param string $executionIdentifier
+     * @param array $options
+     * @return taoResultServer_models_classes_ResultServer
+     * @throws \common_Exception
+     * @throws \common_cache_NotFoundException
+     * @throws \common_exception_Error
+     * @throws \common_exception_NotFound
+     */
     public function initResultServer($compiledDelivery, $executionIdentifier, $options = []){
 
         //retrieve the result server definition
@@ -71,9 +81,11 @@ class OntologyService extends ConfigurableService implements ResultServerService
 
     /**
      * @param $executionIdentifier
-     * @param null $compiledDelivery
+     * @param \core_kernel_classes_Resource|null $compiledDelivery
      * @param array $options
      * @return taoResultServer_models_classes_ResultServer
+     * @throws \common_cache_NotFoundException
+     * @throws \Zend\ServiceManager\Exception\ServiceNotFoundException
      * @throws \common_Exception
      * @throws \common_exception_NotFound
      */
@@ -150,12 +162,13 @@ class OntologyService extends ConfigurableService implements ResultServerService
     }
 
     /**
-     * @return \common_cache_KeyValueCache
+     * @return \common_cache_Cache
+     * @throws \Zend\ServiceManager\Exception\ServiceNotFoundException
      */
-    private function getCache(){
+    private function getCache()
+    {
         /** @var \common_persistence_Manager $pm */
-        $pm =  $this->getServiceManager()->get(\common_persistence_Manager::SERVICE_ID);
-        return $pm->getPersistenceById('cache');
+        return $this->getServiceLocator()->get(\common_cache_Cache::SERVICE_ID);
     }
 
 }
