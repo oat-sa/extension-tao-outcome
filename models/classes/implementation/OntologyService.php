@@ -20,10 +20,10 @@
 namespace oat\taoResultServer\models\classes\implementation;
 
 use oat\taoDelivery\model\execution\ServiceProxy;
+use oat\taoResultServer\models\classes\AbstractResultStorage;
 use taoResultServer_models_classes_ResultServer;
 use oat\generis\model\OntologyAwareTrait;
 use oat\taoResultServer\models\classes\ResultServiceTrait;
-use oat\oatbox\service\ConfigurableService;
 use oat\taoResultServer\models\classes\ResultServerService;
 
 /**
@@ -31,11 +31,13 @@ use oat\taoResultServer\models\classes\ResultServerService;
  * @package oat\taoResultServer\models\classes\implementation
  * @deprecated ResultServerService should be used instead
  */
-class OntologyService extends ConfigurableService implements ResultServerService
+class OntologyService extends AbstractResultStorage implements \taoResultServer_models_classes_WritableResultStorage, \taoResultServer_models_classes_ReadableResultStorage
 {
 
     use OntologyAwareTrait;
     use ResultServiceTrait;
+    use ReadableResultStorage;
+    use WritableResultStorage;
 
     /**
      * @var taoResultServer_models_classes_ResultServer[]
@@ -89,7 +91,7 @@ class OntologyService extends ConfigurableService implements ResultServerService
      * @throws \common_Exception
      * @throws \common_exception_NotFound
      */
-    public function getResultServer($executionIdentifier = null, $compiledDelivery = null, array $options = [])
+    protected function getResultServer($executionIdentifier = null, $compiledDelivery = null, array $options = [])
     {
         if (!isset ($this->localcache[$executionIdentifier])) {
             if ($this->getCache()->has(self::CACHE_PREFIX . $executionIdentifier)) {

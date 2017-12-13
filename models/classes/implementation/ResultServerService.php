@@ -19,11 +19,13 @@
  */
 namespace oat\taoResultServer\models\classes\implementation;
 
+use oat\taoResultServer\models\classes\AbstractResultStorage;
 use taoResultServer_models_classes_ResultServer;
 use oat\generis\model\OntologyAwareTrait;
 use oat\taoResultServer\models\classes\ResultServiceTrait;
 use oat\oatbox\service\ConfigurableService;
 use oat\taoResultServer\models\classes\ResultServerService as ResultServerServiceInterface;
+use taoResultServer_models_classes_Variable;
 
 /**
  * Class ResultServerService
@@ -41,37 +43,16 @@ use oat\taoResultServer\models\classes\ResultServerService as ResultServerServic
  * @package oat\taoResultServer\models\classes\implementation
  * @author Aleh Hutnikau, <hutnikau@1pt.com>
  */
-class ResultServerService extends ConfigurableService implements ResultServerServiceInterface
+class ResultServerService extends AbstractResultStorage implements \taoResultServer_models_classes_ReadableResultStorage,  \taoResultServer_models_classes_WritableResultStorage
 {
+
     use OntologyAwareTrait;
     use ResultServiceTrait;
+    use ReadableResultStorage;
+    use WritableResultStorage;
 
     const OPTION_RESULT_STORAGE = 'result_storage';
 
-    /**
-     * Starts or resume a taoResultServerStateFull session for results submission
-     *
-     * @param $compiledDelivery
-     * @param $executionIdentifier
-     * @param array $options additional result server options @see \taoResultServer_models_classes_ResultServer::__construct()
-     * @throws \common_Exception
-     * @throws
-     */
-    public function initResultServer($compiledDelivery, $executionIdentifier, $options = [])
-    {
-        $rs = $this->getResultServer($executionIdentifier, null, $options);
-
-        $resultIdentifier = $rs->getStorageInterface()->spawnResult($executionIdentifier);
-        \common_Logger::i('Spawning/resuming result identifier related to process execution ' .$executionIdentifier);
-
-        //link test taker identifier with results
-        $rs->getStorageInterface()->storeRelatedTestTaker($executionIdentifier, \common_session_SessionManager::getSession()->getUserUri());
-
-
-        //link delivery identifier with results
-        $rs->getStorageInterface()->storeRelatedDelivery($executionIdentifier, $compiledDelivery->getUri());
-    }
-    
     /**
      * Returns the storage engine of the result server
      *
@@ -91,7 +72,7 @@ class ResultServerService extends ConfigurableService implements ResultServerSer
      * @param array $options
      * @return taoResultServer_models_classes_ResultServer
      */
-    public function getResultServer($executionIdentifier = null, $compiledDelivery = null, array $options = []){
+    protected function getResultServer($executionIdentifier = null, $compiledDelivery = null, array $options = []){
         return new taoResultServer_models_classes_ResultServer($this->getOption(self::OPTION_RESULT_STORAGE), $options);
 
     }

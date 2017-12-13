@@ -28,11 +28,6 @@ use oat\oatbox\service\ServiceManager;
 class taoResultServer_models_classes_ResultServer
 {
 
-    /**
-     * @var core_kernel_classes_Resource
-     */
-    private $resultServer; 
-    
     private $implementations;
 
     /**
