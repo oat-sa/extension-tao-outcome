@@ -89,7 +89,7 @@ class OntologyService extends ConfigurableService implements ResultServerService
      * @throws \common_Exception
      * @throws \common_exception_NotFound
      */
-    public function getResultServer($executionIdentifier, $compiledDelivery = null, array $options = [])
+    public function getResultServer($executionIdentifier = null, $compiledDelivery = null, array $options = [])
     {
         if (!isset ($this->localcache[$executionIdentifier])) {
             if ($this->getCache()->has(self::CACHE_PREFIX . $executionIdentifier)) {

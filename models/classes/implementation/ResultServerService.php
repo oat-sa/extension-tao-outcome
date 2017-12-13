@@ -91,7 +91,7 @@ class ResultServerService extends ConfigurableService implements ResultServerSer
      * @param array $options
      * @return taoResultServer_models_classes_ResultServer
      */
-    public function getResultServer($executionIdentifier, $compiledDelivery = null, array $options = []){
+    public function getResultServer($executionIdentifier = null, $compiledDelivery = null, array $options = []){
         return new taoResultServer_models_classes_ResultServer($this->getOption(self::OPTION_RESULT_STORAGE), $options);
 
     }

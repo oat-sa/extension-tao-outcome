@@ -57,6 +57,6 @@ interface ResultServerService {
      * @param array $options
      * @return \taoResultServer_models_classes_ResultServer
      */
-    public function getResultServer($executionIdentifier, $compiledDelivery = null, array $options = []);
+    public function getResultServer($executionIdentifier = null, $compiledDelivery = null, array $options = []);
 
 }
