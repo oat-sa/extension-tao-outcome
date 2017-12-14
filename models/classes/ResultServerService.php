@@ -14,13 +14,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2016 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
+ * Copyright (c) 2016-2017 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  *
  */
 namespace oat\taoResultServer\models\classes;
 
 interface ResultServerService {
-    
+
+    const SERVICE_ID = 'taoResultServer/resultservice';
 
     const CLASS_URI	= 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServer';
 
@@ -34,10 +35,10 @@ interface ResultServerService {
 
     /**
      * For legacy non stateless storage
-     * 
+     *
      * @param \core_kernel_classes_Resource $compiledDelivery
      * @param string $executionIdentifier
-     * @param array $options additional result server options @see \taoResultServer_models_classes_ResultServer::__construct()
+     * @param array $options additional result server options
      */
     public function initResultServer($compiledDelivery, $executionIdentifier, $options = []);
 

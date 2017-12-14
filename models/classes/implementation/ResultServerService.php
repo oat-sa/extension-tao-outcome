@@ -17,15 +17,10 @@
  * Copyright (c) 2017 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  *
  */
+
 namespace oat\taoResultServer\models\classes\implementation;
 
-use oat\taoResultServer\models\classes\AbstractResultStorage;
-use taoResultServer_models_classes_ResultServer;
-use oat\generis\model\OntologyAwareTrait;
-use oat\taoResultServer\models\classes\ResultServiceTrait;
-use oat\oatbox\service\ConfigurableService;
-use oat\taoResultServer\models\classes\ResultServerService as ResultServerServiceInterface;
-use taoResultServer_models_classes_Variable;
+use oat\taoResultServer\models\classes\AbstractResultService;
 
 /**
  * Class ResultServerService
@@ -43,13 +38,8 @@ use taoResultServer_models_classes_Variable;
  * @package oat\taoResultServer\models\classes\implementation
  * @author Aleh Hutnikau, <hutnikau@1pt.com>
  */
-class ResultServerService extends AbstractResultStorage implements \taoResultServer_models_classes_ReadableResultStorage,  \taoResultServer_models_classes_WritableResultStorage
+class ResultServerService extends AbstractResultService
 {
-
-    use OntologyAwareTrait;
-    use ResultServiceTrait;
-    use ReadableResultStorage;
-    use WritableResultStorage;
 
     const OPTION_RESULT_STORAGE = 'result_storage';
 
@@ -66,14 +56,8 @@ class ResultServerService extends AbstractResultStorage implements \taoResultSer
         return $this->instantiateResultStorage($resultServerId);
     }
 
-    /**
-     * @param $executionIdentifier
-     * @param null $compiledDelivery
-     * @param array $options
-     * @return taoResultServer_models_classes_ResultServer
-     */
-    protected function getResultServer($executionIdentifier = null, $compiledDelivery = null, array $options = []){
-        return new taoResultServer_models_classes_ResultServer($this->getOption(self::OPTION_RESULT_STORAGE), $options);
-
+    protected function prepareImplementationStorageInterface($compiledDelivery = null, $executionIdentifier = null, $options = [])
+    {
+        $this->initStorageInterfaces($this->getOption(self::OPTION_RESULT_STORAGE), $options);
     }
 }

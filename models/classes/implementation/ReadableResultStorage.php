@@ -71,7 +71,7 @@ trait ReadableResultStorage
      */
     private function getReadableStorage($deliveryResultIdentifier = null)
     {
-        $storage = $this->getResultServer($deliveryResultIdentifier)->getStorageInterface();
+        $storage = $this->getStorageInterface($deliveryResultIdentifier);
         if (!$storage instanceof \taoResultServer_models_classes_ReadableResultStorage) {
             throw new common_exception_NoImplementation('No readable support for current storage');
         }

@@ -26,9 +26,9 @@ use common_exception_NoImplementation;
 
 trait WritableResultStorage
 {
-    public function spawnResult()
+    public function spawnResult($executionIdentifier = null)
     {
-        return $this->getWritableStorage()->spawnResult();
+        return $this->getWritableStorage($executionIdentifier)->spawnResult();
     }
 
     public function storeRelatedTestTaker($deliveryResultIdentifier, $testTakerIdentifier)
@@ -82,7 +82,7 @@ trait WritableResultStorage
      */
     private function getWritableStorage($deliveryResultIdentifier = null)
     {
-        $storage = $this->getResultServer($deliveryResultIdentifier)->getStorageInterface();
+        $storage = $this->getStorageInterface($deliveryResultIdentifier);
         if (!$storage instanceof \taoResultServer_models_classes_WritableResultStorage) {
             throw new common_exception_NoImplementation('No writable support for current storage');
         }
