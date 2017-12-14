@@ -27,42 +27,48 @@ use common_exception_NoImplementation;
 trait ReadableResultStorage
 {
 
+    /** @see \taoResultServer_models_classes_ReadableResultStorage::getVariables() */
     public function getVariables($callId)
     {
         return $this->getReadableStorage()->getVariables($callId);
     }
 
 
+    /** @see \taoResultServer_models_classes_ReadableResultStorage::getVariable() */
     public function getVariable($callId, $variableIdentifier)
     {
         return $this->getReadableStorage()->getVariable($callId, $variableIdentifier);
     }
 
+    /** @see \taoResultServer_models_classes_ReadableResultStorage::getTestTaker() */
     public function getTestTaker($deliveryResultIdentifier)
     {
         return $this->getReadableStorage($deliveryResultIdentifier)->getTestTaker($deliveryResultIdentifier);
     }
 
+    /** @see \taoResultServer_models_classes_ReadableResultStorage::getDelivery() */
     public function getDelivery($deliveryResultIdentifier)
     {
         return $this->getReadableStorage($deliveryResultIdentifier)->getDelivery($deliveryResultIdentifier);
     }
 
+    /** @see \taoResultServer_models_classes_ReadableResultStorage::getAllCallIds() */
     public function getAllCallIds()
     {
         return $this->getReadableStorage()->getAllCallIds();
     }
 
+    /** @see \taoResultServer_models_classes_ReadableResultStorage::getAllTestTakerIds() */
     public function getAllTestTakerIds()
     {
         return $this->getReadableStorage()->getAllTestTakerIds();
     }
 
+    /** @see \taoResultServer_models_classes_ReadableResultStorage::getAllDeliveryIds() */
     public function getAllDeliveryIds()
     {
         return $this->getReadableStorage()->getAllDeliveryIds();
     }
-
 
     /**
      * @param $deliveryResultIdentifier

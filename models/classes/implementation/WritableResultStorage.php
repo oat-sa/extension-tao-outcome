@@ -26,50 +26,48 @@ use common_exception_NoImplementation;
 
 trait WritableResultStorage
 {
+    /** @see  \taoResultServer_models_classes_WritableResultStorage::spawnResult() */
     public function spawnResult($executionIdentifier = null)
     {
         return $this->getWritableStorage($executionIdentifier)->spawnResult();
     }
-
+    /** @see  \taoResultServer_models_classes_WritableResultStorage::storeRelatedTestTaker() */
     public function storeRelatedTestTaker($deliveryResultIdentifier, $testTakerIdentifier)
     {
         return $this->getWritableStorage($deliveryResultIdentifier)->storeRelatedTestTaker($deliveryResultIdentifier, $testTakerIdentifier);
     }
 
-    /**
-     * Store Related Delivery
-     *
-     * Store a delivery related to a specific delivery execution
-     *
-     * @param string $deliveryResultIdentifier (mostly delivery execution uri)
-     * @param string $deliveryIdentifier (uri recommended)
-     * @throws common_exception_NoImplementation
-     */
+    /** @see  \taoResultServer_models_classes_WritableResultStorage::storeRelatedDelivery() */
     public function storeRelatedDelivery($deliveryResultIdentifier, $deliveryIdentifier)
     {
         return $this->getWritableStorage($deliveryResultIdentifier)->storeRelatedDelivery($deliveryResultIdentifier, $deliveryIdentifier);
     }
 
+    /** @see  \taoResultServer_models_classes_WritableResultStorage::storeItemVariable() */
     public function storeItemVariable($deliveryResultIdentifier, $test, $item, \taoResultServer_models_classes_Variable $itemVariable, $callIdItem)
     {
         return $this->getWritableStorage($deliveryResultIdentifier)->storeItemVariable($deliveryResultIdentifier, $test, $item, $itemVariable, $callIdItem);
     }
 
+    /** @see  \taoResultServer_models_classes_WritableResultStorage::storeItemVariables() */
     public function storeItemVariables($deliveryResultIdentifier, $test, $item, array $itemVariables, $callIdItem)
     {
         return $this->getWritableStorage($deliveryResultIdentifier)->storeItemVariables($deliveryResultIdentifier, $test, $item, $itemVariables, $callIdItem);
     }
 
+    /** @see  \taoResultServer_models_classes_WritableResultStorage::storeTestVariable() */
     public function storeTestVariable($deliveryResultIdentifier, $test, \taoResultServer_models_classes_Variable $testVariable, $callIdTest)
     {
         return $this->getWritableStorage($deliveryResultIdentifier)->storeTestVariable($deliveryResultIdentifier, $test, $testVariable, $callIdTest);
     }
 
+    /** @see  \taoResultServer_models_classes_WritableResultStorage::storeTestVariables() */
     public function storeTestVariables($deliveryResultIdentifier, $test, array $testVariables, $callIdTest)
     {
         return $this->getWritableStorage($deliveryResultIdentifier)->storeTestVariables($deliveryResultIdentifier, $test, $testVariables, $callIdTest);
     }
 
+    /** @see  \taoResultServer_models_classes_WritableResultStorage::configure() */
     public function configure($callOptions = array())
     {
         return $this->getWritableStorage()->storeTestVariables($callOptions);
