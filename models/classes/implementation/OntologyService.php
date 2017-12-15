@@ -19,7 +19,7 @@
  */
 namespace oat\taoResultServer\models\classes\implementation;
 
-use oat\taoDelivery\model\execution\ServiceProxy;
+use oat\generis\model\OntologyAwareTrait;
 use oat\taoResultServer\models\classes\AbstractResultService;
 use oat\taoResultServer\models\classes\ResultServerService;
 
@@ -30,6 +30,7 @@ use oat\taoResultServer\models\classes\ResultServerService;
  */
 class OntologyService extends AbstractResultService
 {
+    use OntologyAwareTrait;
 
     const OPTION_DEFAULT_MODEL = 'default';
     /** @deprecated */
@@ -82,9 +83,5 @@ class OntologyService extends AbstractResultService
         }
     }
 
-    protected function prepareImplementationStorageInterface($compiledDelivery = null, $executionIdentifier = null, $options = [])
-    {
-        $this->initStorageInterfaces($this->getResultStorage($compiledDelivery)->getUri(), $options);
-    }
 
 }

@@ -56,8 +56,4 @@ class ResultServerService extends AbstractResultService
         return $this->instantiateResultStorage($resultServerId);
     }
 
-    protected function prepareImplementationStorageInterface($compiledDelivery = null, $executionIdentifier = null, $options = [])
-    {
-        $this->initStorageInterfaces($this->getOption(self::OPTION_RESULT_STORAGE), $options);
-    }
 }

@@ -31,7 +31,7 @@ abstract class AbstractResultService extends ConfigurableService implements Resu
 
 //    use ReadableResultStorage;
 //    use WritableResultStorage;
-    use ImplementationResultInitializer;
+//    use ImplementationResultInitializer;
 
     /**
      * Starts or resume a taoResultServerStateFull session for results submission
