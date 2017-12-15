@@ -45,7 +45,7 @@ class taoResultServer_models_classes_ResponseVariable extends taoResultServer_mo
 
     
     /**
-     * substitued for the db storage into a GENERIS_TRUE/FALSE
+     * substitued for the db storage into a GenerisRdf::GENERIS_TRUE/FALSE
      *
      * @access public
      * @author "Patrick Plichart, <patrick@taotesting.com>"
