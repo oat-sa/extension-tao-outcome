@@ -31,8 +31,6 @@ use oat\taoResultServer\models\classes\ResultServerService;
 class OntologyService extends AbstractResultService
 {
 
-    const CACHE_PREFIX = 'RS_';
-
     const OPTION_DEFAULT_MODEL = 'default';
     /** @deprecated */
     const PROPERTY_RESULT_SERVER = 'http://www.tao.lu/Ontologies/TAODelivery.rdf#DeliveryResultServer';
@@ -84,36 +82,9 @@ class OntologyService extends AbstractResultService
         }
     }
 
-    /**
-     * @return \common_cache_Cache
-     * @throws \Zend\ServiceManager\Exception\ServiceNotFoundException
-     */
-    private function getCache()
-    {
-        /** @var \common_persistence_Manager $pm */
-        return $this->getServiceLocator()->get(\common_cache_Cache::SERVICE_ID);
-    }
-
     protected function prepareImplementationStorageInterface($compiledDelivery = null, $executionIdentifier = null, $options = [])
     {
-
-        if ($this->getCache()->has(self::CACHE_PREFIX . $executionIdentifier)) {
-            $this->implementations = $this->getCache()->get(self::CACHE_PREFIX . $executionIdentifier);
-        } else {
-            if (!$compiledDelivery) {
-                $deliveryExecution = ServiceProxy::singleton()->getDeliveryExecution($executionIdentifier);
-                $compiledDelivery = $deliveryExecution->getDelivery();
-            }
-
-            try {
-                $resultServer = $compiledDelivery->getUniquePropertyValue($this->getProperty(self::PROPERTY_RESULT_SERVER));
-            } catch (\core_kernel_classes_EmptyProperty $e) {
-                $resultServer = \taoResultServer_models_classes_ResultServerAuthoringService::singleton()->getDefaultResultServer();
-            }
-            $this->initStorageInterfaces($resultServer->getUri(), $options);
-            $this->getCache()->put($this->implementations, self::CACHE_PREFIX . $executionIdentifier);
-        }
-
+        $this->initStorageInterfaces($this->getResultStorage($compiledDelivery)->getUri(), $options);
     }
 
 }

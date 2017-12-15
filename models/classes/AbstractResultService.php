@@ -24,12 +24,13 @@ use oat\oatbox\service\ConfigurableService;
 use oat\taoResultServer\models\classes\implementation\ReadableResultStorage;
 use oat\taoResultServer\models\classes\implementation\WritableResultStorage;
 
-abstract class AbstractResultService extends ConfigurableService implements ResultServerService, \taoResultServer_models_classes_ReadableResultStorage, \taoResultServer_models_classes_WritableResultStorage
+abstract class AbstractResultService extends ConfigurableService implements ResultServerService //, \taoResultServer_models_classes_ReadableResultStorage, \taoResultServer_models_classes_WritableResultStorage
 {
 
     use ResultServiceTrait;
-    use ReadableResultStorage;
-    use WritableResultStorage;
+
+//    use ReadableResultStorage;
+//    use WritableResultStorage;
     use ImplementationResultInitializer;
 
     /**
@@ -43,21 +44,19 @@ abstract class AbstractResultService extends ConfigurableService implements Resu
      */
     public function initResultServer($compiledDelivery, $executionIdentifier, $options = [])
     {
-        $this->prepareImplementationStorageInterface($compiledDelivery, $executionIdentifier, $options);
+//        $this->prepareImplementationStorageInterface($compiledDelivery, $executionIdentifier, $options);
 
-        $this->spawnResult($executionIdentifier);
-        \common_Logger::i('Spawning/resuming result identifier related to process execution ' . $executionIdentifier);
+        $this->getResultStorage($compiledDelivery)->spawnResult($executionIdentifier);
+//        \common_Logger::i('Spawning/resuming result identifier related to process execution ' . $executionIdentifier);
 
         //link test taker identifier with results
-        $this->storeRelatedTestTaker($executionIdentifier, \common_session_SessionManager::getSession()->getUserUri());
+        $this->getResultStorage($compiledDelivery)->storeRelatedTestTaker($executionIdentifier, \common_session_SessionManager::getSession()->getUserUri());
 
 
         //link delivery identifier with results
-        $this->storeRelatedDelivery($executionIdentifier, $compiledDelivery->getUri());
+        $this->getResultStorage($compiledDelivery)->storeRelatedDelivery($executionIdentifier, $compiledDelivery->getUri());
     }
 
     abstract public function getResultStorage($deliveryId);
-
-    abstract protected function prepareImplementationStorageInterface($compiledDelivery = null, $executionIdentifier = null, $options = []);
 
 }

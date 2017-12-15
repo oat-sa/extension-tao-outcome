@@ -103,7 +103,7 @@ trait ImplementationResultInitializer
     public function getStorageInterface($deliveryResultIdentifier = null)
     {
         if (!$this->resultStorageContainer) {
-            $this->prepareImplementationStorageInterface(null, $deliveryResultIdentifier);
+//            $this->prepareImplementationStorageInterface(null, $deliveryResultIdentifier);
             $storageContainer = new \taoResultServer_models_classes_ResultStorageContainer($this->implementations);
             $storageContainer->setServiceManager($this->getServiceManager());
             $storageContainer->configure();
