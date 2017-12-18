@@ -21,17 +21,11 @@
 namespace oat\taoResultServer\models\classes;
 
 use oat\oatbox\service\ConfigurableService;
-use oat\taoResultServer\models\classes\implementation\ReadableResultStorage;
-use oat\taoResultServer\models\classes\implementation\WritableResultStorage;
 
-abstract class AbstractResultService extends ConfigurableService implements ResultServerService //, \taoResultServer_models_classes_ReadableResultStorage, \taoResultServer_models_classes_WritableResultStorage
+abstract class AbstractResultService extends ConfigurableService implements ResultServerService
 {
 
     use ResultServiceTrait;
-
-//    use ReadableResultStorage;
-//    use WritableResultStorage;
-//    use ImplementationResultInitializer;
 
     /**
      * Starts or resume a taoResultServerStateFull session for results submission
@@ -44,14 +38,11 @@ abstract class AbstractResultService extends ConfigurableService implements Resu
      */
     public function initResultServer($compiledDelivery, $executionIdentifier, $options = [])
     {
-//        $this->prepareImplementationStorageInterface($compiledDelivery, $executionIdentifier, $options);
 
-        $this->getResultStorage($compiledDelivery)->spawnResult($executionIdentifier);
-//        \common_Logger::i('Spawning/resuming result identifier related to process execution ' . $executionIdentifier);
+        //$this->getResultStorage($compiledDelivery)->spawnResult($executionIdentifier);
 
         //link test taker identifier with results
         $this->getResultStorage($compiledDelivery)->storeRelatedTestTaker($executionIdentifier, \common_session_SessionManager::getSession()->getUserUri());
-
 
         //link delivery identifier with results
         $this->getResultStorage($compiledDelivery)->storeRelatedDelivery($executionIdentifier, $compiledDelivery->getUri());

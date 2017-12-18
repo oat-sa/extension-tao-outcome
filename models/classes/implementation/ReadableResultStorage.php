@@ -43,13 +43,13 @@ trait ReadableResultStorage
     /** @see \taoResultServer_models_classes_ReadableResultStorage::getTestTaker() */
     public function getTestTaker($deliveryResultIdentifier)
     {
-        return $this->getReadableStorage($deliveryResultIdentifier)->getTestTaker($deliveryResultIdentifier);
+        return $this->getReadableStorage()->getTestTaker($this->getDeliveryIdentifier());
     }
 
     /** @see \taoResultServer_models_classes_ReadableResultStorage::getDelivery() */
     public function getDelivery($deliveryResultIdentifier)
     {
-        return $this->getReadableStorage($deliveryResultIdentifier)->getDelivery($deliveryResultIdentifier);
+        return $this->getReadableStorage()->getDelivery($this->getDeliveryIdentifier());
     }
 
     /** @see \taoResultServer_models_classes_ReadableResultStorage::getAllCallIds() */
@@ -71,16 +71,19 @@ trait ReadableResultStorage
     }
 
     /**
-     * @param $deliveryResultIdentifier
      * @return \taoResultServer_models_classes_ReadableResultStorage
      * @throws common_exception_NoImplementation
      */
-    private function getReadableStorage($deliveryResultIdentifier = null)
+    protected function getReadableStorage()
     {
-        $storage = $this->getStorageInterface($deliveryResultIdentifier);
+        $storage = $this->getResultServer();
         if (!$storage instanceof \taoResultServer_models_classes_ReadableResultStorage) {
             throw new common_exception_NoImplementation('No readable support for current storage');
         }
         return $storage;
     }
+
+    abstract protected function getResultServer();
+
+    abstract protected function getDeliveryIdentifier();
 }
