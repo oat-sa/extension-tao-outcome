@@ -19,10 +19,8 @@
  */
 namespace oat\taoResultServer\models\classes\implementation;
 
-use taoResultServer_models_classes_ResultServerStateFull;
 use oat\generis\model\OntologyAwareTrait;
-use oat\taoResultServer\models\classes\ResultServiceTrait;
-use oat\oatbox\service\ConfigurableService;
+use oat\taoResultServer\models\classes\AbstractResultService;
 use oat\taoResultServer\models\classes\ResultServerService;
 
 /**
@@ -30,44 +28,14 @@ use oat\taoResultServer\models\classes\ResultServerService;
  * @package oat\taoResultServer\models\classes\implementation
  * @deprecated ResultServerService should be used instead
  */
-class OntologyService extends ConfigurableService implements ResultServerService
+class OntologyService extends AbstractResultService
 {
-    
     use OntologyAwareTrait;
-    use ResultServiceTrait;
 
     const OPTION_DEFAULT_MODEL = 'default';
     /** @deprecated */
     const PROPERTY_RESULT_SERVER = 'http://www.tao.lu/Ontologies/TAODelivery.rdf#DeliveryResultServer';
 
-    public function initResultServer($compiledDelivery, $executionIdentifier, $options = []){
-    
-        //starts or resume a taoResultServerStateFull session for results submission
-    
-        //retrieve the result server definition
-        try {
-            $resultServer = $compiledDelivery->getUniquePropertyValue($this->getProperty(self::PROPERTY_RESULT_SERVER));
-        } catch (\core_kernel_classes_EmptyProperty $e) {
-            $resultServer = \taoResultServer_models_classes_ResultServerAuthoringService::singleton()->getDefaultResultServer();
-        }
-        //callOptions are required in the case of a LTI basic storage
-    
-        taoResultServer_models_classes_ResultServerStateFull::singleton()->initResultServer($resultServer->getUri(), $options);
-    
-        //a unique identifier for data collected through this delivery execution
-        //in the case of LTI, we should use the sourceId
-    
-    
-        taoResultServer_models_classes_ResultServerStateFull::singleton()->spawnResult($executionIdentifier, $executionIdentifier);
-        \common_Logger::i("Spawning/resuming result identifier related to process execution ".$executionIdentifier);
-        //set up the related test taker
-        //a unique identifier for the test taker
-        taoResultServer_models_classes_ResultServerStateFull::singleton()->storeRelatedTestTaker(\common_session_SessionManager::getSession()->getUserUri());
-    
-        //a unique identifier for the delivery
-        taoResultServer_models_classes_ResultServerStateFull::singleton()->storeRelatedDelivery($compiledDelivery->getUri());
-    }
-    
     /**
      * Returns the storage engine of the result server
      *
@@ -114,4 +82,6 @@ class OntologyService extends ConfigurableService implements ResultServerService
             return new StorageAggregation($implementations);
         }
     }
+
+
 }

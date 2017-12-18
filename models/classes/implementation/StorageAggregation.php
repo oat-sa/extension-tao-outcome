@@ -19,10 +19,7 @@
  */
 namespace oat\taoResultServer\models\classes\implementation;
 
-use oat\oatbox\service\ConfigurableService;
-use taoResultServer_models_classes_ResultServerStateFull;
 use taoResultServer_models_classes_Variable;
-use oat\generis\model\OntologyAwareTrait;
 use oat\taoResultServer\models\classes\ResultManagement  as StorageManage;
 use taoResultServer_models_classes_ReadableResultStorage as StorageRead;
 use taoResultServer_models_classes_WritableResultStorage as StorageWrite;
