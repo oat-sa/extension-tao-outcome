@@ -21,20 +21,13 @@
 
 namespace oat\taoResultServer\models\classes;
 
-
-use oat\taoResultServer\models\classes\implementation\ReadableResultStorage;
 use oat\taoResultServer\models\classes\implementation\WritableResultStorage;
 
-class ResultStorageWrapper implements \taoResultServer_models_classes_WritableResultStorage, \taoResultServer_models_classes_ReadableResultStorage
+class ResultStorageWrapper implements \taoResultServer_models_classes_WritableResultStorage
 {
 
     use implementation\WritableResultStorage {
         WritableResultStorage::getWritableStorage as parentGetWritableStorage;
-    }
-
-    use implementation\ReadableResultStorage {
-        ReadableResultStorage::getReadableStorage as parentGetReadableStorage;
-
     }
 
     private $deliveryExecutionIdentifier;
@@ -68,7 +61,5 @@ class ResultStorageWrapper implements \taoResultServer_models_classes_WritableRe
     protected function getDeliveryIdentifier(){
         return $this->deliveryExecutionIdentifier;
     }
-
-
 
 }
