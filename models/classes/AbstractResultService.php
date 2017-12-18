@@ -38,14 +38,14 @@ abstract class AbstractResultService extends ConfigurableService implements Resu
      */
     public function initResultServer($compiledDelivery, $executionIdentifier, $options = [])
     {
-
-        //$this->getResultStorage($compiledDelivery)->spawnResult($executionIdentifier);
+        $storage = $this->getResultStorage($compiledDelivery);
+        //$storage->spawnResult($executionIdentifier);
 
         //link test taker identifier with results
-        $this->getResultStorage($compiledDelivery)->storeRelatedTestTaker($executionIdentifier, \common_session_SessionManager::getSession()->getUserUri());
+        $storage->storeRelatedTestTaker($executionIdentifier, \common_session_SessionManager::getSession()->getUserUri());
 
         //link delivery identifier with results
-        $this->getResultStorage($compiledDelivery)->storeRelatedDelivery($executionIdentifier, $compiledDelivery->getUri());
+        $storage->storeRelatedDelivery($executionIdentifier, $compiledDelivery->getUri());
     }
 
     /**
