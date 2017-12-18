@@ -21,45 +21,73 @@
 
 namespace oat\taoResultServer\models\classes;
 
-use oat\taoResultServer\models\classes\implementation\WritableResultStorage;
-
-class ResultStorageWrapper implements \taoResultServer_models_classes_WritableResultStorage
+class ResultStorageWrapper
 {
 
-    use implementation\WritableResultStorage {
-        WritableResultStorage::getWritableStorage as parentGetWritableStorage;
-    }
-
+    /**
+     * @var string
+     */
     private $deliveryExecutionIdentifier;
+
+    /**
+     * @var \taoResultServer_models_classes_WritableResultStorage
+     */
     protected $resultServer;
 
     /**
      * ResultStorageWrapper constructor.
-     * @param $deliveryExecutionIdentifier
+     * @param string $deliveryExecutionIdentifier
+     * @param \taoResultServer_models_classes_WritableResultStorage $resultServer
      */
-    public function __construct($deliveryExecutionIdentifier, $resultServer)
+    public function __construct($deliveryExecutionIdentifier, \taoResultServer_models_classes_WritableResultStorage $resultServer)
     {
         $this->deliveryExecutionIdentifier = $deliveryExecutionIdentifier;
         $this->resultServer = $resultServer;
     }
 
-    protected function getWritableStorage()
+    protected function getResultServer()
     {
-        return $this->parentGetWritableStorage($this->deliveryExecutionIdentifier);
-    }
-
-
-    protected function getReadableStorage()
-    {
-        return $this->parentGetReadableStorage($this->deliveryExecutionIdentifier);
-    }
-
-    protected function getResultServer(){
         return $this->resultServer;
     }
 
-    protected function getDeliveryExecutionIdentifier(){
+    /**
+     * @return string
+     */
+    protected function getDeliveryExecutionIdentifier()
+    {
         return $this->deliveryExecutionIdentifier;
+    }
+
+    /** @see  \taoResultServer_models_classes_WritableResultStorage::storeItemVariable() */
+    public function storeItemVariable($test, $item, \taoResultServer_models_classes_Variable $itemVariable, $callIdItem)
+    {
+        return $this->getWritableStorage()->storeItemVariable($this->getDeliveryExecutionIdentifier(), $test, $item, $itemVariable, $callIdItem);
+    }
+
+    /** @see  \taoResultServer_models_classes_WritableResultStorage::storeItemVariables() */
+    public function storeItemVariables($test, $item, array $itemVariables, $callIdItem)
+    {
+        return $this->getWritableStorage()->storeItemVariables($this->getDeliveryExecutionIdentifier(), $test, $item, $itemVariables, $callIdItem);
+    }
+
+    /** @see  \taoResultServer_models_classes_WritableResultStorage::storeTestVariable() */
+    public function storeTestVariable($test, \taoResultServer_models_classes_Variable $testVariable, $callIdTest)
+    {
+        return $this->getWritableStorage()->storeTestVariable($this->getDeliveryExecutionIdentifier(), $test, $testVariable, $callIdTest);
+    }
+
+    /** @see  \taoResultServer_models_classes_WritableResultStorage::storeTestVariables() */
+    public function storeTestVariables($test, array $testVariables, $callIdTest)
+    {
+        return $this->getWritableStorage()->storeTestVariables($this->getDeliveryExecutionIdentifier(), $test, $testVariables, $callIdTest);
+    }
+
+    /**
+     * @return \taoResultServer_models_classes_WritableResultStorage
+     */
+    protected function getWritableStorage()
+    {
+        return $this->getResultServer();
     }
 
 }
