@@ -21,11 +21,11 @@
 namespace oat\taoResultServer\models\classes;
 
 use oat\oatbox\service\ConfigurableService;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use \taoResultServer_models_classes_WritableResultStorage as WritableResultStorage;
 
 abstract class AbstractResultService extends ConfigurableService implements ResultServerService
 {
-
-    use ResultServiceTrait;
 
     /**
      * Starts or resume a taoResultServerStateFull session for results submission
@@ -47,6 +47,32 @@ abstract class AbstractResultService extends ConfigurableService implements Resu
         //link delivery identifier with results
         $this->getResultStorage($compiledDelivery)->storeRelatedDelivery($executionIdentifier, $compiledDelivery->getUri());
     }
+
+    /**
+     * @param string $serviceId
+     * @return WritableResultStorage
+     * @throws \common_exception_Error
+     */
+    public function instantiateResultStorage($serviceId)
+    {
+        $storage = null;
+        if (class_exists($serviceId)) { //some old serialized session can has class name instead of service id
+            $storage = new $serviceId();
+        } elseif($this->getServiceManager()->has($serviceId)) {
+            $storage = $this->getServiceManager()->get($serviceId);
+        }
+
+        if ($storage instanceof ServiceLocatorAwareInterface) {
+            $storage->setServiceLocator($this->getServiceLocator());
+        }
+
+        if ($storage === null || !$storage instanceof WritableResultStorage) {
+            throw new \common_exception_Error('Configured result storage is not writable.');
+        }
+
+        return $storage;
+    }
+
 
     abstract public function getResultStorage($deliveryId);
 
