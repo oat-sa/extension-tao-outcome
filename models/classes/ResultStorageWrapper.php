@@ -58,7 +58,7 @@ class ResultStorageWrapper implements \taoResultServer_models_classes_WritableRe
         return $this->resultServer;
     }
 
-    protected function getDeliveryIdentifier(){
+    protected function getDeliveryExecutionIdentifier(){
         return $this->deliveryExecutionIdentifier;
     }
 
