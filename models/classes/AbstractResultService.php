@@ -30,19 +30,18 @@ abstract class AbstractResultService extends ConfigurableService implements Resu
     /**
      * Starts or resume a taoResultServerStateFull session for results submission
      *
-     * @param $compiledDelivery
-     * @param $executionIdentifier
-     * @param array $options additional result server options
-     * @throws \common_Exception
+     * @param \core_kernel_classes_Resource $compiledDelivery
+     * @param string $executionIdentifier
+     * @param string $userUri
      * @throws
      */
-    public function initResultServer($compiledDelivery, $executionIdentifier, $options = [])
+    public function initResultServer($compiledDelivery, $executionIdentifier, $userUri)
     {
         $storage = $this->getResultStorage($compiledDelivery);
         //$storage->spawnResult($executionIdentifier);
 
         //link test taker identifier with results
-        $storage->storeRelatedTestTaker($executionIdentifier, \common_session_SessionManager::getSession()->getUserUri());
+        $storage->storeRelatedTestTaker($executionIdentifier, $userUri);
 
         //link delivery identifier with results
         $storage->storeRelatedDelivery($executionIdentifier, $compiledDelivery->getUri());

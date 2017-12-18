@@ -38,9 +38,9 @@ interface ResultServerService {
      *
      * @param \core_kernel_classes_Resource $compiledDelivery
      * @param string $executionIdentifier
-     * @param array $options additional result server options
+     * @param string $userUri
      */
-    public function initResultServer($compiledDelivery, $executionIdentifier, $options = []);
+    public function initResultServer($compiledDelivery, $executionIdentifier, $userUri);
 
     /**
      * Returns the storage engine of the result server
