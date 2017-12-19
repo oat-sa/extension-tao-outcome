@@ -17,18 +17,36 @@
  * Copyright (c) 2017 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  *
  */
+
 namespace oat\taoResultServer\models\classes;
 
-use \taoResultServer_models_classes_WritableResultStorage as WritableResultStorage;
+use oat\oatbox\service\ConfigurableService;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use \taoResultServer_models_classes_WritableResultStorage as WritableResultStorage;
 
-/**
- * Class ResultServiceTrait
- * @package oat\taoResultServer\models\classes\implementation
- * @author Aleh Hutnikau, <hutnikau@1pt.com>
- */
-trait ResultServiceTrait
+abstract class AbstractResultService extends ConfigurableService implements ResultServerService
 {
+
+    /**
+     * Starts or resume a taoResultServerStateFull session for results submission
+     *
+     * @param \core_kernel_classes_Resource $compiledDelivery
+     * @param string $executionIdentifier
+     * @param string $userUri
+     * @throws
+     */
+    public function initResultServer($compiledDelivery, $executionIdentifier, $userUri)
+    {
+        $storage = $this->getResultStorage($compiledDelivery);
+        //$storage->spawnResult($executionIdentifier);
+
+        //link test taker identifier with results
+        $storage->storeRelatedTestTaker($executionIdentifier, $userUri);
+
+        //link delivery identifier with results
+        $storage->storeRelatedDelivery($executionIdentifier, $compiledDelivery->getUri());
+    }
+
     /**
      * @param string $serviceId
      * @return WritableResultStorage
@@ -53,4 +71,8 @@ trait ResultServiceTrait
 
         return $storage;
     }
+
+
+    abstract public function getResultStorage($deliveryId);
+
 }

@@ -99,4 +99,3 @@ implements taoResultServer_models_classes_WritableResultStorage
         common_logger::i("LoggerStorage - Spawn request made");
     }
 }
-?>

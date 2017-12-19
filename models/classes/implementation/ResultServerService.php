@@ -17,13 +17,10 @@
  * Copyright (c) 2017 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  *
  */
+
 namespace oat\taoResultServer\models\classes\implementation;
 
-use taoResultServer_models_classes_ResultServerStateFull;
-use oat\generis\model\OntologyAwareTrait;
-use oat\taoResultServer\models\classes\ResultServiceTrait;
-use oat\oatbox\service\ConfigurableService;
-use oat\taoResultServer\models\classes\ResultServerService as ResultServerServiceInterface;
+use oat\taoResultServer\models\classes\AbstractResultService;
 
 /**
  * Class ResultServerService
@@ -41,34 +38,11 @@ use oat\taoResultServer\models\classes\ResultServerService as ResultServerServic
  * @package oat\taoResultServer\models\classes\implementation
  * @author Aleh Hutnikau, <hutnikau@1pt.com>
  */
-class ResultServerService extends ConfigurableService implements ResultServerServiceInterface
+class ResultServerService extends AbstractResultService
 {
-    use OntologyAwareTrait;
-    use ResultServiceTrait;
 
     const OPTION_RESULT_STORAGE = 'result_storage';
 
-    /**
-     * Starts or resume a taoResultServerStateFull session for results submission
-     *
-     * @param $compiledDelivery
-     * @param $executionIdentifier
-     * @param array $options additional result server options @see \taoResultServer_models_classes_ResultServer::__construct()
-     * @throws
-     */
-    public function initResultServer($compiledDelivery, $executionIdentifier, $options = [])
-    {
-        taoResultServer_models_classes_ResultServerStateFull::singleton()->initResultServer($this->getOption(self::OPTION_RESULT_STORAGE), $options);
-        taoResultServer_models_classes_ResultServerStateFull::singleton()->spawnResult($executionIdentifier, $executionIdentifier);
-        \common_Logger::i("Spawning/resuming result identifier related to process execution ".$executionIdentifier);
-
-        //link test taker identifier with results
-        taoResultServer_models_classes_ResultServerStateFull::singleton()->storeRelatedTestTaker(\common_session_SessionManager::getSession()->getUserUri());
-    
-        //link delivery identifier with results
-        taoResultServer_models_classes_ResultServerStateFull::singleton()->storeRelatedDelivery($compiledDelivery->getUri());
-    }
-    
     /**
      * Returns the storage engine of the result server
      *
@@ -81,4 +55,5 @@ class ResultServerService extends ConfigurableService implements ResultServerSer
         $resultServerId = $this->getOption(self::OPTION_RESULT_STORAGE);
         return $this->instantiateResultStorage($resultServerId);
     }
+
 }
