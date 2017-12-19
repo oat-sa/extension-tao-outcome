@@ -51,4 +51,6 @@ interface ResultServerService {
      */
     public function getResultStorage($deliveryId);
 
+    public function isConfigurable();
+
 }

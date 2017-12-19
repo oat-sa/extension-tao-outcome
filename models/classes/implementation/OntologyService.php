@@ -36,6 +36,9 @@ class OntologyService extends AbstractResultService
     /** @deprecated */
     const PROPERTY_RESULT_SERVER = 'http://www.tao.lu/Ontologies/TAODelivery.rdf#DeliveryResultServer';
 
+    /** @var bool $configurable Whether this ResultServerService instance is configurable */
+    protected $configurable = false;
+
     /**
      * Returns the storage engine of the result server
      *
