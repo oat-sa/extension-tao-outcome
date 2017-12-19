@@ -69,6 +69,6 @@ class taoResultServer_scripts_update_Updater extends \common_ext_ExtensionUpdate
             $this->setVersion('3.4.0');
         }
 
-        $this->skip('3.4.0', '5.0.0');
+        $this->skip('3.4.0', '5.0.1');
     }
 }
