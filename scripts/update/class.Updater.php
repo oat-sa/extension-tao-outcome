@@ -19,6 +19,7 @@
  *
  */
 
+use oat\tao\scripts\update\OntologyUpdater;
 use oat\taoResultServer\models\classes\ResultServerService;
 use oat\taoResultServer\models\classes\implementation\OntologyService;
 use oat\taoResultServer\models\classes\QtiResultsService;
@@ -70,5 +71,10 @@ class taoResultServer_scripts_update_Updater extends \common_ext_ExtensionUpdate
         }
 
         $this->skip('3.4.0', '5.0.2');
+
+        if ($this->isVersion('5.0.2')) {
+            OntologyUpdater::syncModels();
+            $this->skip('5.0.2', '5.1.0');
+        }
     }
 }

@@ -56,9 +56,17 @@
     <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
   </rdf:Description>
 
+    <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultNoStorageModel">
+        <rdfs:label xml:lang="en-US"><![CDATA[tao logger]]></rdfs:label>
+        <rdfs:comment xml:lang="en-US"><![CDATA[Data about the result storage is sent to the logger]]></rdfs:comment>
+        <resultserver:implementation><![CDATA[oat\taoResultServer\models\classes\NoResultStorage]]></resultserver:implementation>
+        <rdf:type rdf:resource="http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultNoStorageModel"/>
+    </rdf:Description>
+
    <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResultServer.rdf#void">
 	<rdfs:label xml:lang="en-US"><![CDATA[No storage]]></rdfs:label>
 	<rdfs:comment xml:lang="en-US"><![CDATA[No storage ]]></rdfs:comment>
+    <resultserver:hasResultServerModel rdf:resource="http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultNoStorageModel" />
 	<rdf:type rdf:resource="http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServer"/>
    </rdf:Description>
 
