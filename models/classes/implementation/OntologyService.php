@@ -40,7 +40,7 @@ class OntologyService extends AbstractResultService
      *
      * @param string $deliveryId
      * @throws \common_exception_Error
-     * @return \taoResultServer_models_classes_ReadableResultStorage|\taoResultServer_models_classes_WritableResultStorage|oat\taoResultServer\models\classes\ResultManagement
+     * @return \taoResultServer_models_classes_ReadableResultStorage
      */
     public function getResultStorage($deliveryId = null)
     {
