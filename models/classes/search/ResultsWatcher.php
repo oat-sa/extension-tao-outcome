@@ -55,8 +55,9 @@ class ResultsWatcher extends ConfigurableService
 
             $customData = $this->getCustomData($deliveryExecution);
             $taskReport = $queueDispatcher->createTask(new AddSearchIndex(), [$deliveryExecution->getIdentifier(), ResultsDataProvider::SERVICE_ID, $customData], __('Adding/Updating search index for result %s', $deliveryExecution->getLabel()));
+            $report->add($taskReport);
         }
-        $report->add($taskReport);
+
         return $report;
 
     }
