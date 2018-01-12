@@ -21,7 +21,6 @@ namespace oat\taoResultServer\models\classes\implementation;
 
 use oat\generis\model\OntologyAwareTrait;
 use oat\taoResultServer\models\classes\AbstractResultService;
-use oat\taoResultServer\models\classes\ResultServerService;
 
 /**
  * Class OntologyService
@@ -41,7 +40,7 @@ class OntologyService extends AbstractResultService
      *
      * @param string $deliveryId
      * @throws \common_exception_Error
-     * @return \taoResultServer_models_classes_ReadableResultStorage|\taoResultServer_models_classes_WritableResultStorage|oat\taoResultServer\models\classes\ResultManagement
+     * @return \taoResultServer_models_classes_ReadableResultStorage
      */
     public function getResultStorage($deliveryId = null)
     {
@@ -56,7 +55,7 @@ class OntologyService extends AbstractResultService
         if(is_null($deliveryResultServer)){
             throw new \common_exception_Error(__('This delivery has no Result Server'));
         }
-        $resultServerModel = $deliveryResultServer->getPropertyValues($this->getProperty(ResultServerService::PROPERTY_HAS_MODEL));
+        $resultServerModel = $deliveryResultServer->getPropertyValues($this->getProperty(static::PROPERTY_HAS_MODEL));
 
         if(is_null($resultServerModel)){
             throw new \common_exception_Error(__('This delivery has no readable Result Server'));
@@ -67,7 +66,7 @@ class OntologyService extends AbstractResultService
             $model = $this->getClass($model);
 
             /** @var $implementation \core_kernel_classes_Literal*/
-            $implementation = $model->getOnePropertyValue($this->getProperty(ResultServerService::PROPERTY_MODEL_IMPL));
+            $implementation = $model->getOnePropertyValue($this->getProperty(static::PROPERTY_MODEL_IMPL));
 
             if ($implementation !== null) {
                 $implementations[] = $this->instantiateResultStorage($implementation->literal);
