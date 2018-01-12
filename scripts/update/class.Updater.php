@@ -27,6 +27,8 @@ use oat\taoResultServer\models\classes\ResultAliasService;
 use oat\taoResultServer\models\classes\search\ResultsDataProvider;
 use oat\taoResultServer\models\classes\search\ResultsWatcher;
 use oat\oatbox\event\EventManager;
+use oat\tao\model\search\dataProviders\DataProvider;
+use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 use oat\tao\model\search\dataProviders\SearchDataProvider;
 use oat\taoDelivery\models\classes\execution\event\DeliveryExecutionCreated;
 
@@ -78,8 +80,9 @@ class taoResultServer_scripts_update_Updater extends \common_ext_ExtensionUpdate
 
         if ($this->isVersion('5.0.1')) {
             $options = [
-                'indexesMap' => [
+                DataProvider::INDEXES_MAP_OPTION => [
                     ResultService::DELIVERY_RESULT_CLASS_URI => [
+                        DataProvider::SEARCH_CLASS_OPTION => DeliveryAssemblyService::CLASS_URI,
                         'fields' => [
                             'label',
                             'resource_link_id'
