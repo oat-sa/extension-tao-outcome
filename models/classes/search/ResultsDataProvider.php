@@ -20,11 +20,10 @@
 namespace oat\taoResultServer\models\classes\search;
 
 use oat\oatbox\service\ConfigurableService;
+use oat\search\ResultSet;
 use oat\tao\model\search\dataProviders\DataProvider;
 use oat\tao\model\search\document\IndexDocument;
-use oat\tao\model\search\Index;
 use oat\tao\model\search\SearchService;
-use oat\taoDelivery\model\execution\ServiceProxy;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 use oat\taoResultServer\models\classes\ResultServerService;
 use oat\taoResultServer\models\classes\ResultService;
@@ -46,10 +45,31 @@ class ResultsDataProvider extends ConfigurableService implements DataProvider
     protected $tokenGenerator;
     protected $map;
 
+    /**
+     * @return string
+     */
     public function getIndexPrefix()
     {
         return 'documents';
     }
+
+    /**
+     * @param      $queryString
+     * @param null $rootClass
+     * @param int  $start
+     * @param int  $count
+     * @return mixed|ResultSet
+     */
+    public function query($queryString, $rootClass = null, $start = 0, $count = 10)
+    {
+        $search = SearchService::getSearchImplementation();
+
+        /** @var ResultSet $results */
+        $results = $search->query($queryString, $rootClass, $start = 0, $count = 10);
+
+        return $results;
+    }
+
 
     /**
      * @param       $id
