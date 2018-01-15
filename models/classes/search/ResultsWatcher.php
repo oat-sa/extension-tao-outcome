@@ -14,7 +14,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2017 (original work) Open Assessment Technologies SA;
+ * Copyright (c) 2018 (original work) Open Assessment Technologies SA;
  *
  */
 
@@ -29,7 +29,10 @@ use oat\taoDelivery\model\execution\DeliveryExecutionInterface;
 use oat\taoDelivery\models\classes\execution\event\DeliveryExecutionCreated;
 use oat\taoTaskQueue\model\QueueDispatcher;
 
-
+/**
+ * Class ResultsWatcher
+ * @package oat\taoResultServer\models\classes\search
+ */
 class ResultsWatcher extends ConfigurableService
 {
     use OntologyAwareTrait;
@@ -52,10 +55,8 @@ class ResultsWatcher extends ConfigurableService
         if ($searchService->supportCustomIndex()) {
             /** @var QueueDispatcher $queueDispatcher */
             $queueDispatcher = $this->getServiceLocator()->get(QueueDispatcher::SERVICE_ID);
-
             $customData = $this->getCustomData($deliveryExecution);
-            $taskReport = $queueDispatcher->createTask(new AddSearchIndex(), [$deliveryExecution->getIdentifier(), ResultsDataProvider::SERVICE_ID, $customData], __('Adding/Updating search index for result %s', $deliveryExecution->getLabel()));
-            $report->add($taskReport);
+            $queueDispatcher->createTask(new AddSearchIndex(), [$deliveryExecution->getIdentifier(), ResultsDataProvider::SERVICE_ID, $customData], __('Adding/Updating search index for result %s', $deliveryExecution->getLabel()));
         }
 
         return $report;

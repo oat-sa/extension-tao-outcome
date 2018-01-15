@@ -83,7 +83,8 @@ class taoResultServer_scripts_update_Updater extends \common_ext_ExtensionUpdate
                 DataProvider::INDEXES_MAP_OPTION => [
                     ResultService::DELIVERY_RESULT_CLASS_URI => [
                         DataProvider::SEARCH_CLASS_OPTION => DeliveryAssemblyService::CLASS_URI,
-                        'fields' => [
+                        DataProvider::LABEL_CLASS_OPTION => 'results',
+                        DataProvider::FIELDS_OPTION  => [
                             'label',
                             'resource_link_id'
                         ]

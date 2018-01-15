@@ -30,15 +30,25 @@ use oat\taoResultServer\models\classes\ResultService;
 use oat\taoResultServer\models\classes\search\ResultsDataProvider;
 use oat\taoResultServer\models\classes\search\ResultsWatcher;
 
+/**
+ * Class SetupSearchService
+ * @package oat\taoResultServer\scripts\install
+ */
 class SetupSearchService extends InstallAction
 {
+    /**
+     * @param $params
+     * @throws \common_Exception
+     * @throws \oat\oatbox\service\exception\InvalidServiceManagerException
+     */
     public function __invoke($params)
     {
         $options = [
             DataProvider::INDEXES_MAP_OPTION => [
                 ResultService::DELIVERY_RESULT_CLASS_URI => [
                     DataProvider::SEARCH_CLASS_OPTION => DeliveryAssemblyService::CLASS_URI,
-                    'fields' => [
+                    DataProvider::LABEL_CLASS_OPTION => 'results',
+                    DataProvider::FIELDS_OPTION  => [
                         'label',
                         'resource_link_id'
                     ]
