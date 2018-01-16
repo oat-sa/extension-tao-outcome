@@ -27,6 +27,7 @@ use oat\taoResultServer\models\classes\ResultAliasService;
 use oat\taoResultServer\models\classes\search\ResultsDataProvider;
 use oat\taoResultServer\models\classes\search\ResultsWatcher;
 use oat\oatbox\event\EventManager;
+use oat\taoDelivery\model\execution\OntologyDeliveryExecution;
 use oat\tao\model\search\dataProviders\DataProvider;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 use oat\tao\model\search\dataProviders\SearchDataProvider;
@@ -88,7 +89,15 @@ class taoResultServer_scripts_update_Updater extends \common_ext_ExtensionUpdate
                             'label',
                             'resource_link_id'
                         ]
-                    ]
+                    ],
+                    OntologyDeliveryExecution::CLASS_URI => array(
+                        DataProvider::SEARCH_CLASS_OPTION => DeliveryAssemblyService::CLASS_URI,
+                        DataProvider::LABEL_CLASS_OPTION => 'results',
+                        DataProvider::FIELDS_OPTION => array(
+                            'label',
+                            'resource_link_id'
+                        )
+                    ),
                 ]
             ];
             $resultsDataProvider = new ResultsDataProvider($options);

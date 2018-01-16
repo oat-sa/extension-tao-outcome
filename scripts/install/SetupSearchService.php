@@ -26,6 +26,7 @@ use oat\tao\model\search\dataProviders\DataProvider;
 use oat\tao\model\search\dataProviders\SearchDataProvider;
 use oat\taoDelivery\models\classes\execution\event\DeliveryExecutionCreated;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
+use oat\taoDelivery\model\execution\OntologyDeliveryExecution;
 use oat\taoResultServer\models\classes\ResultService;
 use oat\taoResultServer\models\classes\search\ResultsDataProvider;
 use oat\taoResultServer\models\classes\search\ResultsWatcher;
@@ -52,7 +53,15 @@ class SetupSearchService extends InstallAction
                         'label',
                         'resource_link_id'
                     ]
-                ]
+                ],
+                OntologyDeliveryExecution::CLASS_URI => array(
+                    DataProvider::SEARCH_CLASS_OPTION => DeliveryAssemblyService::CLASS_URI,
+                    DataProvider::LABEL_CLASS_OPTION => 'results',
+                    DataProvider::FIELDS_OPTION => array(
+                        'label',
+                        'resource_link_id'
+                    )
+                ),
             ]
         ];
         $resultsDataProvider = new ResultsDataProvider($options);

@@ -20,9 +20,10 @@
 namespace oat\taoResultServer\models\classes\search;
 
 use oat\oatbox\service\ConfigurableService;
-use oat\search\ResultSet;
 use oat\tao\model\search\dataProviders\DataProvider;
 use oat\tao\model\search\document\IndexDocument;
+use oat\tao\model\search\ResultSet;
+use oat\tao\model\search\Search;
 use oat\tao\model\search\SearchService;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 use oat\taoResultServer\models\classes\ResultServerService;
@@ -60,13 +61,16 @@ class ResultsDataProvider extends ConfigurableService implements DataProvider
      * @param int  $count
      * @return mixed|ResultSet
      */
-    public function query($queryString, $rootClass = null, $start = 0, $count = 10)
+    public function query($queryString, $rootClass = null, $start = 0, $count = 10, $options = [])
     {
         $search = SearchService::getSearchImplementation();
 
-        /** @var ResultSet $results */
-        $results = $search->query($queryString, $rootClass, $start = 0, $count = 10);
+        if (!isset($options[Search::OPTION_RESPONSE_KEY])) {
+            $options[Search::OPTION_RESPONSE_KEY] = 'delivery';
+        }
 
+        /** @var ResultSet $results */
+        $results = $search->query($queryString, $rootClass, $start, $count, $options);
         return $results;
     }
 
