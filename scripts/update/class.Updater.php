@@ -76,5 +76,7 @@ class taoResultServer_scripts_update_Updater extends \common_ext_ExtensionUpdate
             OntologyUpdater::syncModels();
             $this->skip('5.0.2', '5.1.0');
         }
+
+        $this->skip('5.1.0', '5.2.0');
     }
 }
