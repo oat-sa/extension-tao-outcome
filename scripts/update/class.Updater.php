@@ -25,6 +25,10 @@ use oat\taoResultServer\models\classes\implementation\OntologyService;
 use oat\taoResultServer\models\classes\QtiResultsService;
 use oat\taoResultServer\models\classes\ResultService;
 use oat\taoResultServer\models\classes\ResultAliasService;
+use oat\tao\model\search\index\IndexService;
+use oat\taoResultServer\models\classes\search\ResultsWatcher;
+use oat\oatbox\event\EventManager;
+use oat\taoDelivery\models\classes\execution\event\DeliveryExecutionCreated;
 
 /**
  * 
@@ -75,6 +79,23 @@ class taoResultServer_scripts_update_Updater extends \common_ext_ExtensionUpdate
         if ($this->isVersion('5.0.2')) {
             OntologyUpdater::syncModels();
             $this->skip('5.0.2', '5.1.0');
+        }
+
+        if ($this->isVersion('5.1.0')) {
+            /** @var IndexService $indexService */
+            $indexService = $this->getServiceManager()->get(IndexService::SERVICE_ID);
+            $options = $indexService->getOptions();
+            $options['rootClasses'][ResultService::DELIVERY_RESULT_CLASS_URI] = [
+                IndexService::PROPERTY_FIELDS => []
+            ];
+            $this->getServiceManager()->register(IndexService::SERVICE_ID, new IndexService($options));
+
+            $this->getServiceManager()->register(ResultsWatcher::SERVICE_ID, new ResultsWatcher());
+            /** @var EventManager $eventManager */
+            $eventManager = $this->getServiceManager()->get(EventManager::SERVICE_ID);
+            $eventManager->attach(DeliveryExecutionCreated::class, [ResultsWatcher::SERVICE_ID, 'catchCreatedDeliveryExecutionEvent']);
+            $this->getServiceManager()->register(EventManager::SERVICE_ID, $eventManager);
+            $this->setVersion('5.2.0');
         }
     }
 }
