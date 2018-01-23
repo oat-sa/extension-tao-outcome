@@ -56,7 +56,7 @@ class ResultsWatcher extends ConfigurableService
             $uri = $deliveryExecution->getIdentifier();
             $responseUri = $deliveryExecution->getDelivery()->getUri();
             $queueDispatcher = $this->getServiceLocator()->get(QueueDispatcher::SERVICE_ID);
-            $queueDispatcher->createTask(new AddSearchIndex(), [$uri, $responseUri, ResultService::DELIVERY_RESULT_CLASS_URI, $body], __('Adding/Updating search index for %s', $deliveryExecution->getLabel()));
+            $queueDispatcher->createTask(new AddSearchIndex(), [$uri, $uri, ResultService::DELIVERY_RESULT_CLASS_URI, $body], __('Adding/Updating search index for %s', $deliveryExecution->getLabel()));
         }
 
         return $report;
