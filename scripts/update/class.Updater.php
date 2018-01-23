@@ -85,7 +85,9 @@ class taoResultServer_scripts_update_Updater extends \common_ext_ExtensionUpdate
             /** @var IndexService $indexService */
             $indexService = $this->getServiceManager()->get(IndexService::SERVICE_ID);
             $options = $indexService->getOptions();
-            $options['rootClasses'][] = ResultService::DELIVERY_RESULT_CLASS_URI;
+            $options['rootClasses'][ResultService::DELIVERY_RESULT_CLASS_URI] = [
+                IndexService::PROPERTY_FIELDS => []
+            ];
             $this->getServiceManager()->register(IndexService::SERVICE_ID, new IndexService($options));
 
             $this->getServiceManager()->register(ResultsWatcher::SERVICE_ID, new ResultsWatcher());

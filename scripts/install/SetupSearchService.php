@@ -42,7 +42,9 @@ class SetupSearchService extends InstallAction
         /** @var IndexService $indexService */
         $indexService = $this->getServiceLocator()->get(IndexService::SERVICE_ID);
         $options = $indexService->getOptions();
-        $options['rootClasses'][] = ResultService::DELIVERY_RESULT_CLASS_URI;
+        $options['rootClasses'][ResultService::DELIVERY_RESULT_CLASS_URI] = [
+            IndexService::PROPERTY_FIELDS => []
+        ];
         $this->getServiceManager()->register(IndexService::SERVICE_ID, new IndexService($options));
 
         $this->getServiceManager()->register(ResultsWatcher::SERVICE_ID, new ResultsWatcher());
