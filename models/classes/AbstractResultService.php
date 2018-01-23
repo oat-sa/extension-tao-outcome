@@ -82,6 +82,6 @@ abstract class AbstractResultService extends ConfigurableService implements Resu
     public function deleteDeliveryExecutionData(DeliveryExecutionDeleteRequest $request)
     {
         $storage = $this->getResultStorage($request->getDeliveryResource()->getUri());
-        $storage->deleteDeliveryExecutionData($request);
+        return $storage->deleteDeliveryExecutionData($request);
     }
 }
