@@ -19,6 +19,7 @@
  */
 namespace oat\taoResultServer\models\classes\implementation;
 
+use oat\taoDelivery\model\execution\Delete\DeliveryExecutionDeleteRequest;
 use taoResultServer_models_classes_Variable;
 use oat\taoResultServer\models\classes\ResultManagement  as StorageManage;
 use taoResultServer_models_classes_ReadableResultStorage as StorageRead;
@@ -196,5 +197,17 @@ class StorageAggregation implements
         }
         return $success === true;
     }
-   
+
+    /**
+     * @inheritdoc
+     */
+    public function deleteDeliveryExecutionData(DeliveryExecutionDeleteRequest $request)
+    {
+        $success = null;
+        /** @var \oat\taoDelivery\model\execution\Delete\DeliveryExecutionDelete $impl */
+        foreach ($this->getAllImplementations(StorageManage::class) as $impl) {
+            $success = $impl->deleteDeliveryExecutionData($request) && ($success === true || is_null($success));
+        }
+        return $success === true;
+    }
 }
