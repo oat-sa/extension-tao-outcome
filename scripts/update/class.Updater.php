@@ -74,9 +74,9 @@ class taoResultServer_scripts_update_Updater extends \common_ext_ExtensionUpdate
 
         if ($this->isVersion('5.0.2')) {
             OntologyUpdater::syncModels();
-            $this->skip('5.0.2', '5.1.0');
+            $this->setVersion('5.1.0');
         }
 
-        $this->skip('5.1.0', '6.0.0');
+        $this->skip('5.1.0', '6.0.1');
     }
 }
