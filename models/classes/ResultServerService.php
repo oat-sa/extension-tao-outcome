@@ -19,7 +19,9 @@
  */
 namespace oat\taoResultServer\models\classes;
 
-interface ResultServerService {
+use oat\taoDelivery\model\execution\Delete\DeliveryExecutionDelete;
+
+interface ResultServerService extends DeliveryExecutionDelete {
 
     const SERVICE_ID = 'taoResultServer/resultservice';
 

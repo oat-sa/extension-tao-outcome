@@ -19,8 +19,9 @@
  */
 namespace oat\taoResultServer\models\classes;
 
-interface ResultManagement extends \taoResultServer_models_classes_ReadableResultStorage {
+use oat\taoDelivery\model\execution\Delete\DeliveryExecutionDelete;
 
+interface ResultManagement extends \taoResultServer_models_classes_ReadableResultStorage, DeliveryExecutionDelete {
     /**
      * Get only one property from a variable
      * @param string $variableId on which we want the property
