@@ -53,4 +53,6 @@ interface ResultServerService extends DeliveryExecutionDelete {
      */
     public function getResultStorage($deliveryId);
 
+    public function isConfigurable();
+
 }
