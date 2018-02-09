@@ -42,7 +42,7 @@
     },
     "homepage" : "http://www.taotesting.com",
     "license" : [
-	"GPL-2.0"
+	"GPL-2.0-only"
 	],
     "keywords" : [
 	"tao",

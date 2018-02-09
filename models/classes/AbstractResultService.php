@@ -21,6 +21,7 @@
 namespace oat\taoResultServer\models\classes;
 
 use oat\oatbox\service\ConfigurableService;
+use oat\taoDelivery\model\execution\Delete\DeliveryExecutionDeleteRequest;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use \taoResultServer_models_classes_WritableResultStorage as WritableResultStorage;
 
@@ -82,4 +83,9 @@ abstract class AbstractResultService extends ConfigurableService implements Resu
         return $this->configurable;
     }
 
+    public function deleteDeliveryExecutionData(DeliveryExecutionDeleteRequest $request)
+    {
+        $storage = $this->getResultStorage($request->getDeliveryResource()->getUri());
+        return $storage->deleteDeliveryExecutionData($request);
+    }
 }
