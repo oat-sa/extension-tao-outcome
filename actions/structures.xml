@@ -27,10 +27,10 @@
                     <action id="results-server-properties" name="Edit result server" url="/taoResultServer/ResultServerMgt/editResultServer" group="content" context="instance">
                         <icon id="icon-edit"/>
                     </action>
-                    <action id="results-server-class-new" name="New class" js="subClass" url="/taoResultServer/ResultServerMgt/addResultServerClass" context="class" group="content">
+                    <action id="results-server-class-new" name="New class" js="subClass" url="/taoResultServer/ResultServerMgt/addResultServerClass" context="class" group="tree">
                         <icon id="icon-folder-open"/>
                     </action>
-                    <action id="results-server-new" name="New result server" js="instanciate" url="/taoResultServer/ResultServerMgt/addResultServer" context="class" group="content">
+                    <action id="results-server-new" name="New result server" js="instanciate" url="/taoResultServer/ResultServerMgt/addResultServer" context="class" group="tree">
                         <icon id="icon-result-server"/>
                     </action>
                     <action id="results-server-delete" name="Delete" js="removeNode" url="/taoResultServer/ResultServerMgt/delete" context="resource" group="tree">
