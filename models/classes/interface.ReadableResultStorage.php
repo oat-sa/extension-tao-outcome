@@ -23,7 +23,7 @@ interface taoResultServer_models_classes_ReadableResultStorage {
 
     /**
      * get the complete variables list stored for a call id (item or test)
-     * @param string $callId an execution identifier
+     * @param string|array $callId an execution identifier
      * @return array that contains the variables related to the call id
      * Array
      *(
