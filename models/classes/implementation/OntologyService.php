@@ -51,7 +51,7 @@ class OntologyService extends AbstractResultService
             $delivery = $this->getResource($deliveryId);
             $deliveryResultServer = $delivery->getOnePropertyValue($this->getProperty(self::PROPERTY_RESULT_SERVER));
         }
-        if (!$deliveryResultServer) {
+        if (!isset($deliveryResultServer) || !$deliveryResultServer) {
             $deliveryResultServer = \taoResultServer_models_classes_ResultServerAuthoringService::singleton()->getDefaultResultServer();
         }
 
