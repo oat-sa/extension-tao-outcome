@@ -54,7 +54,7 @@
     	"tao-extension-name" : "taoResultServer"
     },
     "require": {
-        "oat-sa/oatbox-extension-installer": "dev-master"
+        "oat-sa/oatbox-extension-installer": "~1.1||dev-master"
 
     },
     "autoload" : {
