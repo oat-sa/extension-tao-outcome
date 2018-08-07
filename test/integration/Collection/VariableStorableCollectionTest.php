@@ -19,7 +19,7 @@
  *
  */
 
-namespace oat\taoResultServer\test\Collection;
+namespace oat\taoResultServer\test\integration\Collection;
 
 use oat\taoResultServer\models\Collection\VariableStorableCollection;
 use taoResultServer_models_classes_OutcomeVariable;
