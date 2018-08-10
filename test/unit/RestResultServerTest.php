@@ -1,7 +1,7 @@
 <?php
-namespace oat\taoResultServer\test;
+namespace oat\taoResultServer\test\unit;
 
-use oat\tao\test\RestTestCase;
+use oat\tao\test\integration\RestTestCase;
 use oat\taoResultServer\models\classes\ResultServerService;
 
 class RestResultServerTest extends RestTestCase
