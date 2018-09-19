@@ -73,7 +73,7 @@ interface ResultManagement extends \taoResultServer_models_classes_ReadableResul
 
     /**
      * Get the complete variables list stored for delivery execution
-     * @param $deliveryResultIdentifier
+     * @param array|string $deliveryResultIdentifier
      * @return mixed
      */
     public function getDeliveryVariables($deliveryResultIdentifier);
