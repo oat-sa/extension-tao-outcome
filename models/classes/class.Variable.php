@@ -25,9 +25,15 @@
  * test at all. For example, items that are organized with learning resources and presented 
  * individually in a formative context.
  */
-abstract class taoResultServer_models_classes_Variable 
-//implements JsonSerializable 
-    {
+abstract class taoResultServer_models_classes_Variable  {
+
+    const CARDINALITY_SINGLE = 'single';
+
+    const CARDINALITY_MULTIPLE = 'multiple';
+
+    const CARDINALITY_ORDERED = 'ordered';
+
+    const CARDINALITY_RECORD = 'record';
 
     /**
      * The purpose of an itemVariable is to report the value of the item variable with the given identifier.
@@ -77,14 +83,15 @@ abstract class taoResultServer_models_classes_Variable
      * @param string $cardinality
      * @throws common_exception_InvalidArgumentType
      */
-    public function setCardinality($cardinality = "single")
+    public function setCardinality($cardinality = self::CARDINALITY_SINGLE)
     {
-        if (! (in_array($cardinality, array(
-            "single",
-            "multiple",
-            "ordered",
-            "record"
-        )))) {
+        if (!in_array($cardinality, [
+            self::CARDINALITY_SINGLE,
+            self::CARDINALITY_MULTIPLE,
+            self::CARDINALITY_ORDERED,
+            self::CARDINALITY_RECORD
+        ])
+        ) {
             throw new common_exception_InvalidArgumentType("cardinality");
         }
         $this->cardinality = $cardinality;
@@ -144,6 +151,15 @@ abstract class taoResultServer_models_classes_Variable
     }
 
     /**
+     * Check if variable is of multiple type.
+     *
+     * @return bool
+     */
+    public function isMultiple() {
+        return in_array($this->cardinality, [self::CARDINALITY_MULTIPLE, self::CARDINALITY_ORDERED]);
+    }
+
+    /**
      * get the value of the variable
      * @return mixed
      */
@@ -163,4 +179,3 @@ abstract class taoResultServer_models_classes_Variable
         return json_encode((array)$this);
     }
 }
-?>
