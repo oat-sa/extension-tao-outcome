@@ -27,7 +27,7 @@ use oat\taoResultServer\models\classes\ResultService;
 use oat\taoResultServer\models\classes\ResultAliasService;
 
 /**
- * 
+ *
  * @author Joel Bout <joel@taotesting.com>
  * @author Jérôme Bogaerts <jerome@taotesting.com>
  */
@@ -77,6 +77,6 @@ class taoResultServer_scripts_update_Updater extends \common_ext_ExtensionUpdate
             $this->setVersion('5.1.0');
         }
 
-        $this->skip('5.1.0', '6.6.0');
+        $this->skip('5.1.0', '7.0.0');
     }
 }
