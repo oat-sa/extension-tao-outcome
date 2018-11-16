@@ -13,132 +13,14 @@ msgstr ""
 "X-Poedit-KeywordsList: __\n"
 "X-Poedit-SearchPath-0: .\n"
 
-msgid " call ids"
-msgstr " bel id's"
-
-msgid " deliveries"
-msgstr " leveringen"
-
-msgid " test takers"
-msgstr " kandidaten"
-
-msgid "A delivery server is required for every delivery, it defines where the results of that delivery will be uploaded."
-msgstr "Een uitleveringsserver is nodig voor elke uitlevering. Het bepaalt waar de resultaten van die uitlevering geüpload zullen worden."
-
-msgid "Cancel"
-msgstr "Annuleren"
-
-msgid "Clone Data"
-msgstr "Clone data"
-
-msgid "Close"
-msgstr "Sluiten"
-
-#, tao-public
-msgid "Delete"
-msgstr "Verwijderen"
-
-#, tao-public
-msgid "Edit result server"
-msgstr "Bewerk resultaat server"
-
-msgid "Edit ResultServer"
-msgstr "Bewerk ResultaatServer"
-
 msgid "Invalid request"
 msgstr "Ongeldig verzoek"
 
-#, tao-public
-msgid "Manage Result Servers"
-msgstr "Beheer resultaat servers"
-
-#, tao-public
-msgid "Manage Schema"
-msgstr ""
-
-#, tao-public
-msgid "Migrate"
-msgstr "Migreren"
-
-msgid "Migrate Data"
-msgstr "Migreer data"
-
-msgid "Migration in progress, please wait..."
-msgstr "Migratie bezig, wacht u a.u.b..."
-
-msgid "Migration Successful"
-msgstr "Migratie succesvol"
-
-#, tao-public
-msgid "Move"
-msgstr "Verplaatsen"
-
-#, tao-public
-msgid "New class"
-msgstr "Nieuwe klasse"
-
-#, tao-public
-msgid "New result server"
-msgstr "Nieuwe resultaat server"
-
-msgid "Operation"
-msgstr "Bewerking"
-
-msgid "Please select a destination target"
-msgstr "Selecteer a.u.b. de bestemmingsmap"
-
-msgid "Please select a migration source"
-msgstr "Selecteer a.u.b. een migratie bron"
-
-#, tao-public
-msgid "Properties"
-msgstr "Eigenschappen"
-
-msgid "Result Server"
-msgstr "Resultaat server"
-
-#, tao-public
-msgid "Result Server Manager"
-msgstr "Resultaat server beheer"
-
-msgid "Result Server saved"
-msgstr "Resultaat server opgeslagen"
-
-#, tao-public
 msgid "Result Servers library"
 msgstr "Resultaat server bibliotheek"
-
-msgid "Results Data Migration Tool"
-msgstr "Resultaat data migratie hulpmiddel"
-
-msgid "Results Server"
-msgstr "Resultaat server"
-
-#, tao-public
-msgid "Settings"
-msgstr "Instellingen"
-
-msgid "Source"
-msgstr "Bron"
-
-msgid "Source (Readable Storage)"
-msgstr "Bron (leesbare opslag)"
-
-msgid "Target"
-msgstr "Doel"
-
-msgid "Target (Writable Storage)"
-msgstr "Doel (beschrijfbare opslag)"
-
-msgid "The Result Server Management section allows to add, edit and assign Delivery Result Server to Deliveries."
-msgstr "De resultaat server beheer sectie geeft toegang tot het toevoegen, aanpassen en toewijzen van een leveringsresultaat server aan leveringen."
 
 msgid "This delivery has no readable Result Server"
 msgstr ""
 
 msgid "This delivery has no Result Server"
 msgstr "Deze levering heeft geen resultaat server"
-
-msgid "This extension enables the Results server"
-msgstr "Deze extensie geeft de mogelijkheid tot een resultaat server"
-
