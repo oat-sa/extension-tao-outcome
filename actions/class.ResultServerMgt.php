@@ -60,11 +60,12 @@ class taoResultServer_actions_ResultServerMgt extends tao_actions_SaSModule {
 	 * 'modelType' must be in the request parameters
 	 * @return void
      * @throws Exception
+     * @throws common_exception_BadRequest
      */
     public function getResultServers(){
 		
 		if(!tao_helpers_Request::isAjax()){
-			throw new Exception("wrong request mode");
+			throw new common_exception_BadRequest('wrong request mode');
 		}
 		$options = array(
 			'instances' => true,
@@ -114,10 +115,11 @@ class taoResultServer_actions_ResultServerMgt extends tao_actions_SaSModule {
 	 * Add a resultServer instance        
 	 * @return void
      * @throws Exception
+     * @throws common_exception_BadRequest
      */
     public function addResultServer(){
 		if(!tao_helpers_Request::isAjax()){
-			throw new Exception("wrong request mode");
+			throw new common_exception_BadRequest('wrong request mode');
 		}
 		$clazz = $this->getCurrentClass();
 		$resultServer = $this->service->createInstance($clazz, $this->service->createUniqueLabel($clazz));
@@ -132,11 +134,11 @@ class taoResultServer_actions_ResultServerMgt extends tao_actions_SaSModule {
 	/**
 	 * Add a resultServer subclass
 	 * @return void
-     * @throws Exception
+     * @throws common_exception_BadRequest
      */
     public function addResultServerClass(){
 		if(!tao_helpers_Request::isAjax()){
-			throw new Exception("wrong request mode");
+			throw new common_exception_BadRequest('wrong request mode');
 		}
 		$clazz = $this->service->createResultServerClass($this->getCurrentClass());
 		if(!is_null($clazz) && $clazz instanceof core_kernel_classes_Class){
@@ -150,11 +152,11 @@ class taoResultServer_actions_ResultServerMgt extends tao_actions_SaSModule {
 	/**
 	 * Delete a resultServer or a resultServer class
 	 * @return void
-     * @throws Exception
+     * @throws common_exception_BadRequest
      */
     public function delete(){
 		if(!tao_helpers_Request::isAjax()){
-			throw new Exception("wrong request mode");
+			throw new common_exception_BadRequest('wrong request mode');
 		}
 		
 		$deleted = false;
@@ -172,10 +174,11 @@ class taoResultServer_actions_ResultServerMgt extends tao_actions_SaSModule {
 	 * Duplicate a resultServer instance
 	 * @return void
      * @throws Exception
+     * @throws common_exception_BadRequest
      */
     public function cloneResultServer(){
 		if(!tao_helpers_Request::isAjax()){
-			throw new Exception("wrong request mode");
+			throw new common_exception_BadRequest('wrong request mode');
 		}
 		
 		$resultServer = $this->getCurrentResultServer();
