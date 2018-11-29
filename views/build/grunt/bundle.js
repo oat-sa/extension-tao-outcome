@@ -25,16 +25,7 @@ module.exports = function(grunt) {
 
     grunt.config.merge({
         bundle : {
-            taoresultserver : {
-                options : {
-                    extension : 'taoResultServer',
-                    outputDir : 'loader',
-                    bundles : [{
-                        name : 'taoResultServer',
-                        default : true
-                    }]
-                }
-            }
+
         }
     });
 
