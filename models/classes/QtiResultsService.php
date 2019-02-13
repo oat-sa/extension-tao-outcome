@@ -20,17 +20,24 @@
 
 namespace oat\taoResultServer\models\classes;
 
+use oat\oatbox\service\exception\InvalidServiceManagerException;
+use oat\oatbox\service\ServiceNotFoundException;
 use oat\taoDelivery\model\execution\DeliveryExecution as DeliveryExecutionInterface;
 use oat\taoDelivery\model\execution\ServiceProxy;
-use qtism\common\enums\Cardinality;
 use oat\oatbox\service\ConfigurableService;
 use oat\oatbox\service\ServiceManager;
 
 class QtiResultsService extends ConfigurableService implements ResultService
 {
+    /**
+     * @var ServiceProxy
+     */
     protected $deliveryExecutionService;
 
-    const QTI_NS = 'http://www.imsglobal.org/xsd/imsqti_result_v2p1';
+    /**
+     * @var ResultServerService
+     */
+    protected $resultServerService;
 
     /**
      * @deprecated
@@ -38,20 +45,6 @@ class QtiResultsService extends ConfigurableService implements ResultService
     public static function singleton()
     {
         return ServiceManager::getServiceManager()->get(self::SERVICE_ID);
-    }
-
-    /**
-     * Get the implementation of delivery execution service
-     *
-     * @return ServiceProxy
-     * @throws \Zend\ServiceManager\Exception\ServiceNotFoundException
-     */
-    protected function getDeliveryExecutionService()
-    {
-        if (!$this->deliveryExecutionService) {
-            $this->deliveryExecutionService = $this->getServiceLocator()->get(ServiceProxy::SERVICE_ID);
-        }
-        return $this->deliveryExecutionService;
     }
 
     /**
@@ -94,7 +87,12 @@ class QtiResultsService extends ConfigurableService implements ResultService
      * Return delivery execution as xml of testtaker based on delivery
      *
      * @param DeliveryExecutionInterface $deliveryExecution
+     *
      * @return string
+     * @throws \common_exception_Error when the result storage can not be instanciated or is not readable.
+     * @throws ServiceNotFoundException when the ResultServer service can not be instanciated.
+     * @throws InvalidServiceManagerException when the service locator is not initialized
+     * @throws \common_Exception when timestamp is not recognized
      */
     public function getDeliveryExecutionXml(DeliveryExecutionInterface $deliveryExecution)
     {
@@ -102,158 +100,76 @@ class QtiResultsService extends ConfigurableService implements ResultService
     }
 
     /**
-     * @param $deliveryId
-     * @param $resultId
+     * @param string $deliveryId
+     * @param string $resultId
+     *
      * @return string
+     * @throws \common_exception_Error when the result storage can not be instanciated or is not readable.
+     * @throws ServiceNotFoundException when the ResultServer service can not be instanciated.
+     * @throws InvalidServiceManagerException when the service locator is not initialized
+     * @throws \common_Exception when timestamp is not recognized
      */
     public function getQtiResultXml($deliveryId, $resultId)
     {
-        $deId = $this->getServiceManager()->get(ResultAliasServiceInterface::SERVICE_ID)->getDeliveryExecutionId($resultId);
-        if ($deId === null) {
-            $deId = $resultId;
-        }
-
-        $resultService = $this->getServiceLocator()->get(ResultServerService::SERVICE_ID);
-        $resultServer = $resultService->getResultStorage($deliveryId);
+        // Retrieves result storage and delivery execution id.
+        $resultServer = $this->getResultServerService()->getResultStorage($deliveryId);;
+        $deliveryExecutionId = $this->getResultAliasService()->getDeliveryExecutionId($resultId) ?: $resultId;
 
         $crudService = new CrudResultsService();
+        $testTaker = $resultServer->getTestTaker($deliveryExecutionId);
+        $testResults = $crudService->readQtiResult($resultServer, $deliveryExecutionId, CrudResultsService::GROUP_BY_TEST);
+        $itemResults = $crudService->readQtiResult($resultServer, $deliveryExecutionId, CrudResultsService::GROUP_BY_ITEM, CrudResultsService::ATTEMPTS_ALL);
 
-        $dom = new \DOMDocument('1.0', 'UTF-8');
-        $dom->formatOutput = true;
-
-        $itemResults = $crudService->format($resultServer, $deId, CrudResultsService::GROUP_BY_ITEM);
-        $testResults = $crudService->format($resultServer, $deId, CrudResultsService::GROUP_BY_TEST);
-
-        $assessmentResultElt = $dom->createElementNS(self::QTI_NS, 'assessmentResult');
-        $dom->appendChild($assessmentResultElt);
-
-        /** Context */
-        $contextElt = $dom->createElementNS(self::QTI_NS, 'context');
-        $contextElt->setAttribute('sourcedId', \tao_helpers_Uri::getUniqueId($resultServer->getTestTaker($deId)));
-        $assessmentResultElt->appendChild($contextElt);
-        
-        /** Test Result */
-        foreach ($testResults as $testResultIdentifier => $testResult) {
-            $identifierParts = explode('.', $testResultIdentifier);
-            $testIdentifier = array_pop($identifierParts);
-
-            $testResultElement = $dom->createElementNS(self::QTI_NS, 'testResult');
-            $testResultElement->setAttribute('identifier', $testIdentifier);
-            $testResultElement->setAttribute('datestamp', \tao_helpers_Date::displayeDate(
-                $testResult[0]['epoch'],
-                \tao_helpers_Date::FORMAT_ISO8601
-            ));
-
-            /** Item Variable */
-            foreach ($testResult as $itemVariable) {
-
-                $isResponseVariable = $itemVariable['type']->getUri() === 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResponseVariable';
-                $testVariableElement = $dom->createElementNS(self::QTI_NS, ($isResponseVariable) ? 'responseVariable' : 'outcomeVariable');
-                $testVariableElement->setAttribute('identifier', $itemVariable['identifier']);
-                $testVariableElement->setAttribute('cardinality', $itemVariable['cardinality']);
-                $testVariableElement->setAttribute('baseType', $itemVariable['basetype']);
-
-                $valueElement = $this->createCDATANode($dom, 'value', trim($itemVariable['value']));
-
-                if ($isResponseVariable) {
-                    $candidateResponseElement = $dom->createElementNS(self::QTI_NS, 'candidateResponse');
-                    $candidateResponseElement->appendChild($valueElement);
-                    $testVariableElement->appendChild($candidateResponseElement);
-                } else {
-                    $testVariableElement->appendChild($valueElement);
-                }
-
-                $testResultElement->appendChild($testVariableElement);
-            }
-
-            $assessmentResultElt->appendChild($testResultElement);
-        }
-
-        /** Item Result */
-        foreach ($itemResults as $itemResultIdentifier => $itemResult) {
-
-            // Retrieve identifier.
-            $identifierParts = explode('.', $itemResultIdentifier);
-            $occurenceNumber = array_pop($identifierParts);
-            $refIdentifier = array_pop($identifierParts);
-
-            $itemElement = $dom->createElementNS(self::QTI_NS, 'itemResult');
-            $itemElement->setAttribute('identifier', $refIdentifier);
-            $itemElement->setAttribute('datestamp', \tao_helpers_Date::displayeDate(
-                $itemResult[0]['epoch'],
-                \tao_helpers_Date::FORMAT_ISO8601
-            ));
-            $itemElement->setAttribute('sessionStatus', 'final');
-
-            /** Item variables */
-            foreach ($itemResult as $key => $itemVariable) {
-                $isResponseVariable = $itemVariable['type']->getUri() === 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResponseVariable';
-
-                if ($itemVariable['identifier']=='comment') {
-                    /** Comment */
-                    $itemVariableElement = $dom->createElementNS(self::QTI_NS, 'candidateComment', $itemVariable['value']);
-                } else {
-                    /** Item variable */
-                    $itemVariableElement = $dom->createElementNS(self::QTI_NS, ($isResponseVariable) ? 'responseVariable' : 'outcomeVariable');
-                    $itemVariableElement->setAttribute('identifier', $itemVariable['identifier']);
-                    $itemVariableElement->setAttribute('cardinality', $itemVariable['cardinality']);
-                    $itemVariableElement->setAttribute('baseType', $itemVariable['basetype']);
-
-                    /** Split multiple response */
-                    $itemVariable['value'] = trim($itemVariable['value'], '[]');
-                    if ($itemVariable['cardinality']!==Cardinality::getNameByConstant(Cardinality::SINGLE)) {
-                        $values = explode(';', $itemVariable['value']);
-                        $returnValue = [];
-                        foreach ($values as $value) {
-                            $returnValue[] = $this->createCDATANode($dom, 'value', $value);
-                        }
-                    } else {
-                        $returnValue = $this->createCDATANode($dom, 'value', $itemVariable['value']);
-                    }
-
-                    /** Get response parent element */
-                    if ($isResponseVariable) {
-                        /** Response variable */
-                        $responseElement = $dom->createElementNS(self::QTI_NS, 'candidateResponse');
-                    } else {
-                        /** Outcome variable */
-                        $responseElement = $itemVariableElement;
-                    }
-
-                    /** Write a response node foreach answer  */
-                    if (is_array($returnValue)) {
-                        foreach ($returnValue as $valueElement) {
-                            $responseElement->appendChild($valueElement);
-                        }
-                    } else {
-                        $responseElement->appendChild($returnValue);
-                    }
-
-                    if ($isResponseVariable) {
-                        $itemVariableElement->appendChild($responseElement);
-                    }
-                }
-
-                $itemElement->appendChild($itemVariableElement);
-            }
-
-            $assessmentResultElt->appendChild($itemElement);
-        }
-
-        return $dom->saveXML();
+        // Converts array result to xml.
+        $qtiToXmlConverter = new QtiToXmlConverter();
+        return $qtiToXmlConverter->convertToXml($testTaker, $testResults, $itemResults);
     }
 
     /**
-     * @param \DOMDocument $dom
-     * @param string $tag Xml tag to create
-     * @param string $data Data to escape
-     * @return \DOMElement
+     * Get the implementation of delivery execution service
+     *
+     * @return ServiceProxy
+     * @throws \Zend\ServiceManager\Exception\ServiceNotFoundException
      */
-    protected function createCDATANode($dom, $tag, $data)
+    protected function getDeliveryExecutionService()
     {
-        $node =  $dom->createCDATASection($data);
-        $returnValue = $dom->createElementNS(self::QTI_NS, $tag);
-        $returnValue->appendChild($node);
-        return $returnValue;
+        if (!$this->deliveryExecutionService) {
+            $this->deliveryExecutionService = $this->getServiceLocator()->get(ServiceProxy::SERVICE_ID);
+        }
+        return $this->deliveryExecutionService;
+    }
+
+    /**
+     * Retrieves result storage for the given delivery.
+     *
+     * @return ResultServerService
+     * @throws ServiceNotFoundException when the ResultServerService is not instanciated.
+     */
+    protected function getResultServerService()
+    {
+        if (!$this->resultServerService) {
+            $resultServerService = $this->getServiceLocator()->get(ResultServerService::SERVICE_ID);
+            if (!$resultServerService instanceof ResultServerService) {
+                throw new ServiceNotFoundException('Unable to load ResultServer service.');
+            }
+            $this->resultServerService = $resultServerService;
+        }
+        return $this->resultServerService;
+    }
+
+    /**
+     * Retrieves the delivery execution id given the result id.
+     * Can be the same as result id if no alias is set.
+     *
+     * @return ResultAliasServiceInterface
+     * @throws InvalidServiceManagerException
+     */
+    protected function getResultAliasService()
+    {
+        $resultAliasService = $this->getServiceManager()->get(ResultAliasServiceInterface::SERVICE_ID);
+        if (!$resultAliasService instanceof ResultAliasServiceInterface) {
+            throw new ServiceNotFoundException('Unable to load ResultAlias service.');
+        }
+        return $resultAliasService;
     }
 }

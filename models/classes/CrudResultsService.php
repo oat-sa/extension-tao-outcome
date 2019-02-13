@@ -21,8 +21,10 @@
 
 namespace oat\taoResultServer\models\classes;
 
+use oat\oatbox\service\ServiceNotFoundException;
 use oat\taoDelivery\model\execution\ServiceProxy;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
+use taoResultServer_models_classes_ReadableResultStorage as ReadableResultStorageInterface;
 
 /**
  * .Crud services implements basic CRUD services, orginally intended for REST controllers/ HTTP exception handlers
@@ -30,13 +32,22 @@ use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
  */
 class CrudResultsService extends \tao_models_classes_CrudService
 {
-
+    // How to group variables?
     const GROUP_BY_DELIVERY = 0;
     const GROUP_BY_TEST = 1;
     const GROUP_BY_ITEM = 2;
 
+    // Which attempts to return?
+    const ATTEMPTS_NONE = 0;
+    const ATTEMPTS_ALL = 1;
+    const ATTEMPTS_LATEST = 2;
+
     protected $resultClass = null;
 
+    /**
+     * CrudResultsService constructor.
+     * @throws \common_exception_Error
+     */
     public function __construct()
     {
         parent::__construct();
@@ -48,67 +59,85 @@ class CrudResultsService extends \tao_models_classes_CrudService
         return $this->resultClass;
     }
 
+    /**
+     * @param $uri
+     * @param int $groupBy
+     * @return array|object
+     * @throws \common_exception_Error
+     * @throws \common_exception_NotFound
+     */
     public function get($uri, $groupBy = self::GROUP_BY_DELIVERY)
     {
         $deliveryExecution = ServiceProxy::singleton()->getDeliveryExecution($uri);
         $delivery = $deliveryExecution->getDelivery();
 
-        $resultService = $this->getServiceLocator()->get(ResultServerService::SERVICE_ID);
-        $implementation = $resultService->getResultStorage($delivery->getUri());
+        $implementation = $this->getResultServerService()->getResultStorage($delivery->getUri());
 
-        return $this->format($implementation, $uri);
+        return $this->readQtiResult($implementation, $uri, self::GROUP_BY_DELIVERY, self::ATTEMPTS_LATEST);
     }
 
-    public function format(\taoResultServer_models_classes_ReadableResultStorage $resultStorage, $resultIdentifier, $groupBy = self::GROUP_BY_DELIVERY)
+    /**
+     * @param ReadableResultStorageInterface|ResultManagement $resultStorage
+     * @param $resultIdentifier
+     * @param int $groupBy
+     * @param int $returnAttempts Which attempts do we want? One of self ATTEMPTS_*
+     * @return array
+     * @throws \common_exception_Error
+     */
+    public function readQtiResult(ReadableResultStorageInterface $resultStorage, $resultIdentifier, $groupBy, $returnAttempts = self::ATTEMPTS_NONE)
     {
-        $returnData = array();
+        $returnData = [];
 
-        if ($groupBy === self::GROUP_BY_DELIVERY || $groupBy === self::GROUP_BY_ITEM) {
-            $calls = $resultStorage->getRelatedItemCallIds($resultIdentifier);
-        } else {
-            $calls = $resultStorage->getRelatedTestCallIds($resultIdentifier);
-        }
+        // Finds calls to the ResultStorage we have to make.
+        $calls = ($groupBy === self::GROUP_BY_DELIVERY || $groupBy === self::GROUP_BY_ITEM
+            ? $resultStorage->getRelatedItemCallIds($resultIdentifier)
+            : $resultStorage->getRelatedTestCallIds($resultIdentifier)
+        );
 
+        // Retrieves result variables.
         foreach ($calls as $callId) {
             $results = $resultStorage->getVariables($callId);
-            $resource = array();
-            foreach ($results as $result) {
-                $result = array_pop($result);
-                if (isset($result->variable)) {
-                    $resource['value'] = $result->variable->getValue();
-                    $resource['identifier'] = $result->variable->getIdentifier();
-                    if ($result->variable instanceof \taoResultServer_models_classes_ResponseVariable) {
-                        $type = "http://www.tao.lu/Ontologies/TAOResult.rdf#ResponseVariable";
-                    } else {
-                        $type = "http://www.tao.lu/Ontologies/TAOResult.rdf#OutcomeVariable";
-                    }
-                    $resource['type'] = new \core_kernel_classes_Class($type);
-                    $resource['epoch'] = $result->variable->getEpoch();
-                    $resource['cardinality'] = $result->variable->getCardinality();
-                    $resource['basetype'] = $result->variable->getBaseType();
-                }
+            foreach ($results as $attempts) {
+                foreach ($attempts as $attempt) {
+                    if (isset($attempt->variable)) {
+                        $resource = $this->convertVariableToResource($attempt->variable);
 
-                if ($groupBy === self::GROUP_BY_DELIVERY) {
-                    $returnData[$resultIdentifier][] = $resource;
-                } else {
-                    $returnData[$callId][] = $resource;
+                        $timestamp = ($returnAttempts !== self::ATTEMPTS_NONE
+                            ? (int)explode(' ', $resource['epoch'])[1]
+                            : ''
+                        );
+
+                        $returnData[$timestamp . $callId][] = $resource;
+                    }
                 }
             }
+        }
+
+        // Sorts attempts by timestamp or takes only the most recent one.
+        if ($returnAttempts === self::ATTEMPTS_ALL) {
+            ksort($returnData);
+        } else {
+            krsort($returnData);
+            $returnData = array_slice($returnData, 0, 1);
         }
 
         return $returnData;
     }
 
+    /**
+     * @return array|\stdClass
+     * @throws \common_exception_Error
+     */
     public function getAll()
     {
         $resources = array();
         $deliveryService = DeliveryAssemblyService::singleton();
         foreach ($deliveryService->getAllAssemblies() as $assembly) {
+            /** @var \core_kernel_classes_Resource $assembly */
             // delivery uri
             $delivery = $assembly->getUri();
 
-            $resultService = $this->getServiceLocator()->get(ResultServerService::SERVICE_ID);
-            $implementation = $resultService->getResultStorage($delivery);
+            $implementation = $this->getResultServerService()->getResultStorage($delivery);
 
             // get delivery executions
 
@@ -149,18 +178,29 @@ class CrudResultsService extends \tao_models_classes_CrudService
         return $resources;
     }
 
-
+    /**
+     * @param string $resource
+     * @throws \common_exception_NoImplementation
+     */
     public function delete($resource)
     {
         throw new \common_exception_NoImplementation();
     }
 
+    /**
+     * @throws \common_exception_NoImplementation
+     */
     public function deleteAll()
     {
         throw new \common_exception_NoImplementation();
     }
 
-
+    /**
+     * @param null $uri
+     * @param array $propertiesValues
+     * @return \core_kernel_classes_Resource|void
+     * @throws \common_exception_NoImplementation
+     */
     public function update($uri = null, $propertiesValues = array())
     {
         throw new \common_exception_NoImplementation();
@@ -172,6 +212,21 @@ class CrudResultsService extends \tao_models_classes_CrudService
     }
 
     /**
+     * Retrieves result storage for the given delivery.
+     *
+     * @return ResultServerService
+     * @throws ServiceNotFoundException when the ResultServerService is not instanciated.
+     */
+    protected function getResultServerService()
+    {
+        $resultServerService = $this->getServiceLocator()->get(ResultServerService::SERVICE_ID);
+        if (!$resultServerService instanceof ResultServerService) {
+            throw new ServiceNotFoundException('Unable to load ResultServer service.');
+        }
+        return $resultServerService;
+    }
+
+    /**
      *
      * @author Patrick Plichart, patrick@taotesting.com
      * return tao_models_classes_ClassService
@@ -179,5 +234,26 @@ class CrudResultsService extends \tao_models_classes_CrudService
     protected function getClassService()
     {
         // TODO: Implement getClassService() method.
+    }
+
+    /**
+     * @param \taoResultServer_models_classes_Variable $variable
+     * @return array
+     * @throws \common_exception_Error
+     */
+    protected function convertVariableToResource(\taoResultServer_models_classes_Variable $variable)
+    {
+        $type = $variable instanceof \taoResultServer_models_classes_ResponseVariable
+            ? 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResponseVariable'
+            : 'http://www.tao.lu/Ontologies/TAOResult.rdf#OutcomeVariable';
+
+        return [
+            'value' => $variable->getValue(),
+            'identifier' => $variable->getIdentifier(),
+            'type' => new \core_kernel_classes_Class($type),
+            'epoch' => $variable->getEpoch(),
+            'cardinality' => $variable->getCardinality(),
+            'basetype' => $variable->getBaseType(),
+        ];
     }
 }
