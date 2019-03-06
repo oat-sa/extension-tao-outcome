@@ -35,23 +35,20 @@ class taoResultServer_actions_ResultServerStateFull extends tao_actions_SaSModul
 
     /**
      * constructor: initialize the service and the default data
-     * @return Delivery
+     * @\oat\tao\model\routing\AnnotationReader\security("hide");
      */
     public function __construct() {
         parent::__construct();
         $this->service = $this->getClassService();
     }
 
-    public function getClassService() {
-        return taoResultServer_models_classes_ResultServerStateFull::singleton();
-    }
-
     /**
-     * @see TaoModule::getRootClass
-     * @return core_kernel_classes_Classes
+     * @return tao_models_classes_ClassService
+     * @\oat\tao\model\routing\AnnotationReader\security("hide");
      */
-    protected function getRootClass() {
-        
+    public function getClassService() {
+        // not sure that this is correct service and we need to check that this class not deprecated
+        return \taoResultServer_models_classes_ResultServerAuthoringService::singleton();
     }
 
     protected function returnFailure(Exception $exception) {
@@ -78,6 +75,7 @@ class taoResultServer_actions_ResultServerStateFull extends tao_actions_SaSModul
      * 
      * @example http://tao-dev/taoResultServer/ResultServerStateFull/initResultServer?resultServerUri=http%3A%2F%2Fwww.tao.lu%2FOntologies%2FTAOResultServer.rdf%23taoResultServer
      * @param string result server definition uri
+     * @deprecated needs to be removed
      */
     public function initResultServer() {
         if ($this->hasRequestParameter("resultServerUri")) {
@@ -91,6 +89,7 @@ class taoResultServer_actions_ResultServerStateFull extends tao_actions_SaSModul
     /**
      * @example http://tao-dev/taoResultServer/ResultServerStateFull/spawnResult
      * @return type
+     * @deprecated needs to be removed
      */
     public function spawnResult() {
 
@@ -105,6 +104,7 @@ class taoResultServer_actions_ResultServerStateFull extends tao_actions_SaSModul
      * http://tao-dev/taoResultServer/ResultServerStateFull/storeRelatedTestTaker?testTakerIdentifier=15
      * @param type $testTakerIdentifier
      * @return type
+     * @deprecated needs to be deleted
      */
     public function storeRelatedTestTaker() {
         if ($this->hasRequestParameter("testTakerIdentifier")) {
@@ -124,6 +124,7 @@ class taoResultServer_actions_ResultServerStateFull extends tao_actions_SaSModul
      * @param type $deliveryResultIdentifier
      * @param type $deliveryIdentifier
      * @return type
+     * @deprecated to be deleted
      */
     public function storeRelatedDelivery() {
         if ($this->hasRequestParameter("deliveryIdentifier")) {
@@ -212,10 +213,4 @@ class taoResultServer_actions_ResultServerStateFull extends tao_actions_SaSModul
         return $traceVariable;
     }
 
-    public function index() {
-        
-    }
-
 }
-
-?>
