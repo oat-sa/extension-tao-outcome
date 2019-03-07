@@ -20,6 +20,8 @@
  * 
  */
 
+use \oat\tao\model\routing\AnnotationReader\security;
+
 /**
  * 
  * A session for a particular delivery execution/session on the corresponding result server
@@ -35,7 +37,7 @@ class taoResultServer_actions_ResultServerStateFull extends tao_actions_SaSModul
 
     /**
      * constructor: initialize the service and the default data
-     * @\oat\tao\model\routing\AnnotationReader\security("hide");
+     * @security("hide");
      */
     public function __construct() {
         parent::__construct();
@@ -44,10 +46,10 @@ class taoResultServer_actions_ResultServerStateFull extends tao_actions_SaSModul
 
     /**
      * @return tao_models_classes_ClassService
-     * @\oat\tao\model\routing\AnnotationReader\security("hide");
+     * @security("hide");
      */
     public function getClassService() {
-        // not sure that this is correct service and we need to check that this class not deprecated
+        // todo It seems that this method could be removed
         return \taoResultServer_models_classes_ResultServerAuthoringService::singleton();
     }
 
