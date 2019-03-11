@@ -49,7 +49,7 @@ class taoResultServer_actions_ResultServerStateFull extends tao_actions_SaSModul
      * @security("hide");
      */
     public function getClassService() {
-        // todo It seems that this method could be removed
+        // @todo It seems that this method could be removed
         return \taoResultServer_models_classes_ResultServerAuthoringService::singleton();
     }
 
