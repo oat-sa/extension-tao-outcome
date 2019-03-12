@@ -74,6 +74,74 @@ class taoResultServer_actions_ResultServerStateFull extends tao_actions_SaSModul
     }
 
     /**
+     *
+     * @example http://tao-dev/taoResultServer/ResultServerStateFull/initResultServer?resultServerUri=http%3A%2F%2Fwww.tao.lu%2FOntologies%2FTAOResultServer.rdf%23taoResultServer
+     * @param string result server definition uri
+     * @deprecated needs to be removed
+     */
+    public function initResultServer() {
+        if ($this->hasRequestParameter("resultServerUri")) {
+            $this->service->initResultServer($this->getRequestParameter("resultServerUri"));
+            $this->returnSuccess();
+        } else {
+            $this->returnFailure(new common_exception_MissingParameter("resultServerUri"));
+        }
+    }
+
+    /**
+     * @example http://tao-dev/taoResultServer/ResultServerStateFull/spawnResult
+     * @return type
+     * @deprecated needs to be removed
+     */
+    public function spawnResult() {
+
+        try {
+            $this->returnSuccess($this->service->spawnResult());
+        } catch (exception $e) {
+            $this->returnFailure($e);
+        }
+    }
+
+    /**
+     * http://tao-dev/taoResultServer/ResultServerStateFull/storeRelatedTestTaker?testTakerIdentifier=15
+     * @param type $testTakerIdentifier
+     * @return type
+     * @deprecated needs to be deleted
+     */
+    public function storeRelatedTestTaker() {
+        if ($this->hasRequestParameter("testTakerIdentifier")) {
+            try {
+                $data = $this->service->storeRelatedTestTaker($this->getRequestParameter("testTakerIdentifier"));
+            } catch (exception $e) {
+                $this->returnFailure($e);
+            }
+            return $this->returnSuccess($data);
+        } else {
+            $this->returnFailure(new common_exception_MissingParameter("testTakerIdentifier"));
+        }
+    }
+
+    /**
+     * @example http://tao-dev/taoResultServer/ResultServerStateFull/storeRelatedDelivery?deliveryIdentifier=12
+     * @param type $deliveryResultIdentifier
+     * @param type $deliveryIdentifier
+     * @return type
+     * @deprecated to be deleted
+     */
+    public function storeRelatedDelivery() {
+        if ($this->hasRequestParameter("deliveryIdentifier")) {
+            try {
+                $data = $this->service->storeRelatedDelivery($this->getRequestParameter("deliveryIdentifier"));
+            } catch (exception $e) {
+                $this->returnFailure($e);
+            }
+            return $this->returnSuccess($data);
+        } else {
+            $this->returnFailure(new common_exception_MissingParameter("deliveryIdentifier"));
+        }
+    }
+
+    /**
      * @author  "Patrick Plichart, <patrick@taotesting.com>"
      */
     public function storeItemVariableSet() {
@@ -126,6 +194,7 @@ class taoResultServer_actions_ResultServerStateFull extends tao_actions_SaSModul
 
     /**
      * return a Trace Variable with informations from the request itselfs
+     * @todo does anybody use it? to be deleted
      */
     private function getRequestDetails() {
         $dom = new DOMDocument('1.0', 'utf-8');
