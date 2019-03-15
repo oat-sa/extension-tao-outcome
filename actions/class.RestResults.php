@@ -19,9 +19,14 @@
  */
 
 use oat\taoResultServer\models\classes\CrudResultsService;
+use oat\tao\model\routing\AnnotationReader\security;
 
 class taoResultServer_actions_RestResults extends \tao_actions_CommonRestModule {
 
+    /**
+     * taoResultServer_actions_RestResults constructor.
+     * @security("hide")
+     */
     public function __construct(){
         parent::__construct();
         $this->service = CrudResultsService::singleton();
