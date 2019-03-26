@@ -55,7 +55,7 @@ class OutcomeFilesystemRepository extends ConfigurableService implements ResultS
      */
     private $filePathFactory;
 
-    private function getFilePathFactory()
+    protected function getFilePathFactory()
     {
         if (null === $this->filePathFactory) {
             $this->filePathFactory = new FilePathFactory();
