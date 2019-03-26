@@ -67,7 +67,7 @@ class OutcomeFilesystemRepository extends ConfigurableService implements ResultS
     /**
      * @return ResultStorageInterface
      */
-    private function getDbStorage()
+    protected function getDbStorage()
     {
         if (null === $this->storage) {
             $this->storage = $this->getServiceLocator()->get($this->getOption(self::OPTION_STORAGE));
@@ -83,7 +83,7 @@ class OutcomeFilesystemRepository extends ConfigurableService implements ResultS
      * @throws common_exception_NotFound
      * @throws InvalidServiceManagerException
      */
-    private function getFileSystem()
+    protected function getFileSystem()
     {
         if (null === $this->filesystem) {
             /** @var FileSystemService $fileSystemService */
@@ -454,7 +454,6 @@ class OutcomeFilesystemRepository extends ConfigurableService implements ResultS
      * @param array  $itemVariables
      * @param        $callIdItem
      *
-     * @return mixed
      * @throws InvalidServiceManagerException
      * @throws common_exception_Error
      * @throws common_exception_NotFound
@@ -467,7 +466,7 @@ class OutcomeFilesystemRepository extends ConfigurableService implements ResultS
             $variables[] = $this->handleFiles($deliveryResultIdentifier, $itemVariable);
         }
 
-        return $this->getDbStorage()->storeItemVariables(
+        $this->getDbStorage()->storeItemVariables(
             $deliveryResultIdentifier,
             $test,
             $item,
@@ -485,6 +484,10 @@ class OutcomeFilesystemRepository extends ConfigurableService implements ResultS
      * @param string                                  $test
      * @param taoResultServer_models_classes_Variable $testVariable
      * @param                                         $callIdTest
+     *
+     * @throws InvalidServiceManagerException
+     * @throws common_exception_Error
+     * @throws common_exception_NotFound
      */
     public function storeTestVariable(
         $deliveryResultIdentifier,
@@ -492,10 +495,10 @@ class OutcomeFilesystemRepository extends ConfigurableService implements ResultS
         taoResultServer_models_classes_Variable $testVariable,
         $callIdTest
     ) {
-        return $this->getDbStorage()->storeTestVariable(
+        $this->getDbStorage()->storeTestVariable(
             $deliveryResultIdentifier,
             $test,
-            $testVariable,
+            $this->handleFiles($deliveryResultIdentifier, $testVariable),
             $callIdTest
         );
     }
