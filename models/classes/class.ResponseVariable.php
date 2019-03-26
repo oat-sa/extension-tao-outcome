@@ -18,21 +18,20 @@
  *
  *
  * @author "Patrick Plichart, <patrick@taotesting.com>"
- * 
+ *
  * An Assessment Result is used to report the results of a candidate's interaction
  * with a test and/or one or more items attempted. Information about the test is optional,
- * in some systems it may be possible to interact with items that are not organized into 
- * a test at all. For example, items that are organized with learning resources and 
+ * in some systems it may be possible to interact with items that are not organized into
+ * a test at all. For example, items that are organized with learning resources and
  * presented individually in a formative context.
- * 
+ *
  */
 class taoResultServer_models_classes_ResponseVariable extends taoResultServer_models_classes_Variable
 {
-
     /**
      * The correct response may be output as part of the report if desired.
      * Systems are not limited to reporting correct responses declared in responseDeclarations. For example, a correct response may be set by a templateRule or may simply have been suppressed from the declaration passed to the delivery engine (e.g., for security).
-     * 
+     *
      * @var bool (todo should be a class)
      */
     public $correctResponse;
@@ -43,7 +42,7 @@ class taoResultServer_models_classes_ResponseVariable extends taoResultServer_mo
      */
     public $candidateResponse;
 
-    
+
     /**
      * substitued for the db storage into a GenerisRdf::GENERIS_TRUE/FALSE
      *
@@ -71,7 +70,7 @@ class taoResultServer_models_classes_ResponseVariable extends taoResultServer_mo
      *
      * @access public
      * @author "Patrick Plichart, <patrick@taotesting.com>"
-     * @param unknown $candidateResponse            
+     * @param string $candidateResponse
      */
     public function setCandidateResponse($candidateResponse)
     {
@@ -85,9 +84,9 @@ class taoResultServer_models_classes_ResponseVariable extends taoResultServer_mo
      * @return mixed
      */
     public function getCandidateResponse()
-    {   
+    {
         //base64 binary and nullbyte safe
-        return base64_decode($this->candidateResponse);      
+        return base64_decode($this->candidateResponse);
     }
 
     /**
@@ -105,5 +104,3 @@ class taoResultServer_models_classes_ResponseVariable extends taoResultServer_mo
         $this->setCandidateResponse($value);
     }
 }
-
-?>
