@@ -484,10 +484,6 @@ class OutcomeFilesystemRepository extends ConfigurableService implements ResultS
      * @param string                                  $test
      * @param taoResultServer_models_classes_Variable $testVariable
      * @param                                         $callIdTest
-     *
-     * @throws InvalidServiceManagerException
-     * @throws common_exception_Error
-     * @throws common_exception_NotFound
      */
     public function storeTestVariable(
         $deliveryResultIdentifier,
@@ -498,7 +494,7 @@ class OutcomeFilesystemRepository extends ConfigurableService implements ResultS
         $this->getDbStorage()->storeTestVariable(
             $deliveryResultIdentifier,
             $test,
-            $this->handleFiles($deliveryResultIdentifier, $testVariable),
+            $testVariable,
             $callIdTest
         );
     }
@@ -531,7 +527,7 @@ class OutcomeFilesystemRepository extends ConfigurableService implements ResultS
     ) {
         $variable = $this->handleFiles($deliveryResultIdentifier, $itemVariable);
 
-        return $this->getDbStorage()->storeItemVariable(
+        $this->getDbStorage()->storeItemVariable(
             $deliveryResultIdentifier,
             $test,
             $item,
