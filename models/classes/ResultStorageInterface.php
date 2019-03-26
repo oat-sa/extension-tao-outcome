@@ -21,11 +21,9 @@
 namespace oat\taoResultServer\models\classes;
 
 
-use taoResultServer_models_classes_ReadableResultStorage;
 use taoResultServer_models_classes_WritableResultStorage;
 
 interface ResultStorageInterface extends
-    taoResultServer_models_classes_ReadableResultStorage,
     taoResultServer_models_classes_WritableResultStorage,
     ResultManagement
 {
