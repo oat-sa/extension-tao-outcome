@@ -20,17 +20,19 @@
  */
 
 namespace oat\taoResultServer\models\classes;
+
 use oat\taoDelivery\model\execution\ServiceProxy;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 
 /**
  * .Crud services implements basic CRUD services, orginally intended for REST controllers/ HTTP exception handlers
  *  Consequently the signatures and behaviors is closer to REST and throwing HTTP like exceptions
- *  
  *
- * 
+ *
+ *
  */
-class CrudResultsService extends \tao_models_classes_CrudService {
+class CrudResultsService extends \tao_models_classes_CrudService
+{
 
     const GROUP_BY_DELIVERY = 0;
     const GROUP_BY_TEST = 1;
@@ -38,59 +40,63 @@ class CrudResultsService extends \tao_models_classes_CrudService {
 
     protected $resultClass = null;
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->resultClass = new \core_kernel_classes_Class(ResultService::DELIVERY_RESULT_CLASS_URI);
     }
 
-    public function getRootClass() {
+    public function getRootClass()
+    {
         return $this->resultClass;
     }
 
-    public function get($uri, $groupBy = self::GROUP_BY_DELIVERY) {
-        $deliveryExecution = ServiceProxy::singleton()->getDeliveryExecution($uri);
+    public function get($uri, $groupBy = self::GROUP_BY_DELIVERY)
+    {
+        $deliveryExecution = $this->getDeliveryExecution($uri);
         $delivery = $deliveryExecution->getDelivery();
-    
+
         $resultService = $this->getServiceLocator()->get(ResultServerService::SERVICE_ID);
         $implementation = $resultService->getResultStorage($delivery->getUri());
+
         return $this->format($implementation, $uri);
     }
-        
-    public function format(\taoResultServer_models_classes_ReadableResultStorage $resultStorage, $resultIdentifier, $groupBy = self::GROUP_BY_DELIVERY) {
+
+    public function format(\taoResultServer_models_classes_ReadableResultStorage $resultStorage, $resultIdentifier, $groupBy = self::GROUP_BY_DELIVERY)
+    {
         $returnData = array();
-        
+
         if ($groupBy === self::GROUP_BY_DELIVERY || $groupBy === self::GROUP_BY_ITEM) {
             $calls = $resultStorage->getRelatedItemCallIds($resultIdentifier);
         } else {
             $calls = $resultStorage->getRelatedTestCallIds($resultIdentifier);
         }
 
-        foreach($calls as $callId){
+        foreach ($calls as $callId) {
             $results = $resultStorage->getVariables($callId);
             $resource = array();
-                foreach($results as $result){
-                    $result = array_pop($result);
-                    if(isset($result->variable)){
-                        $resource['value'] = $result->variable->getValue();
-                        $resource['identifier'] = $result->variable->getIdentifier();
-                        if($result->variable instanceof \taoResultServer_models_classes_ResponseVariable){
-                            $type = "http://www.tao.lu/Ontologies/TAOResult.rdf#ResponseVariable";
-                        }
-                        else{
-                            $type = "http://www.tao.lu/Ontologies/TAOResult.rdf#OutcomeVariable";
-                        }
-                        $resource['type'] = new \core_kernel_classes_Class($type);
-                        $resource['epoch'] = $result->variable->getEpoch();
-                        $resource['cardinality'] = $result->variable->getCardinality();
-                        $resource['basetype'] = $result->variable->getBaseType();
-                    }
-
-                    if ($groupBy === self::GROUP_BY_DELIVERY) {
-                        $returnData[$resultIdentifier][] = $resource;
+            foreach ($results as $result) {
+                $result = array_pop($result);
+                if (isset($result->variable)) {
+                    $resource['value'] = $result->variable->getValue();
+                    $resource['identifier'] = $result->variable->getIdentifier();
+                    if ($result->variable instanceof \taoResultServer_models_classes_ResponseVariable) {
+                        $type = "http://www.tao.lu/Ontologies/TAOResult.rdf#ResponseVariable";
                     } else {
-                        $returnData[$callId][] = $resource;
+                        $type = "http://www.tao.lu/Ontologies/TAOResult.rdf#OutcomeVariable";
                     }
+                    $resource['type'] = new \core_kernel_classes_Class($type);
+                    $resource['epoch'] = $result->variable->getEpoch();
+                    $resource['cardinality'] = $result->variable->getCardinality();
+                    $resource['basetype'] = $result->variable->getBaseType();
                 }
+
+                if ($groupBy === self::GROUP_BY_DELIVERY) {
+                    $returnData[$resultIdentifier][] = $resource;
+                } else {
+                    $returnData[$callId][] = $resource;
+                }
+            }
         }
         return $returnData;
     }
@@ -102,20 +108,17 @@ class CrudResultsService extends \tao_models_classes_CrudService {
         foreach ($deliveryService->getAllAssemblies() as $assembly) {
             // delivery uri
             $delivery = $assembly->getUri();
-
-            $resultService = $this->getServiceLocator()->get(ResultServerService::SERVICE_ID);
-            $implementation = $resultService->getResultStorage($delivery);
-
             // get delivery executions
+            $deliveryExecutions = $this->getDeliveryExecutions($delivery);
 
             //get all info
-            foreach($implementation->getResultByDelivery(array($delivery)) as $result){
+            foreach ($deliveryExecutions as $result) {
                 $result = array_merge($result, array(RDFS_LABEL => $assembly->getLabel()));
                 $properties = array();
-                foreach($result as $key => $value){
+                foreach ($result as $key => $value) {
                     $property = array();
                     $type = 'resource';
-                    switch($key){
+                    switch ($key) {
                         case 'deliveryResultIdentifier':
                             $property['predicateUri'] = "http://www.tao.lu/Ontologies/TAOResult.rdf#Identifier";
                             break;
@@ -136,8 +139,8 @@ class CrudResultsService extends \tao_models_classes_CrudService {
 
                 }
                 $resources[] = array(
-                    'uri'           => $result['deliveryResultIdentifier'],
-                    'properties'    => $properties
+                    'uri' => $result['deliveryResultIdentifier'],
+                    'properties' => $properties
                 );
             }
         }
@@ -145,24 +148,38 @@ class CrudResultsService extends \tao_models_classes_CrudService {
     }
 
 
-
-    public function delete($resource) {
-       throw new \common_exception_NoImplementation();
-    }
-
-    public function deleteAll() {
+    public function delete($resource)
+    {
         throw new \common_exception_NoImplementation();
     }
 
-   
+    public function deleteAll()
+    {
+        throw new \common_exception_NoImplementation();
+    }
 
-    public function update($uri = null, $propertiesValues = array()) {
+
+    public function update($uri = null, $propertiesValues = array())
+    {
         throw new \common_exception_NoImplementation();
     }
 
     public function isInScope($uri)
     {
         return true;
+    }
+
+    protected function getDeliveryExecution($uri)
+    {
+        return ServiceProxy::singleton()->getDeliveryExecution($uri);
+    }
+
+    protected function getDeliveryExecutions($delivery)
+    {
+        return $this->getServiceLocator()
+            ->get(ResultServerService::SERVICE_ID)
+            ->getResultStorage($delivery)
+            ->getResultByDelivery(array($delivery));
     }
 
     /**

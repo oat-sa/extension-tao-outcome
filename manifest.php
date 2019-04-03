@@ -36,6 +36,9 @@ return array(
         array('grant', 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerRole', array('ext'=>'taoResultServer')),
         array('grant', 'http://www.tao.lu/Ontologies/TAO.rdf#DeliveryRole', array('ext'=>'taoResultServer', 'mod' => 'ResultServerStateFull')),
     ),
+    'routes' => array(
+        '/taoResultServer' => 'oat\\taoResultServer\\actions'
+    ),
  	'constants' => array(
 	 	# actions directory
 		"DIR_ACTIONS"			=> $extpath."actions".DIRECTORY_SEPARATOR,
