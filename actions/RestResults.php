@@ -14,7 +14,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2013 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
+ * Copyright (c) 2013-2019 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  *
  */
 
@@ -25,24 +25,27 @@ use oat\taoResultServer\models\classes\CrudScorableResultsService;
 
 class RestResults extends \tao_actions_CommonRestModule
 {
-    protected function getCrudService()
-    {
-        if ($this->hasGetParameter('onlyScorable') && $this->getGetParameter('onlyScorable') == 'true') {
-            $this->service = CrudScorableResultsService::singleton();
-        } else {
-            $this->service = CrudResultsService::singleton();
-        }
-        return parent::getCrudService();
-    }
+    const ONLY_SCORABLE = 'onlyScorable';
 
+    /** @var CrudResultsService */
+    protected $resultService;
 
     /**
-     * Optionnaly a specific rest controller may declare
-     * aliases for parameters used for the rest communication
+     * Get the service to manage delivery executions CRUD operations
+     * If HTTP parameters "onlyScorable" is specified then use CrudScorableResultsService
+     *
+     * @return CrudResultsService
      */
-    protected function getParametersAliases()
+    protected function getCrudService()
     {
-        return array_merge(parent::getParametersAliases(), array());
+        if (!$this->resultService) {
+            $this->resultService = $this->propagate(
+                ($this->hasGetParameter(self::ONLY_SCORABLE) && $this->getGetParameter(self::ONLY_SCORABLE) == 'true')
+                    ? new CrudScorableResultsService()
+                    : new CrudResultsService()
+            );
+        }
+        return $this->resultService;
     }
 
     /**
@@ -50,7 +53,7 @@ class RestResults extends \tao_actions_CommonRestModule
      *
      * You may use either the alias or the uri, if the parameter identifier
      * is set it will become mandatory for the operation in $key
-     * Default Parameters Requirents are applied
+     * Default Parameters Requirements are applied
      * type by default is not required and the root class type is applied
      *
      * @return array
@@ -60,6 +63,5 @@ class RestResults extends \tao_actions_CommonRestModule
     {
         return [];
     }
-
 
 }

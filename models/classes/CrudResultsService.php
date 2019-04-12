@@ -23,6 +23,8 @@ namespace oat\taoResultServer\models\classes;
 
 use oat\taoDelivery\model\execution\ServiceProxy;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use Zend\ServiceManager\ServiceLocatorAwareTrait;
 
 /**
  * .Crud services implements basic CRUD services, orginally intended for REST controllers/ HTTP exception handlers
@@ -31,8 +33,9 @@ use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
  *
  *
  */
-class CrudResultsService extends \tao_models_classes_CrudService
+class CrudResultsService extends \tao_models_classes_CrudService implements ServiceLocatorAwareInterface
 {
+    use ServiceLocatorAwareTrait;
 
     const GROUP_BY_DELIVERY = 0;
     const GROUP_BY_TEST = 1;
@@ -105,6 +108,7 @@ class CrudResultsService extends \tao_models_classes_CrudService
     {
         $resources = array();
         $deliveryService = DeliveryAssemblyService::singleton();
+
         foreach ($deliveryService->getAllAssemblies() as $assembly) {
             // delivery uri
             $delivery = $assembly->getUri();
@@ -171,15 +175,26 @@ class CrudResultsService extends \tao_models_classes_CrudService
 
     protected function getDeliveryExecution($uri)
     {
-        return ServiceProxy::singleton()->getDeliveryExecution($uri);
+        return $this->filter(
+            $this->getServiceLocator()
+                ->get(ServiceProxy::SERVICE_ID)
+                ->getDeliveryExecution($uri)
+        );
     }
 
     protected function getDeliveryExecutions($delivery)
     {
-        return $this->getServiceLocator()
-            ->get(ResultServerService::SERVICE_ID)
-            ->getResultStorage($delivery)
-            ->getResultByDelivery(array($delivery));
+        return $this->filter(
+            $this->getServiceLocator()
+                ->get(ResultServerService::SERVICE_ID)
+                ->getResultStorage($delivery)
+                ->getResultByDelivery(array($delivery))
+        );
+    }
+
+    protected function filter(array $deliveryExecutions)
+    {
+        return $deliveryExecutions;
     }
 
     /**
