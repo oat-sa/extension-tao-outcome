@@ -11,8 +11,8 @@ class DeliveryExecutionFilter extends  ConfigurableService
 {
     const SERVICE_ID = 'taoResultServer/scorableResultFilter';
 
-    const OPTION_CACHE = 'cache';
     const ONLY_SCORABLE = 'onlyScorable';
+    const OPTION_CACHE = 'cache';
     const OPTION_SCORABLE_COMPONENTS = 'scorable-components';
 
     use OntologyAwareTrait;
@@ -30,7 +30,6 @@ class DeliveryExecutionFilter extends  ConfigurableService
 
     public function filter(array $deliveryExecutions, $options = [])
     {
-        $this->getCache()->purge();
         $onlyScorable = false;
         if (array_key_exists(self::ONLY_SCORABLE, $options) && (
                 $options[self::ONLY_SCORABLE] === true || $options[self::ONLY_SCORABLE] === 'true'

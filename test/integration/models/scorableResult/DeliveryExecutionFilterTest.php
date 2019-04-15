@@ -12,6 +12,52 @@ use Prophecy\Argument;
 
 class DeliveryExecutionFilterTest extends TestCase
 {
+    public function testScorableOptionNotSet()
+    {
+        $deliveryExecutions = [
+            [
+                'deliveryIdentifier' => 'deliveryIdentifier-fixture1',
+                'deliveryResultIdentifier' => 'deliveryExecutionIdentifier-fixture1',
+            ],[
+                'deliveryIdentifier' => 'deliveryIdentifier-fixture2',
+                'deliveryResultIdentifier' => 'deliveryExecutionIdentifier-fixture2',
+            ]
+        ];
+        $options = ['onlyScorable' => false];
+        $results = $this->getDeliveryExecutionFilter()->filter($deliveryExecutions, $options);
+        $this->assertCount(2, $results);
+    }
+
+    public function testWithNoScorable()
+    {
+        $deliveryExecutions = [
+            [
+                'deliveryIdentifier' => 'deliveryIdentifier-fixture1',
+                'deliveryResultIdentifier' => 'deliveryExecutionIdentifier-fixture1',
+            ],[
+                'deliveryIdentifier' => 'deliveryIdentifier-fixture2',
+                'deliveryResultIdentifier' => 'deliveryExecutionIdentifier-fixture2',
+            ]
+        ];
+        $options = ['onlyScorable' => true];
+        $results = $this->getDeliveryExecutionFilterWithNoScorable()->filter($deliveryExecutions, $options);
+        $this->assertEmpty($results);
+    }
+
+
+    public function testItemDoesNotExist()
+    {
+        $deliveryExecutions = [
+            [
+                'deliveryIdentifier' => 'deliveryIdentifier-fixture',
+                'deliveryResultIdentifier' => 'deliveryExecutionIdentifier-fixture',
+            ]
+        ];
+        $options = ['onlyScorable' => true];
+        $results = $this->getDeliveryExecutionFilter(false)->filter($deliveryExecutions, $options);
+        $this->assertEmpty($results);
+    }
+
     protected function getInMemoryCache()
     {
         $cache = new \common_cache_KeyValueCache();
@@ -22,12 +68,8 @@ class DeliveryExecutionFilterTest extends TestCase
         return $cache;
     }
 
-    /**
-     * DeliveryExecutionFilter
-     */
-    public function getDeliveryExecutionFilter($itemExists = true)
+    protected function getDeliveryExecutionFilter($itemExists = true)
     {
-
         $resultVariable1 = new \stdClass();
         $resultVariable1->item = 'item';
 
@@ -43,7 +85,7 @@ class DeliveryExecutionFilterTest extends TestCase
         $resultStorage->getVariables(Argument::any())->willReturn([$resultVariables]);
 
         $resultServer = $this->prophesize(ResultServerService::class);
-        $resultServer->getResultStorage(Argument::any())->willReturnOnConsecutiveCalls($resultStorage->reveal());
+        $resultServer->getResultStorage(Argument::any())->willReturn($resultStorage->reveal());
 
         $serviceLocatorMock = $this->getServiceLocatorMock([
             ResultServerService::SERVICE_ID => $resultServer,
@@ -75,65 +117,53 @@ class DeliveryExecutionFilterTest extends TestCase
         return $service;
     }
 
-    public function testIt()
+    protected function getDeliveryExecutionFilterWithNoScorable()
     {
-        $deliveryExecutions = [
-            [
-                'deliveryIdentifier' => 'deliveryIdentifier-fixture1',
-                'deliveryResultIdentifier' => 'deliveryExecutionIdentifier-fixture1',
-            ],[
-                'deliveryIdentifier' => 'deliveryIdentifier-fixture2',
-                'deliveryResultIdentifier' => 'deliveryExecutionIdentifier-fixture2',
-            ]
-        ];
-        $options = ['onlyScorable' => true];
-        $results = $this->getDeliveryExecutionFilter()->filter($deliveryExecutions, $options);
-        var_dump($results);
-    }
+        $resultVariable1 = new \stdClass();
+        $resultVariable1->item = 'item';
 
-    public function testScorableOptionNotSet()
-    {
-        $deliveryExecutions = [
-            [
-                'deliveryIdentifier' => 'deliveryIdentifier-fixture1',
-                'deliveryResultIdentifier' => 'deliveryExecutionIdentifier-fixture1',
-            ],[
-                'deliveryIdentifier' => 'deliveryIdentifier-fixture2',
-                'deliveryResultIdentifier' => 'deliveryExecutionIdentifier-fixture2',
-            ]
-        ];
-        $options = ['onlyScorable' => false];
-        $results = $this->getDeliveryExecutionFilter()->filter($deliveryExecutions, $options);
-        $this->assertCount(2, $results);
-    }
+        $resultVariable2 = clone $resultVariable1;
+        $resultVariable3 = clone $resultVariable1;
 
-    public function testScorableOptionNotSet()
-    {
-        $deliveryExecutions = [
-            [
-                'deliveryIdentifier' => 'deliveryIdentifier-fixture1',
-                'deliveryResultIdentifier' => 'deliveryExecutionIdentifier-fixture1',
-            ],[
-                'deliveryIdentifier' => 'deliveryIdentifier-fixture2',
-                'deliveryResultIdentifier' => 'deliveryExecutionIdentifier-fixture2',
-            ]
+        $resultVariables = [
+            $resultVariable1, $resultVariable2, $resultVariable3
         ];
-        $options = ['onlyScorable' => false];
-        $results = $this->getDeliveryExecutionFilter()->filter($deliveryExecutions, $options);
-        $this->assertCount(2, $results);
-    }
 
-    public function testItemDoesNotExist()
-    {
-        $deliveryExecutions = [
-            [
-                'deliveryIdentifier' => 'deliveryIdentifier-fixture',
-                'deliveryResultIdentifier' => 'deliveryExecutionIdentifier-fixture',
-            ]
-        ];
-        $options = ['onlyScorable' => true];
-        $results = $this->getDeliveryExecutionFilter(false)->filter($deliveryExecutions, $options);
-        $this->assertEmpty($results);
+        $resultStorage = $this->prophesize(ResultManagement::class);
+        $resultStorage->getRelatedItemCallIds(Argument::any())->willReturn(['callId']);
+        $resultStorage->getVariables(Argument::any())->willReturn([$resultVariables]);
+
+        $resultServer = $this->prophesize(ResultServerService::class);
+        $resultServer->getResultStorage(Argument::any())->willReturn($resultStorage->reveal());
+
+        $serviceLocatorMock = $this->getServiceLocatorMock([
+            ResultServerService::SERVICE_ID => $resultServer,
+            \common_cache_Cache::SERVICE_ID => $this->getInMemoryCache()
+        ]);
+
+        $resourceProphecy = $this->prophesize(\core_kernel_classes_Resource::class);
+        $resourceProphecy->exists()->willReturn(true);
+
+        $model = $this->prophesize(\core_kernel_persistence_smoothsql_SmoothModel::class);
+        $model->getResource(Argument::any())->willReturn($resourceProphecy->reveal());
+
+        $file = $this->prophesize(File::class);
+        $file->read()->willReturn($this->getItemContentWithoutExtendedText());
+
+        $directory = $this->prophesize(Directory::class);
+        $directory->getFile(Argument::any())->willReturn($file->reveal());
+
+        $itemService = $this->prophesize(\taoItems_models_classes_ItemsService::class);
+        $itemService->getItemDirectory(Argument::any())->willReturn($directory->reveal());
+
+        $service = new DeliveryExecutionFilterMock();
+        $service
+            ->setMock($itemService->reveal())
+            ->setServiceLocator($serviceLocatorMock)
+            ->setModel($model->reveal())
+        ;
+
+        return $service;
     }
 
     protected function getItemContentWithExtendedText()
