@@ -5,6 +5,10 @@
  * @license GPLv2  http://www.opensource.org/licenses/gpl-2.0.php
  *
  */
+
+use oat\tao\model\accessControl\func\AccessRule;
+use oat\taoResultServer\controller\ResultServerStateFull;
+
 $extpath = dirname(__FILE__).DIRECTORY_SEPARATOR;
 $taopath = dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'tao'.DIRECTORY_SEPARATOR;
 
@@ -34,14 +38,14 @@ return array(
     'managementRole' => 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerRole',
     'acl' => array(
         array('grant', 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerRole', array('ext'=>'taoResultServer')),
-        array('grant', 'http://www.tao.lu/Ontologies/TAO.rdf#DeliveryRole', array('ext'=>'taoResultServer', 'mod' => 'ResultServerStateFull')),
+        array(AccessRule::GRANT, 'http://www.tao.lu/Ontologies/TAO.rdf#DeliveryRole', ResultServerStateFull::class),
     ),
     'routes' => array(
-        '/taoResultServer' => 'oat\\taoResultServer\\actions'
+        '/taoResultServer' => 'oat\\taoResultServer\\controller'
     ),
  	'constants' => array(
 	 	# actions directory
-		"DIR_ACTIONS"			=> $extpath."actions".DIRECTORY_SEPARATOR,
+		"DIR_ACTIONS"			=> $extpath . 'controller' . DIRECTORY_SEPARATOR,
 
 		# views directory
 		"DIR_VIEWS"				=> $extpath."views".DIRECTORY_SEPARATOR,

@@ -18,7 +18,7 @@
  *
  */
 
-namespace oat\taoResultServer\actions;
+namespace oat\taoResultServer\controller;
 
 use oat\taoResultServer\models\classes\CrudResultsService;
 use oat\taoResultServer\models\classes\CrudScorableResultsService;

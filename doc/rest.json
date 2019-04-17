@@ -121,6 +121,85 @@
                 ]
             }
         },
+        "/taoResultServer/RestResults/index": {
+            "get": {
+                "description": "Get a list of delivery executions with related delivery and testtakers.",
+                "summary": "Get list of delivery executions.",
+                "tags": [
+                    "result"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response in json format.",
+                        "examples": {
+                            "application/json": {
+                                "success": true,
+                                "data": [
+                                    {
+                                        "uri": "http://www.taotesting.com/ontologies/tao.rdf#RESULT-IDENTIFIER",
+                                        "properties": [
+                                            {
+                                                "predicateUri": "http://www.tao.lu/Ontologies/TAOResult.rdf#Identifier",
+                                                "values": {
+                                                    "valueType": "resource",
+                                                    "value": "http://www.taotesting.com/ontologies/tao.rdf#RESULT-IDENTIFIER"
+                                                }
+                                            },
+                                            {
+                                                "predicateUri": "http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfSubject",
+                                                "values": {
+                                                    "valueType": "resource",
+                                                    "value": "http://www.taotesting.com/ontologies/tao.rdf#TESTTAKER-IDENTIFIER"
+                                                }
+                                            },
+                                            {
+                                                "predicateUri": "http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfDelivery",
+                                                "values": {
+                                                    "valueType": "resource",
+                                                    "value": "http://www.taotesting.com/ontologies/tao.rdf#DELIVERY-IDENTIFIER"
+                                                }
+                                            },
+                                            {
+                                                "predicateUri": "http://www.w3.org/2000/01/rdf-schema#label",
+                                                "values": {
+                                                    "valueType": "literal",
+                                                    "value": "Delivery of items"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "version": "3.3.0-sprint100"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "examples": {
+                            "application/json": {
+                                "success": false,
+                                "errorCode": 401,
+                                "errorMsg": "You are not authorized to access this functionality.",
+                                "version": "3.1.0"
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/errorModel"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "basic_auth": []
+                    }
+                ]
+            }
+        },
         "/taoResultServer/QtiRestResults/getQtiResultXml": {
             "get": {
                 "description": "Get a QTI result by its identifier.",

@@ -61,7 +61,7 @@ class CrudResultsService extends \tao_models_classes_CrudService implements Serv
 
         $resultService = $this->getServiceLocator()->get(ResultServerService::SERVICE_ID);
         $implementation = $resultService->getResultStorage($delivery->getUri());
-
+        echo $deliveryExecution->getIdentifier();
         return $this->format($implementation, $uri);
     }
 
@@ -175,11 +175,11 @@ class CrudResultsService extends \tao_models_classes_CrudService implements Serv
 
     protected function getDeliveryExecution($uri)
     {
-        return $this->filter(
+        return $this->filter([
             $this->getServiceLocator()
                 ->get(ServiceProxy::SERVICE_ID)
                 ->getDeliveryExecution($uri)
-        );
+        ])[0];
     }
 
     protected function getDeliveryExecutions($delivery)
