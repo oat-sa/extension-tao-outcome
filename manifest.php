@@ -8,6 +8,7 @@
 
 use oat\tao\model\accessControl\func\AccessRule;
 use oat\taoResultServer\controller\ResultServerStateFull;
+use oat\taoResultServer\scripts\update\Updater;
 
 $extpath = dirname(__FILE__).DIRECTORY_SEPARATOR;
 $taopath = dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'tao'.DIRECTORY_SEPARATOR;
@@ -33,8 +34,7 @@ return array(
         'php' => array(
         )
     ),
-    'update' => 'taoResultServer_scripts_update_Updater',
-
+    'update' => Updater::class,
     'managementRole' => 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerRole',
     'acl' => array(
         array('grant', 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerRole', array('ext'=>'taoResultServer')),

@@ -33,8 +33,7 @@ class QtiRestResults extends \tao_actions_RestController
 
     public function getQtiResultXml()
     {
-        try
-        {
+        try {
             $this->checkMethod();
 
             $this->validateParams(array(self::DELIVERY, self::RESULT));

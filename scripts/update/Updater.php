@@ -33,7 +33,7 @@ use oat\taoResultServer\models\classes\ResultAliasService;
  * @author Joel Bout <joel@taotesting.com>
  * @author Jérôme Bogaerts <jerome@taotesting.com>
  */
-class taoResultServer_scripts_update_Updater extends \common_ext_ExtensionUpdater
+class Updater extends \common_ext_ExtensionUpdater
 {
     /**
      * Perform update for taoResultServer extension
