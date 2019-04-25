@@ -1,6 +1,5 @@
 <?php
-
-/*
+/**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; under version 2
@@ -15,23 +14,21 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2017 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
+ * Copyright (c) 2017-2019 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  *
  */
 
 namespace oat\taoResultServer\models\classes;
 
+use oat\taoDelivery\model\execution\DeliveryExecutionInterface;
 use oat\taoDelivery\model\execution\ServiceProxy;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 
 /**
- * .Crud services implements basic CRUD services, orginally intended for REST controllers/ HTTP exception handlers
+ * .Crud services implements basic CRUD services, originally intended for REST controllers/ HTTP exception handlers
  *  Consequently the signatures and behaviors is closer to REST and throwing HTTP like exceptions
- *
- *
- *
  */
 class CrudResultsService extends \tao_models_classes_CrudService implements ServiceLocatorAwareInterface
 {
@@ -41,17 +38,14 @@ class CrudResultsService extends \tao_models_classes_CrudService implements Serv
     const GROUP_BY_TEST = 1;
     const GROUP_BY_ITEM = 2;
 
-    protected $resultClass = null;
-
     public function __construct()
     {
         parent::__construct();
-        $this->resultClass = new \core_kernel_classes_Class(ResultService::DELIVERY_RESULT_CLASS_URI);
     }
 
     public function getRootClass()
     {
-        return $this->resultClass;
+        return $this->getClass(ResultService::DELIVERY_RESULT_CLASS_URI);
     }
 
     public function get($uri, $groupBy = self::GROUP_BY_DELIVERY)
@@ -88,7 +82,7 @@ class CrudResultsService extends \tao_models_classes_CrudService implements Serv
                     } else {
                         $type = "http://www.tao.lu/Ontologies/TAOResult.rdf#OutcomeVariable";
                     }
-                    $resource['type'] = new \core_kernel_classes_Class($type);
+                    $resource['type'] = $this->getClass($type);
                     $resource['epoch'] = $result->variable->getEpoch();
                     $resource['cardinality'] = $result->variable->getCardinality();
                     $resource['basetype'] = $result->variable->getBaseType();
@@ -173,6 +167,13 @@ class CrudResultsService extends \tao_models_classes_CrudService implements Serv
         return true;
     }
 
+    /**
+     * Get a delivery execution based on given $identifier
+     * Filters can be applied
+     *
+     * @param $uri
+     * @return DeliveryExecutionInterface
+     */
     protected function getDeliveryExecution($uri)
     {
         return $this->filter([
@@ -182,6 +183,13 @@ class CrudResultsService extends \tao_models_classes_CrudService implements Serv
         ])[0];
     }
 
+    /**
+     * Get list of delivery executions based on given $delivery
+     * Filters can be applied
+     *
+     * @param $delivery
+     * @return DeliveryExecutionInterface[]
+     */
     protected function getDeliveryExecutions($delivery)
     {
         return $this->filter(
@@ -192,6 +200,12 @@ class CrudResultsService extends \tao_models_classes_CrudService implements Serv
         );
     }
 
+    /**
+     * List a list of delivery, by default no filter
+     *
+     * @param array $deliveryExecutions
+     * @return array
+     */
     protected function filter(array $deliveryExecutions)
     {
         return $deliveryExecutions;
