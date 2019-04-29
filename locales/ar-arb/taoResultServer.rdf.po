@@ -1,0 +1,97 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: TAO 3.3.0-sprint96\n"
+"PO-Revision-Date: 2019-04-25T01:03:21\n"
+"Last-Translator: TAO Translation Team <translation@tao.lu>\n"
+"MIME-Version: 1.0\n"
+"Language: ar-arb\n"
+"sourceLanguage: en-US\n"
+"targetLanguage: ar-arb\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServer
+msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
+msgid "Result Server"
+msgstr "خادم النتائج"
+
+# http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServer
+msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
+msgid "the Result Server for the Delivery"
+msgstr "خادم النتيجة للتسليم"
+
+# http://www.tao.lu/Ontologies/TAOResultServer.rdf#hasResultServerModel
+msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
+msgid "Result Storage Engine"
+msgstr "نتيجة محرك التخزين"
+
+# http://www.tao.lu/Ontologies/TAOResultServer.rdf#hasResultServerModel
+msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
+msgid "Result Storage Engine"
+msgstr "نتيجة محرك التخزين"
+
+# http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerEndpoint
+msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
+msgid "Result Server Endpoint"
+msgstr "النتيجة خادم نقطة النهاية"
+
+# http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerEndpoint
+msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
+msgid "Endpoint of the Result Server"
+msgstr "نقطة نهاية خادم النتيجة"
+
+# http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerModel
+msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
+msgid "Result Storage"
+msgstr "تخزين النتيجة"
+
+# http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerModel
+msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
+msgid "Result Storage"
+msgstr "تخزين النتيجة"
+
+# http://www.tao.lu/Ontologies/TAOResultServer.rdf#fileStorage
+msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
+msgid "tao logger"
+msgstr "مسجل tao"
+
+# http://www.tao.lu/Ontologies/TAOResultServer.rdf#fileStorage
+msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
+msgid "Data about the storage is sent into the logger"
+msgstr "يتم إرسال البيانات حول التخزين في مسجل"
+
+# http://www.tao.lu/Ontologies/TAOResultServer.rdf#implementation
+msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
+msgid "Link to the implementation Class"
+msgstr "وصلة لفئة التنفيذ"
+
+# http://www.tao.lu/Ontologies/TAOResultServer.rdf#implementation
+msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
+msgid "Link to the implementation Class"
+msgstr "وصلة لفئة التنفيذ"
+
+# http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultNoStorageModel
+msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
+msgid "Data about the result storage is sent to the logger"
+msgstr ""
+
+# http://www.tao.lu/Ontologies/TAOResultServer.rdf#void
+msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
+msgid "No storage"
+msgstr "لا يوجد تخزين"
+
+# http://www.tao.lu/Ontologies/TAOResultServer.rdf#void
+msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
+msgid "No storage "
+msgstr "لا يوجد تخزين"
+
+# http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerRole
+msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
+msgid "Result Server Manager"
+msgstr "مدير خادم النتائج"
+
+# http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerRole
+msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
+msgid "Result Server Manager Role"
+msgstr "وظيفة مدير خادم النتائج"
+
