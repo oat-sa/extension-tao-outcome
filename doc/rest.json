@@ -126,12 +126,19 @@
                 "description": "Get a list of delivery executions with related delivery and testtakers.",
                 "summary": "Get list of delivery executions.",
                 "tags": [
-                    "result"
+                    "result", "human-scoring"
                 ],
                 "produces": [
                     "application/json"
                 ],
                 "parameters": [
+                    {
+                        "name": "onlyScorable",
+                        "in": "query",
+                        "description": "A flag to filter only manually scorable results.",
+                        "required": false,
+                        "type": "string"
+                    }
                 ],
                 "responses": {
                     "200": {
@@ -212,7 +219,7 @@
                     "application/xml"
                 ],
                 "parameters": [
-                	{
+                    {
                         "name": "delivery",
                         "in": "query",
                         "description": "Delivery identifier in URI format.",
