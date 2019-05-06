@@ -22,6 +22,8 @@ namespace oat\taoResultServer\models\classes;
 
 use oat\generis\model\OntologyAwareTrait;
 use oat\oatbox\service\ConfigurableService;
+use oat\taoDelivery\model\execution\DeliveryExecution;
+use oat\taoDelivery\model\execution\ServiceProxy;
 use qtism\data\storage\xml\XmlDocument;
 
 /**
@@ -71,15 +73,25 @@ class DeliveryExecutionFilter extends ConfigurableService
 
             if ($onlyScorable === true) {
                 $cacheSerial = $this->getScorableSerial($deliveryExecutionIdentifier);
-                if (!$this->getCache()->has($cacheSerial)) {
-                    $this->getCache()->put(
-                        $this->isScorableDeliveryExecution($deliveryExecutionIdentifier, $deliveryIdentifier),
-                        $cacheSerial
-                    );
+
+                if ($this->getCache()->has($cacheSerial)) {
+                    $isScorable = $this->getCache()->get($cacheSerial);
+                } else {
+                    $isScorable = $this->isScorableDeliveryExecution($deliveryExecutionIdentifier, $deliveryIdentifier);
+
+                    /** @var ServiceProxy $serviceProxy */
+                    $serviceProxy = $this->getServiceLocator()->get(ServiceProxy::SERVICE_ID);
+                    $closedStatuses = [DeliveryExecution::STATE_FINISHED, DeliveryExecution::STATE_TERMINATED];
+                    if (in_array($serviceProxy->getDeliveryExecution($deliveryExecutionIdentifier)->getState(), $closedStatuses)) {
+                        $this->getCache()->put($isScorable, $cacheSerial);
+                    }
                 }
-                if ($this->getCache()->get($cacheSerial) === true) {
+
+                echo (int) $isScorable . ' = ';
+                if ($isScorable) {
                     $scorableDeliveryExecutions[] = $deliveryExecution;
                 }
+
             } else {
                 $scorableDeliveryExecutions[] = $deliveryExecution;
             }
