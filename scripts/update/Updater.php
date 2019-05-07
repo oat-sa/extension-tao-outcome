@@ -14,12 +14,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2014-2016 (original work) Open Assessment Technologies SA;
- *
+ * Copyright (c) 2014-2019 (original work) Open Assessment Technologies SA;
  *
  */
 
+namespace oat\taoResultServer\scripts\update;
+
 use oat\tao\scripts\update\OntologyUpdater;
+use oat\taoResultServer\models\classes\DeliveryExecutionFilter;
 use oat\taoResultServer\models\classes\ResultServerService;
 use oat\taoResultServer\models\classes\implementation\OntologyService;
 use oat\taoResultServer\models\classes\QtiResultsService;
@@ -31,14 +33,17 @@ use oat\taoResultServer\models\classes\ResultAliasService;
  * @author Joel Bout <joel@taotesting.com>
  * @author Jérôme Bogaerts <jerome@taotesting.com>
  */
-class taoResultServer_scripts_update_Updater extends \common_ext_ExtensionUpdater {
-
+class Updater extends \common_ext_ExtensionUpdater
+{
     /**
+     * Perform update for taoResultServer extension
      *
      * @param string $initialVersion
      * @return string|void
+     * @throws \common_Exception
      */
-    public function update($initialVersion) {
+    public function update($initialVersion)
+    {
 
         $this->skip('2.6', '2.10.2');
 
@@ -78,5 +83,16 @@ class taoResultServer_scripts_update_Updater extends \common_ext_ExtensionUpdate
         }
 
         $this->skip('5.1.0', '9.2.0');
+
+        if ($this->isVersion('9.2.0')) {
+            $this->getServiceManager()->register(DeliveryExecutionFilter::SERVICE_ID, new DeliveryExecutionFilter([
+                DeliveryExecutionFilter::OPTION_CACHE => 'generis/cache',
+                DeliveryExecutionFilter::OPTION_SCORABLE_COMPONENTS => [
+                    'extendedTextInteraction'
+                ]
+            ]));
+            $this->setVersion('9.3.0');
+        }
+
     }
 }

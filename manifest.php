@@ -5,6 +5,11 @@
  * @license GPLv2  http://www.opensource.org/licenses/gpl-2.0.php
  *
  */
+
+use oat\tao\model\accessControl\func\AccessRule;
+use oat\taoResultServer\controller\ResultServerStateFull;
+use oat\taoResultServer\scripts\update\Updater;
+
 $extpath = dirname(__FILE__).DIRECTORY_SEPARATOR;
 $taopath = dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'tao'.DIRECTORY_SEPARATOR;
 
@@ -13,7 +18,7 @@ return array(
     'label' => 'Result core extension',
     'description' => 'Results Server management and exposed interfaces for results data submission',
     'license' => 'GPL-2.0',
-    'version' => '9.2.0',
+    'version' => '9.3.0',
     'author' => 'Open Assessment Technologies',
     //taoResults may be needed for the taoResults taoResultServerModel that uses taoResults db storage
 	'requires' => array(
@@ -29,16 +34,18 @@ return array(
         'php' => array(
         )
     ),
-    'update' => 'taoResultServer_scripts_update_Updater',
-
+    'update' => Updater::class,
     'managementRole' => 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerRole',
     'acl' => array(
         array('grant', 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerRole', array('ext'=>'taoResultServer')),
-        array('grant', 'http://www.tao.lu/Ontologies/TAO.rdf#DeliveryRole', array('ext'=>'taoResultServer', 'mod' => 'ResultServerStateFull')),
+        array(AccessRule::GRANT, 'http://www.tao.lu/Ontologies/TAO.rdf#DeliveryRole', ResultServerStateFull::class),
+    ),
+    'routes' => array(
+        '/taoResultServer' => 'oat\\taoResultServer\\controller'
     ),
  	'constants' => array(
 	 	# actions directory
-		"DIR_ACTIONS"			=> $extpath."actions".DIRECTORY_SEPARATOR,
+		"DIR_ACTIONS"			=> $extpath . 'controller' . DIRECTORY_SEPARATOR,
 
 		# views directory
 		"DIR_VIEWS"				=> $extpath."views".DIRECTORY_SEPARATOR,

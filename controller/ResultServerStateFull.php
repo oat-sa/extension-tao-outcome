@@ -4,33 +4,35 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; under version 2
  * of the License (non-upgradable).
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- * 
- * Copyright (c) 2013 Open Assessment Technologies
- * 
- * 
+ *
+ * Copyright (c) 2013-2019 Open Assessment Technologies
+ *
  */
+
+namespace oat\taoResultServer\controller;
 
 use \oat\tao\model\routing\AnnotationReader\security;
 
 /**
- * 
+ *
  * A session for a particular delivery execution/session on the corresponding result server
  * Statefull api for results submission from the client
- * 
- * 
+ *
+ *
  * @package taoResultServer
  * @license GPLv2  http://www.opensource.org/licenses/gpl-2.0.php
  */
-class taoResultServer_actions_ResultServerStateFull extends tao_actions_SaSModule {
+class ResultServerStateFull extends \tao_actions_SaSModule
+{
 
     protected $service;
 
@@ -38,16 +40,18 @@ class taoResultServer_actions_ResultServerStateFull extends tao_actions_SaSModul
      * constructor: initialize the service and the default data
      * @security("hide");
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->service = $this->getClassService();
     }
 
-    protected function returnFailure(Exception $exception) {
+    protected function returnFailure(\Exception $exception)
+    {
         $data = array();
         $data['success'] = false;
         $data['errorCode'] = $exception->getCode();
-        $data['errorMsg'] = ($exception instanceof common_exception_UserReadableException) ? $exception->getUserMessage() : $exception->getMessage();
+        $data['errorMsg'] = ($exception instanceof \common_exception_UserReadableException) ? $exception->getUserMessage() : $exception->getMessage();
         $data['version'] = TAO_VERSION;
         echo json_encode($data);
         exit(0);
@@ -74,7 +78,7 @@ class taoResultServer_actions_ResultServerStateFull extends tao_actions_SaSModul
         if ($this->hasRequestParameter("outcomeVariables")) {
             $outcomeVariables = $this->getRequestParameter("outcomeVariables");
             foreach ($outcomeVariables as $variableName => $outcomeValue) {
-                $outComeVariable = new taoResultServer_models_classes_OutcomeVariable();
+                $outComeVariable = new \taoResultServer_models_classes_OutcomeVariable();
                 //$outComeVariable->setBaseType("int");
                 $outComeVariable->setCardinality("single");
                 $outComeVariable->setIdentifier($variableName);
@@ -85,7 +89,7 @@ class taoResultServer_actions_ResultServerStateFull extends tao_actions_SaSModul
         if ($this->hasRequestParameter("responseVariables")) {
             $responseVariables = $this->getRequestParameter("responseVariables");
             foreach ($responseVariables as $variableName => $responseValue) {
-                $responseVariable = new taoResultServer_models_classes_ResponseVariable();
+                $responseVariable = new \taoResultServer_models_classes_ResponseVariable();
                 //$responseVariable->setBaseType("int");
                 //$responseVariable->setCardinality("single");
                 $responseVariable->setIdentifier($variableName);
@@ -97,7 +101,7 @@ class taoResultServer_actions_ResultServerStateFull extends tao_actions_SaSModul
         if ($this->hasRequestParameter("traceVariables")) {
             $traceVariables = $this->getRequestParameter("outcomeVariables");
             foreach ($traceVariables as $variableName => $traceValue) {
-                $traceVariable = new taoResultServer_models_classes_TraceVariable();
+                $traceVariable = new \taoResultServer_models_classes_TraceVariable();
                 //$outComeVariable->setBaseType("int");
                 $traceVariable->setIdentifier($variableName);
                 $traceVariable->setTrace($traceValue);
@@ -108,7 +112,7 @@ class taoResultServer_actions_ResultServerStateFull extends tao_actions_SaSModul
         try {
 
             $data = $this->service->storeItemVariableSet($test, $item, $variables, $callIdItem);
-        } catch (exception $e) {
+        } catch (\Exception $e) {
             $this->returnFailure($e);
         }
         return $this->returnSuccess($data);

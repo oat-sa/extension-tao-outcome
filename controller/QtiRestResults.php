@@ -14,35 +14,34 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2013 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
+ * Copyright (c) 2013-2019 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  *
  */
 
-//http://tao.dev/taoResultServer/QtiRestResults?testtaker=http%3A%2F%2Ftao.local%2Fmytao.rdf%23i1460560178726251&delivery=http%3A%2F%2Ftao.local%2Fmytao.rdf%23i14607116346750186
+namespace oat\taoResultServer\controller;
 
 use oat\taoResultServer\models\classes\ResultService;
 
-class taoResultServer_actions_QtiRestResults extends tao_actions_RestController
+class QtiRestResults extends \tao_actions_RestController
 {
     const TESTTAKER = 'testtaker';
     const DELIVERY = 'delivery';
     const DELIVERY_EXECUTION = 'deliveryExecution';
     const RESULT = 'result';
-    
+
     protected $service;
-    
+
     public function getQtiResultXml()
     {
-        try
-        {
+        try {
             $this->checkMethod();
-        
+
             $this->validateParams(array(self::DELIVERY, self::RESULT));
             $deliveryId = $this->getRequestParameter(self::DELIVERY);
             $resultId = $this->getRequestParameter(self::RESULT);
-        
+
             $this->returnValidXml($this->getQtiResultService()->getQtiResultXml($deliveryId, $resultId));
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->returnFailure($e);
         }
     }
@@ -55,7 +54,7 @@ class taoResultServer_actions_QtiRestResults extends tao_actions_RestController
     protected function getQtiResultService()
     {
         if (!$this->service) {
-            $this->service = $this->getServiceManager()->get(ResultService::SERVICE_ID);
+            $this->service = $this->getServiceLocator()->get(ResultService::SERVICE_ID);
         }
         return $this->service;
     }
@@ -82,7 +81,7 @@ class taoResultServer_actions_QtiRestResults extends tao_actions_RestController
             );
 
             $this->returnValidXml($this->getQtiResultService()->getDeliveryExecutionXml($deliveryExecution));
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->returnFailure($e);
         }
     }
@@ -105,7 +104,7 @@ class taoResultServer_actions_QtiRestResults extends tao_actions_RestController
             );
 
             $this->returnValidXml($this->getQtiResultService()->getDeliveryExecutionXml($deliveryExecution));
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->returnFailure($e);
         }
     }
@@ -119,7 +118,7 @@ class taoResultServer_actions_QtiRestResults extends tao_actions_RestController
     protected function checkMethod()
     {
         if ($this->getRequestMethod()!='GET') {
-            throw new common_exception_MethodNotAllowed($this->getRequestURI());
+            throw new \common_exception_MethodNotAllowed($this->getRequestURI());
         }
     }
 
@@ -135,11 +134,11 @@ class taoResultServer_actions_QtiRestResults extends tao_actions_RestController
     {
         foreach ($params as $param) {
             if (!$this->hasRequestParameter($param)) {
-                throw new common_exception_MissingParameter($param .' is missing from the request.', $this->getRequestURI());
+                throw new \common_exception_MissingParameter($param .' is missing from the request.', $this->getRequestURI());
             }
 
             if (empty($this->getRequestParameter($param))) {
-                throw new common_exception_ValidationFailed($param, $param .' cannot be empty');
+                throw new \common_exception_ValidationFailed($param, $param .' cannot be empty');
             }
         }
     }
@@ -154,13 +153,13 @@ class taoResultServer_actions_QtiRestResults extends tao_actions_RestController
     protected function returnValidXml($data)
     {
         if (empty($data)) {
-            throw new common_exception_NotFound('Delivery execution not found.');
+            throw new \common_exception_NotFound('Delivery execution not found.');
         }
 
         $doc = @simplexml_load_string($data);
         if (!$doc) {
-            common_Logger::i('invalid xml result');
-            throw new Exception('Xml output is malformed.');
+            \common_Logger::i('invalid xml result');
+            throw new \Exception('Xml output is malformed.');
         }
 
         // force XML content type header
