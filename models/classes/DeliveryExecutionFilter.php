@@ -87,7 +87,6 @@ class DeliveryExecutionFilter extends ConfigurableService
                     }
                 }
 
-                echo (int) $isScorable . ' = ';
                 if ($isScorable) {
                     $scorableDeliveryExecutions[] = $deliveryExecution;
                 }
