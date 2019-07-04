@@ -20,6 +20,7 @@
  */
 
 use oat\taoResultServer\models\classes\ResultServerService;
+use \oat\tao\model\OntologyClassService;
 
 /**
  * The Service class is an abstraction of each service instance. 
@@ -28,38 +29,17 @@ use oat\taoResultServer\models\classes\ResultServerService;
  * @author Joel Bout, <joel.bout@tudor.lu>
  * 
  */
-class taoResultServer_models_classes_ResultServerAuthoringService 
-    extends tao_models_classes_ClassService
+class taoResultServer_models_classes_ResultServerAuthoringService extends OntologyClassService
 {
 
     const DEFAULT_RESULTSERVER_KEY = 'default_resultserver';
-    
-    /**
-     *
-     * @access protected
-     * @var core_kernel_classes_Class
-     */
-    protected $resultServerClass = null;
-    
-    /**
-     *
-     * @access public
-     * @author Joel Bout, <joel.bout@tudor.lu>
-     * @return mixed
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        
-        $this->resultServerClass = new core_kernel_classes_Class(ResultServerService::CLASS_URI);
-    }
 
 	/** (non-PHPdoc)
 	 * @see tao_models_classes_ClassService::getRootClass()
 	 */
-	public function getRootClass() {
-	    return $this->resultServerClass;
-
+	public function getRootClass()
+    {
+	    return $this->getClass(ResultServerService::CLASS_URI);
 	}
 
     /**
@@ -69,7 +49,9 @@ class taoResultServer_models_classes_ResultServerAuthoringService
      */
     public function getDefaultResultServer()
     {
-        $ext = common_ext_ExtensionsManager::singleton()->getExtensionById('taoResultServer');
+        $extManager = $this->getServiceLocator()->get(common_ext_ExtensionsManager::SERVICE_ID);
+        $ext = $extManager->getExtensionById('taoResultServer');
+
         if ($ext->hasConfig(self::DEFAULT_RESULTSERVER_KEY)) {
             $uri = $ext->getConfig(self::DEFAULT_RESULTSERVER_KEY);
         } else {
@@ -85,7 +67,9 @@ class taoResultServer_models_classes_ResultServerAuthoringService
      * @param core_kernel_classes_Resource $resultServer
      */
     public function setDefaultResultServer(core_kernel_classes_Resource $resultServer) {
-        $ext = common_ext_ExtensionsManager::singleton()->getExtensionById('taoResultServer');
+        $extManager = $this->getServiceLocator()->get(common_ext_ExtensionsManager::SERVICE_ID);
+
+        $ext = $extManager->getExtensionById('taoResultServer');
         $ext->setConfig(self::DEFAULT_RESULTSERVER_KEY, $resultServer->getUri());
     }
 }
