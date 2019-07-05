@@ -57,4 +57,8 @@ class NoResultStorage extends ConfigurableService implements taoResultServer_mod
     public function configure($callOptions = array())
     {
     }
+
+    public function deleteDeliveryExecutionData()
+    {
+    }
 }
