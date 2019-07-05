@@ -18,9 +18,9 @@
  *
  */
 
-namespace oat\taoResultServer\models\ResultServerService;
+use oat\generis\test\TestCase;
 
-class ResultServerAuthoringTest extends \PHPUnit_Framework_TestCase
+class ResultServerAuthoringTest extends TestCase
 {
     protected function setUp()
     {
@@ -29,7 +29,28 @@ class ResultServerAuthoringTest extends \PHPUnit_Framework_TestCase
 
     public function testGetDefaultResultServer()
     {
-        $service = \taoResultServer_models_classes_ResultServerAuthoringService::singleton();
+        $extMock = $this->getMockBuilder(common_ext_Extension::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['hasConfig'])
+            ->getMock();
+
+        $extMock->method('hasConfig')->willReturn(false);
+
+        $extManagerMock = $this->getMockBuilder(common_ext_ExtensionsManager::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getExtensionById'])
+            ->getMock();
+
+        $extManagerMock->method('getExtensionById')->willReturn($extMock);
+
+        $serviceLocator = $this->getServiceLocatorMock([
+            common_ext_ExtensionsManager::SERVICE_ID => $extManagerMock,
+        ]);
+
+
+        $service = new \taoResultServer_models_classes_ResultServerAuthoringService();
+        $service->setServiceLocator($serviceLocator);
+
         $this->assertInstanceOf(\taoResultServer_models_classes_ResultServerAuthoringService::class, $service);
         
         $defaultResultServer = $service->getDefaultResultServer();
