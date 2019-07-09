@@ -50,7 +50,7 @@ class taoResultServer_models_classes_ResultServerAuthoringService
      */
     public function getDefaultResultServer()
     {
-        $ext = common_ext_ExtensionsManager::singleton()->getExtensionById('taoResultServer');
+        $ext = $this->getServiceLocator()->get(common_ext_ExtensionsManager::SERVICE_ID)->getExtensionById('taoResultServer');
         if ($ext->hasConfig(self::DEFAULT_RESULTSERVER_KEY)) {
             $uri = $ext->getConfig(self::DEFAULT_RESULTSERVER_KEY);
         } else {
@@ -66,7 +66,7 @@ class taoResultServer_models_classes_ResultServerAuthoringService
      * @param core_kernel_classes_Resource $resultServer
      */
     public function setDefaultResultServer(core_kernel_classes_Resource $resultServer) {
-        $ext = common_ext_ExtensionsManager::singleton()->getExtensionById('taoResultServer');
+        $ext = $this->getServiceLocator()->get(common_ext_ExtensionsManager::SERVICE_ID)->getExtensionById('taoResultServer');
         $ext->setConfig(self::DEFAULT_RESULTSERVER_KEY, $resultServer->getUri());
     }
 }

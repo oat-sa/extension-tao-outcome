@@ -56,4 +56,32 @@ class ResultServerAuthoringTest extends TestCase
         $defaultResultServer = $service->getDefaultResultServer();
         $this->assertInstanceOf(\core_kernel_classes_Resource::class, $defaultResultServer);
     }
+
+    public function testSetDefaultResultServer()
+    {
+        $extMock = $this->getMockBuilder(common_ext_Extension::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['hasConfig'])
+            ->getMock();
+        $extMock->method('hasConfig')->willReturn(false);
+        $extManager = $this->getMockBuilder(common_ext_ExtensionsManager::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getExtensionById'])
+            ->getMock();
+        $extManager->method('getExtensionById')->willReturn($extMock);
+
+        $serviceLocatorMock = $this->getServiceLocatorMock([
+            common_ext_ExtensionsManager::SERVICE_ID => $extManager,
+        ]);
+        $service = new \taoResultServer_models_classes_ResultServerAuthoringService();
+        $service->setServiceLocator($serviceLocatorMock);
+        $defaultResultServer = $service->getDefaultResultServer();
+        $service->setDefaultResultServer($defaultResultServer);
+
+//        $serviceMock = $this->getMockBuilder(ResultServerAuthoringTest::class)
+//            ->disableOriginalConstructor()
+//            ->getMock();
+//        $serviceMock->setServiceLocator($serviceLocatorMock);
+//        $serviceMock->setDefaultResultServer($service->getDefaultResultServer());
+    }
 }
