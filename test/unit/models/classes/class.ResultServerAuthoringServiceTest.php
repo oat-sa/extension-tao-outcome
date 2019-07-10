@@ -33,28 +33,26 @@ class ResultServerAuthoringTest extends TestCase
             ->disableOriginalConstructor()
             ->setMethods(['hasConfig'])
             ->getMock();
-
         $extMock->method('hasConfig')->willReturn(false);
 
         $extManagerMock = $this->getMockBuilder(common_ext_ExtensionsManager::class)
             ->disableOriginalConstructor()
             ->setMethods(['getExtensionById'])
             ->getMock();
-
         $extManagerMock->method('getExtensionById')->willReturn($extMock);
 
         $serviceLocator = $this->getServiceLocatorMock([
             common_ext_ExtensionsManager::SERVICE_ID => $extManagerMock,
         ]);
 
-
-        $service = new \taoResultServer_models_classes_ResultServerAuthoringService();
+        $service = new taoResultServer_models_classes_ResultServerAuthoringService();
         $service->setServiceLocator($serviceLocator);
 
-        $this->assertInstanceOf(\taoResultServer_models_classes_ResultServerAuthoringService::class, $service);
+        $this->assertInstanceOf(taoResultServer_models_classes_ResultServerAuthoringService::class, $service);
         
         $defaultResultServer = $service->getDefaultResultServer();
-        $this->assertInstanceOf(\core_kernel_classes_Resource::class, $defaultResultServer);
+
+        $this->assertInstanceOf(core_kernel_classes_Resource::class, $defaultResultServer);
     }
 
     public function testSetDefaultResultServer()
@@ -76,12 +74,12 @@ class ResultServerAuthoringTest extends TestCase
             common_ext_ExtensionsManager::SERVICE_ID => $extManager,
         ]);
 
-        $service = new \taoResultServer_models_classes_ResultServerAuthoringService();
+        $service = new taoResultServer_models_classes_ResultServerAuthoringService();
         $service->setServiceLocator($serviceLocatorMock);
         $defaultResultServer = $service->getDefaultResultServer();
         $service->setDefaultResultServer($defaultResultServer);
 
-        $this->assertInstanceOf(\taoResultServer_models_classes_ResultServerAuthoringService::class, $service);
-        $this->assertInstanceOf(\core_kernel_classes_Resource::class, $defaultResultServer);
+        $this->assertInstanceOf(taoResultServer_models_classes_ResultServerAuthoringService::class, $service);
+        $this->assertInstanceOf(core_kernel_classes_Resource::class, $defaultResultServer);
     }
 }
