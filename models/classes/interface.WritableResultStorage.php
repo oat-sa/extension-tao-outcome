@@ -18,6 +18,8 @@
  *
  */
 
+use oat\taoResultServer\models\Exceptions\DuplicateVariableException;
+
 /**
  * The WritableResultStorage interface.
  * 
@@ -57,7 +59,6 @@ interface taoResultServer_models_classes_WritableResultStorage {
      * 
      * @param string $deliveryResultIdentifier The identifier of the Delivery Result (usually a Delivery Execution URI).
      * @param string $testTakerIdentifier The identifier of the Test Taker (usually a URI).
-     *
      */
     public function storeRelatedTestTaker($deliveryResultIdentifier, $testTakerIdentifier);
 
@@ -82,10 +83,19 @@ interface taoResultServer_models_classes_WritableResultStorage {
      * @param string $item (uri recommended)
      * @param taoResultServer_models_classes_Variable $itemVariable the variable to store
      * @param string $callIdItem contextual call id for the variable, ex. :  to distinguish the same variable output by the same item and that is presented several times in the same test
-     * 
+     * @throws DuplicateVariableException
      */
     public function storeItemVariable($deliveryResultIdentifier, $test, $item, taoResultServer_models_classes_Variable $itemVariable, $callIdItem);
-    
+
+    /**
+     * @param $deliveryResultIdentifier
+     * @param $test
+     * @param $item
+     * @param array $itemVariables
+     * @param $callIdItem
+     * @return mixed
+     * @throws DuplicateVariableException
+     */
     public function storeItemVariables($deliveryResultIdentifier, $test, $item, array $itemVariables, $callIdItem);
 
     /**
@@ -97,9 +107,18 @@ interface taoResultServer_models_classes_WritableResultStorage {
      * @param string $test
      * @param taoResultServer_models_classes_Variable $testVariable
      * @param $callIdTest
+     * @throws DuplicateVariableException
      */
     public function storeTestVariable($deliveryResultIdentifier, $test, taoResultServer_models_classes_Variable $testVariable, $callIdTest);
 
+    /**
+     * @param $deliveryResultIdentifier
+     * @param $test
+     * @param array $testVariables
+     * @param $callIdTest
+     * @return mixed
+     * @throws DuplicateVariableException
+     */
     public function storeTestVariables($deliveryResultIdentifier, $test, array $testVariables, $callIdTest);
     
     /**
