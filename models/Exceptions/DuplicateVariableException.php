@@ -20,14 +20,18 @@
 
 namespace oat\taoResultServer\models\Exceptions;
 
-use Exception;
+use common_Exception;
 
 /**
  * Class DuplicateVariableException
+ *
+ * This exception must be thrown during attempt to store non-unique value in the result storage.
+ * Uniqueness is based on combination of `result id` and `variable value` columns
+ *
  * @package oat\taoResultServer\models\Exceptions
  * @author Aleh Hutnikau, <huntikau@1pt.com>
  */
-class DuplicateVariableException extends Exception
+class DuplicateVariableException extends common_Exception
 {
 
 }
