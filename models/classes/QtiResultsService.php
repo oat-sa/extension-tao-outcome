@@ -22,23 +22,17 @@ namespace oat\taoResultServer\models\classes;
 
 use oat\taoDelivery\model\execution\DeliveryExecution as DeliveryExecutionInterface;
 use oat\taoDelivery\model\execution\ServiceProxy;
+use oat\taoResultServer\models\Mapper\LegacyResultMapper;
+use oat\taoResultServer\models\Parser\QtiResultParser;
 use qtism\common\enums\Cardinality;
 use oat\oatbox\service\ConfigurableService;
-use oat\oatbox\service\ServiceManager;
+use taoResultServer_models_classes_WritableResultStorage as WritableResultStorage;
 
 class QtiResultsService extends ConfigurableService implements ResultService
 {
     protected $deliveryExecutionService;
 
     const QTI_NS = 'http://www.imsglobal.org/xsd/imsqti_result_v2p1';
-
-    /**
-     * @deprecated
-     */
-    public static function singleton()
-    {
-        return ServiceManager::getServiceManager()->get(self::SERVICE_ID);
-    }
 
     /**
      * Get the implementation of delivery execution service
@@ -131,7 +125,7 @@ class QtiResultsService extends ConfigurableService implements ResultService
         $contextElt = $dom->createElementNS(self::QTI_NS, 'context');
         $contextElt->setAttribute('sourcedId', \tao_helpers_Uri::getUniqueId($resultServer->getTestTaker($deId)));
         $assessmentResultElt->appendChild($contextElt);
-        
+
         /** Test Result */
         foreach ($testResults as $testResultIdentifier => $testResult) {
             $identifierParts = explode('.', $testResultIdentifier);
@@ -241,6 +235,31 @@ class QtiResultsService extends ConfigurableService implements ResultService
         }
 
         return $dom->saveXML();
+    }
+
+    public function injectXmlResultToDeliveryExecution($deliveryExecutionId, $xml)
+    {
+        $deliveryExecution = $this->getDeliveryExecutionById($deliveryExecutionId);
+
+        /** @var QtiResultParser $parser */
+        $parser = $this->getServiceLocator()->get(QtiResultParser::class);
+        $map = $parser->parse($xml);
+
+        /** @var WritableResultStorage $resultStorage */
+        $resultStorage = $this->getServiceLocator()->get(ResultServerService::SERVICE_ID)->getResultStorage($deliveryExecution->getDelivery());
+
+        $test = 'test';
+        $test = null;
+        $callIdTest = 'call-id-test';
+        $callIdTest = null;
+
+        $item = 'item';
+//        $item = null;
+        $callIdItem = 'call-id-item';
+//        $callIdItem = null;
+
+        $resultStorage->storeTestVariables($deliveryExecutionId, $test, $map->getTestVariables(), $callIdTest);
+        $resultStorage->storeItemVariables($deliveryExecutionId, $test, $item, $map->getItemVariables(), $callIdItem);
     }
 
     /**
