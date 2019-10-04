@@ -23,7 +23,7 @@ use taoResultServer_models_classes_Variable as Variable;
 class VariableTest extends TestCase
 {
     /**
-     * @var Variable
+     * @var taoResultServer_models_classes_Variable
      */
     private $object;
 
@@ -31,6 +31,13 @@ class VariableTest extends TestCase
     {
         parent::setUp();
         $this->object = $this->getMockForAbstractClass(Variable::class);
+    }
+
+    public function testgetCreationTime()
+    {
+        $this->assertNull($this->object->getCreationTime());
+        $this->object->setEpoch('0.32457400 1570199568');
+        $this->assertEquals(1570199568.32457400, $this->object->getCreationTime());
     }
 
     /**

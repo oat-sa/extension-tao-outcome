@@ -143,6 +143,19 @@ abstract class taoResultServer_models_classes_Variable  {
     }
 
     /**
+     * Returns the time of the creation
+     * @return float|null
+     */
+    public function getCreationTime()
+    {
+        if (!isset($this->epoch)) {
+            return null;
+        }
+        list($usec, $sec) = explode(" ", $this->epoch);
+        return floatval((float) $usec + (float) $sec);
+    }
+
+    /**
      * Allow to know if the epoch is set or not
      * @return bool
      */
