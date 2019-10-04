@@ -98,7 +98,7 @@ class ResultMapperTest extends TestCase
         $this->assertEquals('fixture-test-value1|fixture-test-value2',  $variable->getCorrectResponse());
         $this->assertEquals('single',  $variable->getCardinality());
         $this->assertNull($variable->getBaseType());
-        $epochDateTime = (new DateTime())->setTimestamp($variable->getEpoch());
+        $epochDateTime = (new DateTime())->setTimestamp(explode(' ',$variable->getEpoch())[1]);
         $this->assertSame('2018-06-27T09:41:45', $epochDateTime->format('Y-m-d\TH:i:s'));
     }
 
@@ -132,7 +132,7 @@ class ResultMapperTest extends TestCase
         $this->assertEquals('fixture-value6|fixture-value7',  $variable0->getCorrectResponse());
         $this->assertEquals('single',  $variable0->getCardinality());
         $this->assertEquals('string', $variable0->getBaseType());
-        $epochDateTime = (new DateTime())->setTimestamp($variable0->getEpoch());
+        $epochDateTime = (new DateTime())->setTimestamp(explode(' ',$variable0->getEpoch())[1]);
         $this->assertSame('2018-06-27T09:41:45', $epochDateTime->format('Y-m-d\TH:i:s'));
 
         /** @var \taoResultServer_models_classes_OutcomeVariable $variable1 */
@@ -144,7 +144,7 @@ class ResultMapperTest extends TestCase
         $this->assertEquals('3',  $variable1->getNormalMaximum());
         $this->assertEquals('single',  $variable1->getCardinality());
         $this->assertEquals('string', $variable1->getBaseType());
-        $epochDateTime = (new DateTime())->setTimestamp($variable1->getEpoch());
+        $epochDateTime = (new DateTime())->setTimestamp(explode(' ',$variable1->getEpoch())[1]);
         $this->assertSame('2018-06-27T09:41:45', $epochDateTime->format('Y-m-d\TH:i:s'));
 
         /** @var taoResultServer_models_classes_ResponseVariable $variable2 */
@@ -156,7 +156,7 @@ class ResultMapperTest extends TestCase
         $this->assertEquals('fixture-value14',  $variable2->getCorrectResponse());
         $this->assertEquals('single',  $variable2->getCardinality());
         $this->assertEquals('string', $variable2->getBaseType());
-        $epochDateTime = (new DateTime())->setTimestamp($variable2->getEpoch());
+        $epochDateTime = (new DateTime())->setTimestamp(explode(' ',$variable2->getEpoch())[1]);
         $this->assertSame('2018-06-27T09:41:45', $epochDateTime->format('Y-m-d\TH:i:s'));
 
         /** @var \taoResultServer_models_classes_OutcomeVariable $variable3 */
@@ -168,7 +168,7 @@ class ResultMapperTest extends TestCase
         $this->assertEquals('6',  $variable3->getNormalMaximum());
         $this->assertEquals('single',  $variable3->getCardinality());
         $this->assertEquals('string', $variable3->getBaseType());
-        $epochDateTime = (new DateTime())->setTimestamp($variable3->getEpoch());
+        $epochDateTime = (new DateTime())->setTimestamp(explode(' ',$variable3->getEpoch())[1]);
         $this->assertSame('2018-06-27T09:41:45', $epochDateTime->format('Y-m-d\TH:i:s'));
     }
 
