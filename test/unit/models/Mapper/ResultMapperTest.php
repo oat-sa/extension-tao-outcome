@@ -27,6 +27,7 @@ use oat\taoResultServer\models\Mapper\ResultMapper;
 use Psr\Log\NullLogger;
 use qtism\data\results\AssessmentResult;
 use qtism\data\storage\xml\XmlResultDocument;
+use taoResultServer_models_classes_ResponseVariable;
 
 class ResultMapperTest extends TestCase
 {
@@ -82,11 +83,15 @@ class ResultMapperTest extends TestCase
 
     public function testGetTestVariables()
     {
-        $variables = $this->load()->getTestVariables();
-        $this->assertCount(1, $variables);
-        /** @var \taoResultServer_models_classes_ResponseVariable $variable */
+        $variablesByTestResult = $this->load()->getTestVariables();
+
+        $this->assertCount(1, $variablesByTestResult);
+        $this->assertEquals('fixture-test-identifier', key($variablesByTestResult));
+
+        $variables = $variablesByTestResult['fixture-test-identifier'];
+        /** @var taoResultServer_models_classes_ResponseVariable $variable */
         $variable = reset($variables);
-        $this->assertInstanceOf(\taoResultServer_models_classes_ResponseVariable::class, $variable);
+        $this->assertInstanceOf(taoResultServer_models_classes_ResponseVariable::class, $variable);
         $this->assertEquals('response-identifier',  $variable->getIdentifier());
         $this->assertEquals('fixture-test-value3|fixture-test-value4|fixture-test-value5',  $variable->getCandidateResponse());
         $this->assertEquals('fixture-test-value3|fixture-test-value4|fixture-test-value5',  $variable->getValue());
@@ -112,12 +117,15 @@ class ResultMapperTest extends TestCase
 
     public function testGetItemVariables()
     {
-        $variables = $this->load()->getItemVariables();
-        $this->assertCount(4, $variables);
+        $variablesByItemResult = $this->load()->getItemVariables();
+        $this->assertCount(2, $variablesByItemResult);
 
-        /** @var \taoResultServer_models_classes_ResponseVariable $variable0 */
-        $variable0 = $variables[0];
-        $this->assertInstanceOf(\taoResultServer_models_classes_ResponseVariable::class, $variable0);
+        $this->assertArrayHasKey('fixture-identifier-itemResult1', $variablesByItemResult);
+        $this->assertArrayHasKey('fixture-identifier-itemResult2', $variablesByItemResult);
+
+        /** @var taoResultServer_models_classes_ResponseVariable $variable0 */
+        $variable0 = $variablesByItemResult['fixture-identifier-itemResult1'][0];
+        $this->assertInstanceOf(taoResultServer_models_classes_ResponseVariable::class, $variable0);
         $this->assertEquals('fixture-identifier1',  $variable0->getIdentifier());
         $this->assertEquals('fixture-value8|fixture-value9|fixture-value10',  $variable0->getValue());
         $this->assertEquals('fixture-value8|fixture-value9|fixture-value10',  $variable0->getCandidateResponse());
@@ -128,7 +136,7 @@ class ResultMapperTest extends TestCase
         $this->assertSame('2018-06-27T09:41:45', $epochDateTime->format('Y-m-d\TH:i:s'));
 
         /** @var \taoResultServer_models_classes_OutcomeVariable $variable1 */
-        $variable1 = $variables[1];
+        $variable1 = $variablesByItemResult['fixture-identifier-itemResult1'][1];
         $this->assertInstanceOf(\taoResultServer_models_classes_OutcomeVariable::class, $variable1);
         $this->assertEquals('fixture-identifier2',  $variable1->getIdentifier());
         $this->assertEquals('fixture-value11',  $variable1->getValue());
@@ -139,9 +147,9 @@ class ResultMapperTest extends TestCase
         $epochDateTime = (new DateTime())->setTimestamp($variable1->getEpoch());
         $this->assertSame('2018-06-27T09:41:45', $epochDateTime->format('Y-m-d\TH:i:s'));
 
-        /** @var \taoResultServer_models_classes_ResponseVariable $variable2 */
-        $variable2 = $variables[2];
-        $this->assertInstanceOf(\taoResultServer_models_classes_ResponseVariable::class, $variable2);
+        /** @var taoResultServer_models_classes_ResponseVariable $variable2 */
+        $variable2 = $variablesByItemResult['fixture-identifier-itemResult2'][0];
+        $this->assertInstanceOf(taoResultServer_models_classes_ResponseVariable::class, $variable2);
         $this->assertEquals('fixture-identifier3',  $variable2->getIdentifier());
         $this->assertEquals('fixture-value16',  $variable2->getValue());
         $this->assertEquals('fixture-value16',  $variable2->getCandidateResponse());
@@ -152,7 +160,7 @@ class ResultMapperTest extends TestCase
         $this->assertSame('2018-06-27T09:41:45', $epochDateTime->format('Y-m-d\TH:i:s'));
 
         /** @var \taoResultServer_models_classes_OutcomeVariable $variable3 */
-        $variable3 = $variables[3];
+        $variable3 = $variablesByItemResult['fixture-identifier-itemResult2'][1];
         $this->assertInstanceOf(\taoResultServer_models_classes_OutcomeVariable::class, $variable3);
         $this->assertEquals('fixture-identifier4',  $variable3->getIdentifier());
         $this->assertEquals('fixture-value19',  $variable3->getValue());

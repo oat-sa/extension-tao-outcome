@@ -23,6 +23,7 @@ namespace oat\taoResultServer\models\classes;
 use oat\taoDelivery\model\execution\DeliveryExecution as DeliveryExecutionInterface;
 use oat\taoDelivery\model\execution\ServiceProxy;
 use oat\taoResultServer\models\Mapper\LegacyResultMapper;
+use oat\taoResultServer\models\Mapper\ResultMapper;
 use oat\taoResultServer\models\Parser\QtiResultParser;
 use qtism\common\enums\Cardinality;
 use oat\oatbox\service\ConfigurableService;
@@ -243,23 +244,31 @@ class QtiResultsService extends ConfigurableService implements ResultService
 
         /** @var QtiResultParser $parser */
         $parser = $this->getServiceLocator()->get(QtiResultParser::class);
+        /** @var ResultMapper $map */
         $map = $parser->parse($xml);
 
         /** @var WritableResultStorage $resultStorage */
-        $resultStorage = $this->getServiceLocator()->get(ResultServerService::SERVICE_ID)->getResultStorage($deliveryExecution->getDelivery());
+        $resultStorage = $this->getServiceLocator()
+            ->get(ResultServerService::SERVICE_ID)
+            ->getResultStorage($deliveryExecution->getDelivery());
 
-        $test = 'test';
         $test = null;
-        $callIdTest = 'call-id-test';
-        $callIdTest = null;
 
-        $item = 'item';
-//        $item = null;
-        $callIdItem = 'call-id-item';
-//        $callIdItem = null;
+        $itemVariablesByTestResult = $map->getTestVariables();
+        foreach ($itemVariablesByTestResult as $test => $testVariables) {
+            $resultStorage->storeTestVariables($deliveryExecutionId, $test, $testVariables, $test);
+        }
 
-        $resultStorage->storeTestVariables($deliveryExecutionId, $test, $map->getTestVariables(), $callIdTest);
-        $resultStorage->storeItemVariables($deliveryExecutionId, $test, $item, $map->getItemVariables(), $callIdItem);
+        $itemVariablesByItemResult = $map->getItemVariables();
+        foreach ($itemVariablesByItemResult as $itemResultIdentifier => $itemVariables) {
+            $callIdItem = $deliveryExecution->getIdentifier() . '.' . $itemResultIdentifier;
+            foreach ($itemVariables as $variable) {
+                if ($variable->getIdentifier() == 'numAttempts') {
+                    $callIdItem .= '.' . (int)$variable->getValue();
+                }
+            }
+            $resultStorage->storeItemVariables($deliveryExecutionId, $test, $itemResultIdentifier, $itemVariables,  $callIdItem);
+        }
     }
 
     /**

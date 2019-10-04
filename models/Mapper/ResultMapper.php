@@ -96,7 +96,7 @@ class ResultMapper extends ConfigurableService
      * - Loop on all test itemVariables
      * - Build tao outcome/response variables from qti sk variables
      *
-     * @return taoResultServer_models_classes_Variable[]
+     * @return array
      * @throws common_exception_NotImplemented
      * @throws common_exception_InvalidArgumentType
      * @throws LogicException If AssessmentResult is not loaded
@@ -115,7 +115,9 @@ class ResultMapper extends ConfigurableService
             return [];
         }
 
-        return $this->createVariables($testResult->getItemVariables(), $testResult->getDatestamp());
+        return [
+            $testResult->getIdentifier()->getValue() => $this->createVariables($testResult->getItemVariables(), $testResult->getDatestamp())
+        ];
     }
 
     /**
@@ -123,7 +125,7 @@ class ResultMapper extends ConfigurableService
      * - Loop on all itemResult itemVariables
      * - Build tao outcome/response variables from qti sk variables
      *
-     * @return taoResultServer_models_classes_Variable[]
+     * @return array
      * @throws common_exception_NotImplemented
      * @throws common_exception_InvalidArgumentType
      * @throws LogicException If AssessmentResult is not loaded
@@ -144,9 +146,7 @@ class ResultMapper extends ConfigurableService
             if (!$itemResult->hasItemVariables()) {
                 continue;
             }
-            $test = $this->createVariables($itemResult->getItemVariables(), $itemResult->getDatestamp());
-            /** @var ItemVariable $itemVariable */
-            $itemVariables = array_merge($itemVariables, $test);
+            $itemVariables[$itemResult->getIdentifier()->getValue()] = $this->createVariables($itemResult->getItemVariables(), $itemResult->getDatestamp());
         }
 
         return $itemVariables;
@@ -183,7 +183,7 @@ class ResultMapper extends ConfigurableService
                     break;
             }
 
-            $variable->setEpoch($datetime->format('U'));
+            $variable->setEpoch($datetime->getMicroseconds(true) . ' ' . $datetime->format('U'));
             $variables[] = $variable;
         }
 
