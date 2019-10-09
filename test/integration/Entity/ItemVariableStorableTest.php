@@ -22,8 +22,9 @@
 namespace oat\taoResultServer\test\integration\Entity;
 
 use oat\taoResultServer\models\Entity\ItemVariableStorable;
+use oat\generis\test\TestCase;
 
-class ItemVariableStorableTest extends \PHPUnit_Framework_TestCase
+class ItemVariableStorableTest extends TestCase
 {
 
     public function testSerializeAsExpected()
