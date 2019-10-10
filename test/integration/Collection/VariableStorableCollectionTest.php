@@ -24,8 +24,9 @@ namespace oat\taoResultServer\test\integration\Collection;
 use oat\taoResultServer\models\Collection\VariableStorableCollection;
 use taoResultServer_models_classes_OutcomeVariable;
 use taoResultServer_models_classes_Variable;
+use oat\generis\test\TestCase;
 
-class VariableStorableCollectionTest extends \PHPUnit_Framework_TestCase
+class VariableStorableCollectionTest extends TestCase
 {
     public function testCreateWithSuccess()
     {

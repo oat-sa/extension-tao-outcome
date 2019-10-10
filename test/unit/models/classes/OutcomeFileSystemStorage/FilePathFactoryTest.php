@@ -20,8 +20,9 @@
 
 namespace oat\taoResultServer\models\classes\OutcomeFileSystemStorage;
 
+use oat\generis\test\TestCase;
 
-class FilePathFactoryTest extends \PHPUnit_Framework_TestCase
+class FilePathFactoryTest extends TestCase
 {
     /** @var  FilePathFactory */
     private $factory;

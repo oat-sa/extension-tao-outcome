@@ -26,11 +26,12 @@ use common_exception_NotFound;
 use oat\oatbox\filesystem\FileSystem;
 use oat\oatbox\service\exception\InvalidServiceManagerException;
 use oat\taoResultServer\models\classes\ResultStorageInterface;
-use PHPUnit_Framework_MockObject_MockObject;
+use oat\generis\test\MockObject;
 use stdClass;
 use taoResultServer_models_classes_ResponseVariable;
+use oat\generis\test\TestCase;
 
-class OutcomeFilesystemRepositoryTest extends \PHPUnit_Framework_TestCase
+class OutcomeFilesystemRepositoryTest extends TestCase
 {
     /** @var OutcomeFilesystemRepository */
     private $repository;
@@ -124,7 +125,7 @@ class OutcomeFilesystemRepositoryTest extends \PHPUnit_Framework_TestCase
         $fileSystem = $this->getFileSystem();
         $dbStorage = $this->getDbStorage([$rawVariable]);
 
-        /** @var OutcomeFilesystemRepository|PHPUnit_Framework_MockObject_MockObject $repository */
+        /** @var OutcomeFilesystemRepository|MockObject $repository */
         $repository = $this->getMockBuilder(OutcomeFilesystemRepository::class)
             ->setMethods(['getDbStorage', 'getFileSystem', 'getFilePathFactory'])
             ->getMock();
