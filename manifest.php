@@ -17,6 +17,7 @@ return array(
     'author' => 'Open Assessment Technologies',
     //taoResults may be needed for the taoResults taoResultServerModel that uses taoResults db storage
 	'requires' => array(
+        'generis' => '>=12.5.0',
         'tao' => '>=27.2.0'
 	),
 	'models' => array(
