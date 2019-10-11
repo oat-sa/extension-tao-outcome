@@ -23,8 +23,9 @@ namespace oat\taoResultServer\test\integration\Entity;
 
 use oat\taoResultServer\models\Entity\TestVariableStorable;
 use taoResultServer_models_classes_OutcomeVariable;
+use oat\generis\test\TestCase;
 
-class TestVariableStorableTest extends \PHPUnit_Framework_TestCase
+class TestVariableStorableTest extends TestCase
 {
     public function testSerializeAsExpected()
     {
