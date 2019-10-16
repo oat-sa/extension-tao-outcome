@@ -63,12 +63,12 @@ msgstr "Duomenys apie saugyklą yra išsiųsti į žurnalą"
 # http://www.tao.lu/Ontologies/TAOResultServer.rdf#implementation
 msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
 msgid "Link to the implementation Class"
-msgstr ""
+msgstr "Link to the implementation Class"
 
 # http://www.tao.lu/Ontologies/TAOResultServer.rdf#implementation
 msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
 msgid "Link to the implementation Class"
-msgstr ""
+msgstr "Link to the implementation Class"
 
 # http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultNoStorageModel
 msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
