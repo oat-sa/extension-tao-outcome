@@ -50,7 +50,7 @@ class ResultMapper extends ConfigurableService
      * Initialize Mapper with qti-sqk AssessmentResult
      *
      * @param AssessmentResult $assessmentResult
-     * @return $this
+     * @return ResultMapper
      */
     public function loadSource(AssessmentResult $assessmentResult)
     {
@@ -166,7 +166,9 @@ class ResultMapper extends ConfigurableService
     protected function createVariables(ItemVariableCollection $itemVariables, DateTime $datetime)
     {
         $variables = [];
+        $i = 0;
         foreach ($itemVariables as $itemVariable) {
+            $i++;
             switch (get_class($itemVariable)) {
 
                 case ResultOutcomeVariable::class:
@@ -183,6 +185,7 @@ class ResultMapper extends ConfigurableService
                     break;
             }
 
+            $datetime->modify('+' . $i . ' microsecond');
             $variable->setEpoch($datetime->getMicroseconds(true) . ' ' . $datetime->format('U'));
             $variables[] = $variable;
         }
@@ -306,7 +309,7 @@ class ResultMapper extends ConfigurableService
             }, iterator_to_array($valueCollection)
         );
 
-        return implode('|', $values);
+        return implode(';', $values);
     }
 
     /**

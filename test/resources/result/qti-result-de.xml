@@ -37,7 +37,7 @@
         </responseVariable>
         <responseVariable identifier="duration" cardinality="single" baseType="duration">
             <candidateResponse>
-                <value>PT0S</value>
+                <value>PT10S</value>
             </candidateResponse>
         </responseVariable>
         <outcomeVariable identifier="completionStatus" cardinality="single" baseType="identifier">
@@ -64,7 +64,7 @@
         </responseVariable>
         <responseVariable identifier="duration" cardinality="single" baseType="duration">
             <candidateResponse>
-                <value>PT0S</value>
+                <value>PT5S</value>
             </candidateResponse>
         </responseVariable>
         <outcomeVariable identifier="completionStatus" cardinality="single" baseType="identifier">

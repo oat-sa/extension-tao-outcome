@@ -93,9 +93,9 @@ class ResultMapperTest extends TestCase
         $variable = reset($variables);
         $this->assertInstanceOf(taoResultServer_models_classes_ResponseVariable::class, $variable);
         $this->assertEquals('response-identifier',  $variable->getIdentifier());
-        $this->assertEquals('fixture-test-value3|fixture-test-value4|fixture-test-value5',  $variable->getCandidateResponse());
-        $this->assertEquals('fixture-test-value3|fixture-test-value4|fixture-test-value5',  $variable->getValue());
-        $this->assertEquals('fixture-test-value1|fixture-test-value2',  $variable->getCorrectResponse());
+        $this->assertEquals('fixture-test-value3;fixture-test-value4;fixture-test-value5',  $variable->getCandidateResponse());
+        $this->assertEquals('fixture-test-value3;fixture-test-value4;fixture-test-value5',  $variable->getValue());
+        $this->assertEquals('fixture-test-value1;fixture-test-value2',  $variable->getCorrectResponse());
         $this->assertEquals('single',  $variable->getCardinality());
         $this->assertNull($variable->getBaseType());
         $epochDateTime = (new DateTime())->setTimestamp(explode(' ',$variable->getEpoch())[1]);
@@ -127,9 +127,9 @@ class ResultMapperTest extends TestCase
         $variable0 = $variablesByItemResult['fixture-identifier-itemResult1'][0];
         $this->assertInstanceOf(taoResultServer_models_classes_ResponseVariable::class, $variable0);
         $this->assertEquals('fixture-identifier1',  $variable0->getIdentifier());
-        $this->assertEquals('fixture-value8|fixture-value9|fixture-value10',  $variable0->getValue());
-        $this->assertEquals('fixture-value8|fixture-value9|fixture-value10',  $variable0->getCandidateResponse());
-        $this->assertEquals('fixture-value6|fixture-value7',  $variable0->getCorrectResponse());
+        $this->assertEquals('fixture-value8;fixture-value9;fixture-value10',  $variable0->getValue());
+        $this->assertEquals('fixture-value8;fixture-value9;fixture-value10',  $variable0->getCandidateResponse());
+        $this->assertEquals('fixture-value6;fixture-value7',  $variable0->getCorrectResponse());
         $this->assertEquals('single',  $variable0->getCardinality());
         $this->assertEquals('string', $variable0->getBaseType());
         $epochDateTime = (new DateTime())->setTimestamp(explode(' ',$variable0->getEpoch())[1]);
