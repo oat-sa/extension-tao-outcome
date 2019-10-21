@@ -23,6 +23,7 @@ namespace oat\taoResultServer\models\classes;
 use common_exception_InvalidArgumentType;
 use common_exception_NotFound;
 use common_exception_NotImplemented;
+use core_kernel_classes_Resource;
 use oat\taoDelivery\model\execution\DeliveryExecution as DeliveryExecutionInterface;
 use oat\taoDelivery\model\execution\ServiceProxy;
 use oat\taoResultServer\models\Exceptions\DuplicateVariableException;
@@ -63,7 +64,7 @@ class QtiResultsService extends ConfigurableService implements ResultService
      */
     public function getDeliveryExecutionByTestTakerAndDelivery($delivery, $testtaker)
     {
-        $delivery = new \core_kernel_classes_Resource($delivery);
+        $delivery = new core_kernel_classes_Resource($delivery);
         $deliveryExecutions = $this->getDeliveryExecutionService()->getUserExecutions($delivery, $testtaker);
         if (empty($deliveryExecutions)) {
             throw new common_exception_NotFound('Provided parameters don\'t match with any delivery execution.');
@@ -245,8 +246,8 @@ class QtiResultsService extends ConfigurableService implements ResultService
     /**
      * Parse the xml to save including variables into given deliveryExecution
      *
-     * @param $deliveryExecutionId
-     * @param $xml
+     * @param string $deliveryExecutionId
+     * @param string $xml
      * @throws common_exception_InvalidArgumentType
      * @throws common_exception_NotFound
      * @throws common_exception_NotImplemented
@@ -276,11 +277,11 @@ class QtiResultsService extends ConfigurableService implements ResultService
      * Store test variables associated to a delivery execution
      *
      * @param WritableResultStorage $resultStorage
-     * @param $deliveryExecutionId
-     * @param $itemVariablesByTestResult
+     * @param string $deliveryExecutionId
+     * @param array $itemVariablesByTestResult
      * @throws DuplicateVariableException
      */
-    protected function storeTestVariables(WritableResultStorage $resultStorage, $deliveryExecutionId, $itemVariablesByTestResult)
+    protected function storeTestVariables(WritableResultStorage $resultStorage, $deliveryExecutionId, array $itemVariablesByTestResult)
     {
         $test = null;
         foreach ($itemVariablesByTestResult as $test => $testVariables) {
@@ -292,11 +293,11 @@ class QtiResultsService extends ConfigurableService implements ResultService
      * Store item variables associated to a delivery execution
      *
      * @param WritableResultStorage $resultStorage
-     * @param $deliveryExecutionId
-     * @param $itemVariablesByItemResult
+     * @param string $deliveryExecutionId
+     * @param array $itemVariablesByItemResult
      * @throws DuplicateVariableException
      */
-    protected function storeItemVariables(WritableResultStorage $resultStorage, $deliveryExecutionId, $itemVariablesByItemResult)
+    protected function storeItemVariables(WritableResultStorage $resultStorage, $deliveryExecutionId, array $itemVariablesByItemResult)
     {
         $test = null;
         foreach ($itemVariablesByItemResult as $itemResultIdentifier => $itemVariables) {

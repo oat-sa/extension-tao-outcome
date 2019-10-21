@@ -32,8 +32,8 @@ class QtiResultParser extends ConfigurableService
     /**
      * Parse an xml to provide a map
      *
-     * @param $xml
-     * @return mixed
+     * @param string $xml
+     * @return ResultMapper
      * @throws XmlStorageException
      */
     public function parse($xml)

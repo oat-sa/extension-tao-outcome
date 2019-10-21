@@ -33,14 +33,14 @@ class ResultMapperTest extends TestCase
 {
     public function load($file = null)
     {
-        if (is_null($file)) {
+        if (null === $file) {
             $file = __DIR__ . '/../../../resources/result/simple-assessment-result.xml';
         }
         $doc = new XmlResultDocument();
         $doc->loadFromString(file_get_contents($file));
         $resultMapper = new ResultMapper();
         $resultMapper->setServiceLocator($this->getServiceLocatorMock([LoggerService::SERVICE_ID => new NullLogger()]));
-        return ($resultMapper)->loadSource($doc->getDocumentComponent());
+        return $resultMapper->loadSource($doc->getDocumentComponent());
     }
 
     public function testLoad()

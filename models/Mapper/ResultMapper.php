@@ -72,12 +72,11 @@ class ResultMapper extends ConfigurableService
 
         $sessionIdentifiers = [];
         if ($context->hasSessionIdentifiers()) {
-            $contextSessionIdentifier = iterator_to_array($context->getSessionIdentifiers());
-            array_walk($contextSessionIdentifier,
-                function(SessionIdentifier $sessionIdentifier) use (&$sessionIdentifiers) {
-                    $sessionIdentifiers[$sessionIdentifier->getIdentifier()->getValue()] = $sessionIdentifier->getSourceID()->getValue();
-                }
-            );
+            $contextSessionIdentifiers = iterator_to_array($context->getSessionIdentifiers());
+            /** @var SessionIdentifier $sessionIdentifier */
+            foreach ($contextSessionIdentifiers as $sessionIdentifier) {
+                $sessionIdentifiers[$sessionIdentifier->getIdentifier()->getValue()] = $sessionIdentifier->getSourceID()->getValue();
+            }
         }
 
         $sourcedId = '';
@@ -207,7 +206,7 @@ class ResultMapper extends ConfigurableService
         $variable->setIdentifier((string) $itemVariable->getIdentifier());
         $variable->setCardinality(Cardinality::getNameByConstant($itemVariable->getCardinality()));
 
-        if (!is_null($itemVariable->getBaseType())) {
+        if (null !== $itemVariable->getBaseType()) {
             $variable->setBaseType(BaseType::getNameByConstant($itemVariable->getBaseType()));
         }
 
@@ -304,9 +303,11 @@ class ResultMapper extends ConfigurableService
      */
     protected function serializeValueCollection(ValueCollection $valueCollection)
     {
-        $values = array_map(function (Value $value) {
+        $values = array_map(
+            function (Value $value) {
                 return $value->getValue();
-            }, iterator_to_array($valueCollection)
+            },
+            iterator_to_array($valueCollection)
         );
 
         return implode(';', $values);
