@@ -14,31 +14,31 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2016 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
+ * Copyright (c) 2016-2019 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  *
  */
 
 namespace oat\taoResultServer\models\classes;
 
+use common_exception_InvalidArgumentType;
+use common_exception_NotFound;
+use common_exception_NotImplemented;
+use core_kernel_classes_Resource;
 use oat\taoDelivery\model\execution\DeliveryExecution as DeliveryExecutionInterface;
 use oat\taoDelivery\model\execution\ServiceProxy;
+use oat\taoResultServer\models\Exceptions\DuplicateVariableException;
+use oat\taoResultServer\models\Mapper\ResultMapper;
+use oat\taoResultServer\models\Parser\QtiResultParser;
 use qtism\common\enums\Cardinality;
 use oat\oatbox\service\ConfigurableService;
-use oat\oatbox\service\ServiceManager;
+use qtism\data\storage\xml\XmlStorageException;
+use taoResultServer_models_classes_WritableResultStorage as WritableResultStorage;
 
 class QtiResultsService extends ConfigurableService implements ResultService
 {
     protected $deliveryExecutionService;
 
     const QTI_NS = 'http://www.imsglobal.org/xsd/imsqti_result_v2p1';
-
-    /**
-     * @deprecated
-     */
-    public static function singleton()
-    {
-        return ServiceManager::getServiceManager()->get(self::SERVICE_ID);
-    }
 
     /**
      * Get the implementation of delivery execution service
@@ -64,10 +64,10 @@ class QtiResultsService extends ConfigurableService implements ResultService
      */
     public function getDeliveryExecutionByTestTakerAndDelivery($delivery, $testtaker)
     {
-        $delivery = new \core_kernel_classes_Resource($delivery);
+        $delivery = new core_kernel_classes_Resource($delivery);
         $deliveryExecutions = $this->getDeliveryExecutionService()->getUserExecutions($delivery, $testtaker);
         if (empty($deliveryExecutions)) {
-            throw new \common_exception_NotFound('Provided parameters don\'t match with any delivery execution.');
+            throw new common_exception_NotFound('Provided parameters don\'t match with any delivery execution.');
         }
         return array_pop($deliveryExecutions);
     }
@@ -77,15 +77,15 @@ class QtiResultsService extends ConfigurableService implements ResultService
      *
      * @param $deliveryExecutionId
      * @return DeliveryExecutionInterface
-     * @throws \common_exception_NotFound
+     * @throws common_exception_NotFound
      */
     public function getDeliveryExecutionById($deliveryExecutionId)
     {
         $deliveryExecution = $this->getDeliveryExecutionService()->getDeliveryExecution($deliveryExecutionId);
         try {
             $deliveryExecution->getDelivery();
-        } catch (\common_exception_NotFound $e) {
-            throw new \common_exception_NotFound('Provided parameters don\'t match with any delivery execution.');
+        } catch (common_exception_NotFound $e) {
+            throw new common_exception_NotFound('Provided parameters don\'t match with any delivery execution.');
         }
         return $deliveryExecution;
     }
@@ -131,7 +131,7 @@ class QtiResultsService extends ConfigurableService implements ResultService
         $contextElt = $dom->createElementNS(self::QTI_NS, 'context');
         $contextElt->setAttribute('sourcedId', \tao_helpers_Uri::getUniqueId($resultServer->getTestTaker($deId)));
         $assessmentResultElt->appendChild($contextElt);
-        
+
         /** Test Result */
         foreach ($testResults as $testResultIdentifier => $testResult) {
             $identifierParts = explode('.', $testResultIdentifier);
@@ -241,6 +241,74 @@ class QtiResultsService extends ConfigurableService implements ResultService
         }
 
         return $dom->saveXML();
+    }
+
+    /**
+     * Parse the xml to save including variables into given deliveryExecution
+     *
+     * @param string $deliveryExecutionId
+     * @param string $xml
+     * @throws common_exception_InvalidArgumentType
+     * @throws common_exception_NotFound
+     * @throws common_exception_NotImplemented
+     * @throws XmlStorageException
+     * @throws DuplicateVariableException
+     */
+    public function injectXmlResultToDeliveryExecution($deliveryExecutionId, $xml)
+    {
+        $deliveryExecution = $this->getDeliveryExecutionById($deliveryExecutionId);
+
+        /** @var QtiResultParser $parser */
+        $parser = $this->getServiceLocator()->get(QtiResultParser::class);
+        /** @var ResultMapper $map */
+        $map = $parser->parse($xml);
+
+        /** @var WritableResultStorage $resultStorage */
+        $resultStorage = $this->getServiceLocator()
+            ->get(ResultServerService::SERVICE_ID)
+            ->getResultStorage($deliveryExecution->getDelivery());
+
+
+        $this->storeTestVariables($resultStorage, $deliveryExecutionId, $map->getTestVariables());
+        $this->storeItemVariables($resultStorage, $deliveryExecutionId, $map->getItemVariables());
+    }
+
+    /**
+     * Store test variables associated to a delivery execution
+     *
+     * @param WritableResultStorage $resultStorage
+     * @param string $deliveryExecutionId
+     * @param array $itemVariablesByTestResult
+     * @throws DuplicateVariableException
+     */
+    protected function storeTestVariables(WritableResultStorage $resultStorage, $deliveryExecutionId, array $itemVariablesByTestResult)
+    {
+        $test = null;
+        foreach ($itemVariablesByTestResult as $test => $testVariables) {
+            $resultStorage->storeTestVariables($deliveryExecutionId, $test, $testVariables, $test);
+        }
+    }
+
+    /**
+     * Store item variables associated to a delivery execution
+     *
+     * @param WritableResultStorage $resultStorage
+     * @param string $deliveryExecutionId
+     * @param array $itemVariablesByItemResult
+     * @throws DuplicateVariableException
+     */
+    protected function storeItemVariables(WritableResultStorage $resultStorage, $deliveryExecutionId, array $itemVariablesByItemResult)
+    {
+        $test = null;
+        foreach ($itemVariablesByItemResult as $itemResultIdentifier => $itemVariables) {
+            $callIdItem = $deliveryExecutionId . '.' . $itemResultIdentifier;
+            foreach ($itemVariables as $variable) {
+                if ($variable->getIdentifier() == 'numAttempts') {
+                    $callIdItem .= '.' . (int)$variable->getValue();
+                }
+            }
+            $resultStorage->storeItemVariables($deliveryExecutionId, $test, $itemResultIdentifier, $itemVariables, $callIdItem);
+        }
     }
 
     /**
