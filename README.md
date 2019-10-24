@@ -1,9 +1,3 @@
-
-Command to switch to file storage
-```bash
-php index.php '\oat\taoResultServer\scripts\install\InstallFileStorage'
-``` 
-
 # TAO _taoResultServer_ extension
 
 ![TAO Logo](https://github.com/oat-sa/taohub-developer-guide/raw/master/resources/tao-logo.png)
@@ -12,7 +6,7 @@ php index.php '\oat\taoResultServer\scripts\install\InstallFileStorage'
 ![GitHub release](https://img.shields.io/github/release/oat-sa/extension-tao-outcome.svg)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/y/oat-sa/extension-tao-outcome.svg)
 
-> Extension to manage outcome for TAO
+> Result Core Extension. Provides a results server management, exposes interfaces for results data submission
 
 ## Installation instructions
 
@@ -78,6 +72,11 @@ As a system administrator you can also install it through the TAO Extension Mana
 
 *Possible values:* 
 * Objects of a class that implements the `ResultServerService` interface.
+
+## Command to switch to file storage
+```bash
+php index.php '\oat\taoResultServer\scripts\install\InstallFileStorage'
+``` 
 
 ## Extension Wiki
 You can find the [extension wiki here](https://github.com/oat-sa/extension-tao-outcome/wiki).
