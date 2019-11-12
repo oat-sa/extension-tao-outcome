@@ -49,4 +49,15 @@
             <value>fixture-value19</value>
         </outcomeVariable>
     </itemResult>
+    <itemResult identifier="fixture-identifier-itemResult3" datestamp="2018-06-27T09:43:45.529" sessionStatus="final" sequenceIndex="2">
+        <responseVariable cardinality="single" identifier="fixture-identifier5" baseType="identifier" choiceSequence="value-id-1">
+            <correctResponse>
+                <value>fixture-value20</value>
+            </correctResponse>
+            <candidateResponse/>
+        </responseVariable>
+        <outcomeVariable cardinality="single" identifier="fixture-identifier6" baseType="string" view="candidate" interpretation="fixture-interpretation" longInterpretation="http://fixture-interpretation" normalMinimum="4" normalMaximum="6" masteryValue="5">
+            <value>fixture-value19</value>
+        </outcomeVariable>
+    </itemResult>
 </assessmentResult>
