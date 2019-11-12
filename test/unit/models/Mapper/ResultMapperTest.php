@@ -118,7 +118,7 @@ class ResultMapperTest extends TestCase
     public function testGetItemVariables()
     {
         $variablesByItemResult = $this->load()->getItemVariables();
-        $this->assertCount(2, $variablesByItemResult);
+        $this->assertCount(3, $variablesByItemResult);
 
         $this->assertArrayHasKey('fixture-identifier-itemResult1', $variablesByItemResult);
         $this->assertArrayHasKey('fixture-identifier-itemResult2', $variablesByItemResult);
@@ -170,6 +170,16 @@ class ResultMapperTest extends TestCase
         $this->assertEquals('string', $variable3->getBaseType());
         $epochDateTime = (new DateTime())->setTimestamp(explode(' ',$variable3->getEpoch())[1]);
         $this->assertSame('2018-06-27T09:41:45', $epochDateTime->format('Y-m-d\TH:i:s'));
+
+        /** @var taoResultServer_models_classes_ResponseVariable $variable4 */
+        $variable4 = $variablesByItemResult['fixture-identifier-itemResult3'][0];
+        $this->assertInstanceOf(\taoResultServer_models_classes_ResponseVariable::class, $variable4);
+        $this->assertEquals('fixture-identifier5', $variable4->getIdentifier());
+        $this->assertEmpty($variable4->getValue());
+        $this->assertEmpty($variable4->getCandidateResponse());
+        $this->assertEquals('fixture-value20', $variable4->getCorrectResponse());
+        $this->assertEquals('single', $variable4->getCardinality());
+        $this->assertEquals('identifier', $variable4->getBaseType());
     }
 
     public function testGetItemVariablesWithTemplateVariables()
