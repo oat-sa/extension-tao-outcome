@@ -282,7 +282,9 @@ class ResultMapper extends ConfigurableService
             new taoResultServer_models_classes_ResponseVariable()
         );
 
-        $variable->setCandidateResponse($this->serializeValueCollection($itemVariable->getCandidateResponse()->getValues()));
+        if ($itemVariable->getCandidateResponse()->hasValues()) {
+            $variable->setCandidateResponse($this->serializeValueCollection($itemVariable->getCandidateResponse()->getValues()));
+        }
 
         if ($itemVariable->hasCorrectResponse()) {
             $variable->setCorrectResponse($this->serializeValueCollection($itemVariable->getCorrectResponse()->getValues()));
