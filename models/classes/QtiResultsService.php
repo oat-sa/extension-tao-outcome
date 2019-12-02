@@ -283,7 +283,7 @@ class QtiResultsService extends ConfigurableService implements ResultService
      */
     protected function storeTestVariables(WritableResultStorage $resultStorage, $deliveryExecutionId, array $itemVariablesByTestResult)
     {
-        $test = null;
+        $test = ' ';
         foreach ($itemVariablesByTestResult as $test => $testVariables) {
             $resultStorage->storeTestVariables($deliveryExecutionId, $test, $testVariables, $test);
         }
