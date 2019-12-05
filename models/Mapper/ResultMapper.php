@@ -185,7 +185,7 @@ class ResultMapper extends ConfigurableService
             }
 
             $datetime->modify('+' . $i . ' microsecond');
-            $variable->setEpoch($datetime->getMicroseconds(true) . ' ' . $datetime->format('U'));
+            $variable->setEpoch(number_format($datetime->getMicroseconds(true), 8) . ' ' . $datetime->format('U'));
             $variables[] = $variable;
         }
 
