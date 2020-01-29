@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,13 +22,15 @@
 use oat\taoResultServer\models\classes\CrudResultsService;
 use oat\tao\model\routing\AnnotationReader\security;
 
-class taoResultServer_actions_RestResults extends \tao_actions_CommonRestModule {
+class taoResultServer_actions_RestResults extends \tao_actions_CommonRestModule
+{
 
     /**
      * taoResultServer_actions_RestResults constructor.
      * @security("hide")
      */
-    public function __construct(){
+    public function __construct()
+    {
         parent::__construct();
         $this->service = CrudResultsService::singleton();
     }
@@ -36,24 +39,24 @@ class taoResultServer_actions_RestResults extends \tao_actions_CommonRestModule 
      * Optionnaly a specific rest controller may declare
      * aliases for parameters used for the rest communication
      */
-    protected function getParametersAliases(){
-        return array_merge(parent::getParametersAliases(), array(
+    protected function getParametersAliases()
+    {
+        return array_merge(parent::getParametersAliases(), [
 
-            ));
+            ]);
     }
     /**
      * Optionnal Requirements for parameters to be sent on every service
      *
      */
-    protected function getParametersRequirements() {
-        return array(
+    protected function getParametersRequirements()
+    {
+        return [
             /** you may use either the alias or the uri, if the parameter identifier
              *  is set it will become mandatory for the operation in $key
              * Default Parameters Requirents are applied
              * type by default is not required and the root class type is applied
              */
-        );
+        ];
     }
-
 }
-?>

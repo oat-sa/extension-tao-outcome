@@ -17,15 +17,16 @@
  * Copyright (c) 2013 (original work) Open Assessment Technologies S.A.
  *
  * @author "Patrick Plichart, <patrick@taotesting.com>"
- * 
- * 
+ *
+ *
  * An Assessment Result is used to report the results of a candidate's interaction
  * with a test and/or one or more items attempted. Information about the test is optional,
- * in some systems it may be possible to interact with items that are not organized into a 
- * test at all. For example, items that are organized with learning resources and presented 
+ * in some systems it may be possible to interact with items that are not organized into a
+ * test at all. For example, items that are organized with learning resources and presented
  * individually in a formative context.
  */
-abstract class taoResultServer_models_classes_Variable  {
+abstract class taoResultServer_models_classes_Variable
+{
 
     const CARDINALITY_SINGLE = 'single';
 
@@ -49,7 +50,7 @@ abstract class taoResultServer_models_classes_Variable  {
     /**
      * The base type of the variable, taken from the corresponding declaration of definition.
      * This value is omitted only for variables with record cardinality.
-     * 
+     *
      * @var baseType should move to an enumeration
      */
     public $baseType;
@@ -85,12 +86,13 @@ abstract class taoResultServer_models_classes_Variable  {
      */
     public function setCardinality($cardinality = self::CARDINALITY_SINGLE)
     {
-        if (!in_array($cardinality, [
+        if (
+            !in_array($cardinality, [
             self::CARDINALITY_SINGLE,
             self::CARDINALITY_MULTIPLE,
             self::CARDINALITY_ORDERED,
             self::CARDINALITY_RECORD
-        ])
+            ])
         ) {
             throw new common_exception_InvalidArgumentType("cardinality");
         }
@@ -159,7 +161,8 @@ abstract class taoResultServer_models_classes_Variable  {
      * Allow to know if the epoch is set or not
      * @return bool
      */
-    public function isSetEpoch(){
+    public function isSetEpoch()
+    {
         return (isset($this->epoch));
     }
 
@@ -168,7 +171,8 @@ abstract class taoResultServer_models_classes_Variable  {
      *
      * @return bool
      */
-    public function isMultiple() {
+    public function isMultiple()
+    {
         return in_array($this->cardinality, [self::CARDINALITY_MULTIPLE, self::CARDINALITY_ORDERED]);
     }
 
@@ -188,7 +192,8 @@ abstract class taoResultServer_models_classes_Variable  {
      * Get the json representation of the variable
      * @return string
      */
-    public function toJson() {
+    public function toJson()
+    {
         return json_encode((array)$this);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -146,7 +147,6 @@ class QtiResultsService extends ConfigurableService implements ResultService
 
             /** Item Variable */
             foreach ($testResult as $itemVariable) {
-
                 $isResponseVariable = $itemVariable['type']->getUri() === 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResponseVariable';
                 $testVariableElement = $dom->createElementNS(self::QTI_NS, ($isResponseVariable) ? 'responseVariable' : 'outcomeVariable');
                 $testVariableElement->setAttribute('identifier', $itemVariable['identifier']);
@@ -171,7 +171,6 @@ class QtiResultsService extends ConfigurableService implements ResultService
 
         /** Item Result */
         foreach ($itemResults as $itemResultIdentifier => $itemResult) {
-
             // Retrieve identifier.
             $identifierParts = explode('.', $itemResultIdentifier);
             $occurenceNumber = array_pop($identifierParts);
@@ -189,7 +188,7 @@ class QtiResultsService extends ConfigurableService implements ResultService
             foreach ($itemResult as $key => $itemVariable) {
                 $isResponseVariable = $itemVariable['type']->getUri() === 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResponseVariable';
 
-                if ($itemVariable['identifier']=='comment') {
+                if ($itemVariable['identifier'] == 'comment') {
                     /** Comment */
                     $itemVariableElement = $dom->createElementNS(self::QTI_NS, 'candidateComment', $itemVariable['value']);
                 } else {
@@ -201,7 +200,7 @@ class QtiResultsService extends ConfigurableService implements ResultService
 
                     /** Split multiple response */
                     $itemVariable['value'] = trim($itemVariable['value'], '[]');
-                    if ($itemVariable['cardinality']!==Cardinality::getNameByConstant(Cardinality::SINGLE)) {
+                    if ($itemVariable['cardinality'] !== Cardinality::getNameByConstant(Cardinality::SINGLE)) {
                         $values = explode(';', $itemVariable['value']);
                         $returnValue = [];
                         foreach ($values as $value) {

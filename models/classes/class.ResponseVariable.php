@@ -100,7 +100,8 @@ class taoResultServer_models_classes_ResponseVariable extends taoResultServer_mo
     /**
      * {@inheritdoc}
      */
-    public function setValue($value){
+    public function setValue($value)
+    {
         $this->setCandidateResponse($value);
     }
 }

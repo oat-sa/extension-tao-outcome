@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,41 +23,42 @@ use oat\taoResultServer\models\Exceptions\DuplicateVariableException;
 
 /**
  * The WritableResultStorage interface.
- * 
+ *
  * The WritableResultStorage interface describes all the methods to write results of deliveries
  * taken by test takers into a specific Result Server implementation.
- * 
+ *
  * @author Joel Bout <joel@taotesting.com>
  * @author Antoine Robin <antoine.robin@vesperiagroup.com>
  * @author Jérôme Bogaerts <jerome@taotesting.com>
  *
  */
-interface taoResultServer_models_classes_WritableResultStorage {
+interface taoResultServer_models_classes_WritableResultStorage
+{
 
     /**
      * Spawn Result
-     * 
+     *
      * Initialize a new raw Delivery Result.
-     * 
+     *
      * After initialization, the Delivery Result will be empty, and will not be linked
-     * to a Test Taker or a Delivery. 
-     * 
+     * to a Test Taker or a Delivery.
+     *
      * Please note that it is the responisibility of the implementer to generate Delivery
      * Result identifiers that are as unique as possible.
-     * 
+     *
      * @return string The unique identifier of the initialized Delivery Result.
      */
     public function spawnResult();
 
     /**
      * Store Related Test Taker
-     * 
+     *
      * Attach a given Test Taker to a Delivery Result.
-     * 
+     *
      * A Delivery Result is always attached to a single Test Taker. This method enables
      * the client code to register a given Test Taker, using its $testTakerIdentifier, to a
      * given Delivery Result, using its $deliveryResultIdentifier.
-     * 
+     *
      * @param string $deliveryResultIdentifier The identifier of the Delivery Result (usually a Delivery Execution URI).
      * @param string $testTakerIdentifier The identifier of the Test Taker (usually a URI).
      */
@@ -64,9 +66,9 @@ interface taoResultServer_models_classes_WritableResultStorage {
 
     /**
      * Store Related Delivery
-     * 
+     *
      * Store a delivery related to a specific delivery execution
-     * 
+     *
      * @param string $deliveryResultIdentifier (mostly delivery execution uri)
      * @param string $deliveryIdentifier (uri recommended)
      */
@@ -74,10 +76,10 @@ interface taoResultServer_models_classes_WritableResultStorage {
 
     /**
      * Store Item Variable
-     * 
+     *
      * Submit a specific Item Variable, (ResponseVariable and OutcomeVariable shall be used respectively for collected data and score/interpretation computation)
      * and store it with all the dependencies
-     * 
+     *
      * @param string $deliveryResultIdentifier
      * @param string $test (uri recommended)
      * @param string $item (uri recommended)
@@ -100,9 +102,9 @@ interface taoResultServer_models_classes_WritableResultStorage {
 
     /**
      * Store Test Variable
-     * 
+     *
      * Submit a specific test Variable and store it
-     * 
+     *
      * @param string $deliveryResultIdentifier
      * @param string $test
      * @param taoResultServer_models_classes_Variable $testVariable
@@ -123,11 +125,10 @@ interface taoResultServer_models_classes_WritableResultStorage {
     
     /**
      * Configure
-     * 
+     *
      * The storage may configure itself based on the resultServer definition
-     * 
+     *
      * @param array $callOptions
      */
-    public function configure($callOptions = array());
-    
+    public function configure($callOptions = []);
 }

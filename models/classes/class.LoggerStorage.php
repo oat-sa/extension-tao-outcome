@@ -17,13 +17,11 @@
  *
  * Copyright (c) 2013 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  *
- * 
+ *
  * @author "Patrick Plichart, <patrick@taotesting.com>"
  * @package taoResultServer
  */
-class taoResultServer_models_classes_LoggerStorage 
-extends tao_models_classes_GenerisService 
-implements taoResultServer_models_classes_WritableResultStorage
+class taoResultServer_models_classes_LoggerStorage extends tao_models_classes_GenerisService implements taoResultServer_models_classes_WritableResultStorage
 {
     
     /*
@@ -75,18 +73,18 @@ implements taoResultServer_models_classes_WritableResultStorage
     public function storeTestVariables($deliveryResultIdentifier, $test, array $testVariables, $callIdTest)
     {
          $varContents = array_map(
-            function ($value) {
-                return serialize($value);
-            },
-            $testVariables
-        );
+                function ($value) {
+                    return serialize($value);
+                },
+             $testVariables
+         );
         common_logger::i("LoggerStorage - StoreTestVariable :" . $test . " callid:" . $callIdTest . "variables:" . implode(' - ', $varContents) . " into " . $deliveryResultIdentifier);
     }
     
     /*
      * (non-PHPdoc) @see taoResultServer_models_classes_WritableResultStorage::configure()
      */
-    public function configure($callOptions = array())
+    public function configure($callOptions = [])
     {
         common_logger::i("LoggerStorage - configuration:" . serialize($callOptions));
     }
