@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -33,11 +34,10 @@ class taoResultServer_actions_QtiRestResults extends tao_actions_RestController
     
     public function getQtiResultXml()
     {
-        try
-        {
+        try {
             $this->checkMethod();
         
-            $this->validateParams(array(self::DELIVERY, self::RESULT));
+            $this->validateParams([self::DELIVERY, self::RESULT]);
             $deliveryId = $this->getRequestParameter(self::DELIVERY);
             $resultId = $this->getRequestParameter(self::RESULT);
         
@@ -70,11 +70,10 @@ class taoResultServer_actions_QtiRestResults extends tao_actions_RestController
      */
     public function getLatest()
     {
-        try
-        {
+        try {
             $this->checkMethod();
 
-            $this->validateParams(array(self::TESTTAKER, self::DELIVERY));
+            $this->validateParams([self::TESTTAKER, self::DELIVERY]);
 
             $deliveryExecution = $this->getQtiResultService()->getDeliveryExecutionByTestTakerAndDelivery(
                 $this->getRequestParameter(self::DELIVERY),
@@ -94,11 +93,10 @@ class taoResultServer_actions_QtiRestResults extends tao_actions_RestController
      */
     public function byDeliveryExecution()
     {
-        try
-        {
+        try {
             $this->checkMethod();
 
-            $this->validateParams(array(self::DELIVERY_EXECUTION));
+            $this->validateParams([self::DELIVERY_EXECUTION]);
 
             $deliveryExecution = $this->getQtiResultService()->getDeliveryExecutionById(
                 $this->getRequestParameter(self::DELIVERY_EXECUTION)
@@ -118,7 +116,7 @@ class taoResultServer_actions_QtiRestResults extends tao_actions_RestController
      */
     protected function checkMethod()
     {
-        if ($this->getRequestMethod()!='GET') {
+        if ($this->getRequestMethod() != 'GET') {
             throw new common_exception_MethodNotAllowed($this->getRequestURI());
         }
     }
@@ -135,11 +133,11 @@ class taoResultServer_actions_QtiRestResults extends tao_actions_RestController
     {
         foreach ($params as $param) {
             if (!$this->hasRequestParameter($param)) {
-                throw new common_exception_MissingParameter($param .' is missing from the request.', $this->getRequestURI());
+                throw new common_exception_MissingParameter($param . ' is missing from the request.', $this->getRequestURI());
             }
 
             if (empty($this->getRequestParameter($param))) {
-                throw new common_exception_ValidationFailed($param, $param .' cannot be empty');
+                throw new common_exception_ValidationFailed($param, $param . ' cannot be empty');
             }
         }
     }

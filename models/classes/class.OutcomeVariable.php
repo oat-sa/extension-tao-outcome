@@ -19,20 +19,20 @@
  *
  *
  * @author "Patrick Plichart, <patrick@taotesting.com>"
- * 
+ *
  * An Assessment Result is used to report the results of a candidate's interaction
  * with a test and/or one or more items attempted. Information about the test is optional,
- * in some systems it may be possible to interact with items that are not organized into 
- * a test at all. For example, items that are organized with learning resources and 
+ * in some systems it may be possible to interact with items that are not organized into
+ * a test at all. For example, items that are organized with learning resources and
  * presented individually in a formative context.
- * 
+ *
  */
 class taoResultServer_models_classes_OutcomeVariable extends taoResultServer_models_classes_Variable
 {
 
     /**
      * taken from the corresponding outcomeDeclaration.
-     * 
+     *
      * @var float
      */
     public $normalMaximum;
@@ -47,7 +47,7 @@ class taoResultServer_models_classes_OutcomeVariable extends taoResultServer_mod
     /**
      * The value(s) of the outcome variable.
      * The order of the values is significant only if the outcome was declared with ordered cardinality.
-     * 
+     *
      * @var array
      */
     public $value;
@@ -62,7 +62,7 @@ class taoResultServer_models_classes_OutcomeVariable extends taoResultServer_mod
 
     /**
      *
-     * @access public 
+     * @access public
      * @author "Patrick Plichart, <patrick@taotesting.com>"
      * @return float
      */
@@ -73,7 +73,7 @@ class taoResultServer_models_classes_OutcomeVariable extends taoResultServer_mod
 
     /**
      *
-     * @access public 
+     * @access public
      * @author "Patrick Plichart, <patrick@taotesting.com>"
      * @param float $normalMinimum
      */
@@ -97,7 +97,7 @@ class taoResultServer_models_classes_OutcomeVariable extends taoResultServer_mod
      * {@inheritdoc}
      */
     public function getValue()
-    {   
+    {
         return base64_decode($this->value);
     }
 
@@ -105,10 +105,8 @@ class taoResultServer_models_classes_OutcomeVariable extends taoResultServer_mod
      * {@inheritdoc}
      */
     public function setValue($value)
-    {   
-        //null byte, binary 
+    {
+        //null byte, binary
         $this->value = base64_encode($value);
     }
 }
-
-?>

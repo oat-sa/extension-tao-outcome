@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -54,7 +55,6 @@ class VariableStorableCollection
         $storableVariables = [];
 
         foreach ($testVariables as $testVariable) {
-
             if (!($testVariable->isSetEpoch())) {
                 $testVariable->setEpoch(microtime());
             }
@@ -79,7 +79,6 @@ class VariableStorableCollection
         $storableVariables = [];
 
         foreach ($testVariables as $testVariable) {
-
             if (!($testVariable->isSetEpoch())) {
                 $testVariable->setEpoch(microtime());
             }
@@ -100,13 +99,12 @@ class VariableStorableCollection
         $storableVariables = [];
 
         foreach ($variables as $variable) {
-
             $variable = json_decode($variable, true);
             if (isset($variable['callIdTest'])) {
                 $variableObj = TestVariableStorable::createFromArray($variable);
-            }else if (isset($variable['callIdItem'])) {
+            } elseif (isset($variable['callIdItem'])) {
                 $variableObj = ItemVariableStorable::createFromArray($variable);
-            }else {
+            } else {
                 continue;
             }
 
@@ -129,14 +127,14 @@ class VariableStorableCollection
      */
     public function toStorableArray()
     {
-       $data = [];
+        $data = [];
 
-       foreach ($this->variables as $variable) {
-           $data[$variable->getIdentifier()] = json_encode([
+        foreach ($this->variables as $variable) {
+            $data[$variable->getIdentifier()] = json_encode([
                $variable
-           ]);
-       }
+            ]);
+        }
 
-       return $data;
+        return $data;
     }
 }

@@ -1,36 +1,38 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; under version 2
  * of the License (non-upgradable).
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- * 
+ *
  * Copyright (c) 2013 Open Assessment Technologies
- * 
- * 
+ *
+ *
  */
 
 use \oat\tao\model\routing\AnnotationReader\security;
 
 /**
- * 
+ *
  * A session for a particular delivery execution/session on the corresponding result server
  * Statefull api for results submission from the client
- * 
- * 
+ *
+ *
  * @package taoResultServer
  * @license GPLv2  http://www.opensource.org/licenses/gpl-2.0.php
  */
-class taoResultServer_actions_ResultServerStateFull extends tao_actions_SaSModule {
+class taoResultServer_actions_ResultServerStateFull extends tao_actions_SaSModule
+{
 
     protected $service;
 
@@ -38,13 +40,15 @@ class taoResultServer_actions_ResultServerStateFull extends tao_actions_SaSModul
      * constructor: initialize the service and the default data
      * @security("hide");
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->service = $this->getClassService();
     }
 
-    protected function returnFailure(Exception $exception) {
-        $data = array();
+    protected function returnFailure(Exception $exception)
+    {
+        $data = [];
         $data['success'] = false;
         $data['errorCode'] = $exception->getCode();
         $data['errorMsg'] = ($exception instanceof common_exception_UserReadableException) ? $exception->getUserMessage() : $exception->getMessage();
@@ -53,8 +57,9 @@ class taoResultServer_actions_ResultServerStateFull extends tao_actions_SaSModul
         exit(0);
     }
 
-    protected function returnSuccess($rawData = "") {
-        $data = array();
+    protected function returnSuccess($rawData = "")
+    {
+        $data = [];
         $data['success'] = true;
         $data['data'] = $rawData;
         $data['version'] = TAO_VERSION;
@@ -66,8 +71,9 @@ class taoResultServer_actions_ResultServerStateFull extends tao_actions_SaSModul
     /**
      * @author  "Patrick Plichart, <patrick@taotesting.com>"
      */
-    public function storeItemVariableSet() {
-        $variables = array();
+    public function storeItemVariableSet()
+    {
+        $variables = [];
         $item = $this->hasRequestParameter("itemId") ? $this->getRequestParameter("itemId") : "undefined";
         $callIdItem = $this->hasRequestParameter("serviceCallId") ? $this->getRequestParameter("serviceCallId") : "undefined";
         $test = $this->hasRequestParameter("testId") ? $this->getRequestParameter("testId") : "undefined";
@@ -106,12 +112,10 @@ class taoResultServer_actions_ResultServerStateFull extends tao_actions_SaSModul
         }
 
         try {
-
             $data = $this->service->storeItemVariableSet($test, $item, $variables, $callIdItem);
         } catch (exception $e) {
             $this->returnFailure($e);
         }
         return $this->returnSuccess($data);
     }
-
 }

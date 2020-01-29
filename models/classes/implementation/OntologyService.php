@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,6 +18,7 @@
  * Copyright (c) 2016-2017 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  *
  */
+
 namespace oat\taoResultServer\models\classes\implementation;
 
 use oat\generis\model\OntologyAwareTrait;
@@ -55,17 +57,17 @@ class OntologyService extends AbstractResultService
             $deliveryResultServer = \taoResultServer_models_classes_ResultServerAuthoringService::singleton()->getDefaultResultServer();
         }
 
-        if(is_null($deliveryResultServer)){
+        if (is_null($deliveryResultServer)) {
             throw new \common_exception_Error(__('This delivery has no Result Server'));
         }
         $resultServerModel = $deliveryResultServer->getPropertyValues($this->getProperty(static::PROPERTY_HAS_MODEL));
 
-        if(is_null($resultServerModel)){
+        if (is_null($resultServerModel)) {
             throw new \common_exception_Error(__('This delivery has no readable Result Server'));
         }
 
-        $implementations = array();
-        foreach($resultServerModel as $model){
+        $implementations = [];
+        foreach ($resultServerModel as $model) {
             $model = $this->getClass($model);
 
             /** @var $implementation \core_kernel_classes_Literal*/
@@ -84,6 +86,4 @@ class OntologyService extends AbstractResultService
             return new StorageAggregation($implementations);
         }
     }
-
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -31,14 +32,16 @@ use oat\taoResultServer\models\classes\ResultAliasService;
  * @author Joel Bout <joel@taotesting.com>
  * @author Jérôme Bogaerts <jerome@taotesting.com>
  */
-class taoResultServer_scripts_update_Updater extends \common_ext_ExtensionUpdater {
+class taoResultServer_scripts_update_Updater extends \common_ext_ExtensionUpdater
+{
 
     /**
      *
      * @param string $initialVersion
      * @return string|void
      */
-    public function update($initialVersion) {
+    public function update($initialVersion)
+    {
 
         $this->skip('2.6', '2.10.2');
 

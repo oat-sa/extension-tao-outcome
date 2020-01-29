@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -55,5 +56,4 @@ class ResultServerService extends AbstractResultService
         $resultServerId = $this->getOption(self::OPTION_RESULT_STORAGE);
         return $this->instantiateResultStorage($resultServerId);
     }
-
 }
