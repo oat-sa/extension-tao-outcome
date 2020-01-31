@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -169,7 +170,6 @@ class ResultMapper extends ConfigurableService
         foreach ($itemVariables as $itemVariable) {
             $i++;
             switch (get_class($itemVariable)) {
-
                 case ResultOutcomeVariable::class:
                     $variable = $this->createOutcomeVariable($itemVariable);
                     break;

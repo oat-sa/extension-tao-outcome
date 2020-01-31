@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,7 +20,6 @@
  */
 
 namespace oat\taoResultServer\models\classes\OutcomeFileSystemStorage;
-
 
 use common_exception_Error;
 use common_exception_NotFound;
@@ -112,7 +112,7 @@ class OutcomeFilesystemRepositoryTest extends TestCase
 
     private function getVariable($baseType, $value = '')
     {
-        $variable = new taoResultServer_models_classes_ResponseVariable;
+        $variable = new taoResultServer_models_classes_ResponseVariable();
         $variable->setBaseType($baseType);
         $variable->setCandidateResponse($value);
 

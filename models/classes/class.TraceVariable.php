@@ -19,7 +19,7 @@
  *
  *
  * @author "Patrick Plichart, <patrick@taotesting.com>"
- * 
+ *
  * An Assessment Result is used to report the results of a candidate's interaction
  * with a test and/or one or more items attempted.
  * Information about the test is optional,
@@ -31,7 +31,7 @@ class taoResultServer_models_classes_TraceVariable extends taoResultServer_model
     /**
      * When a response variable is bound to an interaction that supports the shuffling of choices, the sequence of choices experienced by the candidate will vary between test instances.
      * When shuffling is in effect, the sequence of choices should be reported as a sequence of choice identifiers using this attribute.
-     * 
+     *
      * @var string
      */
     public $trace;
@@ -73,5 +73,3 @@ class taoResultServer_models_classes_TraceVariable extends taoResultServer_model
         $this->setTrace($value);
     }
 }
-
-?>

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,7 +17,7 @@
  *
  * Copyright (c) 2013 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  *
- * 
+ *
  */
 
 /**
@@ -24,17 +25,16 @@
  *
  * @deprecated
  */
-$todefine = array(
-    'TAO_DELIVERY_RESULT'			=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#DeliveryResult',
-    'PROPERTY_RESULT_OF_SUBJECT'	=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfSubject',
-    'PROPERTY_RESULT_OF_DELIVERY'	=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfDelivery',
+$todefine = [
+    'TAO_DELIVERY_RESULT'           => 'http://www.tao.lu/Ontologies/TAOResult.rdf#DeliveryResult',
+    'PROPERTY_RESULT_OF_SUBJECT'    => 'http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfSubject',
+    'PROPERTY_RESULT_OF_DELIVERY'   => 'http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfDelivery',
 
-    'TAO_RESULTSERVER_CLASS'	=> 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServer',
+    'TAO_RESULTSERVER_CLASS'    => 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServer',
     'TAO_RESULTSERVER_MODEL_CLASS'  =>  'http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerModel',
-    'TAO_RESULTSERVER_MODEL_PROP' =>'http://www.tao.lu/Ontologies/TAOResultServer.rdf#hasResultServerModel',
-    'TAO_RESULTSERVER_MODEL_IMPL_PROP' =>'http://www.tao.lu/Ontologies/TAOResultServer.rdf#implementation',
+    'TAO_RESULTSERVER_MODEL_PROP' => 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#hasResultServerModel',
+    'TAO_RESULTSERVER_MODEL_IMPL_PROP' => 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#implementation',
     'TAO_VOID_RESULT_SERVER' => 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#void',
     //not used
-	'PROPERTY_RESULTSERVER_ENDPOINT' => 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerEndpoint'
-);
-?>
+    'PROPERTY_RESULTSERVER_ENDPOINT' => 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerEndpoint'
+];

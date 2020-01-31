@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -54,7 +55,7 @@ class NoResultStorage extends ConfigurableService implements taoResultServer_mod
     {
     }
 
-    public function configure($callOptions = array())
+    public function configure($callOptions = [])
     {
     }
 
