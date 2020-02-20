@@ -27,21 +27,24 @@ class taoResultServer_actions_QtiRestResults extends tao_actions_RestController
 {
     const TESTTAKER = 'testtaker';
     const DELIVERY = 'delivery';
+    const LAST_RESULT = 'last_result';
     const DELIVERY_EXECUTION = 'deliveryExecution';
     const RESULT = 'result';
-    
+
     protected $service;
-    
+
     public function getQtiResultXml()
     {
         try {
             $this->checkMethod();
-        
+
             $this->validateParams([self::DELIVERY, self::RESULT]);
+
             $deliveryId = $this->getRequestParameter(self::DELIVERY);
             $resultId = $this->getRequestParameter(self::RESULT);
-        
-            $this->returnValidXml($this->getQtiResultService()->getQtiResultXml($deliveryId, $resultId));
+            $lastResult = (bool) $this->getRequestParameter(self::LAST_RESULT);
+
+            $this->returnValidXml($this->getQtiResultService()->getQtiResultXml($deliveryId, $resultId, $lastResult));
         } catch (Exception $e) {
             $this->returnFailure($e);
         }

@@ -21,10 +21,12 @@
 
 namespace oat\taoResultServer\models\classes;
 
+use common_Exception;
 use common_exception_InvalidArgumentType;
 use common_exception_NotFound;
 use common_exception_NotImplemented;
 use core_kernel_classes_Resource;
+use oat\oatbox\service\exception\InvalidServiceManagerException;
 use oat\taoDelivery\model\execution\DeliveryExecution as DeliveryExecutionInterface;
 use oat\taoDelivery\model\execution\ServiceProxy;
 use oat\taoResultServer\models\Exceptions\DuplicateVariableException;
@@ -105,9 +107,12 @@ class QtiResultsService extends ConfigurableService implements ResultService
     /**
      * @param $deliveryId
      * @param $resultId
+     * @param bool $lastResults
      * @return string
+     * @throws common_Exception
+     * @throws InvalidServiceManagerException
      */
-    public function getQtiResultXml($deliveryId, $resultId)
+    public function getQtiResultXml($deliveryId, $resultId, $lastResults = false)
     {
         $deId = $this->getServiceManager()->get(ResultAliasServiceInterface::SERVICE_ID)->getDeliveryExecutionId($resultId);
         if ($deId === null) {
@@ -122,7 +127,7 @@ class QtiResultsService extends ConfigurableService implements ResultService
         $dom = new \DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $itemResults = $crudService->format($resultServer, $deId, CrudResultsService::GROUP_BY_ITEM);
+        $itemResults = $crudService->format($resultServer, $deId, CrudResultsService::GROUP_BY_ITEM, $lastResults);
         $testResults = $crudService->format($resultServer, $deId, CrudResultsService::GROUP_BY_TEST);
 
         $assessmentResultElt = $dom->createElementNS(self::QTI_NS, 'assessmentResult');
@@ -318,7 +323,7 @@ class QtiResultsService extends ConfigurableService implements ResultService
      */
     protected function createCDATANode($dom, $tag, $data)
     {
-        $node =  $dom->createCDATASection($data);
+        $node = $dom->createCDATASection($data);
         $returnValue = $dom->createElementNS(self::QTI_NS, $tag);
         $returnValue->appendChild($node);
         return $returnValue;
