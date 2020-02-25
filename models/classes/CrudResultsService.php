@@ -69,19 +69,23 @@ class CrudResultsService extends \tao_models_classes_CrudService
      * @param taoResultServer_models_classes_ReadableResultStorage $resultStorage
      * @param $resultIdentifier
      * @param int $groupBy
-     * @param bool $lastResult
+     * @param bool $fetchLastAnswers
      * @return array
      * @throws common_exception_Error
      */
-    public function format(taoResultServer_models_classes_ReadableResultStorage $resultStorage, $resultIdentifier, $groupBy = self::GROUP_BY_DELIVERY, $lastResult = false)
+    public function format(
+        taoResultServer_models_classes_ReadableResultStorage $resultStorage,
+        $resultIdentifier,
+        $groupBy = self::GROUP_BY_DELIVERY,
+        $fetchLastAnswers = false
+    )
     {
         $returnData = [];
-
         if ($groupBy === self::GROUP_BY_DELIVERY || $groupBy === self::GROUP_BY_ITEM) {
             $calls = $resultStorage->getRelatedItemCallIds($resultIdentifier);
         } else {
             $calls = $resultStorage->getRelatedTestCallIds($resultIdentifier);
-            $lastResult = false;
+            $fetchLastAnswers = false;
         }
 
         foreach ($calls as $callId) {
@@ -90,8 +94,8 @@ class CrudResultsService extends \tao_models_classes_CrudService
             foreach ($results as $result) {
                 $result = array_pop($result);
                 if (isset($result->variable)) {
-                    $resource = $this->formResource($result->variable);
-                    if (!$lastResult) {
+                    $resource = $this->getFormResource($result->variable);
+                    if (!$fetchLastAnswers) {
                         $lastData[] = $resource;
                     } elseif ((empty($lastData[$resource['identifier']])
                         || preg_replace('/0(\.\d*)\s(\d*)/', '$2$1', $resource['epoch'])
@@ -194,7 +198,7 @@ class CrudResultsService extends \tao_models_classes_CrudService
      * @return array
      * @throws common_exception_Error
      */
-    protected function formResource($variable){
+    protected function getFormResource($variable){
         $resource['value'] = $variable->getValue();
         $resource['identifier'] = $variable->getIdentifier();
         if ($variable instanceof taoResultServer_models_classes_ResponseVariable) {
