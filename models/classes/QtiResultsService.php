@@ -107,12 +107,12 @@ class QtiResultsService extends ConfigurableService implements ResultService
     /**
      * @param $deliveryId
      * @param $resultId
-     * @param bool $lastResults
+     * @param bool $fetchOnlyLastAttemptResult
      * @return string
      * @throws common_Exception
      * @throws InvalidServiceManagerException
      */
-    public function getQtiResultXml($deliveryId, $resultId, $lastResults = false)
+    public function getQtiResultXml($deliveryId, $resultId, $fetchOnlyLastAttemptResult = false)
     {
         $deId = $this->getServiceManager()->get(ResultAliasServiceInterface::SERVICE_ID)->getDeliveryExecutionId($resultId);
         if ($deId === null) {
@@ -127,7 +127,7 @@ class QtiResultsService extends ConfigurableService implements ResultService
         $dom = new \DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $itemResults = $crudService->format($resultServer, $deId, CrudResultsService::GROUP_BY_ITEM, $lastResults);
+        $itemResults = $crudService->format($resultServer, $deId, CrudResultsService::GROUP_BY_ITEM, $fetchOnlyLastAttemptResult);
         $testResults = $crudService->format($resultServer, $deId, CrudResultsService::GROUP_BY_TEST);
 
         $assessmentResultElt = $dom->createElementNS(self::QTI_NS, 'assessmentResult');

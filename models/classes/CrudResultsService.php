@@ -69,7 +69,7 @@ class CrudResultsService extends \tao_models_classes_CrudService
      * @param taoResultServer_models_classes_ReadableResultStorage $resultStorage
      * @param $resultIdentifier
      * @param int $groupBy
-     * @param bool $fetchLastAnswers
+     * @param bool $fetchOnlyLastAttemptResult
      * @return array
      * @throws common_exception_Error
      */
@@ -77,15 +77,15 @@ class CrudResultsService extends \tao_models_classes_CrudService
         taoResultServer_models_classes_ReadableResultStorage $resultStorage,
         $resultIdentifier,
         $groupBy = self::GROUP_BY_DELIVERY,
-        $fetchLastAnswers = false
+        $fetchOnlyLastAttemptResult = false
     )
     {
-        $returnData = [];
+        $groupedData = [];
         if ($groupBy === self::GROUP_BY_DELIVERY || $groupBy === self::GROUP_BY_ITEM) {
             $calls = $resultStorage->getRelatedItemCallIds($resultIdentifier);
         } else {
             $calls = $resultStorage->getRelatedTestCallIds($resultIdentifier);
-            $fetchLastAnswers = false;
+            $fetchOnlyLastAttemptResult = false;
         }
 
         foreach ($calls as $callId) {
@@ -95,22 +95,28 @@ class CrudResultsService extends \tao_models_classes_CrudService
                 $result = array_pop($result);
                 if (isset($result->variable)) {
                     $resource = $this->getFormResource($result->variable);
-                    if (!$fetchLastAnswers) {
+                    if (!$fetchOnlyLastAttemptResult) {
                         $lastData[] = $resource;
-                    } elseif ((empty($lastData[$resource['identifier']])
-                        || preg_replace('/0(\.\d*)\s(\d*)/', '$2$1', $resource['epoch'])
-                        > preg_replace('/0(\.\d*)\s(\d*)/', '$2$1', $lastData[$resource['identifier']]['epoch']))) {
-                        $lastData[$resource['identifier']] = $resource;
+                    } else {
+                        $currentResTime = preg_replace('/0(\.\d*)\s(\d*)/', '$2$1', $resource['epoch']);
+                        $previousResTime = preg_replace(
+                            '/0(\.\d*)\s(\d*)/',
+                            '$2$1',
+                            $lastData[$resource['identifier']]['epoch'] ?? '0.0 0'
+                        );
+                        if ($currentResTime > $previousResTime) {
+                            $lastData[$resource['identifier']] = $resource;
+                        }
                     }
                 }
             }
-            if ($groupBy === self::GROUP_BY_DELIVERY) {
-                $returnData[$resultIdentifier] = array_merge($returnData[$resultIdentifier] ?? [], array_values($lastData));
-            } else {
-                $returnData[$callId] = array_merge($returnData[$callId] ?? [], array_values($lastData));
-            }
+            $groupKey = $groupBy === self::GROUP_BY_DELIVERY ? $resultIdentifier : $callId;
+            $groupedData[$groupKey][] = array_values($lastData);
         }
-        return $returnData;
+        foreach($groupedData as $groupKey => $items){
+            $returnData[$groupKey] = array_merge(...$items);
+        }
+        return $returnData ?? [];
     }
 
     public function getAll()

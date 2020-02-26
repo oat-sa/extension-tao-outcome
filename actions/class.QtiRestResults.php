@@ -42,9 +42,9 @@ class taoResultServer_actions_QtiRestResults extends tao_actions_RestController
 
             $deliveryId = $this->getRequestParameter(self::DELIVERY);
             $resultId = $this->getRequestParameter(self::RESULT);
-            $lastResult = (bool) $this->getRequestParameter(self::LAST_RESULT);
+            $fetchOnlyLastAttemptResult = filter_var($this->getRequestParameter(self::LAST_RESULT), FILTER_VALIDATE_BOOLEAN);
 
-            $this->returnValidXml($this->getQtiResultService()->getQtiResultXml($deliveryId, $resultId, $lastResult));
+            $this->returnValidXml($this->getQtiResultService()->getQtiResultXml($deliveryId, $resultId, $fetchOnlyLastAttemptResult));
         } catch (Exception $e) {
             $this->returnFailure($e);
         }
