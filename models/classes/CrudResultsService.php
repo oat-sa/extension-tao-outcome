@@ -21,8 +21,12 @@
 
 namespace oat\taoResultServer\models\classes;
 
+use common_exception_Error;
+use core_kernel_classes_Class;
 use oat\taoDelivery\model\execution\ServiceProxy;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
+use taoResultServer_models_classes_ReadableResultStorage;
+use taoResultServer_models_classes_ResponseVariable;
 
 /**
  * .Crud services implements basic CRUD services, orginally intended for REST controllers/ HTTP exception handlers
@@ -43,7 +47,7 @@ class CrudResultsService extends \tao_models_classes_CrudService
     public function __construct()
     {
         parent::__construct();
-        $this->resultClass = new \core_kernel_classes_Class(ResultService::DELIVERY_RESULT_CLASS_URI);
+        $this->resultClass = new core_kernel_classes_Class(ResultService::DELIVERY_RESULT_CLASS_URI);
     }
 
     public function getRootClass()
@@ -55,49 +59,64 @@ class CrudResultsService extends \tao_models_classes_CrudService
     {
         $deliveryExecution = ServiceProxy::singleton()->getDeliveryExecution($uri);
         $delivery = $deliveryExecution->getDelivery();
-    
+
         $resultService = $this->getServiceLocator()->get(ResultServerService::SERVICE_ID);
         $implementation = $resultService->getResultStorage($delivery->getUri());
         return $this->format($implementation, $uri);
     }
-        
-    public function format(\taoResultServer_models_classes_ReadableResultStorage $resultStorage, $resultIdentifier, $groupBy = self::GROUP_BY_DELIVERY)
+
+    /**
+     * @param taoResultServer_models_classes_ReadableResultStorage $resultStorage
+     * @param $resultIdentifier
+     * @param int $groupBy
+     * @param bool $fetchOnlyLastAttemptResult
+     * @return array
+     * @throws common_exception_Error
+     */
+    public function format(
+        taoResultServer_models_classes_ReadableResultStorage $resultStorage,
+        $resultIdentifier,
+        $groupBy = self::GROUP_BY_DELIVERY,
+        $fetchOnlyLastAttemptResult = false
+    )
     {
-        $returnData = [];
-        
+        $groupedData = [];
         if ($groupBy === self::GROUP_BY_DELIVERY || $groupBy === self::GROUP_BY_ITEM) {
             $calls = $resultStorage->getRelatedItemCallIds($resultIdentifier);
         } else {
             $calls = $resultStorage->getRelatedTestCallIds($resultIdentifier);
+            $fetchOnlyLastAttemptResult = false;
         }
 
         foreach ($calls as $callId) {
             $results = $resultStorage->getVariables($callId);
-            $resource = [];
+            $lastData = [];
             foreach ($results as $result) {
                 $result = array_pop($result);
                 if (isset($result->variable)) {
-                    $resource['value'] = $result->variable->getValue();
-                    $resource['identifier'] = $result->variable->getIdentifier();
-                    if ($result->variable instanceof \taoResultServer_models_classes_ResponseVariable) {
-                        $type = "http://www.tao.lu/Ontologies/TAOResult.rdf#ResponseVariable";
+                    $resource = $this->getFormResource($result->variable);
+                    if (!$fetchOnlyLastAttemptResult) {
+                        $lastData[] = $resource;
                     } else {
-                        $type = "http://www.tao.lu/Ontologies/TAOResult.rdf#OutcomeVariable";
+                        $currentResTime = preg_replace('/0(\.\d*)\s(\d*)/', '$2$1', $resource['epoch']);
+                        $previousResTime = preg_replace(
+                            '/0(\.\d*)\s(\d*)/',
+                            '$2$1',
+                            $lastData[$resource['identifier']]['epoch'] ?? '0.0 0'
+                        );
+                        if ($currentResTime > $previousResTime) {
+                            $lastData[$resource['identifier']] = $resource;
+                        }
                     }
-                    $resource['type'] = new \core_kernel_classes_Class($type);
-                    $resource['epoch'] = $result->variable->getEpoch();
-                    $resource['cardinality'] = $result->variable->getCardinality();
-                    $resource['basetype'] = $result->variable->getBaseType();
-                }
-
-                if ($groupBy === self::GROUP_BY_DELIVERY) {
-                    $returnData[$resultIdentifier][] = $resource;
-                } else {
-                    $returnData[$callId][] = $resource;
                 }
             }
+            $groupKey = $groupBy === self::GROUP_BY_DELIVERY ? $resultIdentifier : $callId;
+            $groupedData[$groupKey][] = array_values($lastData);
         }
-        return $returnData;
+        foreach($groupedData as $groupKey => $items){
+            $returnData[$groupKey] = array_merge(...$items);
+        }
+        return $returnData ?? [];
     }
 
     public function getAll()
@@ -140,14 +159,13 @@ class CrudResultsService extends \tao_models_classes_CrudService
                     $properties[] = $property;
                 }
                 $resources[] = [
-                    'uri'           => $result['deliveryResultIdentifier'],
-                    'properties'    => $properties
+                    'uri'        => $result['deliveryResultIdentifier'],
+                    'properties' => $properties
                 ];
             }
         }
         return $resources;
     }
-
 
 
     public function delete($resource)
@@ -160,7 +178,6 @@ class CrudResultsService extends \tao_models_classes_CrudService
         throw new \common_exception_NoImplementation();
     }
 
-   
 
     public function update($uri = null, $propertiesValues = [])
     {
@@ -180,5 +197,24 @@ class CrudResultsService extends \tao_models_classes_CrudService
     protected function getClassService()
     {
         // TODO: Implement getClassService() method.
+    }
+
+    /**
+     * @param $variable
+     * @return array
+     * @throws common_exception_Error
+     */
+    protected function getFormResource($variable){
+        $resource['value'] = $variable->getValue();
+        $resource['identifier'] = $variable->getIdentifier();
+        if ($variable instanceof taoResultServer_models_classes_ResponseVariable) {
+            $resource['type'] = new core_kernel_classes_Class('http://www.tao.lu/Ontologies/TAOResult.rdf#ResponseVariable');
+        } else {
+            $resource['type']= new core_kernel_classes_Class('http://www.tao.lu/Ontologies/TAOResult.rdf#OutcomeVariable');
+        }
+        $resource['epoch'] = $variable->getEpoch();
+        $resource['cardinality'] = $variable->getCardinality();
+        $resource['basetype'] = $variable->getBaseType();
+        return $resource;
     }
 }
