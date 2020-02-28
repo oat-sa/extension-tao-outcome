@@ -68,7 +68,8 @@ interface ResultService extends PhpSerializable
      *
      * @param $deliveryId
      * @param $resultId
+     * @param bool $fetchOnlyLastAttemptResult
      * @return mixed
      */
-    public function getQtiResultXml($deliveryId, $resultId);
+    public function getQtiResultXml($deliveryId, $resultId, $fetchOnlyLastAttemptResult = false);
 }
