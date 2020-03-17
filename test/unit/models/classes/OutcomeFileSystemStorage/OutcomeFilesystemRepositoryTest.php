@@ -83,7 +83,6 @@ class OutcomeFilesystemRepositoryTest extends TestCase
             [$variable1, $variable2],
             'callIdItem'
         );
-        $this->assertTrue(true);
     }
 
     public function testStoreVariable()
@@ -91,7 +90,6 @@ class OutcomeFilesystemRepositoryTest extends TestCase
         $variable = $this->getVariable('file', 'fileContent');
 
         $this->repository->storeItemVariable('deliveryId', 'test', 'item', $variable, 'callIdItem');
-        $this->assertTrue(true);
     }
 
     /**
