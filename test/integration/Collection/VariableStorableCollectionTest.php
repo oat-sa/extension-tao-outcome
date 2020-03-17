@@ -67,8 +67,8 @@ class VariableStorableCollectionTest extends TestCase
         $array = $collection->toStorableArray();
         $this->assertArrayHasKey('variable1', $array);
         $this->assertArrayHasKey('variable2', $array);
-        $this->assertInternalType('string', $array['variable1']);
-        $this->assertInternalType('string', $array['variable2']);
+        $this->assertIsString($array['variable1']);
+        $this->assertIsString($array['variable2']);
         $this->assertSame('callIdTest', $collection->getIdentifier());
     }
 
@@ -96,8 +96,8 @@ class VariableStorableCollectionTest extends TestCase
         $array = $collection->toStorableArray();
         $this->assertArrayHasKey('variable1', $array);
         $this->assertArrayHasKey('variable2', $array);
-        $this->assertInternalType('string', $array['variable1']);
-        $this->assertInternalType('string', $array['variable2']);
+        $this->assertIsString($array['variable1']);
+        $this->assertIsString($array['variable2']);
         $this->assertSame('callIdItem', $collection->getIdentifier());
     }
 }

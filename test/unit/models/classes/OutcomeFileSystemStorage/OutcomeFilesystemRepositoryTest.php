@@ -51,7 +51,7 @@ class OutcomeFilesystemRepositoryTest extends TestCase
         $variable = $this->repository->getVariable('callId', 'varId');
 
         $this->assertNotEmpty($variable);
-        $this->assertisarray($variable);
+        $this->assertIsArray($variable);
         $this->assertInstanceOf(taoResultServer_models_classes_ResponseVariable::class, $variable[0]->variable);
         $this->assertEquals('file', $variable[0]->variable->getBaseType());
     }
@@ -66,7 +66,7 @@ class OutcomeFilesystemRepositoryTest extends TestCase
         $variable = $this->repository->getVariables('callId');
 
         $this->assertNotEmpty($variable);
-        $this->assertisarray($variable);
+        $this->assertIsArray($variable);
         $this->assertInstanceOf(taoResultServer_models_classes_ResponseVariable::class, $variable[0][0]->variable);
         $this->assertEquals('file', $variable[0][0]->variable->getBaseType());
     }
