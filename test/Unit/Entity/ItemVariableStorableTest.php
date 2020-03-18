@@ -19,28 +19,28 @@
  *
  */
 
-namespace oat\taoResultServer\test\Entity;
+namespace oat\taoResultServer\test\Unit\Entity;
 
-use oat\taoResultServer\models\Entity\TestVariableStorable;
-use taoResultServer_models_classes_OutcomeVariable;
+use oat\taoResultServer\models\Entity\ItemVariableStorable;
 
-class TestVariableStorableTest extends \PHPUnit_Framework_TestCase
+class ItemVariableStorableTest extends \PHPUnit_Framework_TestCase
 {
+
     public function testSerializeAsExpected()
     {
-        $resultVariable = $this->getMockBuilder(taoResultServer_models_classes_OutcomeVariable::class)->disableOriginalConstructor()->getMock();
+        $resultVariable = $this->getMockBuilder(\taoResultServer_models_classes_Variable::class)->disableOriginalConstructor()->getMock();
 
-        $var = new TestVariableStorable('deliveryResultIdentifier', 'test', $resultVariable, 'callIdTest');
+        $var = new \oat\taoResultServer\models\Entity\ItemVariableStorable('deliveryResultIdentifier', 'test', $resultVariable, 'item', 'callIdItem');
 
         $this->assertInstanceOf(\JsonSerializable::class, $var);
         $this->assertEquals([
             "deliveryResultIdentifier" => 'deliveryResultIdentifier',
             "test" => 'test',
-            "item" => null,
+            "item" => 'item',
             "variable" => serialize($resultVariable),
-            "callIdItem" => null,
-            "uri" => 'deliveryResultIdentifiercallIdTest',
-            "callIdTest" => 'callIdTest',
+            "callIdItem" => 'callIdItem',
+            "callIdTest" => null,
+            "uri" => 'deliveryResultIdentifiercallIdItem',
             "class" => get_class($resultVariable)
 
         ], $var->jsonSerialize());

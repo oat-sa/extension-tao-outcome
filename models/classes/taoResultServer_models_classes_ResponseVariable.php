@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,78 +19,56 @@
  *
  * Copyright (c) 2013 (original work) Open Assessment Technologies S.A.
  *
- *
  * @author "Patrick Plichart, <patrick@taotesting.com>"
- * 
+ *
  * An Assessment Result is used to report the results of a candidate's interaction
  * with a test and/or one or more items attempted. Information about the test is optional,
- * in some systems it may be possible to interact with items that are not organized into 
- * a test at all. For example, items that are organized with learning resources and 
+ * in some systems it may be possible to interact with items that are not organized into
+ * a test at all. For example, items that are organized with learning resources and
  * presented individually in a formative context.
- * 
  */
 class taoResultServer_models_classes_ResponseVariable extends taoResultServer_models_classes_Variable
 {
-
     /**
      * The correct response may be output as part of the report if desired.
-     * Systems are not limited to reporting correct responses declared in responseDeclarations. For example, a correct response may be set by a templateRule or may simply have been suppressed from the declaration passed to the delivery engine (e.g., for security).
-     * 
-     * @var bool (todo should be a class)
+     * Systems are not limited to reporting correct responses declared in responseDeclarations. For example, a correct
+     * response may be set by a templateRule or may simply have been suppressed from the declaration passed to the
+     * delivery engine (e.g., for security).
+     *
+     * @var mixed
      */
-    public $correctResponse;
+    protected $correctResponse;
 
     /**
-     *
-     * @var string
+     * @var string Base64 encoded candidate response
      */
-    public $candidateResponse;
+    protected $candidateResponse;
 
-    
-    /**
-     * substitued for the db storage into a GenerisRdf::GENERIS_TRUE/FALSE
-     *
-     * @access public
-     * @author "Patrick Plichart, <patrick@taotesting.com>"
-     * @param string correctResponse
-     */
-    public function setCorrectResponse($correctResponse)
+    public function setCorrectResponse($correctResponse): self
     {
         $this->correctResponse = $correctResponse;
+
+        return $this;
     }
 
-    /**
-     *
-     * @access public
-     * @author "Patrick Plichart, <patrick@taotesting.com>"
-     * @return boolean
-     */
     public function getCorrectResponse()
     {
         return $this->correctResponse;
     }
 
-    /**
-     *
-     * @access public
-     * @author "Patrick Plichart, <patrick@taotesting.com>"
-     * @param unknown $candidateResponse            
-     */
-    public function setCandidateResponse($candidateResponse)
+    public function setCandidateResponse($candidateResponse): self
     {
-        //binary and nullbyte safe
         $this->candidateResponse = base64_encode($candidateResponse);
+
+        return $this;
     }
+
     /**
-     *
-     * @access public
-     * @author "Patrick Plichart, <patrick@taotesting.com>"
-     * @return mixed
+     * @return string|false
      */
     public function getCandidateResponse()
-    {   
-        //base64 binary and nullbyte safe
-        return base64_decode($this->candidateResponse);      
+    {
+        return base64_decode($this->candidateResponse);
     }
 
     /**
@@ -101,9 +82,22 @@ class taoResultServer_models_classes_ResponseVariable extends taoResultServer_mo
     /**
      * {@inheritdoc}
      */
-    public function setValue($value){
+    public function setValue($value): self
+    {
         $this->setCandidateResponse($value);
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function jsonSerialize()
+    {
+        return parent::jsonSerialize() +
+            [
+                'correctResponse' => $this->correctResponse,
+                'candidateResponse' => $this->candidateResponse,
+            ];
     }
 }
-
-?>

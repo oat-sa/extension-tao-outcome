@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,78 +19,54 @@
  *
  * Copyright (c) 2013 (original work) Open Assessment Technologies S.A.
  *
- *
  * @author "Patrick Plichart, <patrick@taotesting.com>"
- * 
+ *
  * An Assessment Result is used to report the results of a candidate's interaction
  * with a test and/or one or more items attempted. Information about the test is optional,
- * in some systems it may be possible to interact with items that are not organized into 
- * a test at all. For example, items that are organized with learning resources and 
+ * in some systems it may be possible to interact with items that are not organized into
+ * a test at all. For example, items that are organized with learning resources and
  * presented individually in a formative context.
- * 
  */
 class taoResultServer_models_classes_OutcomeVariable extends taoResultServer_models_classes_Variable
 {
-
     /**
      * taken from the corresponding outcomeDeclaration.
-     * 
-     * @var float
-     */
-    public $normalMaximum;
-
-    /**
      *
      * @var float
      */
-    public $normalMinimum;
+    protected $normalMaximum;
 
+    /** @var float */
+    protected $normalMinimum;
 
     /**
      * The value(s) of the outcome variable.
      * The order of the values is significant only if the outcome was declared with ordered cardinality.
-     * 
-     * @var array
+     *
+     * @var string Base64 encoded
      */
     public $value;
 
-    /**
-     * @param float $normalMaximum
-     */
-    public function setNormalMaximum($normalMaximum)
+    public function setNormalMaximum(float $normalMaximum): self
     {
         $this->normalMaximum = $normalMaximum;
+
+        return $this;
     }
 
-    /**
-     *
-     * @access public 
-     * @author "Patrick Plichart, <patrick@taotesting.com>"
-     * @return float
-     */
-    public function getNormalMaximum()
+    public function getNormalMaximum(): ?float
     {
         return $this->normalMaximum;
     }
 
-    /**
-     *
-     * @access public 
-     * @author "Patrick Plichart, <patrick@taotesting.com>"
-     * @param float $normalMinimum
-     */
-    public function setNormalMinimum($normalMinimum)
+    public function setNormalMinimum(float $normalMinimum): self
     {
         $this->normalMinimum = $normalMinimum;
+
+        return $this;
     }
 
-    /**
-     *
-     * @access public
-     * @author "Patrick Plichart, <patrick@taotesting.com>"
-     * @return float
-     */
-    public function getNormalMinimum()
+    public function getNormalMinimum(): ?float
     {
         return $this->normalMinimum;
     }
@@ -97,18 +75,30 @@ class taoResultServer_models_classes_OutcomeVariable extends taoResultServer_mod
      * {@inheritdoc}
      */
     public function getValue()
-    {   
+    {
         return base64_decode($this->value);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setValue($value)
-    {   
-        //null byte, binary 
+    public function setValue($value): self
+    {
         $this->value = base64_encode($value);
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function jsonSerialize()
+    {
+        return parent::jsonSerialize() +
+            [
+                'normalMinimum' => $this->normalMinimum,
+                'normalMaximum' => $this->normalMaximum,
+                'value' => $this->value,
+            ];
     }
 }
-
-?>
