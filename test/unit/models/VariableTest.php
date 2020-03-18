@@ -28,7 +28,7 @@ class VariableTest extends TestCase
      */
     private $object;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->object = $this->getMockForAbstractClass(Variable::class);
