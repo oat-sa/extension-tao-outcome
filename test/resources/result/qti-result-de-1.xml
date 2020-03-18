@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assessmentResult xmlns="http://www.imsglobal.org/xsd/imsqti_result_v2p1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqti_result_v2p1 http://www.imsglobal.org/xsd/qti/qtiv2p1/imsqti_result_v2p1.xsd">
+    <context/>
+    <testResult identifier="9254425e-7c2b-4125-a2dd-b3f168311110" datestamp="2019-09-30T13:12:08"/>
+    <itemResult identifier="item-2" datestamp="2019-09-30T13:12:08" sessionStatus="final">
+        <responseVariable identifier="numAttempts" cardinality="single" baseType="integer">
+            <candidateResponse>
+                <value>2</value>
+            </candidateResponse>
+        </responseVariable>
+        <responseVariable identifier="duration" cardinality="single" baseType="duration">
+            <candidateResponse>
+                <value>PT2S</value>
+            </candidateResponse>
+        </responseVariable>
+        <outcomeVariable identifier="completionStatus" cardinality="single" baseType="identifier">
+            <value>completed</value>
+        </outcomeVariable>
+        <outcomeVariable identifier="SCORE" cardinality="single" baseType="float">
+            <value>0</value>
+        </outcomeVariable>
+        <outcomeVariable identifier="MAXSCORE" cardinality="single" baseType="float">
+            <value>1</value>
+        </outcomeVariable>
+        <responseVariable identifier="RESPONSE" cardinality="multiple" baseType="identifier">
+            <candidateResponse>
+                <value>choice_2</value>
+                <value>choice_3</value>
+            </candidateResponse>
+        </responseVariable>
+    </itemResult>
+    <itemResult identifier="item-3" datestamp="2019-09-30T13:13:08" sessionStatus="final">
+        <responseVariable identifier="numAttempts" cardinality="single" baseType="integer">
+            <candidateResponse>
+                <value>2</value>
+            </candidateResponse>
+        </responseVariable>
+        <responseVariable identifier="duration" cardinality="single" baseType="duration">
+            <candidateResponse>
+                <value>PT0S</value>
+            </candidateResponse>
+        </responseVariable>
+        <outcomeVariable identifier="completionStatus" cardinality="single" baseType="identifier">
+            <value>completed</value>
+        </outcomeVariable>
+        <outcomeVariable identifier="SCORE" cardinality="single" baseType="float">
+            <value>0</value>
+        </outcomeVariable>
+        <outcomeVariable identifier="MAXSCORE" cardinality="single" baseType="float">
+            <value>1</value>
+        </outcomeVariable>
+        <responseVariable identifier="RESPONSE" cardinality="single" baseType="integer">
+            <candidateResponse>
+                <value>39</value>
+            </candidateResponse>
+        </responseVariable>
+    </itemResult>
+</assessmentResult>

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,19 +18,21 @@
  * Copyright (c) 2016-2017 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  *
  */
+
 namespace oat\taoResultServer\models\classes;
 
 use oat\taoDelivery\model\execution\Delete\DeliveryExecutionDelete;
 
-interface ResultServerService extends DeliveryExecutionDelete {
+interface ResultServerService extends DeliveryExecutionDelete
+{
 
     const SERVICE_ID = 'taoResultServer/resultservice';
 
-    const CLASS_URI	= 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServer';
+    const CLASS_URI = 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServer';
 
     const PROPERTY_MODEL = 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerModel';
 
-    const PROPERTY_HAS_MODEL ='http://www.tao.lu/Ontologies/TAOResultServer.rdf#hasResultServerModel';
+    const PROPERTY_HAS_MODEL = 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#hasResultServerModel';
 
     const PROPERTY_MODEL_IMPL = 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#implementation';
 
@@ -54,5 +57,4 @@ interface ResultServerService extends DeliveryExecutionDelete {
     public function getResultStorage($deliveryId);
 
     public function isConfigurable();
-
 }

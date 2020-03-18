@@ -29,6 +29,15 @@ declare(strict_types=1);
  */
 abstract class taoResultServer_models_classes_Variable implements JsonSerializable
 {
+
+    const CARDINALITY_SINGLE = 'single';
+
+    const CARDINALITY_MULTIPLE = 'multiple';
+
+    const CARDINALITY_ORDERED = 'ordered';
+
+    const CARDINALITY_RECORD = 'record';
+
     /**
      * The purpose of an itemVariable is to report the value of the item variable with the given identifier.
      *
@@ -73,15 +82,17 @@ abstract class taoResultServer_models_classes_Variable implements JsonSerializab
     /**
      * @throws common_exception_InvalidArgumentType
      */
-    public function setCardinality(string $cardinality = 'single'): self
+    public function setCardinality($cardinality = self::CARDINALITY_SINGLE)
     {
-        if (!(in_array($cardinality, [
-            'single',
-            'multiple',
-            'ordered',
-            'record',
-        ]))) {
-            throw new common_exception_InvalidArgumentType('cardinality');
+        if (
+            !in_array($cardinality, [
+            self::CARDINALITY_SINGLE,
+            self::CARDINALITY_MULTIPLE,
+            self::CARDINALITY_ORDERED,
+            self::CARDINALITY_RECORD
+            ])
+        ) {
+            throw new common_exception_InvalidArgumentType("cardinality");
         }
 
         $this->cardinality = $cardinality;
@@ -118,9 +129,36 @@ abstract class taoResultServer_models_classes_Variable implements JsonSerializab
         return $this->epoch;
     }
 
-    public function isSetEpoch(): bool
+    /**
+     * Returns the time of the creation
+     * @return float|null
+     */
+    public function getCreationTime()
+    {
+        if (!isset($this->epoch)) {
+            return null;
+        }
+        list($usec, $sec) = explode(" ", $this->epoch);
+        return floatval((float) $usec + (float) $sec);
+    }
+
+    /**
+     * Allow to know if the epoch is set or not
+     * @return bool
+     */
+    public function isSetEpoch()
     {
         return (isset($this->epoch));
+    }
+
+    /**
+     * Check if variable is of multiple type.
+     *
+     * @return bool
+     */
+    public function isMultiple()
+    {
+        return in_array($this->cardinality, [self::CARDINALITY_MULTIPLE, self::CARDINALITY_ORDERED]);
     }
 
     /**

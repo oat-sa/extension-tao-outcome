@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assessmentResult xmlns="http://www.imsglobal.org/xsd/imsqti_result_v2p1"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqti_result_v2p1  http://www.imsglobal.org/xsd/qti/qtiv2p1/imsqti_result_v2p1.xsd">
+    <context sourcedId="fixture-sourcedId">
+        <sessionIdentifier sourceID="http://sessionIdentifier1-sourceID" identifier="sessionIdentifier1-id"/>
+        <sessionIdentifier sourceID="http://sessionIdentifier2-sourceID" identifier="sessionIdentifier2-id"/>
+    </context>
+    <testResult identifier="fixture-test-identifier" datestamp="2018-06-27T09:41:45.529">
+        <responseVariable identifier="response-identifier" cardinality="single">
+            <correctResponse>
+                <value>fixture-test-value1</value>
+                <value>fixture-test-value2</value>
+            </correctResponse>
+            <candidateResponse>
+                <value fieldIdentifier="test-id-3">fixture-test-value3</value>
+                <value fieldIdentifier="test-id-4">fixture-test-value4</value>
+                <value fieldIdentifier="test-id-5">fixture-test-value5</value>
+            </candidateResponse>
+        </responseVariable>
+    </testResult>
+    <itemResult identifier="fixture-identifier-itemResult1" datestamp="2018-06-27T09:41:45.529" sessionStatus="final" sequenceIndex="2">
+        <responseVariable cardinality="single" identifier="fixture-identifier1" baseType="string" choiceSequence="value-id-1">
+            <correctResponse>
+                <value>fixture-value6</value>
+                <value>fixture-value7</value>
+            </correctResponse>
+            <candidateResponse>
+                <value fieldIdentifier="value-id-8">fixture-value8</value>
+                <value fieldIdentifier="value-id-9">fixture-value9</value>
+                <value fieldIdentifier="value-id-10">fixture-value10</value>
+            </candidateResponse>
+        </responseVariable>
+        <outcomeVariable cardinality="single" identifier="fixture-identifier2" baseType="string" view="candidate" interpretation="fixture-interpretation" longInterpretation="http://fixture-interpretation" normalMinimum="2" normalMaximum="3" masteryValue="4">
+            <value>fixture-value11</value>
+        </outcomeVariable>
+        <candidateComment>comment-fixture</candidateComment>
+    </itemResult>
+    <itemResult identifier="fixture-identifier-itemResult2" datestamp="2018-06-27T09:41:45.529" sessionStatus="final" sequenceIndex="2">
+        <responseVariable cardinality="single" identifier="fixture-identifier3" baseType="string" choiceSequence="value-id-1">
+            <correctResponse>
+                <value>fixture-value14</value>
+            </correctResponse>
+            <candidateResponse>
+                <value fieldIdentifier="value-id-16">fixture-value16</value>
+            </candidateResponse>
+        </responseVariable>
+        <outcomeVariable cardinality="single" identifier="fixture-identifier4" baseType="string" view="candidate" interpretation="fixture-interpretation" longInterpretation="http://fixture-interpretation" normalMinimum="4" normalMaximum="6" masteryValue="5">
+            <value>fixture-value19</value>
+        </outcomeVariable>
+    </itemResult>
+    <itemResult identifier="fixture-identifier-itemResult3" datestamp="2018-06-27T09:43:45.529" sessionStatus="final" sequenceIndex="2">
+        <responseVariable cardinality="single" identifier="fixture-identifier5" baseType="identifier" choiceSequence="value-id-1">
+            <correctResponse>
+                <value>fixture-value20</value>
+            </correctResponse>
+            <candidateResponse/>
+        </responseVariable>
+        <outcomeVariable cardinality="single" identifier="fixture-identifier6" baseType="string" view="candidate" interpretation="fixture-interpretation" longInterpretation="http://fixture-interpretation" normalMinimum="4" normalMaximum="6" masteryValue="5">
+            <value>fixture-value19</value>
+        </outcomeVariable>
+    </itemResult>
+</assessmentResult>

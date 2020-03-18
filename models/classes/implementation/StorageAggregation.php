@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,6 +18,7 @@
  * Copyright (c) 2016 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  *
  */
+
 namespace oat\taoResultServer\models\classes\implementation;
 
 use oat\taoDelivery\model\execution\Delete\DeliveryExecutionDeleteRequest;
@@ -25,19 +27,18 @@ use oat\taoResultServer\models\classes\ResultManagement  as StorageManage;
 use taoResultServer_models_classes_ReadableResultStorage as StorageRead;
 use taoResultServer_models_classes_WritableResultStorage as StorageWrite;
 
-
 class StorageAggregation implements
     StorageRead,
     StorageWrite,
     StorageManage
 {
-    private $implementations = array();    
+    private $implementations = [];
     
     public function __construct($implementations)
     {
         $interfaces = class_implements($this);
         foreach ($interfaces as $interface) {
-            $this->implementations[$interface] = array();
+            $this->implementations[$interface] = [];
         }
         foreach ($implementations as $impl) {
             foreach (array_intersect($interfaces, class_implements($impl)) as $interface) {
@@ -150,7 +151,7 @@ class StorageAggregation implements
         }
     }
     
-    public function configure($callOptions = array())
+    public function configure($callOptions = [])
     {
         foreach ($this->getAllImplementations(StorageWrite::class) as $impl) {
             $success = $impl->configure($callOptions);
@@ -174,9 +175,9 @@ class StorageAggregation implements
         return $this->getOneImplementation(StorageManage::class)->getRelatedTestCallIds($deliveryResultIdentifier);
     }
     
-    public function getResultByDelivery($delivery, $options = array())
+    public function getResultByDelivery($delivery, $options = [])
     {
-        return $this->getOneImplementation(StorageManage::class)->getResultByDelivery($delivery, $options = array());
+        return $this->getOneImplementation(StorageManage::class)->getResultByDelivery($delivery, $options = []);
     }
     
     public function countResultByDelivery($delivery)

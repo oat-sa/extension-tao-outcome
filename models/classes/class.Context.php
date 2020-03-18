@@ -37,7 +37,7 @@ class taoResultServer_models_classes_Context
     /**
      * The system that creates the result (for example, the test delivery system) should assign a session identifier that it can use to identify the session.
      * Subsequent systems that process the result might assign their own identifier to the session which should be added to the context if the result is modified and exported for transport again.
-     * 
+     *
      * @var sessionIdentifier
      */
     private $sessionIdentifiers;
@@ -45,7 +45,7 @@ class taoResultServer_models_classes_Context
     /**
      * A unique identifier for the test candidate.
      * The attribute is defined by the IMS Learning Information Services specification [IMS_LIS].
-     * 
+     *
      * @var string (an uri)
      */
     private $sourcedID;
@@ -70,5 +70,3 @@ class taoResultServer_models_classes_Context
         return $this->sourcedID;
     }
 }
-
-?>

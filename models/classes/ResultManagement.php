@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,11 +18,13 @@
  * Copyright (c) 2014 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  *
  */
+
 namespace oat\taoResultServer\models\classes;
 
 use oat\taoDelivery\model\execution\Delete\DeliveryExecutionDelete;
 
-interface ResultManagement extends \taoResultServer_models_classes_ReadableResultStorage, DeliveryExecutionDelete {
+interface ResultManagement extends \taoResultServer_models_classes_ReadableResultStorage, DeliveryExecutionDelete
+{
     /**
      * Get only one property from a variable
      * @param string $variableId on which we want the property
@@ -55,7 +58,7 @@ interface ResultManagement extends \taoResultServer_models_classes_ReadableResul
      * )
      * @return array of results that match the filter : array(array('deliveryResultIdentifier' => '123', 'testTakerIdentifier' => '456', 'deliveryIdentifier' => '789'))
      */
-    public function getResultByDelivery($delivery, $options = array());
+    public function getResultByDelivery($delivery, $options = []);
 
     /**
      * Count the number of result that match the filter

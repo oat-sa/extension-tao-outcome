@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -29,11 +30,11 @@ interface ResultService extends PhpSerializable
 
     const CONFIG_ID = 'qtiResultsService';
 
-    const DELIVERY_RESULT_CLASS_URI ='http://www.tao.lu/Ontologies/TAOResult.rdf#DeliveryResult';
+    const DELIVERY_RESULT_CLASS_URI = 'http://www.tao.lu/Ontologies/TAOResult.rdf#DeliveryResult';
 
-    const SUBJECT_CLASS_URI ='http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfSubject';
+    const SUBJECT_CLASS_URI = 'http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfSubject';
 
-    const DELIVERY_CLASS_URI ='http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfDelivery';
+    const DELIVERY_CLASS_URI = 'http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfDelivery';
 
     /**
      * Get last delivery execution from $delivery & $testtaker uri
@@ -67,7 +68,8 @@ interface ResultService extends PhpSerializable
      *
      * @param $deliveryId
      * @param $resultId
+     * @param bool $fetchOnlyLastAttemptResult
      * @return mixed
      */
-    public function getQtiResultXml($deliveryId, $resultId);
+    public function getQtiResultXml($deliveryId, $resultId, $fetchOnlyLastAttemptResult = false);
 }

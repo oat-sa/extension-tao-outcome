@@ -43,7 +43,7 @@ class taoResultServer_models_classes_OutcomeVariable extends taoResultServer_mod
      * The value(s) of the outcome variable.
      * The order of the values is significant only if the outcome was declared with ordered cardinality.
      *
-     * @var string Base64 encoded
+     * @var array
      */
     public $value;
 

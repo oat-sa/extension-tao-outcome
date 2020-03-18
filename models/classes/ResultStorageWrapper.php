@@ -89,5 +89,4 @@ class ResultStorageWrapper
     {
         return $this->getResultServer();
     }
-
 }

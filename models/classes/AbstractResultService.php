@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -60,7 +61,7 @@ abstract class AbstractResultService extends ConfigurableService implements Resu
         $storage = null;
         if (class_exists($serviceId)) { //some old serialized session can has class name instead of service id
             $storage = new $serviceId();
-        } elseif($this->getServiceManager()->has($serviceId)) {
+        } elseif ($this->getServiceManager()->has($serviceId)) {
             $storage = $this->getServiceManager()->get($serviceId);
         }
 

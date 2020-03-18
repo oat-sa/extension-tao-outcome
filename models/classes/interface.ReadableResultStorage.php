@@ -18,7 +18,8 @@
  *
  */
 
-interface taoResultServer_models_classes_ReadableResultStorage {
+interface taoResultServer_models_classes_ReadableResultStorage
+{
     
 
     /**
@@ -152,4 +153,3 @@ interface taoResultServer_models_classes_ReadableResultStorage {
      */
     public function getAllDeliveryIds();
 }
-?>
