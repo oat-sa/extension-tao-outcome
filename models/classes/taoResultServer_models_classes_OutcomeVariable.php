@@ -32,18 +32,18 @@ class taoResultServer_models_classes_OutcomeVariable extends taoResultServer_mod
     /**
      * taken from the corresponding outcomeDeclaration.
      *
-     * @var float
+     * @var float|null
      */
     protected $normalMaximum;
 
-    /** @var float */
+    /** @var float|null */
     protected $normalMinimum;
 
     /**
      * The value(s) of the outcome variable.
      * The order of the values is significant only if the outcome was declared with ordered cardinality.
      *
-     * @var array
+     * @var string|null base64 encoded
      */
     public $value;
 

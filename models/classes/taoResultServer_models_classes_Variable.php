@@ -29,14 +29,10 @@ declare(strict_types=1);
  */
 abstract class taoResultServer_models_classes_Variable implements JsonSerializable
 {
-
-    const CARDINALITY_SINGLE = 'single';
-
-    const CARDINALITY_MULTIPLE = 'multiple';
-
-    const CARDINALITY_ORDERED = 'ordered';
-
-    const CARDINALITY_RECORD = 'record';
+    public const CARDINALITY_SINGLE = 'single';
+    public const CARDINALITY_MULTIPLE = 'multiple';
+    public const CARDINALITY_ORDERED = 'ordered';
+    public const CARDINALITY_RECORD = 'record';
 
     /**
      * The purpose of an itemVariable is to report the value of the item variable with the given identifier.
@@ -158,7 +154,7 @@ abstract class taoResultServer_models_classes_Variable implements JsonSerializab
      */
     public function isMultiple()
     {
-        return in_array($this->cardinality, [self::CARDINALITY_MULTIPLE, self::CARDINALITY_ORDERED]);
+        return in_array($this->cardinality, [self::CARDINALITY_MULTIPLE, self::CARDINALITY_ORDERED], true);
     }
 
     /**

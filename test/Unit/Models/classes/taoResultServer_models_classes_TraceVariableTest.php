@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace oat\taoResultServer\test\Unit\Models;
+namespace oat\taoResultServer\test\Unit\Models\classes;
 
 use PHPUnit\Framework\TestCase;
 
@@ -24,25 +24,23 @@ use PHPUnit\Framework\TestCase;
  * Copyright (c) 2020 (original work) Open Assessment Technologies S.A.
  */
 
-class taoResultServer_models_classes_ResponseVariableTest extends TestCase
+class taoResultServer_models_classes_TraceVariableTest extends TestCase
 {
     public function testVariableCanBeJsonSerialized(): void
     {
-        $subject = (new \taoResultServer_models_classes_ResponseVariable())
+        $subject = (new \taoResultServer_models_classes_TraceVariable())
             ->setIdentifier('testIdentifier')
             ->setCardinality('single')
             ->setBaseType('testBaseType')
             ->setEpoch('testEpoch')
-            ->setCorrectResponse('testCorrectResponse')
-            ->setCandidateResponse('testCandidateResponse');
+            ->setTrace('testTrace');
 
         $this->assertSame(json_encode([
             'identifier' => 'testIdentifier',
             'cardinality' => 'single',
             'baseType' => 'testBaseType',
             'epoch' => 'testEpoch',
-            'correctResponse' => 'testCorrectResponse',
-            'candidateResponse' => base64_encode('testCandidateResponse'),
+            'trace' => 'testTrace',
         ]), json_encode($subject));
     }
 }

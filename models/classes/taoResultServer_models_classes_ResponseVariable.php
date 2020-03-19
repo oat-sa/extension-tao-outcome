@@ -35,12 +35,12 @@ class taoResultServer_models_classes_ResponseVariable extends taoResultServer_mo
      * response may be set by a templateRule or may simply have been suppressed from the declaration passed to the
      * delivery engine (e.g., for security).
      *
-     * @var mixed
+     * @var mixed|null
      */
     protected $correctResponse;
 
     /**
-     * @var string Base64 encoded candidate response
+     * @var string|null Base64 encoded candidate response
      */
     protected $candidateResponse;
 

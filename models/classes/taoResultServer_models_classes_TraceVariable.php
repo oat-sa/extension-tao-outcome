@@ -34,7 +34,7 @@ class taoResultServer_models_classes_TraceVariable extends taoResultServer_model
      * choices experienced by the candidate will vary between test instances. When shuffling is in effect, the sequence
      * of choices should be reported as a sequence of choice identifiers using this attribute.
      *
-     * @var string
+     * @var string|null
      */
     protected $trace;
 
