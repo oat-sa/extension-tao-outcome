@@ -78,17 +78,16 @@ abstract class taoResultServer_models_classes_Variable implements JsonSerializab
     /**
      * @throws common_exception_InvalidArgumentType
      */
-    public function setCardinality($cardinality = self::CARDINALITY_SINGLE)
+    public function setCardinality($cardinality = self::CARDINALITY_SINGLE): self
     {
-        if (
-            !in_array($cardinality, [
+        if (!in_array($cardinality, [
             self::CARDINALITY_SINGLE,
             self::CARDINALITY_MULTIPLE,
             self::CARDINALITY_ORDERED,
-            self::CARDINALITY_RECORD
-            ])
+            self::CARDINALITY_RECORD,
+        ], true)
         ) {
-            throw new common_exception_InvalidArgumentType("cardinality");
+            throw new common_exception_InvalidArgumentType('cardinality');
         }
 
         $this->cardinality = $cardinality;
@@ -125,34 +124,22 @@ abstract class taoResultServer_models_classes_Variable implements JsonSerializab
         return $this->epoch;
     }
 
-    /**
-     * Returns the time of the creation
-     * @return float|null
-     */
-    public function getCreationTime()
+    public function getCreationTime(): ?float
     {
         if (!isset($this->epoch)) {
             return null;
         }
-        list($usec, $sec) = explode(" ", $this->epoch);
-        return floatval((float) $usec + (float) $sec);
+        [$usec, $sec] = explode(' ', $this->epoch);
+
+        return ((float)$usec + (float)$sec);
     }
 
-    /**
-     * Allow to know if the epoch is set or not
-     * @return bool
-     */
-    public function isSetEpoch()
+    public function isSetEpoch(): bool
     {
         return (isset($this->epoch));
     }
 
-    /**
-     * Check if variable is of multiple type.
-     *
-     * @return bool
-     */
-    public function isMultiple()
+    public function isMultiple(): bool
     {
         return in_array($this->cardinality, [self::CARDINALITY_MULTIPLE, self::CARDINALITY_ORDERED], true);
     }
@@ -207,26 +194,17 @@ abstract class taoResultServer_models_classes_Variable implements JsonSerializab
 
         switch ($data['type']) {
             case taoResultServer_models_classes_OutcomeVariable::class:
-                self::validateKeys(['normalMinimum', 'normalMaximum', 'value'], $data);
-                $variable = (new taoResultServer_models_classes_OutcomeVariable())
-                    ->setNormalMinimum($data['normalMinimum'])
-                    ->setNormalMaximum($data['normalMaximum'])
-                    ->setValue($data['value']);
+                $variable = self::fromOutcomeVariableData($data);
                 break;
             case taoResultServer_models_classes_ResponseVariable::class:
-                self::validateKeys(['correctResponse', 'candidateResponse'], $data);
-                $variable = (new taoResultServer_models_classes_ResponseVariable())
-                    ->setCorrectResponse($data['correctResponse'])
-                    ->setCandidateResponse($data['candidateResponse']);
+                $variable = self::fromResponseVariableData($data);
                 break;
             case taoResultServer_models_classes_TraceVariable::class:
-                self::validateKeys(['trace'], $data);
-                $variable = (new taoResultServer_models_classes_TraceVariable())->setTrace($data['trace']);
+                $variable = self::fromTraceVariableData($data);
                 break;
             default:
                 throw new \LogicException(sprintf('Unsupported variable type: %s', $data['type']));
         }
-
 
         return $variable
             ->setIdentifier($data['identifier'])
@@ -245,5 +223,33 @@ abstract class taoResultServer_models_classes_Variable implements JsonSerializab
                 throw new LogicException(sprintf('Key "%s" is not defined in variable data.', $key));
             }
         }
+    }
+
+    private static function fromOutcomeVariableData(
+        array $rawOutcomeVariable
+    ): taoResultServer_models_classes_OutcomeVariable {
+        self::validateKeys(['normalMinimum', 'normalMaximum', 'value'], $rawOutcomeVariable);
+
+        return (new taoResultServer_models_classes_OutcomeVariable())
+            ->setNormalMinimum($rawOutcomeVariable['normalMinimum'])
+            ->setNormalMaximum($rawOutcomeVariable['normalMaximum'])
+            ->setValue($rawOutcomeVariable['value']);
+    }
+
+    private static function fromResponseVariableData(
+        array $rawResponseVariable
+    ): taoResultServer_models_classes_ResponseVariable {
+        self::validateKeys(['correctResponse', 'candidateResponse'], $rawResponseVariable);
+
+        return (new taoResultServer_models_classes_ResponseVariable())
+            ->setCorrectResponse($rawResponseVariable['correctResponse'])
+            ->setCandidateResponse($rawResponseVariable['candidateResponse']);
+    }
+
+    private static function fromTraceVariableData(array $rawTraceVariable): taoResultServer_models_classes_TraceVariable
+    {
+        self::validateKeys(['trace'], $rawTraceVariable);
+
+        return (new taoResultServer_models_classes_TraceVariable())->setTrace($rawTraceVariable['trace']);
     }
 }

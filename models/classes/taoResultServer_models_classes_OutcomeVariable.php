@@ -45,7 +45,7 @@ class taoResultServer_models_classes_OutcomeVariable extends taoResultServer_mod
      *
      * @var string|null base64 encoded
      */
-    public $value;
+    protected $value;
 
     public function setNormalMaximum(float $normalMaximum): self
     {
