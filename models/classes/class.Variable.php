@@ -184,33 +184,33 @@ abstract class taoResultServer_models_classes_Variable implements JsonSerializab
      * @throws common_exception_InvalidArgumentType
      * @throws LogicException
      */
-    public static function fromData(array $data)
+    public static function fromData(array $rawVariable)
     {
-        if (!isset($data['type'])) {
+        if (!isset($rawVariable['type'])) {
             throw new \LogicException('Variable type declaration is missing.');
         }
 
-        self::validateKeys(['identifier', 'cardinality', 'baseType', 'epoch'], $data);
+        self::validateKeys(['identifier', 'cardinality', 'baseType', 'epoch'], $rawVariable);
 
-        switch ($data['type']) {
+        switch ($rawVariable['type']) {
             case taoResultServer_models_classes_OutcomeVariable::class:
-                $variable = self::fromOutcomeVariableData($data);
+                $variable = self::fromOutcomeVariableData($rawVariable);
                 break;
             case taoResultServer_models_classes_ResponseVariable::class:
-                $variable = self::fromResponseVariableData($data);
+                $variable = self::fromResponseVariableData($rawVariable);
                 break;
             case taoResultServer_models_classes_TraceVariable::class:
-                $variable = self::fromTraceVariableData($data);
+                $variable = self::fromTraceVariableData($rawVariable);
                 break;
             default:
-                throw new \LogicException(sprintf('Unsupported variable type: %s', $data['type']));
+                throw new \LogicException(sprintf('Unsupported variable type: %s', $rawVariable['type']));
         }
 
         return $variable
-            ->setIdentifier($data['identifier'])
-            ->setCardinality($data['cardinality'])
-            ->setBaseType($data['baseType'])
-            ->setEpoch($data['epoch']);
+            ->setIdentifier($rawVariable['identifier'])
+            ->setCardinality($rawVariable['cardinality'])
+            ->setBaseType($rawVariable['baseType'])
+            ->setEpoch($rawVariable['epoch']);
     }
 
     /**
