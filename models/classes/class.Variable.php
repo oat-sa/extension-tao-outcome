@@ -63,6 +63,8 @@ abstract class taoResultServer_models_classes_Variable implements JsonSerializab
      */
     protected $epoch;
 
+    abstract protected function getType(): string;
+
     public function setIdentifier(string $identifier): self
     {
         $this->identifier = $identifier;
@@ -176,6 +178,7 @@ abstract class taoResultServer_models_classes_Variable implements JsonSerializab
             'cardinality' => $this->cardinality,
             'baseType' => $this->baseType,
             'epoch' => $this->epoch,
+            'type' => $this->getType(),
         ];
     }
 
@@ -193,13 +196,13 @@ abstract class taoResultServer_models_classes_Variable implements JsonSerializab
         self::validateKeys(['identifier', 'cardinality', 'baseType', 'epoch'], $rawVariable);
 
         switch ($rawVariable['type']) {
-            case taoResultServer_models_classes_OutcomeVariable::class:
+            case taoResultServer_models_classes_OutcomeVariable::TYPE:
                 $variable = self::fromOutcomeVariableData($rawVariable);
                 break;
-            case taoResultServer_models_classes_ResponseVariable::class:
+            case taoResultServer_models_classes_ResponseVariable::TYPE:
                 $variable = self::fromResponseVariableData($rawVariable);
                 break;
-            case taoResultServer_models_classes_TraceVariable::class:
+            case taoResultServer_models_classes_TraceVariable::TYPE:
                 $variable = self::fromTraceVariableData($rawVariable);
                 break;
             default:

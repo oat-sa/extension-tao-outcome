@@ -36,6 +36,11 @@ class taoResultServer_models_classes_VariableTest extends TestCase
             public function setValue($value)
             {
             }
+
+            protected function getType(): string
+            {
+                return 'testType';
+            }
         };
 
         $subject
@@ -49,6 +54,7 @@ class taoResultServer_models_classes_VariableTest extends TestCase
             'cardinality' => 'single',
             'baseType' => 'testBaseType',
             'epoch' => 'testEpoch',
+            'type' => 'testType'
         ]), json_encode($subject));
     }
 
@@ -68,11 +74,11 @@ class taoResultServer_models_classes_VariableTest extends TestCase
     public function testIfOutComeVariableCanBeReconstructedFromArray(): void
     {
         $variableAsArray = [
-            'type' => \taoResultServer_models_classes_OutcomeVariable::class,
             'identifier' => 'testIdentifier',
             'cardinality' => 'multiple',
             'baseType' => 'testBaseType',
             'epoch' => 'testEpoch',
+            'type' => \taoResultServer_models_classes_OutcomeVariable::TYPE,
             'normalMinimum' => 0.0,
             'normalMaximum' => 10.0,
             'value' => 'testValue',
@@ -86,6 +92,7 @@ class taoResultServer_models_classes_VariableTest extends TestCase
             'cardinality' => 'multiple',
             'baseType' => 'testBaseType',
             'epoch' => 'testEpoch',
+            'type' => \taoResultServer_models_classes_OutcomeVariable::TYPE,
             'normalMinimum' => 0.0,
             'normalMaximum' => 10.0,
             'value' => base64_encode('testValue'),
@@ -102,6 +109,7 @@ class taoResultServer_models_classes_VariableTest extends TestCase
             'cardinality' => 'multiple',
             'baseType' => 'testBaseType',
             'epoch' => 'testEpoch',
+            'type' => \taoResultServer_models_classes_ResponseVariable::TYPE,
             'correctResponse' => 'testCorrectResponse',
             'candidateResponse' => 'testCandidateResponse',
         ];
@@ -124,7 +132,7 @@ class taoResultServer_models_classes_VariableTest extends TestCase
     public function testIfTraceVariableCanBeConstructedFromArray(): void
     {
         $variableAsArray = [
-            'type' => \taoResultServer_models_classes_TraceVariable::class,
+            'type' => \taoResultServer_models_classes_TraceVariable::TYPE,
             'identifier' => 'testIdentifier',
             'cardinality' => 'multiple',
             'baseType' => 'testBaseType',
@@ -141,6 +149,7 @@ class taoResultServer_models_classes_VariableTest extends TestCase
             'baseType' => 'testBaseType',
             'epoch' => 'testEpoch',
             'trace' => 'test',
+            'type' => \taoResultServer_models_classes_TraceVariable::TYPE,
         ];
 
         $this->assertSame($expectedVariableData, $result->jsonSerialize());
@@ -201,7 +210,7 @@ class taoResultServer_models_classes_VariableTest extends TestCase
             'outcomeVariableWithMissingNormalMinimumKey' => [
                 'expectedExceptionMessage' => 'Key "normalMinimum" is not defined in variable data.',
                 'variableAsArray' => [
-                    'type' => \taoResultServer_models_classes_OutcomeVariable::class,
+                    'type' => \taoResultServer_models_classes_OutcomeVariable::TYPE,
                     'identifier' => 'test',
                     'cardinality' => 'single',
                     'baseType' => 'test',
@@ -211,7 +220,7 @@ class taoResultServer_models_classes_VariableTest extends TestCase
             'outcomeVariableWithMissingNormalMaximumKey' => [
                 'expectedExceptionMessage' => 'Key "normalMaximum" is not defined in variable data.',
                 'variableAsArray' => [
-                    'type' => \taoResultServer_models_classes_OutcomeVariable::class,
+                    'type' => \taoResultServer_models_classes_OutcomeVariable::TYPE,
                     'identifier' => 'test',
                     'cardinality' => 'single',
                     'baseType' => 'test',
@@ -222,7 +231,7 @@ class taoResultServer_models_classes_VariableTest extends TestCase
             'outcomeVariableWithMissingValueKey' => [
                 'expectedExceptionMessage' => 'Key "value" is not defined in variable data.',
                 'variableAsArray' => [
-                    'type' => \taoResultServer_models_classes_OutcomeVariable::class,
+                    'type' => \taoResultServer_models_classes_OutcomeVariable::TYPE,
                     'identifier' => 'test',
                     'cardinality' => 'single',
                     'baseType' => 'test',
@@ -234,7 +243,7 @@ class taoResultServer_models_classes_VariableTest extends TestCase
             'responseVariableWithMissingCorrectResponseKey' => [
                 'expectedExceptionMessage' => 'Key "correctResponse" is not defined in variable data.',
                 'variableAsArray' => [
-                    'type' => \taoResultServer_models_classes_ResponseVariable::class,
+                    'type' => \taoResultServer_models_classes_ResponseVariable::TYPE,
                     'identifier' => 'test',
                     'cardinality' => 'single',
                     'baseType' => 'test',
@@ -244,7 +253,7 @@ class taoResultServer_models_classes_VariableTest extends TestCase
             'responseVariableWithMissingCandidateResponseKey' => [
                 'expectedExceptionMessage' => 'Key "candidateResponse" is not defined in variable data.',
                 'variableAsArray' => [
-                    'type' => \taoResultServer_models_classes_ResponseVariable::class,
+                    'type' => \taoResultServer_models_classes_ResponseVariable::TYPE,
                     'identifier' => 'test',
                     'cardinality' => 'single',
                     'baseType' => 'test',
@@ -255,7 +264,7 @@ class taoResultServer_models_classes_VariableTest extends TestCase
             'traceVariableWithMissingTraceKey' => [
                 'expectedExceptionMessage' => 'Key "trace" is not defined in variable data.',
                 'variableAsArray' => [
-                    'type' => \taoResultServer_models_classes_TraceVariable::class,
+                    'type' => \taoResultServer_models_classes_TraceVariable::TYPE,
                     'identifier' => 'test',
                     'cardinality' => 'single',
                     'baseType' => 'test',

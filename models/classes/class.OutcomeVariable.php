@@ -29,6 +29,8 @@ declare(strict_types=1);
  */
 class taoResultServer_models_classes_OutcomeVariable extends taoResultServer_models_classes_Variable
 {
+    public const TYPE = 'outcomeVariable';
+
     /**
      * taken from the corresponding outcomeDeclaration.
      *
@@ -100,5 +102,10 @@ class taoResultServer_models_classes_OutcomeVariable extends taoResultServer_mod
                 'normalMaximum' => $this->normalMaximum,
                 'value' => $this->value,
             ];
+    }
+
+    protected function getType(): string
+    {
+        return self::TYPE;
     }
 }

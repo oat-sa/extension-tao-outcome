@@ -29,6 +29,8 @@ declare(strict_types=1);
  */
 class taoResultServer_models_classes_TraceVariable extends taoResultServer_models_classes_Variable
 {
+    public const TYPE = 'traceVariable';
+
     /**
      * When a response variable is bound to an interaction that supports the shuffling of choices, the sequence of
      * choices experienced by the candidate will vary between test instances. When shuffling is in effect, the sequence
@@ -71,5 +73,10 @@ class taoResultServer_models_classes_TraceVariable extends taoResultServer_model
             [
                 'trace' => $this->trace,
             ];
+    }
+
+    protected function getType(): string
+    {
+        return self::TYPE;
     }
 }

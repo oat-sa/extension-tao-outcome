@@ -42,6 +42,7 @@ class taoResultServer_models_classes_OutcomeVariableTest extends TestCase
             'cardinality' => 'single',
             'baseType' => 'testBaseType',
             'epoch' => 'testEpoch',
+            'type' => \taoResultServer_models_classes_OutcomeVariable::TYPE,
             'normalMinimum' => 1.00,
             'normalMaximum' => 10.00,
             'value' => base64_encode('testValue'),

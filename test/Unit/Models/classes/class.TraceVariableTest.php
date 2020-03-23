@@ -40,6 +40,7 @@ class taoResultServer_models_classes_TraceVariableTest extends TestCase
             'cardinality' => 'single',
             'baseType' => 'testBaseType',
             'epoch' => 'testEpoch',
+            'type' => \taoResultServer_models_classes_TraceVariable::TYPE,
             'trace' => 'testTrace',
         ]), json_encode($subject));
     }

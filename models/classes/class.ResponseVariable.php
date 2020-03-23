@@ -29,6 +29,8 @@ declare(strict_types=1);
  */
 class taoResultServer_models_classes_ResponseVariable extends taoResultServer_models_classes_Variable
 {
+    public const TYPE = 'responseVariable';
+
     /**
      * The correct response may be output as part of the report if desired.
      * Systems are not limited to reporting correct responses declared in responseDeclarations. For example, a correct
@@ -99,5 +101,10 @@ class taoResultServer_models_classes_ResponseVariable extends taoResultServer_mo
                 'correctResponse' => $this->correctResponse,
                 'candidateResponse' => $this->candidateResponse,
             ];
+    }
+
+    protected function getType(): string
+    {
+        return self::TYPE;
     }
 }
