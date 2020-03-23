@@ -78,7 +78,7 @@ class taoResultServer_models_classes_OutcomeVariable extends taoResultServer_mod
      */
     public function getValue()
     {
-        return base64_decode($this->value);
+        return base64_decode((string)$this->value);
     }
 
     /**

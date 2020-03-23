@@ -70,7 +70,7 @@ class taoResultServer_models_classes_ResponseVariable extends taoResultServer_mo
      */
     public function getCandidateResponse()
     {
-        return base64_decode($this->candidateResponse);
+        return base64_decode((string)$this->candidateResponse);
     }
 
     /**
