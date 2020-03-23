@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace oat\taoResultServer\test\Unit\Models\classes;
+namespace oat\taoResultServer\test\Unit\models\classes;
 
 use PHPUnit\Framework\TestCase;
 

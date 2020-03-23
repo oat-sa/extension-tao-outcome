@@ -165,7 +165,7 @@ abstract class taoResultServer_models_classes_Variable implements JsonSerializab
      */
     public function toJson(): string
     {
-        return json_encode($this->jsonSerialize());
+        return json_encode($this);
     }
 
     /**
@@ -189,11 +189,7 @@ abstract class taoResultServer_models_classes_Variable implements JsonSerializab
      */
     public static function fromData(array $rawVariable)
     {
-        if (!isset($rawVariable['type'])) {
-            throw new \LogicException('Variable type declaration is missing.');
-        }
-
-        self::validateKeys(['identifier', 'cardinality', 'baseType', 'epoch'], $rawVariable);
+        self::validateKeys(['identifier', 'cardinality', 'baseType', 'epoch', 'type'], $rawVariable);
 
         switch ($rawVariable['type']) {
             case taoResultServer_models_classes_OutcomeVariable::TYPE:

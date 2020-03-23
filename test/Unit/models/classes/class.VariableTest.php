@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace oat\taoResultServer\test\Unit\Models\classes;
+namespace oat\taoResultServer\test\Unit\models\classes;
 
 use PHPUnit\Framework\TestCase;
 
@@ -23,7 +23,6 @@ use PHPUnit\Framework\TestCase;
  *
  * Copyright (c) 2020 (original work) Open Assessment Technologies S.A.
  */
-
 class taoResultServer_models_classes_VariableTest extends TestCase
 {
     public function testVariableCanBeJsonSerialized(): void
@@ -54,7 +53,7 @@ class taoResultServer_models_classes_VariableTest extends TestCase
             'cardinality' => 'single',
             'baseType' => 'testBaseType',
             'epoch' => 'testEpoch',
-            'type' => 'testType'
+            'type' => 'testType',
         ]), json_encode($subject));
     }
 
@@ -104,7 +103,6 @@ class taoResultServer_models_classes_VariableTest extends TestCase
     public function testIfResponseVariableCanBeConstructedFromArray(): void
     {
         $variableAsArray = [
-            'type' => \taoResultServer_models_classes_ResponseVariable::class,
             'identifier' => 'testIdentifier',
             'cardinality' => 'multiple',
             'baseType' => 'testBaseType',
@@ -122,6 +120,7 @@ class taoResultServer_models_classes_VariableTest extends TestCase
             'cardinality' => 'multiple',
             'baseType' => 'testBaseType',
             'epoch' => 'testEpoch',
+            'type' => \taoResultServer_models_classes_ResponseVariable::TYPE,
             'correctResponse' => 'testCorrectResponse',
             'candidateResponse' => base64_encode('testCandidateResponse'),
         ];
@@ -132,11 +131,11 @@ class taoResultServer_models_classes_VariableTest extends TestCase
     public function testIfTraceVariableCanBeConstructedFromArray(): void
     {
         $variableAsArray = [
-            'type' => \taoResultServer_models_classes_TraceVariable::TYPE,
             'identifier' => 'testIdentifier',
             'cardinality' => 'multiple',
             'baseType' => 'testBaseType',
             'epoch' => 'testEpoch',
+            'type' => \taoResultServer_models_classes_TraceVariable::TYPE,
             'trace' => 'test',
         ];
 
@@ -148,8 +147,8 @@ class taoResultServer_models_classes_VariableTest extends TestCase
             'cardinality' => 'multiple',
             'baseType' => 'testBaseType',
             'epoch' => 'testEpoch',
-            'trace' => 'test',
             'type' => \taoResultServer_models_classes_TraceVariable::TYPE,
+            'trace' => 'test',
         ];
 
         $this->assertSame($expectedVariableData, $result->jsonSerialize());
@@ -173,10 +172,6 @@ class taoResultServer_models_classes_VariableTest extends TestCase
     public function provideInvalidVariableArrayRepresentation(): array
     {
         return [
-            'missingVariableType' => [
-                'expectedExceptionMessage' => 'Variable type declaration is missing.',
-                'variableAsArray' => [],
-            ],
             'anyVariableWithMissingIdentifierKey' => [
                 'expectedExceptionMessage' => 'Key "identifier" is not defined in variable data.',
                 'variableAsArray' => [
@@ -205,6 +200,15 @@ class taoResultServer_models_classes_VariableTest extends TestCase
                     'identifier' => 'test',
                     'cardinality' => 'single',
                     'baseType' => 'test',
+                ],
+            ],
+            'missingVariableType' => [
+                'expectedExceptionMessage' => 'Key "type" is not defined in variable data.',
+                'variableAsArray' => [
+                    'identifier' => 'test',
+                    'cardinality' => 'single',
+                    'baseType' => 'test',
+                    'epoch' => 'test',
                 ],
             ],
             'outcomeVariableWithMissingNormalMinimumKey' => [
