@@ -86,7 +86,7 @@ class taoResultServer_models_classes_OutcomeVariable extends taoResultServer_mod
      */
     public function setValue($value): self
     {
-        $this->value = base64_encode($value);
+        $this->value = base64_encode((string)$value);
 
         return $this;
     }
