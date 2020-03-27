@@ -14,7 +14,7 @@ class ResultsServiceTestCase extends UnitTestCase
       * @var taoResultServer_models_classes_LocalResultsService
       */
     private $localResultsService;
-    public function setUp()
+    public function setUp(): void
     {
         TaoTestRunner::initTest();
         $this->localResultsService = new taoResultServer_models_classes_LocalResultsService("ontology");

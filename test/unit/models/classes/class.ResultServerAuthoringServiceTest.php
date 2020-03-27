@@ -23,7 +23,7 @@ use oat\generis\test\TestCase;
 
 class ResultServerAuthoringTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
     }
@@ -50,7 +50,7 @@ class ResultServerAuthoringTest extends TestCase
         $service->setServiceLocator($serviceLocator);
 
         $this->assertInstanceOf(taoResultServer_models_classes_ResultServerAuthoringService::class, $service);
-        
+
         $defaultResultServer = $service->getDefaultResultServer();
 
         $this->assertInstanceOf(core_kernel_classes_Resource::class, $defaultResultServer);
