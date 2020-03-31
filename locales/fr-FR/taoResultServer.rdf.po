@@ -1,97 +1,97 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: TAO 3.4.0-sprint124\n"
-"PO-Revision-Date: 2020-03-20T11:17:04\n"
+"PO-Revision-Date: 2020-03-23T16:05:30\n"
 "Last-Translator: TAO Translation Team <translation@tao.lu>\n"
 "MIME-Version: 1.0\n"
-"Language: nl-NL\n"
+"Language: fr-FR\n"
 "sourceLanguage: en-US\n"
-"targetLanguage: nl-NL\n"
+"targetLanguage: fr-FR\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 # http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServer
 msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
 msgid "Result Server"
-msgstr "Resultaat server"
+msgstr "Serveur de résultats"
 
 # http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServer
 msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
 msgid "the Result Server for the Delivery"
-msgstr "de resultaat server voor de levering"
+msgstr "le serveur de résultats pour la passation"
 
 # http://www.tao.lu/Ontologies/TAOResultServer.rdf#hasResultServerModel
 msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
 msgid "Result Storage Engine"
-msgstr "Resultaat opslag motor"
+msgstr "Moteur de stockage de résultats"
 
 # http://www.tao.lu/Ontologies/TAOResultServer.rdf#hasResultServerModel
 msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
 msgid "Result Storage Engine"
-msgstr "Resultaat opslag motor"
+msgstr "Moteur de stockage de résultats"
 
 # http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerEndpoint
 msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
 msgid "Result Server Endpoint"
-msgstr "Resultaat server eindpunt"
+msgstr "Point de terminaison du serveur de résultats"
 
 # http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerEndpoint
 msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
 msgid "Endpoint of the Result Server"
-msgstr "Eindpunt van de resultaat server"
+msgstr "Point de terminaison du serveur de résultats"
 
 # http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerModel
 msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
 msgid "Result Storage"
-msgstr "Resultaat opslag"
+msgstr "Stockage de résultats"
 
 # http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerModel
 msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
 msgid "Result Storage"
-msgstr "Resultaat opslag"
+msgstr "Stockage de résultats"
 
 # http://www.tao.lu/Ontologies/TAOResultServer.rdf#fileStorage
 msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
 msgid "tao logger"
-msgstr "tao logger"
+msgstr "journal des événements TAO"
 
 # http://www.tao.lu/Ontologies/TAOResultServer.rdf#fileStorage
 msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
 msgid "Data about the storage is sent into the logger"
-msgstr "Data aangaande de opslag is gestuurd naar de logger"
+msgstr "Les données à propos du stockage sont envoyées dans le journal."
 
 # http://www.tao.lu/Ontologies/TAOResultServer.rdf#implementation
 msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
 msgid "Link to the implementation Class"
-msgstr "Link naar de implementatie klasse"
+msgstr "Lien vers la classe implémentation"
 
 # http://www.tao.lu/Ontologies/TAOResultServer.rdf#implementation
 msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
 msgid "Link to the implementation Class"
-msgstr "Link naar de implementatie klasse"
+msgstr "Lien vers la classe implémentation"
 
 # http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultNoStorageModel
 msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
 msgid "Data about the result storage is sent to the logger"
-msgstr "Gegevens over de opslag van de resultaten werden naar de logger gestuurd"
+msgstr "Les données à propos du stockage sont envoyées dans le journal."
 
 # http://www.tao.lu/Ontologies/TAOResultServer.rdf#void
 msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
 msgid "No storage"
-msgstr "Geen opslag"
+msgstr "Pas de stockage"
 
 # http://www.tao.lu/Ontologies/TAOResultServer.rdf#void
 msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
 msgid "No storage "
-msgstr "Geen opslag"
+msgstr "Pas de stockage"
 
 # http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerRole
 msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
 msgid "Result Server Manager"
-msgstr "Resultaat server beheerder"
+msgstr "Gestionnaire de serveur de résultats"
 
 # http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerRole
 msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
 msgid "Result Server Manager Role"
-msgstr "Resultaat server beheerder rol"
+msgstr "Rôle de gestionnaire de serveur de résultats"
 
