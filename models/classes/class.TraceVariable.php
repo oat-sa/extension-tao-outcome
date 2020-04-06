@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,59 +19,64 @@
  *
  * Copyright (c) 2013 (original work) Open Assessment Technologies S.A.
  *
- *
  * @author "Patrick Plichart, <patrick@taotesting.com>"
  *
  * An Assessment Result is used to report the results of a candidate's interaction
  * with a test and/or one or more items attempted.
  * Information about the test is optional,
- * in some systems it may be possible to interact with items that are not organized into a test at all. For example, items that are organized with learning resources and presented individually in a formative context.
+ * in some systems it may be possible to interact with items that are not organized into a test at all. For example,
+ * items that are organized with learning resources and presented individually in a formative context.
  */
 class taoResultServer_models_classes_TraceVariable extends taoResultServer_models_classes_Variable
 {
+    public const TYPE = 'traceVariable';
 
     /**
-     * When a response variable is bound to an interaction that supports the shuffling of choices, the sequence of choices experienced by the candidate will vary between test instances.
-     * When shuffling is in effect, the sequence of choices should be reported as a sequence of choice identifiers using this attribute.
+     * When a response variable is bound to an interaction that supports the shuffling of choices, the sequence of
+     * choices experienced by the candidate will vary between test instances. When shuffling is in effect, the sequence
+     * of choices should be reported as a sequence of choice identifiers using this attribute.
      *
-     * @var string
+     * @var string|null
      */
-    public $trace;
+    protected $trace;
 
-    /**
-     * @author  "Patrick Plichart, <patrick@taotesting.com>"
-     * @param string $trace
-     */
-    public function setTrace($trace)
+    public function setTrace(string $trace): self
     {
         $this->trace = $trace;
+
+        return $this;
     }
 
-    /**
-     * @author  "Patrick Plichart, <patrick@taotesting.com>"
-     * @return string
-     */
-    public function getTrace()
+    public function getTrace(): ?string
     {
         return $this->trace;
     }
-    
-    /**
-     * Return value.
-     * @author  Aleh Hutnikau, <hutnikau@1pt.com>
-     * @return string
-     */
+
     public function getValue()
     {
         return $this->getTrace();
     }
 
-    /**
-     * Set the value of the trace variable
-     * @param string $value
-     */
-    public function setValue($value)
+    public function setValue($value): self
     {
         $this->setTrace($value);
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function jsonSerialize()
+    {
+        return parent::jsonSerialize() +
+            [
+                'trace' => $this->trace,
+            ];
+    }
+
+    protected function getType(): string
+    {
+        return self::TYPE;
     }
 }
