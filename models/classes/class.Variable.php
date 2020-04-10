@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,182 +21,234 @@
  *
  * @author "Patrick Plichart, <patrick@taotesting.com>"
  *
- *
  * An Assessment Result is used to report the results of a candidate's interaction
  * with a test and/or one or more items attempted. Information about the test is optional,
  * in some systems it may be possible to interact with items that are not organized into a
  * test at all. For example, items that are organized with learning resources and presented
  * individually in a formative context.
  */
-abstract class taoResultServer_models_classes_Variable
+abstract class taoResultServer_models_classes_Variable implements JsonSerializable
 {
-
-    const CARDINALITY_SINGLE = 'single';
-
-    const CARDINALITY_MULTIPLE = 'multiple';
-
-    const CARDINALITY_ORDERED = 'ordered';
-
-    const CARDINALITY_RECORD = 'record';
+    public const CARDINALITY_SINGLE = 'single';
+    public const CARDINALITY_MULTIPLE = 'multiple';
+    public const CARDINALITY_ORDERED = 'ordered';
+    public const CARDINALITY_RECORD = 'record';
 
     /**
      * The purpose of an itemVariable is to report the value of the item variable with the given identifier.
-     * @var string
+     *
+     * @var string|null
      */
-    public $identifier;
+    protected $identifier;
+
     /**
      * The cardinality of the variable, taken from the corresponding declaration or definition.
-     * @var string {single, multiple, ordered, record}
+     *
+     * @var string|null {single, multiple, ordered, record}
      */
-    public $cardinality;
+    protected $cardinality;
 
     /**
      * The base type of the variable, taken from the corresponding declaration of definition.
      * This value is omitted only for variables with record cardinality.
      *
-     * @var baseType should move to an enumeration
+     * @var string|null should move to an enumeration
      */
-    public $baseType;
+    protected $baseType;
 
     /**
      * The epoch when the variable has been last modified
-     * @var string
+     *
+     * @var string|null
      */
-    public $epoch;
+    protected $epoch;
 
-    /**
-     * @author  "Patrick Plichart, <patrick@taotesting.com>"
-     * @param string $identifier
-     */
-    public function setIdentifier($identifier)
+    abstract protected function getType(): string;
+
+    public function setIdentifier(string $identifier): self
     {
         $this->identifier = $identifier;
+
+        return $this;
     }
 
-    /**
-     * @author  "Patrick Plichart, <patrick@taotesting.com>"
-     * @return string
-     */
-    public function getIdentifier()
+    public function getIdentifier(): ?string
     {
         return $this->identifier;
     }
 
     /**
-     * @author  "Patrick Plichart, <patrick@taotesting.com>"
-     * @param string $cardinality
      * @throws common_exception_InvalidArgumentType
      */
-    public function setCardinality($cardinality = self::CARDINALITY_SINGLE)
+    public function setCardinality($cardinality = self::CARDINALITY_SINGLE): self
     {
-        if (
-            !in_array($cardinality, [
+        if (!in_array($cardinality, [
             self::CARDINALITY_SINGLE,
             self::CARDINALITY_MULTIPLE,
             self::CARDINALITY_ORDERED,
-            self::CARDINALITY_RECORD
-            ])
+            self::CARDINALITY_RECORD,
+        ], true)
         ) {
-            throw new common_exception_InvalidArgumentType("cardinality");
+            throw new common_exception_InvalidArgumentType('cardinality');
         }
+
         $this->cardinality = $cardinality;
+
+        return $this;
     }
 
-    /**
-     * @author  "Patrick Plichart, <patrick@taotesting.com>"
-     * @return string
-     */
-    public function getCardinality()
+    public function getCardinality(): ?string
     {
         return $this->cardinality;
     }
 
-    /**
-     * @author  "Patrick Plichart, <patrick@taotesting.com>"
-     * @param string $baseType
-     */
-    public function setBaseType($baseType)
+    public function setBaseType(string $baseType): self
     {
         $this->baseType = $baseType;
+
+        return $this;
     }
 
-    /**
-     * @author  "Patrick Plichart, <patrick@taotesting.com>"
-     * @return string $baseType
-     */
-    public function getBaseType()
+    public function getBaseType(): ?string
     {
         return $this->baseType;
     }
 
-    /**
-     * Set the epoch of the variable
-     * @param $epoch string
-     */
-    public function setEpoch($epoch)
+    public function setEpoch(string $epoch): self
     {
-         $this->epoch = $epoch;
+        $this->epoch = $epoch;
+
+        return $this;
     }
 
-    /**
-     * Get the epoch of a variable
-     * @return string
-     */
-    public function getEpoch()
+    public function getEpoch(): ?string
     {
-         return $this->epoch;
+        return $this->epoch;
     }
 
-    /**
-     * Returns the time of the creation
-     * @return float|null
-     */
-    public function getCreationTime()
+    public function getCreationTime(): ?float
     {
         if (!isset($this->epoch)) {
             return null;
         }
-        list($usec, $sec) = explode(" ", $this->epoch);
-        return floatval((float) $usec + (float) $sec);
+        [$usec, $sec] = explode(' ', $this->epoch);
+
+        return ((float)$usec + (float)$sec);
     }
 
-    /**
-     * Allow to know if the epoch is set or not
-     * @return bool
-     */
-    public function isSetEpoch()
+    public function isSetEpoch(): bool
     {
         return (isset($this->epoch));
     }
 
-    /**
-     * Check if variable is of multiple type.
-     *
-     * @return bool
-     */
-    public function isMultiple()
+    public function isMultiple(): bool
     {
-        return in_array($this->cardinality, [self::CARDINALITY_MULTIPLE, self::CARDINALITY_ORDERED]);
+        return in_array($this->cardinality, [self::CARDINALITY_MULTIPLE, self::CARDINALITY_ORDERED], true);
     }
 
     /**
      * get the value of the variable
+     *
      * @return mixed
      */
     abstract public function getValue();
 
     /**
-     * set the value of the variable
+     * Set the value of the variable
+     *
      * @param $value mixed
      */
     abstract public function setValue($value);
 
     /**
-     * Get the json representation of the variable
-     * @return string
+     * @deprecated Use jsonSerialize method instead
      */
-    public function toJson()
+    public function toJson(): string
     {
-        return json_encode((array)$this);
+        return json_encode($this);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'identifier' => $this->identifier,
+            'cardinality' => $this->cardinality,
+            'baseType' => $this->baseType,
+            'epoch' => $this->epoch,
+            'type' => $this->getType(),
+        ];
+    }
+
+    /**
+     * @return taoResultServer_models_classes_OutcomeVariable|taoResultServer_models_classes_ResponseVariable|taoResultServer_models_classes_TraceVariable
+     * @throws common_exception_InvalidArgumentType
+     * @throws LogicException
+     */
+    public static function fromData(array $rawVariable)
+    {
+        self::validateKeys(['identifier', 'cardinality', 'baseType', 'epoch', 'type'], $rawVariable);
+
+        switch ($rawVariable['type']) {
+            case taoResultServer_models_classes_OutcomeVariable::TYPE:
+                $variable = self::fromOutcomeVariableData($rawVariable);
+                break;
+            case taoResultServer_models_classes_ResponseVariable::TYPE:
+                $variable = self::fromResponseVariableData($rawVariable);
+                break;
+            case taoResultServer_models_classes_TraceVariable::TYPE:
+                $variable = self::fromTraceVariableData($rawVariable);
+                break;
+            default:
+                throw new \LogicException(sprintf('Unsupported variable type: %s', $rawVariable['type']));
+        }
+
+        return $variable
+            ->setIdentifier($rawVariable['identifier'])
+            ->setCardinality($rawVariable['cardinality'])
+            ->setBaseType($rawVariable['baseType'])
+            ->setEpoch($rawVariable['epoch']);
+    }
+
+    /**
+     * @throws LogicException
+     */
+    protected static function validateKeys(array $keys, array $data): void
+    {
+        foreach ($keys as $key) {
+            if (!array_key_exists($key, $data)) {
+                throw new LogicException(sprintf('Key "%s" is not defined in variable data.', $key));
+            }
+        }
+    }
+
+    private static function fromOutcomeVariableData(
+        array $rawOutcomeVariable
+    ): taoResultServer_models_classes_OutcomeVariable {
+        self::validateKeys(['normalMinimum', 'normalMaximum', 'value'], $rawOutcomeVariable);
+
+        return (new taoResultServer_models_classes_OutcomeVariable())
+            ->setNormalMinimum($rawOutcomeVariable['normalMinimum'])
+            ->setNormalMaximum($rawOutcomeVariable['normalMaximum'])
+            ->setValue($rawOutcomeVariable['value']);
+    }
+
+    private static function fromResponseVariableData(
+        array $rawResponseVariable
+    ): taoResultServer_models_classes_ResponseVariable {
+        self::validateKeys(['correctResponse', 'candidateResponse'], $rawResponseVariable);
+
+        return (new taoResultServer_models_classes_ResponseVariable())
+            ->setCorrectResponse($rawResponseVariable['correctResponse'])
+            ->setCandidateResponse($rawResponseVariable['candidateResponse']);
+    }
+
+    private static function fromTraceVariableData(array $rawTraceVariable): taoResultServer_models_classes_TraceVariable
+    {
+        self::validateKeys(['trace'], $rawTraceVariable);
+
+        return (new taoResultServer_models_classes_TraceVariable())->setTrace($rawTraceVariable['trace']);
     }
 }
