@@ -49,7 +49,7 @@ class taoResultServer_models_classes_OutcomeVariable extends taoResultServer_mod
      */
     protected $value;
 
-    public function setNormalMaximum(float $normalMaximum): self
+    public function setNormalMaximum(?float $normalMaximum): self
     {
         $this->normalMaximum = $normalMaximum;
 
@@ -61,7 +61,7 @@ class taoResultServer_models_classes_OutcomeVariable extends taoResultServer_mod
         return $this->normalMaximum;
     }
 
-    public function setNormalMinimum(float $normalMinimum): self
+    public function setNormalMinimum(?float $normalMinimum): self
     {
         $this->normalMinimum = $normalMinimum;
 
