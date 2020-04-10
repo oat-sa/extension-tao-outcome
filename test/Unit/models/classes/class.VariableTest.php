@@ -122,7 +122,7 @@ class taoResultServer_models_classes_VariableTest extends TestCase
             'epoch' => 'testEpoch',
             'type' => \taoResultServer_models_classes_ResponseVariable::TYPE,
             'correctResponse' => 'testCorrectResponse',
-            'candidateResponse' => base64_encode('testCandidateResponse'),
+            'candidateResponse' => 'testCandidateResponse',
         ];
 
         $this->assertSame($expectedVariableData, $result->jsonSerialize());

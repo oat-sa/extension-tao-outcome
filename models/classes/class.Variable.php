@@ -242,7 +242,7 @@ abstract class taoResultServer_models_classes_Variable implements JsonSerializab
 
         return (new taoResultServer_models_classes_ResponseVariable())
             ->setCorrectResponse($rawResponseVariable['correctResponse'])
-            ->setCandidateResponse($rawResponseVariable['candidateResponse']);
+            ->setEncodedCandidateResponse($rawResponseVariable['candidateResponse']);
     }
 
     private static function fromTraceVariableData(array $rawTraceVariable): taoResultServer_models_classes_TraceVariable
