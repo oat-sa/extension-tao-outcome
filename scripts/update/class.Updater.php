@@ -21,8 +21,6 @@
  */
 
 use oat\tao\scripts\update\OntologyUpdater;
-use oat\taoResultServer\models\classes\ResultServerService;
-use oat\taoResultServer\models\classes\implementation\OntologyService;
 use oat\taoResultServer\models\classes\QtiResultsService;
 use oat\taoResultServer\models\classes\ResultService;
 use oat\taoResultServer\models\classes\ResultAliasService;
@@ -43,14 +41,7 @@ class taoResultServer_scripts_update_Updater extends \common_ext_ExtensionUpdate
     public function update($initialVersion)
     {
 
-        $this->skip('2.6', '2.10.2');
-
-        if ($this->isVersion('2.10.2')) {
-            $this->getServiceManager()->register(ResultServerService::SERVICE_ID, new OntologyService());
-            $this->setVersion('2.11.0');
-        }
-
-        $this->skip('2.11.0', '2.11.2');
+        $this->skip('2.6', '2.11.2');
 
         if ($this->isVersion('2.11.2')) {
             $this->getServiceManager()->register(QtiResultsService::SERVICE_ID, new QtiResultsService());
@@ -80,6 +71,6 @@ class taoResultServer_scripts_update_Updater extends \common_ext_ExtensionUpdate
             $this->setVersion('5.1.0');
         }
 
-        $this->skip('5.1.0', '11.0.0');
+        $this->skip('5.1.0', '11.1.0');
     }
 }
