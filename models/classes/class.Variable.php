@@ -230,8 +230,8 @@ abstract class taoResultServer_models_classes_Variable implements JsonSerializab
         self::validateKeys(['normalMinimum', 'normalMaximum', 'value'], $rawOutcomeVariable);
 
         return (new taoResultServer_models_classes_OutcomeVariable())
-            ->setNormalMinimum((float)$rawOutcomeVariable['normalMinimum'])
-            ->setNormalMaximum((float)$rawOutcomeVariable['normalMaximum'])
+            ->setNormalMinimum($rawOutcomeVariable['normalMinimum'])
+            ->setNormalMaximum($rawOutcomeVariable['normalMaximum'])
             ->setValue($rawOutcomeVariable['value']);
     }
 
