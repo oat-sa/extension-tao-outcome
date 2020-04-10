@@ -94,7 +94,7 @@ class taoResultServer_models_classes_VariableTest extends TestCase
             'type' => \taoResultServer_models_classes_OutcomeVariable::TYPE,
             'normalMinimum' => 0.0,
             'normalMaximum' => 10.0,
-            'value' => base64_encode('testValue'),
+            'value' => 'testValue',
         ];
 
         $this->assertSame($expectedVariableData, $result->jsonSerialize());

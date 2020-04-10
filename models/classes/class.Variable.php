@@ -232,7 +232,7 @@ abstract class taoResultServer_models_classes_Variable implements JsonSerializab
         return (new taoResultServer_models_classes_OutcomeVariable())
             ->setNormalMinimum($rawOutcomeVariable['normalMinimum'])
             ->setNormalMaximum($rawOutcomeVariable['normalMaximum'])
-            ->setValue($rawOutcomeVariable['value']);
+            ->setEncodedValue($rawOutcomeVariable['value']);
     }
 
     private static function fromResponseVariableData(
