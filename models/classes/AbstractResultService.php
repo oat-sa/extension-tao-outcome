@@ -28,8 +28,6 @@ use \taoResultServer_models_classes_WritableResultStorage as WritableResultStora
 
 abstract class AbstractResultService extends ConfigurableService implements ResultServerService
 {
-    /** @var bool $configurable Whether this ResultServerService instance is configurable */
-    protected $configurable = true;
 
     /**
      * Starts or resume a taoResultServerStateFull session for results submission
@@ -55,6 +53,7 @@ abstract class AbstractResultService extends ConfigurableService implements Resu
      * @param string $serviceId
      * @return WritableResultStorage
      * @throws \common_exception_Error
+     * @throws \oat\oatbox\service\exception\InvalidServiceManagerException
      */
     public function instantiateResultStorage($serviceId)
     {
@@ -76,13 +75,7 @@ abstract class AbstractResultService extends ConfigurableService implements Resu
         return $storage;
     }
 
-
-    abstract public function getResultStorage($deliveryId);
-
-    public function isConfigurable()
-    {
-        return $this->configurable;
-    }
+    abstract public function getResultStorage();
 
     public function deleteDeliveryExecutionData(DeliveryExecutionDeleteRequest $request)
     {

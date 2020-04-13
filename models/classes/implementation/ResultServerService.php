@@ -47,11 +47,10 @@ class ResultServerService extends AbstractResultService
     /**
      * Returns the storage engine of the result server
      *
-     * @param string $deliveryId
      * @throws \common_exception_Error
      * @return \taoResultServer_models_classes_WritableResultStorage
      */
-    public function getResultStorage($deliveryId)
+    public function getResultStorage()
     {
         $resultServerId = $this->getOption(self::OPTION_RESULT_STORAGE);
         return $this->instantiateResultStorage($resultServerId);
