@@ -82,6 +82,7 @@ class taoResultServer_scripts_update_Updater extends \common_ext_ExtensionUpdate
                 ]);
                 $this->getServiceManager()->register(ResultServerService::SERVICE_ID, $resultService);
             }
+            OntologyUpdater::syncModels();
             $this->setVersion('11.1.0');
         }
 
