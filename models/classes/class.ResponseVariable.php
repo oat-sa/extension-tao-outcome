@@ -60,7 +60,12 @@ class taoResultServer_models_classes_ResponseVariable extends taoResultServer_mo
 
     public function setCandidateResponse($candidateResponse): self
     {
-        $this->candidateResponse = base64_encode((string)$candidateResponse);
+        return $this->setEncodedCandidateResponse(base64_encode((string)$candidateResponse));
+    }
+
+    public function setEncodedCandidateResponse($encodedCandidateResponse): self
+    {
+        $this->candidateResponse = $encodedCandidateResponse;
 
         return $this;
     }

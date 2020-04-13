@@ -49,7 +49,7 @@ class taoResultServer_models_classes_OutcomeVariable extends taoResultServer_mod
      */
     protected $value;
 
-    public function setNormalMaximum(float $normalMaximum): self
+    public function setNormalMaximum(?float $normalMaximum): self
     {
         $this->normalMaximum = $normalMaximum;
 
@@ -61,7 +61,7 @@ class taoResultServer_models_classes_OutcomeVariable extends taoResultServer_mod
         return $this->normalMaximum;
     }
 
-    public function setNormalMinimum(float $normalMinimum): self
+    public function setNormalMinimum(?float $normalMinimum): self
     {
         $this->normalMinimum = $normalMinimum;
 
@@ -86,7 +86,12 @@ class taoResultServer_models_classes_OutcomeVariable extends taoResultServer_mod
      */
     public function setValue($value): self
     {
-        $this->value = base64_encode((string)$value);
+        return $this->setEncodedValue(base64_encode((string)$value));
+    }
+
+    public function setEncodedValue($encodedValue): self
+    {
+        $this->value = $encodedValue;
 
         return $this;
     }

@@ -72,9 +72,9 @@ class taoResultServer_scripts_update_Updater extends \common_ext_ExtensionUpdate
             $this->setVersion('5.1.0');
         }
 
-        $this->skip('5.1.0', '11.0.0');
+        $this->skip('5.1.0', '11.0.1');
 
-        if ($this->isVersion('11.0.0')) {
+        if ($this->isVersion('11.0.1')) {
             $resultServerServiceClassName = get_class($this->getServiceManager()->get(ResultServerService::SERVICE_ID));
             if ($resultServerServiceClassName === 'oat\taoResultServer\models\classes\implementation\OntologyService') {
                 $resultService = new ResultServerService([
@@ -85,6 +85,5 @@ class taoResultServer_scripts_update_Updater extends \common_ext_ExtensionUpdate
             OntologyUpdater::syncModels();
             $this->setVersion('11.1.0');
         }
-
     }
 }
