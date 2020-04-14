@@ -75,15 +75,15 @@ class taoResultServer_scripts_update_Updater extends \common_ext_ExtensionUpdate
         $this->skip('5.1.0', '11.0.1');
 
         if ($this->isVersion('11.0.1')) {
-            $resultServerServiceClassName = get_class($this->getServiceManager()->get(ResultServerService::SERVICE_ID));
-            if ($resultServerServiceClassName === 'oat\taoResultServer\models\classes\implementation\OntologyService') {
+            $resultServerService = $this->safeLoadService(ResultServerService::SERVICE_ID);
+            if (get_class($resultServerService) === 'oat\taoResultServer\models\classes\implementation\OntologyService') {
                 $resultService = new ResultServerService([
                     ResultServerService::OPTION_RESULT_STORAGE => 'taoOutcomeRds/RdsResultStorage'
                 ]);
                 $this->getServiceManager()->register(ResultServerService::SERVICE_ID, $resultService);
             }
             OntologyUpdater::syncModels();
-            $this->setVersion('11.1.0');
+            $this->setVersion('12.0.0');
         }
     }
 }
