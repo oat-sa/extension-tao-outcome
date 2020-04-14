@@ -39,7 +39,7 @@ abstract class AbstractResultService extends ConfigurableService implements Resu
      */
     public function initResultServer($compiledDelivery, $executionIdentifier, $userUri)
     {
-        $storage = $this->getResultStorage($compiledDelivery);
+        $storage = $this->getResultStorage();
         //$storage->spawnResult($executionIdentifier);
 
         //link test taker identifier with results
@@ -79,7 +79,7 @@ abstract class AbstractResultService extends ConfigurableService implements Resu
 
     public function deleteDeliveryExecutionData(DeliveryExecutionDeleteRequest $request)
     {
-        $storage = $this->getResultStorage($request->getDeliveryResource()->getUri());
+        $storage = $this->getResultStorage();
         return $storage->deleteDeliveryExecutionData($request);
     }
 }
