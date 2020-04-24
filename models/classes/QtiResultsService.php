@@ -120,7 +120,7 @@ class QtiResultsService extends ConfigurableService implements ResultService
         }
 
         $resultService = $this->getServiceLocator()->get(ResultServerService::SERVICE_ID);
-        $resultServer = $resultService->getResultStorage($deliveryId);
+        $resultServer = $resultService->getResultStorage();
 
         $crudService = new CrudResultsService();
 
@@ -270,7 +270,7 @@ class QtiResultsService extends ConfigurableService implements ResultService
         /** @var WritableResultStorage $resultStorage */
         $resultStorage = $this->getServiceLocator()
             ->get(ResultServerService::SERVICE_ID)
-            ->getResultStorage($deliveryExecution->getDelivery());
+            ->getResultStorage();
 
 
         $this->storeTestVariables($resultStorage, $deliveryExecutionId, $map->getTestVariables());

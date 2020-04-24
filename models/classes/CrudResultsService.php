@@ -57,11 +57,8 @@ class CrudResultsService extends \tao_models_classes_CrudService
 
     public function get($uri, $groupBy = self::GROUP_BY_DELIVERY)
     {
-        $deliveryExecution = ServiceProxy::singleton()->getDeliveryExecution($uri);
-        $delivery = $deliveryExecution->getDelivery();
-
         $resultService = $this->getServiceLocator()->get(ResultServerService::SERVICE_ID);
-        $implementation = $resultService->getResultStorage($delivery->getUri());
+        $implementation = $resultService->getResultStorage();
         return $this->format($implementation, $uri);
     }
 
@@ -128,7 +125,7 @@ class CrudResultsService extends \tao_models_classes_CrudService
             $delivery = $assembly->getUri();
 
             $resultService = $this->getServiceLocator()->get(ResultServerService::SERVICE_ID);
-            $implementation = $resultService->getResultStorage($delivery);
+            $implementation = $resultService->getResultStorage();
 
             // get delivery executions
 

@@ -21,14 +21,18 @@
 
 namespace oat\taoResultServer\models\classes\implementation;
 
-use oat\taoResultServer\models\classes\AbstractResultService;
+use oat\oatbox\service\ConfigurableService;
+use oat\oatbox\service\ServiceNotFoundException;
+use oat\taoDelivery\model\execution\Delete\DeliveryExecutionDeleteRequest;
+use oat\taoResultServer\models\classes\ResultServerService as ResultServerServiceInterface;
+use taoResultServer_models_classes_WritableResultStorage as WritableResultStorage;
+use oat\oatbox\service\exception\InvalidServiceManagerException;
 
 /**
  * Class ResultServerService
  *
  * Configuration example (taoResultServer/resultservice.conf.php):
  * ```php
- *
  * use oat\taoResultServer\models\classes\implementation\ResultServerService;
  * return new ResultServerService([
  *     ResultServerService::OPTION_RESULT_STORAGE => 'taoOutcomeRds/RdsResultStorage'
@@ -39,19 +43,69 @@ use oat\taoResultServer\models\classes\AbstractResultService;
  * @package oat\taoResultServer\models\classes\implementation
  * @author Aleh Hutnikau, <hutnikau@1pt.com>
  */
-class ResultServerService extends AbstractResultService
+class ResultServerService  extends ConfigurableService implements ResultServerServiceInterface
 {
 
     const OPTION_RESULT_STORAGE = 'result_storage';
 
     /**
+     * Starts or resume a taoResultServerStateFull session for results submission
+     *
+     * @param \core_kernel_classes_Resource $compiledDelivery
+     * @param string $executionIdentifier
+     * @param string $userUri
+     * @throws
+     */
+    public function initResultServer($compiledDelivery, $executionIdentifier, $userUri)
+    {
+        $storage = $this->getResultStorage();
+        //link test taker identifier with results
+        $storage->storeRelatedTestTaker($executionIdentifier, $userUri);
+        //link delivery identifier with results
+        $storage->storeRelatedDelivery($executionIdentifier, $compiledDelivery->getUri());
+    }
+
+    /**
+     * @param string $serviceId
+     * @return WritableResultStorage
+     * @throws \common_exception_Error
+     * @throws InvalidServiceManagerException
+     */
+    public function instantiateResultStorage($serviceId)
+    {
+        try {
+            $storage = $this->getServiceManager()->get($serviceId);
+        } catch (ServiceNotFoundException $e) {
+            throw new \common_exception_Error(sprintf('Cannot instantiate %s result storage', $serviceId));
+        }
+
+        if (!$storage instanceof WritableResultStorage) {
+            throw new \common_exception_Error('Configured result storage is not writable.');
+        }
+
+        return $storage;
+    }
+
+    /**
+     * @param DeliveryExecutionDeleteRequest $request
+     * @return bool
+     * @throws \common_exception_Error
+     * @throws InvalidServiceManagerException
+     */
+    public function deleteDeliveryExecutionData(DeliveryExecutionDeleteRequest $request)
+    {
+        $storage = $this->getResultStorage();
+        return $storage->deleteDeliveryExecutionData($request);
+    }
+
+    /**
      * Returns the storage engine of the result server
      *
-     * @param string $deliveryId
-     * @throws \common_exception_Error
      * @return \taoResultServer_models_classes_WritableResultStorage
+     * @throws InvalidServiceManagerException
+     * @throws \common_exception_Error
      */
-    public function getResultStorage($deliveryId)
+    public function getResultStorage()
     {
         $resultServerId = $this->getOption(self::OPTION_RESULT_STORAGE);
         return $this->instantiateResultStorage($resultServerId);
