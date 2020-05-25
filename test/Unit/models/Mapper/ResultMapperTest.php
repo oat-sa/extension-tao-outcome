@@ -19,7 +19,7 @@
  *
  */
 
-namespace oat\taoResultServer\test\Unit\models\nit\models\Mapper;
+namespace oat\taoResultServer\test\Unit\models\Mapper;
 
 use oat\dtms\DateTime;
 use oat\generis\test\TestCase;
