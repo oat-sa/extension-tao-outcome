@@ -19,9 +19,10 @@
  *
  */
 
-namespace oat\taoResultServer\models\classes\OutcomeFileSystemStorage;
+namespace oat\taoResultServer\test\Unit\models\classes\OutcomeFileSystemStorage;
 
 use oat\generis\test\TestCase;
+use oat\taoResultServer\models\classes\OutcomeFileSystemStorage\FilePathFactory;
 
 class FilePathFactoryTest extends TestCase
 {
