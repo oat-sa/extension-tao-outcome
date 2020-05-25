@@ -6,16 +6,12 @@ namespace oat\taoResultServer\migrations;
 
 use Doctrine\DBAL\Schema\Schema;
 use oat\tao\scripts\tools\migrations\AbstractMigration;
-use oat\oatbox\service\ServiceManagerAwareInterface;
-use oat\oatbox\service\ServiceManagerAwareTrait;
 
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version202005191825551179_taoResultServer extends AbstractMigration implements ServiceManagerAwareInterface
+final class Version202005191825551179_taoResultServer extends AbstractMigration
 {
-    use ServiceManagerAwareTrait;
-
     public function getDescription(): string
     {
         return 'A test migration for extension taoResultServer (2).';
