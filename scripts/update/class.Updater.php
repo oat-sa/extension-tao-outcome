@@ -86,10 +86,6 @@ class taoResultServer_scripts_update_Updater extends \common_ext_ExtensionUpdate
             $this->setVersion('12.0.0');
         }
 
-        if ($this->isVersion('12.0.0')) {
-
-            $this->getLogger()->debug('taoResultServer update!');
-            $this->setVersion('12.0.1');
-        }
+        $this->skip('12.0.0', '12.0.1');
     }
 }
