@@ -19,7 +19,7 @@
  *
  */
 
-namespace oat\taoResultServer\models\classes\OutcomeFileSystemStorage;
+namespace oat\taoResultServer\test\Unit\models\classes\OutcomeFileSystemStorage;
 
 use common_exception_Error;
 use common_exception_NotFound;
@@ -27,6 +27,8 @@ use oat\generis\test\MockObject;
 use oat\generis\test\TestCase;
 use oat\oatbox\filesystem\FileSystem;
 use oat\oatbox\service\exception\InvalidServiceManagerException;
+use oat\taoResultServer\models\classes\OutcomeFileSystemStorage\FilePathFactory;
+use oat\taoResultServer\models\classes\OutcomeFileSystemStorage\OutcomeFilesystemRepository;
 use oat\taoResultServer\models\classes\ResultStorageInterface;
 use PHPUnit\Framework\MockObject\MockObject as GenericMockObject;
 use stdClass;
@@ -139,6 +141,9 @@ class OutcomeFilesystemRepositoryTest extends TestCase
         return $variable;
     }
 
+    /**
+     * @return MockObject|OutcomeFilesystemRepository
+     */
     private function getRepository()
     {
         $fileSystem = $this->getFileSystem();
@@ -156,6 +161,9 @@ class OutcomeFilesystemRepositoryTest extends TestCase
         return $repository;
     }
 
+    /**
+     * @return FilePathFactory|GenericMockObject
+     */
     private function getFilePathFactory()
     {
         $mock = $this->createMock(FilePathFactory::class);
