@@ -46,7 +46,7 @@ class QtiResultsService extends ConfigurableService implements ResultService
 {
     protected $deliveryExecutionService;
     /** @var string  */
-    public const QTI_NS = 'http://www.imsglobal.org/xsd/imsqti_result_v2p1';
+    private const QTI_NS = 'http://www.imsglobal.org/xsd/imsqti_result_v2p1';
 
     /**
      * Get the implementation of delivery execution service
