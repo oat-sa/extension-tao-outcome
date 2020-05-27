@@ -15,9 +15,11 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2016-2019 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
+ * Copyright (c) 2016-2020 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  *
  */
+
+declare(strict_types=1);
 
 namespace oat\taoResultServer\models\classes;
 
@@ -26,6 +28,9 @@ use common_exception_InvalidArgumentType;
 use common_exception_NotFound;
 use common_exception_NotImplemented;
 use core_kernel_classes_Resource;
+use DOMDocument;
+use DOMElement;
+use oat\oatbox\service\ConfigurableService;
 use oat\oatbox\service\exception\InvalidServiceManagerException;
 use oat\taoDelivery\model\execution\DeliveryExecution as DeliveryExecutionInterface;
 use oat\taoDelivery\model\execution\ServiceProxy;
@@ -33,15 +38,15 @@ use oat\taoResultServer\models\Exceptions\DuplicateVariableException;
 use oat\taoResultServer\models\Mapper\ResultMapper;
 use oat\taoResultServer\models\Parser\QtiResultParser;
 use qtism\common\enums\Cardinality;
-use oat\oatbox\service\ConfigurableService;
 use qtism\data\storage\xml\XmlStorageException;
+use tao_helpers_Date;
 use taoResultServer_models_classes_WritableResultStorage as WritableResultStorage;
 
 class QtiResultsService extends ConfigurableService implements ResultService
 {
     protected $deliveryExecutionService;
-
-    const QTI_NS = 'http://www.imsglobal.org/xsd/imsqti_result_v2p1';
+    /** @var string  */
+    public const QTI_NS = 'http://www.imsglobal.org/xsd/imsqti_result_v2p1';
 
     /**
      * Get the implementation of delivery execution service
@@ -124,7 +129,7 @@ class QtiResultsService extends ConfigurableService implements ResultService
 
         $crudService = new CrudResultsService();
 
-        $dom = new \DOMDocument('1.0', 'UTF-8');
+        $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
         $itemResults = $crudService->format($resultServer, $deId, CrudResultsService::GROUP_BY_ITEM, $fetchOnlyLastAttemptResult);
@@ -145,10 +150,7 @@ class QtiResultsService extends ConfigurableService implements ResultService
 
             $testResultElement = $dom->createElementNS(self::QTI_NS, 'testResult');
             $testResultElement->setAttribute('identifier', $testIdentifier);
-            $testResultElement->setAttribute('datestamp', \tao_helpers_Date::displayeDate(
-                $testResult[0]['epoch'],
-                \tao_helpers_Date::FORMAT_ISO8601
-            ));
+            $testResultElement->setAttribute('datestamp', $this->getDisplayDate($testResult[0]['epoch']));
 
             /** Item Variable */
             foreach ($testResult as $itemVariable) {
@@ -176,21 +178,11 @@ class QtiResultsService extends ConfigurableService implements ResultService
 
         /** Item Result */
         foreach ($itemResults as $itemResultIdentifier => $itemResult) {
-            // Retrieve identifier.
-            $identifierParts = explode('.', $itemResultIdentifier);
-            $occurenceNumber = array_pop($identifierParts);
-            $refIdentifier = array_pop($identifierParts);
-
-            $itemElement = $dom->createElementNS(self::QTI_NS, 'itemResult');
-            $itemElement->setAttribute('identifier', $refIdentifier);
-            $itemElement->setAttribute('datestamp', \tao_helpers_Date::displayeDate(
-                $itemResult[0]['epoch'],
-                \tao_helpers_Date::FORMAT_ISO8601
-            ));
-            $itemElement->setAttribute('sessionStatus', 'final');
 
             /** Item variables */
             foreach ($itemResult as $key => $itemVariable) {
+                $itemElement = $this->createItemResultNode($itemResultIdentifier, $dom, $itemResult);
+
                 $isResponseVariable = $itemVariable['type']->getUri() === 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResponseVariable';
 
                 if ($itemVariable['identifier'] == 'comment') {
@@ -236,12 +228,12 @@ class QtiResultsService extends ConfigurableService implements ResultService
                     if ($isResponseVariable) {
                         $itemVariableElement->appendChild($responseElement);
                     }
+
+                    $assessmentResultElt->appendChild($itemElement);
                 }
 
                 $itemElement->appendChild($itemVariableElement);
             }
-
-            $assessmentResultElt->appendChild($itemElement);
         }
 
         return $dom->saveXML();
@@ -316,10 +308,10 @@ class QtiResultsService extends ConfigurableService implements ResultService
     }
 
     /**
-     * @param \DOMDocument $dom
+     * @param DOMDocument $dom
      * @param string $tag Xml tag to create
      * @param string $data Data to escape
-     * @return \DOMElement
+     * @return DOMElement
      */
     protected function createCDATANode($dom, $tag, $data)
     {
@@ -327,5 +319,28 @@ class QtiResultsService extends ConfigurableService implements ResultService
         $returnValue = $dom->createElementNS(self::QTI_NS, $tag);
         $returnValue->appendChild($node);
         return $returnValue;
+    }
+
+    private function createItemResultNode(string $itemResultIdentifier, DOMDocument $dom, array $itemResult): DOMElement
+    {
+        // Retrieve identifier.
+        $identifierParts = explode('.', $itemResultIdentifier);
+        $occurrenceNumber = array_pop($identifierParts);
+        $refIdentifier = array_pop($identifierParts);
+
+        $itemElement = $dom->createElementNS(self::QTI_NS, 'itemResult');
+        $itemElement->setAttribute('identifier', $refIdentifier);
+        $itemElement->setAttribute('datestamp', $this->getDisplayDate($itemResult[0]['epoch']));
+        $itemElement->setAttribute('sessionStatus', 'final');
+
+        return $itemElement;
+    }
+
+    /**
+     * @throws common_Exception
+     */
+    private function getDisplayDate(string $epoch): string
+    {
+        return tao_helpers_Date::displayeDate($epoch, tao_helpers_Date::FORMAT_ISO8601);
     }
 }
