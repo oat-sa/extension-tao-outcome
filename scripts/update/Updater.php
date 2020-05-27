@@ -15,11 +15,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2014-2016 (original work) Open Assessment Technologies SA;
- *
+ * Copyright (c) 2014-2020 (original work) Open Assessment Technologies SA;
  *
  */
 
+namespace oat\taoResultServer\scripts\update;
+
+use common_Exception;
+use common_ext_ExtensionUpdater;
 use oat\tao\scripts\update\OntologyUpdater;
 use oat\taoResultServer\models\classes\QtiResultsService;
 use oat\taoResultServer\models\classes\ResultService;
@@ -31,13 +34,12 @@ use oat\taoResultServer\models\classes\implementation\ResultServerService;
  * @author Joel Bout <joel@taotesting.com>
  * @author Jérôme Bogaerts <jerome@taotesting.com>
  */
-class taoResultServer_scripts_update_Updater extends \common_ext_ExtensionUpdater
+class Updater extends common_ext_ExtensionUpdater
 {
 
     /**
-     *
      * @param string $initialVersion
-     * @return string|void
+     * @throws common_Exception
      */
     public function update($initialVersion)
     {
@@ -86,6 +88,6 @@ class taoResultServer_scripts_update_Updater extends \common_ext_ExtensionUpdate
             $this->setVersion('12.0.0');
         }
 
-        $this->skip('12.0.0', '12.0.1');
+        $this->skip('12.0.0', '12.0.2');
     }
 }
