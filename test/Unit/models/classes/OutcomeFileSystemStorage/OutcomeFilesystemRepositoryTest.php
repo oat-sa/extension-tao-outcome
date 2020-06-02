@@ -19,25 +19,33 @@
  *
  */
 
-namespace oat\taoResultServer\models\classes\OutcomeFileSystemStorage;
+namespace oat\taoResultServer\test\Unit\models\classes\OutcomeFileSystemStorage;
 
 use common_exception_Error;
 use common_exception_NotFound;
+use oat\generis\test\MockObject;
+use oat\generis\test\TestCase;
 use oat\oatbox\filesystem\FileSystem;
 use oat\oatbox\service\exception\InvalidServiceManagerException;
+use oat\taoResultServer\models\classes\OutcomeFileSystemStorage\FilePathFactory;
+use oat\taoResultServer\models\classes\OutcomeFileSystemStorage\OutcomeFilesystemRepository;
 use oat\taoResultServer\models\classes\ResultStorageInterface;
-use oat\generis\test\MockObject;
+use PHPUnit\Framework\MockObject\MockObject as GenericMockObject;
 use stdClass;
 use taoResultServer_models_classes_ResponseVariable;
-use oat\generis\test\TestCase;
 
 class OutcomeFilesystemRepositoryTest extends TestCase
 {
     /** @var OutcomeFilesystemRepository */
     private $repository;
+    /** @var ResultStorageInterface|GenericMockObject */
+    private $dbStorage;
 
     protected function setUp(): void
     {
+        $rawVariable = $this->getRawVariable(OutcomeFilesystemRepository::BASE_TYPE_FILE_REFERENCE);
+        $this->dbStorage = $this->getDbStorage([$rawVariable]);
+
         $this->repository = $this->getRepository();
     }
 
@@ -46,7 +54,7 @@ class OutcomeFilesystemRepositoryTest extends TestCase
      * @throws common_exception_NotFound
      * @throws InvalidServiceManagerException
      */
-    public function testGetVariable()
+    public function testGetVariable(): void
     {
         $variable = $this->repository->getVariable('callId', 'varId');
 
@@ -61,7 +69,7 @@ class OutcomeFilesystemRepositoryTest extends TestCase
      * @throws common_exception_NotFound
      * @throws InvalidServiceManagerException
      */
-    public function testGetVariables()
+    public function testGetVariables(): void
     {
         $variable = $this->repository->getVariables('callId');
 
@@ -71,8 +79,15 @@ class OutcomeFilesystemRepositoryTest extends TestCase
         $this->assertEquals('file', $variable[0][0]->variable->getBaseType());
     }
 
-    public function testStoreVariables()
+    /**
+     * @throws InvalidServiceManagerException
+     * @throws common_exception_Error
+     * @throws common_exception_NotFound
+     */
+    public function testStoreVariables(): void
     {
+        $this->dbStorage->expects($this->once())->method('storeItemVariables');
+
         $variable1 = $this->getVariable('file', 'fileContent');
         $variable2 = $this->getVariable('string', 'something');
 
@@ -85,8 +100,15 @@ class OutcomeFilesystemRepositoryTest extends TestCase
         );
     }
 
-    public function testStoreVariable()
+    /**
+     * @throws InvalidServiceManagerException
+     * @throws common_exception_Error
+     * @throws common_exception_NotFound
+     */
+    public function testStoreVariable(): void
     {
+        $this->dbStorage->expects($this->once())->method('storeItemVariable');
+
         $variable = $this->getVariable('file', 'fileContent');
 
         $this->repository->storeItemVariable('deliveryId', 'test', 'item', $variable, 'callIdItem');
@@ -98,7 +120,7 @@ class OutcomeFilesystemRepositoryTest extends TestCase
      *
      * @return stdClass
      */
-    private function getRawVariable($baseType, $value = '')
+    private function getRawVariable($baseType, $value = ''): stdClass
     {
         $rawVariable = new stdClass();
         $rawVariable->uri = 'uri';
@@ -110,7 +132,7 @@ class OutcomeFilesystemRepositoryTest extends TestCase
         return $rawVariable;
     }
 
-    private function getVariable($baseType, $value = '')
+    private function getVariable($baseType, $value = ''): taoResultServer_models_classes_ResponseVariable
     {
         $variable = new taoResultServer_models_classes_ResponseVariable();
         $variable->setBaseType($baseType);
@@ -119,38 +141,46 @@ class OutcomeFilesystemRepositoryTest extends TestCase
         return $variable;
     }
 
+    /**
+     * @return MockObject|OutcomeFilesystemRepository
+     */
     private function getRepository()
     {
-        $rawVariable = $this->getRawVariable(OutcomeFilesystemRepository::BASE_TYPE_FILE_REFERENCE);
         $fileSystem = $this->getFileSystem();
-        $dbStorage = $this->getDbStorage([$rawVariable]);
 
         /** @var OutcomeFilesystemRepository|MockObject $repository */
-        $repository = $this->getMockBuilder(OutcomeFilesystemRepository::class)
-            ->setMethods(['getDbStorage', 'getFileSystem', 'getFilePathFactory'])
-            ->getMock();
+        $repository = $this->createPartialMock(
+            OutcomeFilesystemRepository::class,
+            ['getDbStorage', 'getFileSystem', 'getFilePathFactory']
+        );
 
-        $repository->method('getDbStorage')->willReturn($dbStorage);
+        $repository->method('getDbStorage')->willReturn($this->dbStorage);
         $repository->method('getFileSystem')->willReturn($fileSystem);
         $repository->method('getFilePathFactory')->willReturn($this->getFilePathFactory());
 
         return $repository;
     }
 
+    /**
+     * @return FilePathFactory|GenericMockObject
+     */
     private function getFilePathFactory()
     {
-        $mock = $this->getMockBuilder(FilePathFactory::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $mock = $this->createMock(FilePathFactory::class);
 
         $mock->method('getFilePath')->willReturn('filePath');
 
         return $mock;
     }
 
+    /**
+     * @param array $variables
+     *
+     * @return ResultStorageInterface|GenericMockObject
+     */
     private function getDbStorage(array $variables)
     {
-        $dbStorage = $this->getMockBuilder(ResultStorageInterface::class)->getMock();
+        $dbStorage = $this->createMock(ResultStorageInterface::class);
         $dbStorage->method('getVariable')->willReturn($variables);
         $dbStorage->method('getVariables')->willReturn([$variables]);
 
@@ -159,7 +189,7 @@ class OutcomeFilesystemRepositoryTest extends TestCase
             $this->anything(),
             $this->anything(),
             $this->callback(
-                function ($subjects) {
+                static function ($subjects) {
                     if (!is_array($subjects)) {
                         return false;
                     }
@@ -180,7 +210,7 @@ class OutcomeFilesystemRepositoryTest extends TestCase
             $this->anything(),
             $this->anything(),
             $this->callback(
-                function ($subject) {
+                static function ($subject) {
                     return $subject->getBaseType() !== 'file'
                         && $subject->getCandidateResponse() === 'filePath';
                 }
@@ -190,10 +220,11 @@ class OutcomeFilesystemRepositoryTest extends TestCase
         return $dbStorage;
     }
 
+    /**
+     * @return GenericMockObject|FileSystem
+     */
     private function getFileSystem()
     {
-        return $this->getMockBuilder(FileSystem::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        return $this->createMock(FileSystem::class);
     }
 }
