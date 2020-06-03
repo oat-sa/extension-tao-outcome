@@ -21,13 +21,12 @@
 
 namespace oat\taoResultServer\scripts\update;
 
-use common_Exception;
 use common_ext_ExtensionUpdater;
 use oat\tao\scripts\update\OntologyUpdater;
-use oat\taoResultServer\models\classes\QtiResultsService;
-use oat\taoResultServer\models\classes\ResultService;
-use oat\taoResultServer\models\classes\ResultAliasService;
 use oat\taoResultServer\models\classes\implementation\ResultServerService;
+use oat\taoResultServer\models\classes\QtiResultsService;
+use oat\taoResultServer\models\classes\ResultAliasService;
+use oat\taoResultServer\models\classes\ResultService;
 
 /**
  *
@@ -38,8 +37,7 @@ class Updater extends common_ext_ExtensionUpdater
 {
 
     /**
-     * @param string $initialVersion
-     * @throws common_Exception
+     * @inheritDoc
      */
     public function update($initialVersion)
     {
