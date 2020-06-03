@@ -45,7 +45,7 @@ use taoResultServer_models_classes_WritableResultStorage as WritableResultStorag
 class QtiResultsService extends ConfigurableService implements ResultService
 {
     protected $deliveryExecutionService;
-    /** @var string  */
+
     private const QTI_NS = 'http://www.imsglobal.org/xsd/imsqti_result_v2p1';
 
     /**
@@ -132,7 +132,7 @@ class QtiResultsService extends ConfigurableService implements ResultService
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $itemResults = $crudService->format($resultServer, $deId, CrudResultsService::GROUP_BY_ITEM, $fetchOnlyLastAttemptResult);
+        $itemResultsByAttempt = $crudService->format($resultServer, $deId, CrudResultsService::GROUP_BY_ITEM, $fetchOnlyLastAttemptResult, true);
         $testResults = $crudService->format($resultServer, $deId, CrudResultsService::GROUP_BY_TEST);
 
         $assessmentResultElt = $dom->createElementNS(self::QTI_NS, 'assessmentResult');
@@ -177,62 +177,23 @@ class QtiResultsService extends ConfigurableService implements ResultService
         }
 
         /** Item Result */
-        foreach ($itemResults as $itemResultIdentifier => $itemResult) {
+        foreach ($itemResultsByAttempt as $itemResultIdentifier => $itemResults) {
+            /** Iterates variables  */
+            foreach ($itemResults as $itemResult) {
+                $itemElement = $this->createItemResultNode($dom, $itemResultIdentifier, $itemResult);
+                /** Item variables */
+                foreach ($itemResult as $key => $itemVariable) {
+                    $isResponseVariable = $itemVariable['type']->getUri() === 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResponseVariable';
 
-            /** Item variables */
-            foreach ($itemResult as $key => $itemVariable) {
-                $itemElement = $this->createItemResultNode($itemResultIdentifier, $dom, $itemResult);
-
-                $isResponseVariable = $itemVariable['type']->getUri() === 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResponseVariable';
-
-                if ($itemVariable['identifier'] == 'comment') {
-                    /** Comment */
-                    $itemVariableElement = $dom->createElementNS(self::QTI_NS, 'candidateComment', $itemVariable['value']);
-                } else {
-                    /** Item variable */
-                    $itemVariableElement = $dom->createElementNS(self::QTI_NS, ($isResponseVariable) ? 'responseVariable' : 'outcomeVariable');
-                    $itemVariableElement->setAttribute('identifier', $itemVariable['identifier']);
-                    $itemVariableElement->setAttribute('cardinality', $itemVariable['cardinality']);
-                    $itemVariableElement->setAttribute('baseType', $itemVariable['basetype']);
-
-                    /** Split multiple response */
-                    $itemVariable['value'] = trim($itemVariable['value'], '[]');
-                    if ($itemVariable['cardinality'] !== Cardinality::getNameByConstant(Cardinality::SINGLE)) {
-                        $values = explode(';', $itemVariable['value']);
-                        $returnValue = [];
-                        foreach ($values as $value) {
-                            $returnValue[] = $this->createCDATANode($dom, 'value', $value);
-                        }
+                    if ($itemVariable['identifier'] == 'comment') {
+                        /** Comment */
+                        $itemVariableElement = $dom->createElementNS(self::QTI_NS,'candidateComment', $itemVariable['value']);
                     } else {
-                        $returnValue = $this->createCDATANode($dom, 'value', $itemVariable['value']);
+                        $itemVariableElement = $this->createItemVariableNode($dom, $isResponseVariable, $itemVariable);
                     }
-
-                    /** Get response parent element */
-                    if ($isResponseVariable) {
-                        /** Response variable */
-                        $responseElement = $dom->createElementNS(self::QTI_NS, 'candidateResponse');
-                    } else {
-                        /** Outcome variable */
-                        $responseElement = $itemVariableElement;
-                    }
-
-                    /** Write a response node foreach answer  */
-                    if (is_array($returnValue)) {
-                        foreach ($returnValue as $valueElement) {
-                            $responseElement->appendChild($valueElement);
-                        }
-                    } else {
-                        $responseElement->appendChild($returnValue);
-                    }
-
-                    if ($isResponseVariable) {
-                        $itemVariableElement->appendChild($responseElement);
-                    }
-
-                    $assessmentResultElt->appendChild($itemElement);
+                    $itemElement->appendChild($itemVariableElement);
                 }
-
-                $itemElement->appendChild($itemVariableElement);
+                $assessmentResultElt->appendChild($itemElement);
             }
         }
 
@@ -321,9 +282,8 @@ class QtiResultsService extends ConfigurableService implements ResultService
         return $returnValue;
     }
 
-    private function createItemResultNode(string $itemResultIdentifier, DOMDocument $dom, array $itemResult): DOMElement
+    private function createItemResultNode(DOMDocument $dom, string $itemResultIdentifier, array $itemResult): DOMElement
     {
-        // Retrieve identifier.
         $identifierParts = explode('.', $itemResultIdentifier);
         $occurrenceNumber = array_pop($identifierParts);
         $refIdentifier = array_pop($identifierParts);
@@ -334,6 +294,54 @@ class QtiResultsService extends ConfigurableService implements ResultService
         $itemElement->setAttribute('sessionStatus', 'final');
 
         return $itemElement;
+    }
+
+    private function createItemVariableNode(DOMDocument $dom, bool $isResponseVariable, $itemVariable): DOMElement
+    {
+        /** Item variable */
+        $itemVariableElement = $dom->createElementNS(
+            self::QTI_NS,
+            ($isResponseVariable) ? 'responseVariable' : 'outcomeVariable'
+        );
+        $itemVariableElement->setAttribute('identifier', $itemVariable['identifier']);
+        $itemVariableElement->setAttribute('cardinality', $itemVariable['cardinality']);
+        $itemVariableElement->setAttribute('baseType', $itemVariable['basetype']);
+
+        /** Split multiple response */
+        $itemVariable['value'] = trim($itemVariable['value'], '[]');
+        if ($itemVariable['cardinality'] !== Cardinality::getNameByConstant(Cardinality::SINGLE)) {
+            $values = explode(';', $itemVariable['value']);
+            $returnValue = [];
+            foreach ($values as $value) {
+                $returnValue[] = $this->createCDATANode($dom, 'value', $value);
+            }
+        } else {
+            $returnValue = $this->createCDATANode($dom, 'value', $itemVariable['value']);
+        }
+
+        /** Get response parent element */
+        if ($isResponseVariable) {
+            /** Response variable */
+            $responseElement = $dom->createElementNS(self::QTI_NS, 'candidateResponse');
+        } else {
+            /** Outcome variable */
+            $responseElement = $itemVariableElement;
+        }
+
+        /** Write a response node foreach answer  */
+        if (is_array($returnValue)) {
+            foreach ($returnValue as $valueElement) {
+                $responseElement->appendChild($valueElement);
+            }
+        } else {
+            $responseElement->appendChild($returnValue);
+        }
+
+        if ($isResponseVariable) {
+            $itemVariableElement->appendChild($responseElement);
+        }
+
+        return $itemVariableElement;
     }
 
     /**
