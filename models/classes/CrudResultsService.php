@@ -23,6 +23,7 @@ namespace oat\taoResultServer\models\classes;
 
 use core_kernel_classes_Class;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
+use oat\taoResultServer\models\Mapper\ItemVariableMapper;
 use tao_models_classes_CrudService;
 use taoResultServer_models_classes_ReadableResultStorage;
 use taoResultServer_models_classes_ResponseVariable;
@@ -204,35 +205,13 @@ class CrudResultsService extends tao_models_classes_CrudService
         return $resource;
     }
 
-
-    private function convertTime(string $epoch): float
-    {
-        [$usec, $sec] = explode(' ', $epoch);
-
-        return ((float)$usec + (float)$sec);
-    }
-
     private function splitByAttempt(array $itemVariables): array
     {
-        $attempts = [];
-        foreach ($itemVariables as $variable) {
-            if ($variable['identifier'] == 'numAttempts') {
-                $attempts[(string)$this->convertTime($variable['epoch'])] = [];
-            }
-        }
-        foreach ($itemVariables as $variable) {
-            $cand = null;
-            $bestDist = null;
-            foreach (array_keys($attempts) as $time) {
-                $dist = abs($time - $this->convertTime($variable['epoch']));
-                if (is_null($bestDist) || $dist < $bestDist) {
-                    $bestDist = $dist;
-                    $cand = $time;
-                }
-            }
-            $attempts[$cand][] = $variable;
-        }
+        return $this->getItemVariableMapper()->splitByAttempt($itemVariables);
+    }
 
-        return $attempts;
+    private function getItemVariableMapper(): ItemVariableMapper
+    {
+        return $this->getServiceLocator()->get(ItemVariableMapper::class);
     }
 }
