@@ -9,7 +9,6 @@
 use oat\taoResultServer\scripts\update\Updater;
 
 $extpath = __DIR__ . DIRECTORY_SEPARATOR;
-$taopath = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'tao' . DIRECTORY_SEPARATOR;
 
 return [
     'name' => 'taoResultServer',
