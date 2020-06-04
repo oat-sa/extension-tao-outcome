@@ -23,7 +23,7 @@ namespace oat\taoResultServer\models\classes;
 
 use core_kernel_classes_Class;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
-use oat\taoResultServer\models\Mapper\ItemVariableMapper;
+use oat\taoResultServer\models\Formatter\ItemResponseVariableSplitter;
 use tao_models_classes_CrudService;
 use taoResultServer_models_classes_ReadableResultStorage;
 use taoResultServer_models_classes_ResponseVariable;
@@ -210,8 +210,8 @@ class CrudResultsService extends tao_models_classes_CrudService
         return $this->getItemVariableMapper()->splitByAttempt($itemVariables);
     }
 
-    private function getItemVariableMapper(): ItemVariableMapper
+    private function getItemVariableMapper(): ItemResponseVariableSplitter
     {
-        return $this->getServiceLocator()->get(ItemVariableMapper::class);
+        return $this->getServiceLocator()->get(ItemResponseVariableSplitter::class);
     }
 }

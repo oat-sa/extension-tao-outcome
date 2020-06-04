@@ -20,11 +20,11 @@
 
 declare(strict_types=1);
 
-namespace oat\taoResultServer\models\Mapper;
+namespace oat\taoResultServer\models\Formatter;
 
 use oat\oatbox\service\ConfigurableService;
 
-class ItemVariableMapper extends ConfigurableService
+class ItemResponseVariableSplitter extends ConfigurableService
 {
     public function splitByAttempt(array $itemVariables): array
     {
