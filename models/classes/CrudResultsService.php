@@ -207,10 +207,10 @@ class CrudResultsService extends tao_models_classes_CrudService
 
     private function splitByAttempt(array $itemVariables): array
     {
-        return $this->getItemVariableMapper()->splitByAttempt($itemVariables);
+        return $this->getItemVariableSplitter()->splitByAttempt($itemVariables);
     }
 
-    private function getItemVariableMapper(): ItemResponseVariableSplitter
+    private function getItemVariableSplitter(): ItemResponseVariableSplitter
     {
         return $this->getServiceLocator()->get(ItemResponseVariableSplitter::class);
     }
