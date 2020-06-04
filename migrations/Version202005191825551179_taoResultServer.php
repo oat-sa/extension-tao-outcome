@@ -14,8 +14,6 @@ use oat\oatbox\service\ServiceManagerAwareTrait;
  */
 final class Version202005191825551179_taoResultServer extends AbstractMigration implements ServiceManagerAwareInterface
 {
-    use ServiceManagerAwareTrait;
-
     public function getDescription(): string
     {
         return 'A test migration for extension taoResultServer (2).';
