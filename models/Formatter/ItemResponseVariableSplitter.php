@@ -50,6 +50,31 @@ class ItemResponseVariableSplitter extends ConfigurableService
         return $attempts;
     }
 
+    public function splitObjByAttempt(array $itemVariables): array
+    {
+        $attempts = [];
+        foreach ($itemVariables as $variable) {
+            if ($variable->variable->getIdentifier() == 'numAttempts') {
+                $attempts[(string)$variable->variable->getCreationTime()] = [];
+            }
+        }
+        foreach ($itemVariables as $variable) {
+            $cand = null;
+            $bestDist = null;
+            foreach (array_keys($attempts) as $time) {
+                $dist = abs($time - $variable->variable->getCreationTime());
+                if (is_null($bestDist) || $dist < $bestDist) {
+                    $bestDist = $dist;
+                    $cand = $time;
+                }
+            }
+            $attempts[$cand][] = $variable;
+        }
+
+        return $attempts;
+    }
+
+
     private function getVariableTime(string $epoch): float
     {
         [$usec, $sec] = explode(' ', $epoch);
