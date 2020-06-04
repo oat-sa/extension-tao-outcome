@@ -31,14 +31,14 @@ class ItemResponseVariableSplitter extends ConfigurableService
         $attempts = [];
         foreach ($itemVariables as $variable) {
             if ($variable['identifier'] == 'numAttempts') {
-                $attempts[(string)$this->convertTime($variable['epoch'])] = [];
+                $attempts[(string)$this->getVariableTime($variable['epoch'])] = [];
             }
         }
         foreach ($itemVariables as $variable) {
             $cand = null;
             $bestDist = null;
             foreach (array_keys($attempts) as $time) {
-                $dist = abs($time - $this->convertTime($variable['epoch']));
+                $dist = abs($time - $this->getVariableTime($variable['epoch']));
                 if (is_null($bestDist) || $dist < $bestDist) {
                     $bestDist = $dist;
                     $cand = $time;
@@ -50,7 +50,7 @@ class ItemResponseVariableSplitter extends ConfigurableService
         return $attempts;
     }
 
-    private function convertTime(string $epoch): float
+    private function getVariableTime(string $epoch): float
     {
         [$usec, $sec] = explode(' ', $epoch);
 
