@@ -27,6 +27,10 @@ use stdClass;
 
 class ItemResponseCollectionNormalizer extends ConfigurableService
 {
+    /**
+     * Implementations(KV,RDS) of \taoResultServer_models_classes_ReadableResultStorage::getVariables
+     * providing a bit different structure of output, so this needed to unify before major storages refactoring happens
+     */
     public function normalize(array $collection): array
     {
         $result = [];
