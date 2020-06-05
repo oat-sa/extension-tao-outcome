@@ -23,6 +23,7 @@ namespace oat\taoResultServer\models\classes;
 
 use core_kernel_classes_Class;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
+use oat\taoResultServer\models\Formatter\ItemResponseCollectionNormalizer;
 use oat\taoResultServer\models\Formatter\ItemResponseVariableSplitter;
 use tao_models_classes_CrudService;
 use taoResultServer_models_classes_ReadableResultStorage;
@@ -39,7 +40,7 @@ class CrudResultsService extends tao_models_classes_CrudService
     public const GROUP_BY_TEST = 1;
     public const GROUP_BY_ITEM = 2;
 
-    /** @var core_kernel_classes_Class  */
+    /** @var core_kernel_classes_Class */
     protected $resultClass;
 
     public function __construct()
@@ -77,6 +78,7 @@ class CrudResultsService extends tao_models_classes_CrudService
 
         foreach ($calls as $callId) {
             $results = $resultStorage->getVariables($callId);
+            $results = $this->getNormalizer()->normalize($results);
             $lastData = [];
             foreach ($results as $result) {
                 $result = array_pop($result);
@@ -146,7 +148,7 @@ class CrudResultsService extends tao_models_classes_CrudService
                     $properties[] = $property;
                 }
                 $resources[] = [
-                    'uri'        => $result['deliveryResultIdentifier'],
+                    'uri' => $result['deliveryResultIdentifier'],
                     'properties' => $properties
                 ];
             }
@@ -209,5 +211,10 @@ class CrudResultsService extends tao_models_classes_CrudService
     private function getItemVariableSplitter(): ItemResponseVariableSplitter
     {
         return $this->getServiceLocator()->get(ItemResponseVariableSplitter::class);
+    }
+
+    private function getNormalizer(): ItemResponseCollectionNormalizer
+    {
+        return $this->getServiceLocator()->get(ItemResponseCollectionNormalizer::class);
     }
 }
