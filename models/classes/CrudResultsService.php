@@ -186,11 +186,7 @@ class CrudResultsService extends tao_models_classes_CrudService
         // TODO: Implement getClassService() method.
     }
 
-    /**
-     * @param $variable
-     * @return array
-     */
-    protected function getFormResource($variable)
+    private function getFormResource($variable): array
     {
         $resource['value'] = $variable->getValue();
         $resource['identifier'] = $variable->getIdentifier();
