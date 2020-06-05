@@ -195,9 +195,9 @@ class CrudResultsService extends tao_models_classes_CrudService
         $resource['value'] = $variable->getValue();
         $resource['identifier'] = $variable->getIdentifier();
         if ($variable instanceof taoResultServer_models_classes_ResponseVariable) {
-            $resource['type'] = new core_kernel_classes_Class('http://www.tao.lu/Ontologies/TAOResult.rdf#ResponseVariable');
+            $resource['type'] = $this->getClass(QtiResultsService::CLASS_RESPONSE_VARIABLE);
         } else {
-            $resource['type'] = new core_kernel_classes_Class('http://www.tao.lu/Ontologies/TAOResult.rdf#OutcomeVariable');
+            $resource['type'] = $this->getClass(QtiResultsService::CLASS_OUTCOME_VARIABLE);
         }
         $resource['epoch'] = $variable->getEpoch();
         $resource['cardinality'] = $variable->getCardinality();

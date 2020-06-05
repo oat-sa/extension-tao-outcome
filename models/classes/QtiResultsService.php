@@ -48,6 +48,9 @@ class QtiResultsService extends ConfigurableService implements ResultService
 
     private const QTI_NS = 'http://www.imsglobal.org/xsd/imsqti_result_v2p1';
 
+    public const CLASS_RESPONSE_VARIABLE = 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResponseVariable';
+    public const CLASS_OUTCOME_VARIABLE = 'http://www.tao.lu/Ontologies/TAOResult.rdf#OutcomeVariable';
+
     /**
      * Get the implementation of delivery execution service
      *
@@ -154,7 +157,7 @@ class QtiResultsService extends ConfigurableService implements ResultService
 
             /** Item Variable */
             foreach ($testResult as $itemVariable) {
-                $isResponseVariable = $itemVariable['type']->getUri() === 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResponseVariable';
+                $isResponseVariable = $itemVariable['type']->getUri() === self::CLASS_RESPONSE_VARIABLE;
                 $testVariableElement = $dom->createElementNS(self::QTI_NS, ($isResponseVariable) ? 'responseVariable' : 'outcomeVariable');
                 $testVariableElement->setAttribute('identifier', $itemVariable['identifier']);
                 $testVariableElement->setAttribute('cardinality', $itemVariable['cardinality']);
@@ -183,7 +186,7 @@ class QtiResultsService extends ConfigurableService implements ResultService
                 $itemElement = $this->createItemResultNode($dom, $itemResultIdentifier, $itemResult);
                 /** Item variables */
                 foreach ($itemResult as $key => $itemVariable) {
-                    $isResponseVariable = $itemVariable['type']->getUri() === 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResponseVariable';
+                    $isResponseVariable = $itemVariable['type']->getUri() === self::CLASS_RESPONSE_VARIABLE;
 
                     if ($itemVariable['identifier'] == 'comment') {
                         /** Comment */
