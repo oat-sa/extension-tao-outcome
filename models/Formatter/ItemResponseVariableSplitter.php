@@ -29,16 +29,20 @@ class ItemResponseVariableSplitter extends ConfigurableService
     public function splitByAttempt(array $itemVariables): array
     {
         $attempts = [];
+
         foreach ($itemVariables as $variable) {
             if ($variable['identifier'] == 'numAttempts') {
                 $attempts[(string)$this->getVariableTime($variable['epoch'])] = [];
             }
         }
+
         foreach ($itemVariables as $variable) {
             $cand = null;
             $bestDist = null;
+
             foreach (array_keys($attempts) as $time) {
                 $dist = abs($time - $this->getVariableTime($variable['epoch']));
+
                 if (is_null($bestDist) || $dist < $bestDist) {
                     $bestDist = $dist;
                     $cand = $time;
@@ -53,6 +57,7 @@ class ItemResponseVariableSplitter extends ConfigurableService
     public function splitObjByAttempt(array $itemVariables): array
     {
         $attempts = [];
+
         foreach ($itemVariables as $variable) {
             if ($variable->variable->getIdentifier() == 'numAttempts') {
                 $attempts[(string)$variable->variable->getCreationTime()] = [];
@@ -61,8 +66,10 @@ class ItemResponseVariableSplitter extends ConfigurableService
         foreach ($itemVariables as $variable) {
             $cand = null;
             $bestDist = null;
+
             foreach (array_keys($attempts) as $time) {
                 $dist = abs($time - $variable->variable->getCreationTime());
+
                 if (is_null($bestDist) || $dist < $bestDist) {
                     $bestDist = $dist;
                     $cand = $time;
