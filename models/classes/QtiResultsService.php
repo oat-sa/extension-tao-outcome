@@ -15,9 +15,11 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2016-2019 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
+ * Copyright (c) 2016-2020 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  *
  */
+
+declare(strict_types=1);
 
 namespace oat\taoResultServer\models\classes;
 
@@ -26,6 +28,9 @@ use common_exception_InvalidArgumentType;
 use common_exception_NotFound;
 use common_exception_NotImplemented;
 use core_kernel_classes_Resource;
+use DOMDocument;
+use DOMElement;
+use oat\oatbox\service\ConfigurableService;
 use oat\oatbox\service\exception\InvalidServiceManagerException;
 use oat\taoDelivery\model\execution\DeliveryExecution as DeliveryExecutionInterface;
 use oat\taoDelivery\model\execution\ServiceProxy;
@@ -33,15 +38,18 @@ use oat\taoResultServer\models\Exceptions\DuplicateVariableException;
 use oat\taoResultServer\models\Mapper\ResultMapper;
 use oat\taoResultServer\models\Parser\QtiResultParser;
 use qtism\common\enums\Cardinality;
-use oat\oatbox\service\ConfigurableService;
 use qtism\data\storage\xml\XmlStorageException;
+use tao_helpers_Date;
 use taoResultServer_models_classes_WritableResultStorage as WritableResultStorage;
 
 class QtiResultsService extends ConfigurableService implements ResultService
 {
     protected $deliveryExecutionService;
 
-    const QTI_NS = 'http://www.imsglobal.org/xsd/imsqti_result_v2p1';
+    private const QTI_NS = 'http://www.imsglobal.org/xsd/imsqti_result_v2p1';
+
+    public const CLASS_RESPONSE_VARIABLE = 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResponseVariable';
+    public const CLASS_OUTCOME_VARIABLE = 'http://www.tao.lu/Ontologies/TAOResult.rdf#OutcomeVariable';
 
     /**
      * Get the implementation of delivery execution service
@@ -124,10 +132,10 @@ class QtiResultsService extends ConfigurableService implements ResultService
 
         $crudService = new CrudResultsService();
 
-        $dom = new \DOMDocument('1.0', 'UTF-8');
+        $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $itemResults = $crudService->format($resultServer, $deId, CrudResultsService::GROUP_BY_ITEM, $fetchOnlyLastAttemptResult);
+        $itemResultsByAttempt = $crudService->format($resultServer, $deId, CrudResultsService::GROUP_BY_ITEM, $fetchOnlyLastAttemptResult, true);
         $testResults = $crudService->format($resultServer, $deId, CrudResultsService::GROUP_BY_TEST);
 
         $assessmentResultElt = $dom->createElementNS(self::QTI_NS, 'assessmentResult');
@@ -145,14 +153,11 @@ class QtiResultsService extends ConfigurableService implements ResultService
 
             $testResultElement = $dom->createElementNS(self::QTI_NS, 'testResult');
             $testResultElement->setAttribute('identifier', $testIdentifier);
-            $testResultElement->setAttribute('datestamp', \tao_helpers_Date::displayeDate(
-                $testResult[0]['epoch'],
-                \tao_helpers_Date::FORMAT_ISO8601
-            ));
+            $testResultElement->setAttribute('datestamp', $this->getDisplayDate($testResult[0]['epoch']));
 
             /** Item Variable */
             foreach ($testResult as $itemVariable) {
-                $isResponseVariable = $itemVariable['type']->getUri() === 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResponseVariable';
+                $isResponseVariable = $itemVariable['type']->getUri() === self::CLASS_RESPONSE_VARIABLE;
                 $testVariableElement = $dom->createElementNS(self::QTI_NS, ($isResponseVariable) ? 'responseVariable' : 'outcomeVariable');
                 $testVariableElement->setAttribute('identifier', $itemVariable['identifier']);
                 $testVariableElement->setAttribute('cardinality', $itemVariable['cardinality']);
@@ -175,73 +180,24 @@ class QtiResultsService extends ConfigurableService implements ResultService
         }
 
         /** Item Result */
-        foreach ($itemResults as $itemResultIdentifier => $itemResult) {
-            // Retrieve identifier.
-            $identifierParts = explode('.', $itemResultIdentifier);
-            $occurenceNumber = array_pop($identifierParts);
-            $refIdentifier = array_pop($identifierParts);
+        foreach ($itemResultsByAttempt as $itemResultIdentifier => $itemResults) {
+            /** Iterates variables  */
+            foreach ($itemResults as $itemResult) {
+                $itemElement = $this->createItemResultNode($dom, $itemResultIdentifier, $itemResult);
+                /** Item variables */
+                foreach ($itemResult as $key => $itemVariable) {
+                    $isResponseVariable = $itemVariable['type']->getUri() === self::CLASS_RESPONSE_VARIABLE;
 
-            $itemElement = $dom->createElementNS(self::QTI_NS, 'itemResult');
-            $itemElement->setAttribute('identifier', $refIdentifier);
-            $itemElement->setAttribute('datestamp', \tao_helpers_Date::displayeDate(
-                $itemResult[0]['epoch'],
-                \tao_helpers_Date::FORMAT_ISO8601
-            ));
-            $itemElement->setAttribute('sessionStatus', 'final');
-
-            /** Item variables */
-            foreach ($itemResult as $key => $itemVariable) {
-                $isResponseVariable = $itemVariable['type']->getUri() === 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResponseVariable';
-
-                if ($itemVariable['identifier'] == 'comment') {
-                    /** Comment */
-                    $itemVariableElement = $dom->createElementNS(self::QTI_NS, 'candidateComment', $itemVariable['value']);
-                } else {
-                    /** Item variable */
-                    $itemVariableElement = $dom->createElementNS(self::QTI_NS, ($isResponseVariable) ? 'responseVariable' : 'outcomeVariable');
-                    $itemVariableElement->setAttribute('identifier', $itemVariable['identifier']);
-                    $itemVariableElement->setAttribute('cardinality', $itemVariable['cardinality']);
-                    $itemVariableElement->setAttribute('baseType', $itemVariable['basetype']);
-
-                    /** Split multiple response */
-                    $itemVariable['value'] = trim($itemVariable['value'], '[]');
-                    if ($itemVariable['cardinality'] !== Cardinality::getNameByConstant(Cardinality::SINGLE)) {
-                        $values = explode(';', $itemVariable['value']);
-                        $returnValue = [];
-                        foreach ($values as $value) {
-                            $returnValue[] = $this->createCDATANode($dom, 'value', $value);
-                        }
+                    if ($itemVariable['identifier'] == 'comment') {
+                        /** Comment */
+                        $itemVariableElement = $dom->createElementNS(self::QTI_NS,'candidateComment', $itemVariable['value']);
                     } else {
-                        $returnValue = $this->createCDATANode($dom, 'value', $itemVariable['value']);
+                        $itemVariableElement = $this->createItemVariableNode($dom, $isResponseVariable, $itemVariable);
                     }
-
-                    /** Get response parent element */
-                    if ($isResponseVariable) {
-                        /** Response variable */
-                        $responseElement = $dom->createElementNS(self::QTI_NS, 'candidateResponse');
-                    } else {
-                        /** Outcome variable */
-                        $responseElement = $itemVariableElement;
-                    }
-
-                    /** Write a response node foreach answer  */
-                    if (is_array($returnValue)) {
-                        foreach ($returnValue as $valueElement) {
-                            $responseElement->appendChild($valueElement);
-                        }
-                    } else {
-                        $responseElement->appendChild($returnValue);
-                    }
-
-                    if ($isResponseVariable) {
-                        $itemVariableElement->appendChild($responseElement);
-                    }
+                    $itemElement->appendChild($itemVariableElement);
                 }
-
-                $itemElement->appendChild($itemVariableElement);
+                $assessmentResultElt->appendChild($itemElement);
             }
-
-            $assessmentResultElt->appendChild($itemElement);
         }
 
         return $dom->saveXML();
@@ -316,10 +272,10 @@ class QtiResultsService extends ConfigurableService implements ResultService
     }
 
     /**
-     * @param \DOMDocument $dom
+     * @param DOMDocument $dom
      * @param string $tag Xml tag to create
      * @param string $data Data to escape
-     * @return \DOMElement
+     * @return DOMElement
      */
     protected function createCDATANode($dom, $tag, $data)
     {
@@ -327,5 +283,75 @@ class QtiResultsService extends ConfigurableService implements ResultService
         $returnValue = $dom->createElementNS(self::QTI_NS, $tag);
         $returnValue->appendChild($node);
         return $returnValue;
+    }
+
+    private function createItemResultNode(DOMDocument $dom, string $itemResultIdentifier, array $itemResult): DOMElement
+    {
+        $identifierParts = explode('.', $itemResultIdentifier);
+        $occurrenceNumber = array_pop($identifierParts);
+        $refIdentifier = array_pop($identifierParts);
+
+        $itemElement = $dom->createElementNS(self::QTI_NS, 'itemResult');
+        $itemElement->setAttribute('identifier', $refIdentifier);
+        $itemElement->setAttribute('datestamp', $this->getDisplayDate($itemResult[0]['epoch']));
+        $itemElement->setAttribute('sessionStatus', 'final');
+
+        return $itemElement;
+    }
+
+    private function createItemVariableNode(DOMDocument $dom, bool $isResponseVariable, $itemVariable): DOMElement
+    {
+        /** Item variable */
+        $itemVariableElement = $dom->createElementNS(
+            self::QTI_NS,
+            ($isResponseVariable) ? 'responseVariable' : 'outcomeVariable'
+        );
+        $itemVariableElement->setAttribute('identifier', $itemVariable['identifier']);
+        $itemVariableElement->setAttribute('cardinality', $itemVariable['cardinality']);
+        $itemVariableElement->setAttribute('baseType', $itemVariable['basetype']);
+
+        /** Split multiple response */
+        $itemVariable['value'] = trim($itemVariable['value'], '[]');
+        if ($itemVariable['cardinality'] !== Cardinality::getNameByConstant(Cardinality::SINGLE)) {
+            $values = explode(';', $itemVariable['value']);
+            $returnValue = [];
+            foreach ($values as $value) {
+                $returnValue[] = $this->createCDATANode($dom, 'value', $value);
+            }
+        } else {
+            $returnValue = $this->createCDATANode($dom, 'value', $itemVariable['value']);
+        }
+
+        /** Get response parent element */
+        if ($isResponseVariable) {
+            /** Response variable */
+            $responseElement = $dom->createElementNS(self::QTI_NS, 'candidateResponse');
+        } else {
+            /** Outcome variable */
+            $responseElement = $itemVariableElement;
+        }
+
+        /** Write a response node foreach answer  */
+        if (is_array($returnValue)) {
+            foreach ($returnValue as $valueElement) {
+                $responseElement->appendChild($valueElement);
+            }
+        } else {
+            $responseElement->appendChild($returnValue);
+        }
+
+        if ($isResponseVariable) {
+            $itemVariableElement->appendChild($responseElement);
+        }
+
+        return $itemVariableElement;
+    }
+
+    /**
+     * @throws common_Exception
+     */
+    private function getDisplayDate(string $epoch): string
+    {
+        return tao_helpers_Date::displayeDate($epoch, tao_helpers_Date::FORMAT_ISO8601);
     }
 }

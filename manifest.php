@@ -5,15 +5,17 @@
  * @license GPLv2  http://www.opensource.org/licenses/gpl-2.0.php
  *
  */
-$extpath = dirname(__FILE__) . DIRECTORY_SEPARATOR;
-$taopath = dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'tao' . DIRECTORY_SEPARATOR;
+
+use oat\taoResultServer\scripts\update\Updater;
+
+$extpath = __DIR__ . DIRECTORY_SEPARATOR;
 
 return [
     'name' => 'taoResultServer',
     'label' => 'Result core extension',
     'description' => 'Results Server management and exposed interfaces for results data submission',
     'license' => 'GPL-2.0',
-    'version' => '12.0.1',
+    'version' => '12.0.2',
     'author' => 'Open Assessment Technologies',
     //taoResults may be needed for the taoResults taoResultServerModel that uses taoResults db storage
     'requires' => [
@@ -25,12 +27,12 @@ return [
     ],
     'install' => [
         'rdf' => [
-            dirname(__FILE__) . '/models/ontology/taoResultServer.rdf'
+            __DIR__ . '/models/ontology/taoResultServer.rdf'
         ],
         'php' => [
         ]
     ],
-    'update' => 'taoResultServer_scripts_update_Updater',
+    'update' => Updater::class,
 
     'managementRole' => 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerRole',
     'acl' => [
