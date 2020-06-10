@@ -15,34 +15,33 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2017 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
+ * Copyright (c) 2017-2020 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  *
  */
 
 namespace oat\taoResultServer\models\classes;
 
-use common_exception_Error;
 use core_kernel_classes_Class;
-use oat\taoDelivery\model\execution\ServiceProxy;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
+use oat\taoResultServer\models\Formatter\ItemResponseCollectionNormalizer;
+use oat\taoResultServer\models\Formatter\ItemResponseVariableSplitter;
+use tao_models_classes_CrudService;
 use taoResultServer_models_classes_ReadableResultStorage;
 use taoResultServer_models_classes_ResponseVariable;
 
 /**
- * .Crud services implements basic CRUD services, orginally intended for REST controllers/ HTTP exception handlers
- *  Consequently the signatures and behaviors is closer to REST and throwing HTTP like exceptions
- *
- *
- *
+ * Crud services implements basic CRUD services, originally intended for REST controllers/ HTTP exception handlers
+ * Consequently the signatures and behaviors is closer to REST and throwing HTTP like exceptions
  */
-class CrudResultsService extends \tao_models_classes_CrudService
+class CrudResultsService extends tao_models_classes_CrudService
 {
 
-    const GROUP_BY_DELIVERY = 0;
-    const GROUP_BY_TEST = 1;
-    const GROUP_BY_ITEM = 2;
+    public const GROUP_BY_DELIVERY = 0;
+    public const GROUP_BY_TEST = 1;
+    public const GROUP_BY_ITEM = 2;
 
-    protected $resultClass = null;
+    /** @var core_kernel_classes_Class */
+    protected $resultClass;
 
     public function __construct()
     {
@@ -62,21 +61,13 @@ class CrudResultsService extends \tao_models_classes_CrudService
         return $this->format($implementation, $uri);
     }
 
-    /**
-     * @param taoResultServer_models_classes_ReadableResultStorage $resultStorage
-     * @param $resultIdentifier
-     * @param int $groupBy
-     * @param bool $fetchOnlyLastAttemptResult
-     * @return array
-     * @throws common_exception_Error
-     */
     public function format(
         taoResultServer_models_classes_ReadableResultStorage $resultStorage,
         $resultIdentifier,
-        $groupBy = self::GROUP_BY_DELIVERY,
-        $fetchOnlyLastAttemptResult = false
-    )
-    {
+        int $groupBy = self::GROUP_BY_DELIVERY,
+        bool $fetchOnlyLastAttemptResult = false,
+        bool $splitByAttempt = false
+    ): array {
         $groupedData = [];
         if ($groupBy === self::GROUP_BY_DELIVERY || $groupBy === self::GROUP_BY_ITEM) {
             $calls = $resultStorage->getRelatedItemCallIds($resultIdentifier);
@@ -87,6 +78,7 @@ class CrudResultsService extends \tao_models_classes_CrudService
 
         foreach ($calls as $callId) {
             $results = $resultStorage->getVariables($callId);
+            $results = $this->getNormalizer()->normalize($results);
             $lastData = [];
             foreach ($results as $result) {
                 $result = array_pop($result);
@@ -108,9 +100,9 @@ class CrudResultsService extends \tao_models_classes_CrudService
                 }
             }
             $groupKey = $groupBy === self::GROUP_BY_DELIVERY ? $resultIdentifier : $callId;
-            $groupedData[$groupKey][] = array_values($lastData);
+            $groupedData[$groupKey][] = $splitByAttempt ? $this->splitByAttempt($lastData) : $lastData;
         }
-        foreach($groupedData as $groupKey => $items){
+        foreach ($groupedData as $groupKey => $items) {
             $returnData[$groupKey] = array_merge(...$items);
         }
         return $returnData ?? [];
@@ -156,7 +148,7 @@ class CrudResultsService extends \tao_models_classes_CrudService
                     $properties[] = $property;
                 }
                 $resources[] = [
-                    'uri'        => $result['deliveryResultIdentifier'],
+                    'uri' => $result['deliveryResultIdentifier'],
                     'properties' => $properties
                 ];
             }
@@ -196,22 +188,33 @@ class CrudResultsService extends \tao_models_classes_CrudService
         // TODO: Implement getClassService() method.
     }
 
-    /**
-     * @param $variable
-     * @return array
-     * @throws common_exception_Error
-     */
-    protected function getFormResource($variable){
+    private function getFormResource($variable): array
+    {
         $resource['value'] = $variable->getValue();
         $resource['identifier'] = $variable->getIdentifier();
         if ($variable instanceof taoResultServer_models_classes_ResponseVariable) {
-            $resource['type'] = new core_kernel_classes_Class('http://www.tao.lu/Ontologies/TAOResult.rdf#ResponseVariable');
+            $resource['type'] = $this->getClass(QtiResultsService::CLASS_RESPONSE_VARIABLE);
         } else {
-            $resource['type']= new core_kernel_classes_Class('http://www.tao.lu/Ontologies/TAOResult.rdf#OutcomeVariable');
+            $resource['type'] = $this->getClass(QtiResultsService::CLASS_OUTCOME_VARIABLE);
         }
         $resource['epoch'] = $variable->getEpoch();
         $resource['cardinality'] = $variable->getCardinality();
         $resource['basetype'] = $variable->getBaseType();
         return $resource;
+    }
+
+    private function splitByAttempt(array $itemVariables): array
+    {
+        return $this->getItemVariableSplitter()->splitByAttempt($itemVariables);
+    }
+
+    private function getItemVariableSplitter(): ItemResponseVariableSplitter
+    {
+        return $this->getServiceLocator()->get(ItemResponseVariableSplitter::class);
+    }
+
+    private function getNormalizer(): ItemResponseCollectionNormalizer
+    {
+        return $this->getServiceLocator()->get(ItemResponseCollectionNormalizer::class);
     }
 }
