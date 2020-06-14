@@ -87,5 +87,11 @@ class Updater extends common_ext_ExtensionUpdater
         }
 
         $this->skip('12.0.0', '12.1.0');
+
+        if ($this->isVersion('12.1.0')) {
+
+            $this->getLogger()->debug('taoResultServer update!');
+            $this->setVersion('12.1.1');
+        }
     }
 }
