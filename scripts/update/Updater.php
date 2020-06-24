@@ -32,6 +32,7 @@ use oat\taoResultServer\models\classes\ResultService;
  *
  * @author Joel Bout <joel@taotesting.com>
  * @author Jérôme Bogaerts <jerome@taotesting.com>
+ * @deprecated use migrations instead. See https://github.com/oat-sa/generis/wiki/Tao-Update-Process
  */
 class Updater extends common_ext_ExtensionUpdater
 {
@@ -86,12 +87,17 @@ class Updater extends common_ext_ExtensionUpdater
             $this->setVersion('12.0.0');
         }
 
-        $this->skip('12.0.0', '12.1.0');
+        $this->skip('12.0.0', '12.1.1');
 
-        if ($this->isVersion('12.1.0')) {
+        if ($this->isVersion('12.1.1')) {
 
             $this->getLogger()->debug('taoResultServer update!');
-            $this->setVersion('12.1.1');
+            $this->setVersion('12.1.2');
         }
+        
+        //Updater files are deprecated. Please use migrations.
+        //See: https://github.com/oat-sa/generis/wiki/Tao-Update-Process
+
+        $this->setVersion($this->getExtension()->getManifest()->getVersion());
     }
 }
