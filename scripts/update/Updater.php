@@ -87,12 +87,12 @@ class Updater extends common_ext_ExtensionUpdater
             $this->setVersion('12.0.0');
         }
 
-        $this->skip('12.0.0', '12.1.1');
+        $this->skip('12.0.0', '12.2.0');
 
-        if ($this->isVersion('12.1.1')) {
+        if ($this->isVersion('12.2.0')) {
 
             $this->getLogger()->debug('taoResultServer update!');
-            $this->setVersion('12.1.2');
+            $this->setVersion('12.2.1');
         }
         
         //Updater files are deprecated. Please use migrations.
