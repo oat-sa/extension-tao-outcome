@@ -310,6 +310,9 @@ class QtiResultsService extends ConfigurableService implements ResultService
         $itemVariableElement->setAttribute('cardinality', $itemVariable['cardinality']);
         $itemVariableElement->setAttribute('baseType', $itemVariable['basetype']);
 
+        if ($itemVariable['basetype'] === 'file') {
+            $itemVariable['value'] = '';
+        }
         /** Split multiple response */
         $itemVariable['value'] = trim($itemVariable['value'], '[]');
         if ($itemVariable['cardinality'] !== Cardinality::getNameByConstant(Cardinality::SINGLE)) {
