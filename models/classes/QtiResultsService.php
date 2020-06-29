@@ -35,6 +35,7 @@ use oat\oatbox\service\ConfigurableService;
 use oat\oatbox\service\exception\InvalidServiceManagerException;
 use oat\taoDelivery\model\execution\DeliveryExecution as DeliveryExecutionInterface;
 use oat\taoDelivery\model\execution\ServiceProxy;
+use oat\taoResultServer\helpers\BinaryContentRenderer;
 use oat\taoResultServer\models\Exceptions\DuplicateVariableException;
 use oat\taoResultServer\models\Mapper\ResultMapper;
 use oat\taoResultServer\models\Parser\QtiResultParser;
@@ -356,20 +357,12 @@ class QtiResultsService extends ConfigurableService implements ResultService
         return tao_helpers_Date::displayeDate($epoch, tao_helpers_Date::FORMAT_ISO8601);
     }
 
-
     private function prepareItemVariableValue($value, $basetype): string
     {
         if ($basetype === 'file') {
-
-            if (extension_loaded('fileinfo')) {
-                $info = new finfo(FILEINFO_MIME_TYPE);
-                $mimeType = $info->buffer($value);
-            } else {
-                // fallback
-                $mimeType = 'application/octet-stream';
-            }
-
-            return sprintf('%s,base64,%s', $mimeType, base64_encode($value));
+            /** @var BinaryContentRenderer $renderer */
+            $renderer = $this->getServiceLocator()->get(BinaryContentRenderer::class);
+            return $renderer->renderBinaryContentAsVariableValue($value);
         }
 
         return trim($value, '[]');
