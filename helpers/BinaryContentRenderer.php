@@ -30,7 +30,25 @@ use oat\oatbox\service\ConfigurableService;
  */
 class BinaryContentRenderer extends ConfigurableService
 {
-    public function renderBinaryContentAsVariableValue(string $binaryContent): string
+    /** @var string */
+    public const SERVICE_ID = 'taoResultService/BinaryContentRenderer';
+
+    /**
+     * BinaryContentRenderer constructor.
+     *
+     * @param array $options An array of Service options.
+     */
+    public function __construct(array $options = [])
+    {
+        parent::__construct($options);
+    }
+
+    /**
+     * Tries to guess a MIME type from passed binary content and builds a properly formatted string
+     * @param string $binaryContent
+     * @return string
+     */
+    public function renderBinaryContentAsVariableValue(string $binaryContent): stringq
     {
         $info = new finfo(FILEINFO_MIME_TYPE);
         $mimeType = $info->buffer($binaryContent);
