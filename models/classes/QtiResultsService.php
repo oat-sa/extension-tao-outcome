@@ -364,7 +364,7 @@ class QtiResultsService extends ConfigurableService implements ResultService
     {
         if ($basetype === 'file') {
             /** @var BinaryContentRenderer $renderer */
-            $renderer = $this->getServiceLocator()->get(BinaryContentRenderer::class);
+            $renderer = $this->getServiceLocator()->get(BinaryContentRenderer::SERVICE_ID);
             return $renderer->renderBinaryContentAsVariableValue($value);
         }
 

@@ -48,7 +48,7 @@ class BinaryContentRenderer extends ConfigurableService
      * @param string $binaryContent
      * @return string
      */
-    public function renderBinaryContentAsVariableValue(string $binaryContent): stringq
+    public function renderBinaryContentAsVariableValue(string $binaryContent): string
     {
         $info = new finfo(FILEINFO_MIME_TYPE);
         $mimeType = $info->buffer($binaryContent);
