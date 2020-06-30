@@ -25,13 +25,16 @@ namespace oat\taoResultServer\helpers;
 use finfo;
 use oat\oatbox\service\ConfigurableService;
 
+/**
+ * This service is intended to render a binary file content to the different formats
+ */
 class BinaryContentRenderer extends ConfigurableService
 {
-    public function renderBinaryContentAsVariableValue(string $fileContent): string
+    public function renderBinaryContentAsVariableValue(string $binaryContent): string
     {
         $info = new finfo(FILEINFO_MIME_TYPE);
-        $mimeType = $info->buffer($fileContent);
+        $mimeType = $info->buffer($binaryContent);
 
-        return sprintf('%s,base64,%s', $mimeType, base64_encode($fileContent));
+        return sprintf('%s,base64,%s', $mimeType, base64_encode($binaryContent));
     }
 }

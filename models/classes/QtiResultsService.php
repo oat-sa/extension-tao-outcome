@@ -357,6 +357,9 @@ class QtiResultsService extends ConfigurableService implements ResultService
         return tao_helpers_Date::displayeDate($epoch, tao_helpers_Date::FORMAT_ISO8601);
     }
 
+    /**
+     * Prepares a variable value depending on it's baseType
+     */
     private function prepareItemVariableValue($value, $basetype): string
     {
         if ($basetype === 'file') {
