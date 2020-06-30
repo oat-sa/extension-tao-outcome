@@ -20,25 +20,17 @@
 
 declare(strict_types=1);
 
-use oat\taoResultServer\helpers\BinaryContentRenderer;
+use oat\taoResultServer\models\classes\QtiResultsService;
 use PHPUnit\Framework\TestCase;
 
 class BinaryContentRendererTest extends TestCase
 {
-    /** @var BinaryContentRenderer */
-    private $subject;
-
-    protected function setUp(): void
-    {
-        $this->subject = new BinaryContentRenderer();
-    }
-
     /**
      * @dataProvider binaryContentDataProvider
      */
     public function testItRendersBinaryContentProperly(string $filePath, string $expectedString): void
     {
-        $result = $this->subject->renderBinaryContentAsVariableValue(file_get_contents($filePath));
+        $result = QtiResultsService::renderBinaryContentAsVariableValue(file_get_contents($filePath));
         $this->assertSame($expectedString, $result);
     }
 

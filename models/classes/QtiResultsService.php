@@ -363,11 +363,26 @@ class QtiResultsService extends ConfigurableService implements ResultService
     private function prepareItemVariableValue($value, $basetype): string
     {
         if ($basetype === 'file') {
-            /** @var BinaryContentRenderer $renderer */
-            $renderer = $this->getServiceLocator()->get(BinaryContentRenderer::SERVICE_ID);
-            return $renderer->renderBinaryContentAsVariableValue($value);
+            return self::renderBinaryContentAsVariableValue($value);
         }
 
         return trim($value, '[]');
+    }
+
+    /**
+     * Tries to guess a MIME type from passed binary content and builds a properly formatted string
+     * @param string $binaryContent
+     * @return string
+     */
+    public static function renderBinaryContentAsVariableValue(string $binaryContent): string
+    {
+        if (extension_loaded('fileinfo')) {
+            $info = new finfo(FILEINFO_MIME_TYPE);
+            $mimeType = $info->buffer($binaryContent);
+        } else {
+            $mimeType = 'application/octet-stream';
+        }
+
+        return sprintf('%s,base64,%s', $mimeType, base64_encode($binaryContent));
     }
 }
