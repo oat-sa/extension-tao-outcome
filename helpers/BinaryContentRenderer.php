@@ -40,8 +40,12 @@ class BinaryContentRenderer extends ConfigurableService
      */
     public function renderBinaryContentAsVariableValue(string $binaryContent): string
     {
-        $info = new finfo(FILEINFO_MIME_TYPE);
-        $mimeType = $info->buffer($binaryContent);
+        if (extension_loaded('fileinfo')) {
+            $info = new finfo(FILEINFO_MIME_TYPE);
+            $mimeType = $info->buffer($binaryContent);
+        } else {
+            $mimeType = 'application/octet-stream';
+        }
 
         return sprintf('%s,base64,%s', $mimeType, base64_encode($binaryContent));
     }
