@@ -23,7 +23,7 @@ declare(strict_types=1);
 use oat\taoResultServer\models\classes\QtiResultsService;
 use PHPUnit\Framework\TestCase;
 
-class BinaryContentRendererTest extends TestCase
+class QtiResultsServiceTest extends TestCase
 {
     /**
      * @dataProvider binaryContentDataProvider
@@ -36,7 +36,7 @@ class BinaryContentRendererTest extends TestCase
 
     public function binaryContentDataProvider(): array
     {
-        $basePath = realpath(__DIR__ . '/../../resources');
+        $basePath = realpath(__DIR__.'/../../../resources');
 
         return [
             [
