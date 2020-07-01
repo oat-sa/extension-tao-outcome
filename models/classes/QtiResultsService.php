@@ -35,7 +35,6 @@ use oat\oatbox\service\ConfigurableService;
 use oat\oatbox\service\exception\InvalidServiceManagerException;
 use oat\taoDelivery\model\execution\DeliveryExecution as DeliveryExecutionInterface;
 use oat\taoDelivery\model\execution\ServiceProxy;
-use oat\taoResultServer\helpers\BinaryContentRenderer;
 use oat\taoResultServer\models\Exceptions\DuplicateVariableException;
 use oat\taoResultServer\models\Mapper\ResultMapper;
 use oat\taoResultServer\models\Parser\QtiResultParser;
