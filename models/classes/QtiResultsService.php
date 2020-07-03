@@ -30,6 +30,7 @@ use common_exception_NotImplemented;
 use core_kernel_classes_Resource;
 use DOMDocument;
 use DOMElement;
+use finfo;
 use oat\oatbox\service\ConfigurableService;
 use oat\oatbox\service\exception\InvalidServiceManagerException;
 use oat\taoDelivery\model\execution\DeliveryExecution as DeliveryExecutionInterface;
@@ -311,7 +312,7 @@ class QtiResultsService extends ConfigurableService implements ResultService
         $itemVariableElement->setAttribute('baseType', $itemVariable['basetype']);
 
         /** Split multiple response */
-        $itemVariable['value'] = trim($itemVariable['value'], '[]');
+        $itemVariable['value'] = $this->prepareItemVariableValue($itemVariable['value'], $itemVariable['basetype']);
         if ($itemVariable['cardinality'] !== Cardinality::getNameByConstant(Cardinality::SINGLE)) {
             $values = explode(';', $itemVariable['value']);
             $returnValue = [];
@@ -353,5 +354,34 @@ class QtiResultsService extends ConfigurableService implements ResultService
     private function getDisplayDate(string $epoch): string
     {
         return tao_helpers_Date::displayeDate($epoch, tao_helpers_Date::FORMAT_ISO8601);
+    }
+
+    /**
+     * Prepares a variable value depending on it's baseType
+     */
+    private function prepareItemVariableValue($value, $basetype): string
+    {
+        if ($basetype === 'file') {
+            return self::renderBinaryContentAsVariableValue($value);
+        }
+
+        return trim($value, '[]');
+    }
+
+    /**
+     * Tries to guess a MIME type from passed binary content and builds a properly formatted string
+     * @param string $binaryContent
+     * @return string
+     */
+    public static function renderBinaryContentAsVariableValue(string $binaryContent): string
+    {
+        if (extension_loaded('fileinfo')) {
+            $info = new finfo(FILEINFO_MIME_TYPE);
+            $mimeType = $info->buffer($binaryContent);
+        } else {
+            $mimeType = 'application/octet-stream';
+        }
+
+        return sprintf('%s,base64,%s', $mimeType, base64_encode($binaryContent));
     }
 }
