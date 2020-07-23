@@ -15,12 +15,13 @@ return [
     'label' => 'Result core extension',
     'description' => 'Results Server management and exposed interfaces for results data submission',
     'license' => 'GPL-2.0',
-    'version' => '12.2.2',
+    'version' => '12.3.0',
     'author' => 'Open Assessment Technologies',
     //taoResults may be needed for the taoResults taoResultServerModel that uses taoResults db storage
     'requires' => [
         'generis' => '>=12.15.0',
-        'tao' => '>=27.2.0'
+        'tao' => '>=27.2.0',
+        'taoOutcomeRds' => '>=7.3.2'
     ],
     'models' => [
         'http://www.tao.lu/Ontologies/TAOResultServer.rdf#'
