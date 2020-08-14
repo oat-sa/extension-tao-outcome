@@ -34,6 +34,12 @@ abstract class taoResultServer_models_classes_Variable implements JsonSerializab
     public const CARDINALITY_ORDERED = 'ordered';
     public const CARDINALITY_RECORD = 'record';
 
+    public const TYPE_VARIABLE_INTEGER = 'integer';
+    public const TYPE_VARIABLE_BOOLEAN = 'boolean';
+    public const TYPE_VARIABLE_IDENTIFIER = 'identifier';
+    public const TYPE_VARIABLE_DURATION = 'duration';
+    public const TYPE_VARIABLE_FLOAT = 'float';
+
     /**
      * The purpose of an itemVariable is to report the value of the item variable with the given identifier.
      *
