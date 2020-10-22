@@ -144,7 +144,11 @@ class QtiResultsService extends ConfigurableService implements ResultService
 
         /** Context */
         $contextElt = $dom->createElementNS(self::QTI_NS, 'context');
-        $contextElt->setAttribute('sourcedId', \tao_helpers_Uri::getUniqueId($resultServer->getTestTaker($deId)));
+        $userId = $resultServer->getTestTaker($deId);
+        if (\common_Utils::isUri($userId)) {
+            $userId = \tao_helpers_Uri::getUniqueId($userId);
+        }
+        $contextElt->setAttribute('sourcedId', $userId);
         $assessmentResultElt->appendChild($contextElt);
 
         /** Test Result */
