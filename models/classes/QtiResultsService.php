@@ -148,6 +148,9 @@ class QtiResultsService extends ConfigurableService implements ResultService
         if (\common_Utils::isUri($userId)) {
             $userId = \tao_helpers_Uri::getUniqueId($userId);
         }
+        if ($userId === false) {
+            $userId = '';
+        }
         $contextElt->setAttribute('sourcedId', $userId);
         $assessmentResultElt->appendChild($contextElt);
 
