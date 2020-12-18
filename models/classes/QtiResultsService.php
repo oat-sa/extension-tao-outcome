@@ -27,6 +27,7 @@ use common_Exception;
 use common_exception_InvalidArgumentType;
 use common_exception_NotFound;
 use common_exception_NotImplemented;
+use common_exception_ResourceNotFound;
 use core_kernel_classes_Resource;
 use DOMDocument;
 use DOMElement;
@@ -145,12 +146,15 @@ class QtiResultsService extends ConfigurableService implements ResultService
         /** Context */
         $contextElt = $dom->createElementNS(self::QTI_NS, 'context');
         $userId = $resultServer->getTestTaker($deId);
+
+        if ($userId === false) {
+            throw new common_exception_ResourceNotFound('Provided parameters don\'t match with any delivery execution.');
+        }
+
         if (\common_Utils::isUri($userId)) {
             $userId = \tao_helpers_Uri::getUniqueId($userId);
         }
-        if ($userId === false) {
-            $userId = '';
-        }
+
         $contextElt->setAttribute('sourcedId', $userId);
         $assessmentResultElt->appendChild($contextElt);
 
