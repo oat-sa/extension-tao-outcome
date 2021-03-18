@@ -158,6 +158,8 @@ class taoResultServer_actions_QtiRestResults extends tao_actions_RestController
             throw new common_exception_NotFound('Delivery execution not found.');
         }
 
+        // delete control characters
+        $data = preg_replace('/[\x00-\x1F\x7F]/', '', $data);
         $doc = @simplexml_load_string($data);
         if (!$doc) {
             common_Logger::i('invalid xml result');
