@@ -6,6 +6,7 @@
  *
  */
 
+use oat\taoResultServer\models\AssessmentResultResolver\DependencyInjection\AssessmentResultResolverContainerServiceProvider;
 use oat\taoResultServer\scripts\update\Updater;
 
 $extpath = __DIR__ . DIRECTORY_SEPARATOR;
@@ -51,5 +52,8 @@ return [
 
         #BASE URL (usually the domain root)
         'BASE_URL'              => ROOT_URL . '/taoResultServer',
+    ],
+    'containerServiceProviders' => [
+        AssessmentResultResolverContainerServiceProvider::class
     ]
 ];
