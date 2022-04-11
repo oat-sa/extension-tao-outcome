@@ -16,7 +16,7 @@ use tao_helpers_File;
 
 class AssessmentResultFileResponseResolver
 {
-    private const PATTERN = '/^(?<fileName>[^,]+).*download_url,(?<downloadUrl>[^,]+)/';
+    private const PATTERN = '/^(?<' . self::FILENAME_KEY . '>[^,]+).*download_url,(?<' . self::DOWNLOAD_URL_KEY . '>[^,]+)/';
     private const FILENAME_KEY = 'fileName';
     private const DOWNLOAD_URL_KEY = 'downloadUrl';
 
