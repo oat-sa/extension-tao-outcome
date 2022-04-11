@@ -58,7 +58,7 @@
 		"oat-sa/generis" : ">=15.3.0",
 		"oat-sa/tao-core" : ">=47.0.0",
 		"oat-sa/lib-tao-dtms" : "1.0.0",
-		"qtism/qtism": ">=0.25.2"
+		"qtism/qtism": ">=0.25.0"
 	},
     "autoload" : {
         "psr-4" : {
