@@ -32,14 +32,18 @@ use core_kernel_classes_Resource;
 use DOMDocument;
 use DOMElement;
 use finfo;
+use InvalidArgumentException;
 use oat\oatbox\service\ConfigurableService;
 use oat\oatbox\service\exception\InvalidServiceManagerException;
 use oat\taoDelivery\model\execution\DeliveryExecution as DeliveryExecutionInterface;
 use oat\taoDelivery\model\execution\ServiceProxy;
+use oat\taoResultServer\models\AssessmentResultResolver\AssessmentResultFileResponseResolver;
 use oat\taoResultServer\models\Exceptions\DuplicateVariableException;
 use oat\taoResultServer\models\Mapper\ResultMapper;
 use oat\taoResultServer\models\Parser\QtiResultParser;
 use qtism\common\enums\Cardinality;
+use qtism\data\results\AssessmentResult;
+use qtism\data\storage\xml\XmlResultDocument;
 use qtism\data\storage\xml\XmlStorageException;
 use tao_helpers_Date;
 use taoResultServer_models_classes_WritableResultStorage as WritableResultStorage;
@@ -228,19 +232,19 @@ class QtiResultsService extends ConfigurableService implements ResultService
      */
     public function injectXmlResultToDeliveryExecution($deliveryExecutionId, $xml)
     {
-        $deliveryExecution = $this->getDeliveryExecutionById($deliveryExecutionId);
+        $this->getDeliveryExecutionById($deliveryExecutionId);
 
-        /** @var QtiResultParser $parser */
-        $parser = $this->getServiceLocator()->get(QtiResultParser::class);
-        /** @var ResultMapper $map */
-        $map = $parser->parse($xml);
+        $xmlResultDocument = new XmlResultDocument();
+        $xmlResultDocument->loadFromString($xml);
+        $assessmentResult = $xmlResultDocument->getDocumentComponent();
+        if (!$assessmentResult instanceof AssessmentResult) {
+            throw new InvalidArgumentException('Unsupported xml provided');
+        }
 
-        /** @var WritableResultStorage $resultStorage */
-        $resultStorage = $this->getServiceLocator()
-            ->get(ResultServerService::SERVICE_ID)
-            ->getResultStorage();
+        $assessmentResult = $this->getAssessmentResultFileResponseResolver()->resolve($assessmentResult);
+        $map = $this->getMapper()->loadSource($assessmentResult);
 
-
+        $resultStorage = $this->getResultStorage();
         $this->storeTestVariables($resultStorage, $deliveryExecutionId, $map->getTestVariables());
         $this->storeItemVariables($resultStorage, $deliveryExecutionId, $map->getItemVariables());
     }
@@ -394,5 +398,20 @@ class QtiResultsService extends ConfigurableService implements ResultService
         }
 
         return sprintf('%s,base64,%s', $mimeType, base64_encode($binaryContent));
+    }
+
+    private function getResultStorage(): WritableResultStorage
+    {
+        return $this->getServiceLocator()->get(ResultServerService::SERVICE_ID)->getResultStorage();
+    }
+
+    protected function getMapper(): ResultMapper
+    {
+        return $this->getServiceLocator()->get(ResultMapper::class);
+    }
+
+    protected function getAssessmentResultFileResponseResolver(): AssessmentResultFileResponseResolver
+    {
+        return $this->getServiceLocator()->getContainer()->get(AssessmentResultFileResponseResolver::class);
     }
 }

@@ -55,13 +55,20 @@
     },
     "require": {
         "oat-sa/oatbox-extension-installer": "~1.1||dev-master",
-		"oat-sa/generis" : ">=14.0.0",
+		"oat-sa/generis" : ">=15.3.0",
 		"oat-sa/tao-core" : ">=47.0.0",
-		"oat-sa/lib-tao-dtms" : "1.0.0"
+		"oat-sa/lib-tao-dtms" : "1.0.0",
+		"qtism/qtism": ">=0.25.0"
 	},
     "autoload" : {
         "psr-4" : {
             "oat\\taoResultServer\\" : ""
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "oat-sa/oatbox-extension-installer": true,
+            "oat-sa/composer-npm-bridge": true
         }
     }
 }
