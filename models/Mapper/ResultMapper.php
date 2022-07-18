@@ -23,6 +23,7 @@ namespace oat\taoResultServer\models\Mapper;
 
 use common_exception_InvalidArgumentType;
 use common_exception_NotImplemented;
+use DateTimeInterface;
 use LogicException;
 use oat\dtms\DateTime;
 use oat\oatbox\service\ConfigurableService;
@@ -163,8 +164,12 @@ class ResultMapper extends ConfigurableService
      * @throws common_exception_NotImplemented If itemVariable is not outcome|response (e.g. template)
      * @throws common_exception_InvalidArgumentType
      */
-    protected function createVariables(ItemVariableCollection $itemVariables, DateTime $datetime)
+    protected function createVariables(ItemVariableCollection $itemVariables, DateTimeInterface $datetime)
     {
+        if (!$datetime instanceof DateTime) {
+            $datetime = new DateTime($datetime->format(DateTime::ISO8601));
+        }
+
         $variables = [];
         $i = 0;
         foreach ($itemVariables as $itemVariable) {

@@ -5,6 +5,7 @@
 ![GitHub](https://img.shields.io/github/license/oat-sa/extension-tao-outcome.svg)
 ![GitHub release](https://img.shields.io/github/release/oat-sa/extension-tao-outcome.svg)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/y/oat-sa/extension-tao-outcome.svg)
+[![codecov](https://codecov.io/gh/oat-sa/extension-tao-outcome/branch/master/graph/badge.svg)](https://codecov.io/gh/oat-sa/extension-tao-outcome)
 
 > Result Core Extension. Provides a results server management, exposes interfaces for results data submission
 
