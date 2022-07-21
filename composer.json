@@ -70,5 +70,8 @@
             "oat-sa/oatbox-extension-installer": true,
             "oat-sa/composer-npm-bridge": true
         }
+    },
+    "require-dev": {
+        "oat-sa/extension-tao-delivery": ">=15.10.0"
     }
 }
