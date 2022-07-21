@@ -72,6 +72,8 @@
         }
     },
     "require-dev": {
-        "oat-sa/extension-tao-delivery": ">=15.10.0"
+        "oat-sa/extension-tao-delivery": ">=15.10.0",
+        "oat-sa/generis": "dev-php8-migration as v16.0.0",
+        "oat-sa/tao-core": "dev-php8-migration as v51.0.0"
     }
 }
