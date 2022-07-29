@@ -57,7 +57,7 @@
         "oat-sa/oatbox-extension-installer": "~1.1||dev-master",
         "oat-sa/generis" : ">=15.3.0",
         "oat-sa/tao-core" : ">=47.0.0",
-        "oat-sa/lib-tao-dtms" : "dev-php8-migration as v2.0.0",
+        "oat-sa/lib-tao-dtms" : "1.0.0",
         "qtism/qtism": ">=0.25.0"
     },
     "autoload" : {
@@ -74,6 +74,8 @@
     "require-dev": {
         "oat-sa/extension-tao-delivery": ">=15.10.0",
         "oat-sa/generis": "dev-php8-migration as v16.0.0",
-        "oat-sa/tao-core": "dev-php8-migration as v51.0.0"
+        "oat-sa/tao-core": "dev-php8-migration as v51.0.0",
+        "oat-sa/lib-tao-dtms" : "dev-php8-migration as v2.0.0",
+        "qtism/qtism": "dev-dev-php8-migration as v0.29.0"
     }
 }
