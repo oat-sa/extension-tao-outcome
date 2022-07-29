@@ -57,7 +57,7 @@
 		"oat-sa/oatbox-extension-installer": "~1.1||dev-master",
 		"oat-sa/generis" : ">=15.3.0",
 		"oat-sa/tao-core" : ">=47.0.0",
-		"oat-sa/lib-tao-dtms" : "dev-php8-migration as 1.0.1",
+		"oat-sa/lib-tao-dtms" : "^1.0.1",
 		"qtism/qtism": ">=0.25.0"
 	},
 	"autoload" : {
