@@ -1,77 +1,75 @@
 {
 
-    "name": "oat-sa/extension-tao-outcome",
-     "authors" : [
+	"name": "oat-sa/extension-tao-outcome",
+	"authors" : [
 		{
-		"name" : "Open Assessment Technologies S.A.",
-		"homepage" : "http://www.taotesting.com"
+			"name" : "Open Assessment Technologies S.A.",
+			"homepage" : "http://www.taotesting.com"
 		},
 		{
-		"name": "Jérôme Bogaerts",
-		"role": "Developer"
+			"name": "Jérôme Bogaerts",
+			"role": "Developer"
 		},
 		{
-		"name": "Joel Bout",
-		"role": "Developer"
+			"name": "Joel Bout",
+			"role": "Developer"
 		},
 		{
-		"name": "Bertrand Chevrier",
-		"role": "Developer"
+			"name": "Bertrand Chevrier",
+			"role": "Developer"
 		},
 		{
-		"name": "Lionel Lecaque",
-		"role": "Developer"
+			"name": "Lionel Lecaque",
+			"role": "Developer"
 		},
 		{
-		"name": "Patrick Plichart",
-		"role": "Developer"
+			"name": "Patrick Plichart",
+			"role": "Developer"
 		},
 		{
-		"name": "Dieter Raber",
-		"role": "Developer"
+			"name": "Dieter Raber",
+			"role": "Developer"
 		},
 		{
-		"name": "Somsack Sipasseuth",
-		"role": "Developer"
+			"name": "Somsack Sipasseuth",
+			"role": "Developer"
 		}
-    ],
-    "description" : "extension to manage resultservers",
-    "support": {
+	],
+	"description" : "extension to manage resultservers",
+	"support": {
 		"forum": "http://forum.taotesting.com",
 		"issues": "http://forge.taotesting.com"
-    },
-    "homepage" : "http://www.taotesting.com",
-    "license" : [
-	"GPL-2.0-only"
+	},
+	"homepage" : "http://www.taotesting.com",
+	"license" : [
+		"GPL-2.0-only"
 	],
-    "keywords" : [
-	"tao",
-	"oat",
-	"computer-based-assessment"
+	"keywords" : [
+		"tao",
+		"oat",
+		"computer-based-assessment"
 	],
-    "type" : "tao-extension",
-    "extra" : {
-    	"tao-extension-name" : "taoResultServer"
-    },
-    "require": {
-        "oat-sa/oatbox-extension-installer": "~1.1||dev-master",
-		"oat-sa/generis" : ">=15.3.0",
-		"oat-sa/tao-core" : ">=47.0.0",
-		"oat-sa/lib-tao-dtms" : "1.0.0",
+	"type" : "tao-extension",
+	"extra" : {
+		"tao-extension-name" : "taoResultServer"
+	},
+	"require": {
+		"oat-sa/oatbox-extension-installer": "~1.1||dev-master",
+		"oat-sa/extension-tao-delivery": ">=15.10.0",
+		"oat-sa/generis" : ">=15.22",
+		"oat-sa/tao-core" : ">=50.24.6",
+		"oat-sa/lib-tao-dtms" : "^1.0.1",
 		"qtism/qtism": ">=0.25.0"
 	},
-    "autoload" : {
-        "psr-4" : {
-            "oat\\taoResultServer\\" : ""
-        }
-    },
-    "config": {
-        "allow-plugins": {
-            "oat-sa/oatbox-extension-installer": true,
-            "oat-sa/composer-npm-bridge": true
-        }
-    },
-    "require-dev": {
-        "oat-sa/extension-tao-delivery": ">=15.10.0"
-    }
+	"autoload" : {
+		"psr-4" : {
+			"oat\\taoResultServer\\" : ""
+		}
+	},
+	"config": {
+		"allow-plugins": {
+			"oat-sa/oatbox-extension-installer": true,
+			"oat-sa/composer-npm-bridge": true
+		}
+	}
 }
