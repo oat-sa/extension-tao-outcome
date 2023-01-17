@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace oat\taoResultServer\controller;
+namespace oat\taoResultServer\controller\rest;
 
 use http\Exception\BadQueryStringException;
 use oat\oatbox\event\EventManagerAwareTrait;

@@ -6,7 +6,10 @@
  *
  */
 
-use oat\taoResultServer\models\AssessmentResultResolver\DependencyInjection\AssessmentResultResolverContainerServiceProvider;
+use oat\tao\model\routing\LegacyRoute;
+use oat\taoResultServer\models\AssessmentResultResolver
+\DependencyInjection\AssessmentResultResolverContainerServiceProvider;
+use oat\taoResultServer\models\routing\ApiRoute;
 use oat\taoResultServer\scripts\update\Updater;
 
 $extpath = __DIR__ . DIRECTORY_SEPARATOR;
@@ -32,7 +35,9 @@ return [
     'managementRole' => 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerRole',
     'acl' => [
         ['grant', 'http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerRole', ['ext' => 'taoResultServer']],
-        ['grant', 'http://www.tao.lu/Ontologies/TAO.rdf#DeliveryRole', ['ext' => 'taoResultServer', 'mod' => 'ResultServerStateFull']],
+        ['grant', 'http://www.tao.lu/Ontologies/TAO.rdf#DeliveryRole', [
+            'ext' => 'taoResultServer', 'mod' => 'ResultServerStateFull'
+        ]],
     ],
     'constants' => [
         # actions directory
@@ -54,7 +59,9 @@ return [
         'BASE_URL'              => ROOT_URL . '/taoResultServer',
     ],
     'routes' => [
-        '/taoResultServer' => 'oat\\taoResultServer\\actions'
+       '/taoResultServer/api' => ['class' => ApiRoute::class],
+       '/taoResultServer' => ['class' => LegacyRoute::class],
+
     ],
     'containerServiceProviders' => [
         AssessmentResultResolverContainerServiceProvider::class
