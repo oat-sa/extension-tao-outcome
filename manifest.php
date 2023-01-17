@@ -53,6 +53,9 @@ return [
         #BASE URL (usually the domain root)
         'BASE_URL'              => ROOT_URL . '/taoResultServer',
     ],
+    'routes' => [
+        '/taoResultServer' => 'oat\\taoResultServer\\actions'
+    ],
     'containerServiceProviders' => [
         AssessmentResultResolverContainerServiceProvider::class
     ]
