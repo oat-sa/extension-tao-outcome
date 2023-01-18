@@ -29,8 +29,20 @@ final class ApiRoute extends AbstractApiRoute
     /**
      * @inheritdoc
      */
-    public static function getControllerPrefix()
+    public static function getControllerPrefix(): string
     {
         return self::REST_CONTROLLER_PREFIX;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function getAction($method): string
+    {
+        if ($method == 'PATCH') {
+            return 'patch';
+        }
+
+        return parent::getAction($method);
     }
 }
