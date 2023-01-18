@@ -49,7 +49,7 @@ class DeliveryExecutionResults extends tao_actions_RestController
             $queryParams[self::Q_PARAM_DELIVERY_EXECUTION_ID]
         );
 
-        // Todo patch variables pending in scope of TR-4952
+        // Todo patch variables pending in scope of the next phase of development
 
         if (isset($queryParams[self::Q_PARAM_TRIGGER_AGS_SEND])) {
             $this->triggerAgsResultSend($deliveryExecution);
@@ -81,10 +81,12 @@ class DeliveryExecutionResults extends tao_actions_RestController
         foreach ($testLevelVariables as $variable) {
             if ($variable->getIdentifier() === 'SCORE_TOTAL') {
                 $scoreTotal = $variable->getValue();
+                continue;
             }
 
             if ($variable->getIdentifier() === 'SCORE_TOTAL_MAX') {
                 $scoreTotalMax = $variable->getValue();
+                continue;
             }
 
             if ($scoreTotal !== null && $scoreTotalMax !== null) {
