@@ -11,8 +11,11 @@ class DeliveryExecutionResultsRecalculated implements Event
     private ?float $totalScore;
     private ?float $totalMaxScore;
 
-    public function __construct(DeliveryExecutionInterface $deliveryExecution, ?float $totalScore, ?float $totalMaxScore)
-    {
+    public function __construct(
+        DeliveryExecutionInterface $deliveryExecution,
+        ?float $totalScore,
+        ?float $totalMaxScore
+    ) {
         $this->deliveryExecution = $deliveryExecution;
         $this->totalScore = $totalScore;
         $this->totalMaxScore = $totalMaxScore;
