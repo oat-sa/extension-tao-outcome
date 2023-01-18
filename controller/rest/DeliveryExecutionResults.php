@@ -72,8 +72,7 @@ class DeliveryExecutionResults extends tao_actions_RestController
         );
         $testLevelVariables = $this->getResultsService()->extractTestVariables(
             $variables,
-            [taoResultServer_models_classes_OutcomeVariable::class],
-            ResultsService::VARIABLES_FILTER_LAST_SUBMITTED
+            [taoResultServer_models_classes_OutcomeVariable::class]
         );
 
         $scoreTotal = null;
@@ -94,7 +93,7 @@ class DeliveryExecutionResults extends tao_actions_RestController
         }
 
         $this->getEventManager()->trigger(
-            new DeliveryExecutionResultsRecalculated($deliveryExecution, $scoreTotal, $scoreTotalMax)
+            new DeliveryExecutionResultsRecalculated($deliveryExecution, (float)$scoreTotal, (float)$scoreTotalMax)
         );
     }
 
