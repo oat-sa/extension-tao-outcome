@@ -52,12 +52,12 @@ class DeliveryExecutionResultsRecalculated implements Event
         return self::class;
     }
 
-    public function getScore(): ?float
+    public function getTotalScore(): ?float
     {
         return $this->totalScore;
     }
 
-    public function getMaxScore(): ?float
+    public function getTotalMaxScore(): ?float
     {
         return $this->totalMaxScore;
     }
