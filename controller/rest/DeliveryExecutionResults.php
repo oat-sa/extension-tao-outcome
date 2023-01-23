@@ -24,14 +24,14 @@ namespace oat\taoResultServer\controller\rest;
 
 use http\Exception\BadQueryStringException;
 use oat\oatbox\event\EventManagerAwareTrait;
+use oat\oatbox\service\exception\InvalidServiceManagerException;
+use oat\oatbox\service\ServiceNotFoundException;
 use oat\taoDelivery\model\execution\DeliveryExecutionInterface;
 use oat\taoDelivery\model\execution\DeliveryExecutionService;
-use oat\taoOutcomeRds\model\AbstractRdsResultStorage;
-use oat\taoOutcomeUi\model\ResultsService;
-use oat\taoOutcomeUi\model\Wrapper\ResultServiceWrapper;
+use oat\taoResultServer\models\classes\implementation\ResultServerService;
 use oat\taoResultServer\models\Events\DeliveryExecutionResultsRecalculated;
 use tao_actions_RestController;
-use taoResultServer_models_classes_OutcomeVariable;
+use taoResultServer_models_classes_ReadableResultStorage as ReadableResultStorage;
 
 class DeliveryExecutionResults extends tao_actions_RestController
 {
@@ -67,18 +67,17 @@ class DeliveryExecutionResults extends tao_actions_RestController
 
     private function triggerAgsResultSend(DeliveryExecutionInterface $deliveryExecution): void
     {
-        $variables = $this->getResultsService()->getVariables(
+        $variables = $this->getResultsStorage()->getVariables(
             $deliveryExecution->getIdentifier(),
         );
-        $testLevelVariables = $this->getResultsService()->extractTestVariables(
-            $variables,
-            [taoResultServer_models_classes_OutcomeVariable::class]
-        );
+        $variableObjects = array_map(static function (array $variableObject) {
+            return current($variableObject)->variable;
+        }, $variables);
 
         $scoreTotal = null;
         $scoreTotalMax = null;
 
-        foreach ($testLevelVariables as $variable) {
+        foreach ($variableObjects as $variable) {
             if ($variable->getIdentifier() === 'SCORE_TOTAL') {
                 $scoreTotal = $variable->getValue();
                 continue;
@@ -99,12 +98,22 @@ class DeliveryExecutionResults extends tao_actions_RestController
         );
     }
 
-    private function getResultsService(): ResultsService
+    /**
+     * @throws \common_exception_Error
+     * @throws InvalidServiceManagerException
+     * @throws ServiceNotFoundException
+     */
+    private function getResultsStorage(): ReadableResultStorage
     {
-        $implementation = $this->getServiceLocator()->get(AbstractRdsResultStorage::SERVICE_ID);
-        $resultService = $this->getServiceLocator()->get(ResultServiceWrapper::SERVICE_ID)->getService();
-        $resultService->setImplementation($implementation);
+        /* @var ResultServerService $resultService */
+        $resultService = $this->getServiceManager()->get(ResultServerService::SERVICE_ID);
 
-        return $resultService;
+        $storage = $resultService->getResultStorage();
+
+        if (!$storage instanceof ReadableResultStorage) {
+            throw new \common_exception_Error('Configured result storage is not writable.');
+        }
+
+        return $storage;
     }
 }
