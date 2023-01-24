@@ -44,10 +44,11 @@ class DeliveryExecutionResults extends tao_actions_RestController
     public function patch(DeliveryExecutionService $deliveryExecutionService): void
     {
         $queryParams = $this->getPsrRequest()->getQueryParams();
+        $agsNotificationTriggered = false;
 
         if (!isset($queryParams[self::Q_PARAM_DELIVERY_EXECUTION_ID])) {
             $this->setErrorJsonResponse(
-                sprintf('Missing %s query', self::Q_PARAM_DELIVERY_EXECUTION_ID)
+                sprintf('Missing %s query param', self::Q_PARAM_DELIVERY_EXECUTION_ID)
             );
             return;
         };
@@ -65,11 +66,12 @@ class DeliveryExecutionResults extends tao_actions_RestController
 
         if (isset($queryParams[self::Q_PARAM_TRIGGER_AGS_SEND])) {
             $this->triggerAgsResultSend($deliveryExecution);
+            $agsNotificationTriggered = true;
         }
-    }
 
-    private function validateRequestParams(array $queryParams): void
-    {
+        $this->setSuccessJsonResponse([
+            'agsNotificationTriggered' => $agsNotificationTriggered
+        ]);
     }
 
     private function triggerAgsResultSend(DeliveryExecutionInterface $deliveryExecution): void
