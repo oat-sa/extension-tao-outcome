@@ -22,10 +22,10 @@ declare(strict_types=1);
 
 namespace oat\taoResultServer\controller\rest;
 
-use http\Exception\BadQueryStringException;
 use oat\oatbox\event\EventManagerAwareTrait;
 use oat\oatbox\service\exception\InvalidServiceManagerException;
 use oat\oatbox\service\ServiceNotFoundException;
+use oat\tao\model\http\HttpJsonResponseTrait;
 use oat\taoDelivery\model\execution\DeliveryExecutionInterface;
 use oat\taoDelivery\model\execution\DeliveryExecutionService;
 use oat\taoResultServer\models\classes\implementation\ResultServerService;
@@ -36,6 +36,7 @@ use taoResultServer_models_classes_ReadableResultStorage as ReadableResultStorag
 class DeliveryExecutionResults extends tao_actions_RestController
 {
     use EventManagerAwareTrait;
+    use HttpJsonResponseTrait;
 
     private const Q_PARAM_DELIVERY_EXECUTION_ID = 'execution';
     private const Q_PARAM_TRIGGER_AGS_SEND = 'send_ags';
@@ -43,11 +44,22 @@ class DeliveryExecutionResults extends tao_actions_RestController
     public function patch(DeliveryExecutionService $deliveryExecutionService): void
     {
         $queryParams = $this->getPsrRequest()->getQueryParams();
-        $this->validateRequestParams($queryParams);
+
+        if (!isset($queryParams[self::Q_PARAM_DELIVERY_EXECUTION_ID])) {
+            $this->setErrorJsonResponse(
+                sprintf('Missing %s query', self::Q_PARAM_DELIVERY_EXECUTION_ID)
+            );
+            return;
+        };
 
         $deliveryExecution = $deliveryExecutionService->getDeliveryExecution(
             $queryParams[self::Q_PARAM_DELIVERY_EXECUTION_ID]
         );
+
+        if (!$deliveryExecution->getFinishTime()) {
+            $this->setErrorJsonResponse("Delivery execution not found");
+            return;
+        }
 
         // Todo patch variables pending in scope of the next phase of development
 
@@ -58,11 +70,6 @@ class DeliveryExecutionResults extends tao_actions_RestController
 
     private function validateRequestParams(array $queryParams): void
     {
-        if (!isset($queryParams[self::Q_PARAM_DELIVERY_EXECUTION_ID])) {
-            throw new BadQueryStringException(
-                sprintf('Missing %s query', self::Q_PARAM_DELIVERY_EXECUTION_ID)
-            );
-        };
     }
 
     private function triggerAgsResultSend(DeliveryExecutionInterface $deliveryExecution): void
