@@ -58,13 +58,16 @@ class DeliveryExecutionResults extends tao_actions_RestController
         );
 
         if (!$deliveryExecution->getFinishTime()) {
-            $this->setErrorJsonResponse("Delivery execution not found");
+            $this->setErrorJsonResponse("Finished delivery execution not found", 0, [], 404);
             return;
         }
 
         // Todo patch variables pending in scope of the next phase of development
 
-        if (isset($queryParams[self::Q_PARAM_TRIGGER_AGS_SEND])) {
+        if (
+            isset($queryParams[self::Q_PARAM_TRIGGER_AGS_SEND]) &&
+            $queryParams[self::Q_PARAM_TRIGGER_AGS_SEND] !== 'false'
+        ) {
             $this->triggerAgsResultSend($deliveryExecution);
             $agsNotificationTriggered = true;
         }
@@ -88,12 +91,12 @@ class DeliveryExecutionResults extends tao_actions_RestController
 
         foreach ($variableObjects as $variable) {
             if ($variable->getIdentifier() === 'SCORE_TOTAL') {
-                $scoreTotal = $variable->getValue();
+                $scoreTotal = (float)$variable->getValue();
                 continue;
             }
 
             if ($variable->getIdentifier() === 'SCORE_TOTAL_MAX') {
-                $scoreTotalMax = $variable->getValue();
+                $scoreTotalMax = (float)$variable->getValue();
                 continue;
             }
 
@@ -103,7 +106,7 @@ class DeliveryExecutionResults extends tao_actions_RestController
         }
 
         $this->getEventManager()->trigger(
-            new DeliveryExecutionResultsRecalculated($deliveryExecution, (float)$scoreTotal, (float)$scoreTotalMax)
+            new DeliveryExecutionResultsRecalculated($deliveryExecution, $scoreTotal, $scoreTotalMax)
         );
     }
 
