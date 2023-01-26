@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace oat\taoResultServer\controller\rest;
 
+use common_exception_Error;
 use oat\oatbox\event\EventManagerAwareTrait;
 use oat\oatbox\service\exception\InvalidServiceManagerException;
 use oat\oatbox\service\ServiceNotFoundException;
@@ -111,7 +112,7 @@ class DeliveryExecutionResults extends tao_actions_RestController
     }
 
     /**
-     * @throws \common_exception_Error
+     * @throws common_exception_Error
      * @throws InvalidServiceManagerException
      * @throws ServiceNotFoundException
      */
@@ -123,7 +124,7 @@ class DeliveryExecutionResults extends tao_actions_RestController
         $storage = $resultService->getResultStorage();
 
         if (!$storage instanceof ReadableResultStorage) {
-            throw new \common_exception_Error('Configured result storage is not writable.');
+            throw new common_exception_Error('Configured result storage is not writable.');
         }
 
         return $storage;
