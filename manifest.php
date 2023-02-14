@@ -11,6 +11,7 @@ use oat\tao\model\routing\LegacyRoute;
 use oat\taoResultServer\models\AssessmentResultResolver\DependencyInjection\AssessmentResultResolverContainerServiceProvider;
 use oat\taoResultServer\models\routing\ApiRoute;
 use oat\taoResultServer\scripts\update\Updater;
+
 // phpcs:enable
 
 $extpath = __DIR__ . DIRECTORY_SEPARATOR;
