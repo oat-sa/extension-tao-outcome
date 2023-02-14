@@ -4,13 +4,14 @@
  * @author CRP Henri Tudor - TAO Team - {@link http://www.tao.lu}
  * @license GPLv2  http://www.opensource.org/licenses/gpl-2.0.php
  *
+ * phpcs:disable Generic.Files.LineLength
  */
 
 use oat\tao\model\routing\LegacyRoute;
-use oat\taoResultServer\models\AssessmentResultResolver
-\DependencyInjection\AssessmentResultResolverContainerServiceProvider;
+use oat\taoResultServer\models\AssessmentResultResolver\DependencyInjection\AssessmentResultResolverContainerServiceProvider;
 use oat\taoResultServer\models\routing\ApiRoute;
 use oat\taoResultServer\scripts\update\Updater;
+// phpcs:enable
 
 $extpath = __DIR__ . DIRECTORY_SEPARATOR;
 
