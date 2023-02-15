@@ -12,6 +12,113 @@
         }
     ],
     "paths": {
+        "/taoResultServer/api/DeliveryExecutionResults": {
+            "patch": {
+                "description": "Get results for delivery execution",
+                "tags": [
+                    "result"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "The delivery URL encoded id",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "ags",
+                        "in": "query",
+                        "description": "Will execute AGS requests for the results in case it is provided. Value: true|empty",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response in JSON format."
+                    },
+                    "400": {
+                        "description": "Bad request if you send invalid parameters.",
+                        "examples": {
+                            "application/json": {
+                                "success": false,
+                                "errorCode": 0,
+                                "errorMsg": "At least one mandatory parameter was required but found missing in your request",
+                                "version": "3.1.0"
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/errorModel"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "examples": {
+                            "application/json": {
+                                "success": false,
+                                "errorCode": 401,
+                                "errorMsg": "You are not authorized to access this functionality.",
+                                "version": "3.1.0"
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/errorModel"
+                        }
+                    },
+                    "404": {
+                        "description": "Delivery execution not found.",
+                        "examples": {
+                            "application/json": {
+                                "success": false,
+                                "errorCode": 0,
+                                "errorMsg": "Provided parameters don't match with any delivery execution.",
+                                "version": "3.1.0"
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/errorModel"
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed",
+                        "examples": {
+                            "application/json": {
+                                "success": false,
+                                "errorCode": 0,
+                                "errorMsg": "Request method is not allowed.",
+                                "version": "3.1.0"
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/errorModel"
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable",
+                        "examples": {
+                            "application/json": {
+                                "success": false,
+                                "errorCode": 0,
+                                "errorMsg": "The requested content encoding cannot be satisfied",
+                                "version": "3.1.0"
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/errorModel"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "basic_auth": []
+                    }
+                ]
+            }
+        },
         "/taoResultServer/QtiRestResults/getLatest": {
             "get": {
                 "description": "Get the latest QTI result for a test taker and a delivery.",
