@@ -23,16 +23,16 @@
                 ],
                 "parameters": [
                     {
-                        "name": "id",
+                        "name": "execution",
                         "in": "query",
-                        "description": "The delivery URL encoded id",
+                        "description": "The delivery execution URL encoded id",
                         "required": true,
                         "type": "string"
                     },
                     {
-                        "name": "ags",
+                        "name": "send_ags",
                         "in": "query",
-                        "description": "Will execute AGS requests for the results in case it is provided. Value: true|empty",
+                        "description": "Will execute AGS requests for the results in case it is provided. Value: true|*|false",
                         "required": false,
                         "type": "string"
                     }

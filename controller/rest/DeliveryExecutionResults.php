@@ -31,6 +31,8 @@ use oat\taoDelivery\model\execution\DeliveryExecutionInterface;
 use oat\taoDelivery\model\execution\DeliveryExecutionService;
 use oat\taoResultServer\models\classes\implementation\ResultServerService;
 use oat\taoResultServer\models\Events\DeliveryExecutionResultsRecalculated;
+use oat\taoResultServer\models\Import\ImportResultInput;
+use oat\taoResultServer\models\Import\QtiResultXmlImporter;
 use tao_actions_RestController;
 use taoResultServer_models_classes_ReadableResultStorage as ReadableResultStorage;
 
@@ -63,7 +65,14 @@ class DeliveryExecutionResults extends tao_actions_RestController
             return;
         }
 
-        // Todo patch variables pending in scope of the next phase of development
+        //@TODO
+        // 1) Move this to a task, return the task as output
+        // 2) Move AGS notification to inside the task
+        // 3) Return task ID as response
+
+        /** @var QtiResultXmlImporter $importer */
+        $importer = $this->getServiceManager()->get(QtiResultXmlImporter::class);
+        $importer->importByResultInput(ImportResultInput::fromRequest($this->getPsrRequest()));
 
         if (
             isset($queryParams[self::Q_PARAM_TRIGGER_AGS_SEND]) &&
