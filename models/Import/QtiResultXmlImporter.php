@@ -41,9 +41,10 @@ class QtiResultXmlImporter extends ConfigurableService
 
     public function importByResultInput(ImportResultInput $input)
     {
-        $xml = $this->createXml($input);
-
-        $this->importQtiResultXml($input->getDeliveryExecutionId(), $xml);
+        $this->importQtiResultXml(
+            $input->getDeliveryExecutionId(),
+            $this->getQtiResultXmlFactory()->createByImportResult($input)
+        );
     }
 
     public function importQtiResultXml(
@@ -63,40 +64,6 @@ class QtiResultXmlImporter extends ConfigurableService
 
         $this->storeTestVariables($resultStorage, $test->getUri(), $deliveryExecutionId, $resultMapper->getTestVariables());
         $this->storeItemVariables($resultStorage, $test->getUri(), $items, $deliveryExecutionId, $resultMapper->getItemVariables());
-    }
-
-    private function createXml(ImportResultInput $input): string
-    {
-        $itemResults = [];
-        $timeStamp = '2023-02-26T14:13:54.548';
-
-        foreach ($input->getOutcomes() as $itemId => $outcomes) {
-            foreach ($outcomes as $outcomeId => $outcomeValue) {
-                $itemResults[] = sprintf(
-                    '<itemResult identifier="%s" datestamp="%s" sessionStatus="final">
-                    <outcomeVariable identifier="%s" cardinality="single" baseType="float">
-                        <value>%s</value>
-                    </outcomeVariable>
-                </itemResult>',
-                    $itemId,
-                    $timeStamp,
-                    $outcomeId,
-                    $outcomeValue
-                );
-            }
-        }
-
-        return sprintf(
-            '<?xml version="1.0" encoding="UTF-8"?>
-                    <assessmentResult 
-                        xmlns="http://www.imsglobal.org/xsd/imsqti_result_v2p1" 
-                        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-                        xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqti_result_v2p1 http://www.imsglobal.org/xsd/qti/qtiv2p1/imsqti_result_v2p1.xsd">
-                    <context/>
-                    %s
-                    </assessmentResult>',
-            implode('', $itemResults)
-        );
     }
 
     private function storeItemVariables(
@@ -168,5 +135,10 @@ class QtiResultXmlImporter extends ConfigurableService
     private function getQtiTestService(): taoQtiTest_models_classes_QtiTestService
     {
         return $this->getServiceManager()->get(taoQtiTest_models_classes_QtiTestService::class);
+    }
+
+    private function getQtiResultXmlFactory(): QtiResultXmlFactory
+    {
+        return $this->getServiceManager()->get(QtiResultXmlFactory::class);
     }
 }

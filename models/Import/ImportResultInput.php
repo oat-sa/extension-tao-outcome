@@ -22,9 +22,10 @@ declare(strict_types=1);
 
 namespace oat\taoResultServer\models\Import;
 
+use JsonSerializable;
 use Psr\Http\Message\ServerRequestInterface;
 
-class ImportResultInput
+class ImportResultInput implements JsonSerializable
 {
     private string $deliveryExecutionId;
     private bool $sendAgs;
@@ -47,7 +48,7 @@ class ImportResultInput
         return $this->sendAgs;
     }
 
-    public function addOutcome(string $itemId, string $outcomeId, string $outcomeValue): void
+    public function addOutcome(string $itemId, string $outcomeId, float $outcomeValue): void
     {
         $this->outcomes[$itemId][$outcomeId] = $outcomeValue;
     }
@@ -77,10 +78,32 @@ class ImportResultInput
 
         foreach ($body as $item) {
             foreach ($item['outcomes'] ?? [] as $outcome) {
-                $new->addOutcome($item['itemId'], $outcome['id'], (string)$outcome['value']);
+                $new->addOutcome($item['itemId'], $outcome['id'], (float)$outcome['value']);
             }
         }
 
         return $new;
+    }
+
+    public static function fromJson(array $json): self
+    {
+        $new = new self($json['deliveryExecutionId'], $json['sendAgs']);
+
+        foreach ($json['outcomes'] as $itemId => $values) {
+            foreach ($values as $outcomeId => $outcomeValue) {
+                $new->addOutcome($itemId, $outcomeId, $outcomeValue);
+            }
+        }
+
+        return $new;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'deliveryExecutionId' => $this->deliveryExecutionId,
+            'outcomes' => $this->outcomes,
+            'sendAgs' => $this->sendAgs,
+        ];
     }
 }
