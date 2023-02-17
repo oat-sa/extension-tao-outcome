@@ -22,20 +22,12 @@ declare(strict_types=1);
 
 namespace oat\taoResultServer\controller\rest;
 
-use common_exception_Error;
 use oat\oatbox\event\EventManagerAwareTrait;
-use oat\oatbox\service\exception\InvalidServiceManagerException;
-use oat\oatbox\service\ServiceNotFoundException;
 use oat\tao\model\http\HttpJsonResponseTrait;
-use oat\taoDelivery\model\execution\DeliveryExecutionInterface;
 use oat\taoDelivery\model\execution\DeliveryExecutionService;
-use oat\taoResultServer\models\classes\implementation\ResultServerService;
-use oat\taoResultServer\models\Events\DeliveryExecutionResultsRecalculated;
 use oat\taoResultServer\models\Import\ImportResultInput;
-use oat\taoResultServer\models\Import\QtiResultXmlImporter;
 use oat\taoResultServer\models\Import\ResultImportScheduler;
 use tao_actions_RestController;
-use taoResultServer_models_classes_ReadableResultStorage as ReadableResultStorage;
 
 class DeliveryExecutionResults extends tao_actions_RestController
 {
@@ -63,74 +55,25 @@ class DeliveryExecutionResults extends tao_actions_RestController
 
         if (!$deliveryExecution->getFinishTime()) {
             $this->setErrorJsonResponse("Finished delivery execution not found", 0, [], 404);
+
             return;
         }
 
-        $importer = $this->getResultImportScheduler()->schedule(ImportResultInput::fromRequest($this->getPsrRequest()));
+        $task = $this->getResultImportScheduler()->schedule(ImportResultInput::fromRequest($this->getPsrRequest()));
 
         if (
             isset($queryParams[self::Q_PARAM_TRIGGER_AGS_SEND]) &&
             $queryParams[self::Q_PARAM_TRIGGER_AGS_SEND] !== 'false'
         ) {
-            $this->triggerAgsResultSend($deliveryExecution);
             $agsNotificationTriggered = true;
         }
 
-        $this->setSuccessJsonResponse([
-            'agsNotificationTriggered' => $agsNotificationTriggered
-        ]);
-    }
-
-    private function triggerAgsResultSend(DeliveryExecutionInterface $deliveryExecution): void
-    {
-        $variables = $this->getResultsStorage()->getVariables(
-            $deliveryExecution->getIdentifier(),
+        $this->setSuccessJsonResponse(
+            [
+                'agsNotificationTriggered' => $agsNotificationTriggered,
+                'taskId' => $task->getId()
+            ]
         );
-        $variableObjects = array_map(static function (array $variableObject) {
-            return current($variableObject)->variable;
-        }, $variables);
-
-        $scoreTotal = null;
-        $scoreTotalMax = null;
-
-        foreach ($variableObjects as $variable) {
-            if ($variable->getIdentifier() === 'SCORE_TOTAL') {
-                $scoreTotal = (float)$variable->getValue();
-                continue;
-            }
-
-            if ($variable->getIdentifier() === 'SCORE_TOTAL_MAX') {
-                $scoreTotalMax = (float)$variable->getValue();
-                continue;
-            }
-
-            if ($scoreTotal !== null && $scoreTotalMax !== null) {
-                break;
-            }
-        }
-
-        $this->getEventManager()->trigger(
-            new DeliveryExecutionResultsRecalculated($deliveryExecution, $scoreTotal, $scoreTotalMax)
-        );
-    }
-
-    /**
-     * @throws common_exception_Error
-     * @throws InvalidServiceManagerException
-     * @throws ServiceNotFoundException
-     */
-    private function getResultsStorage(): ReadableResultStorage
-    {
-        /* @var ResultServerService $resultService */
-        $resultService = $this->getServiceManager()->get(ResultServerService::SERVICE_ID);
-
-        $storage = $resultService->getResultStorage();
-
-        if (!$storage instanceof ReadableResultStorage) {
-            throw new common_exception_Error('Configured result storage is not writable.');
-        }
-
-        return $storage;
     }
 
     private function getResultImportScheduler(): ResultImportScheduler
