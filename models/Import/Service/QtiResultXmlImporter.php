@@ -27,6 +27,7 @@ use oat\generis\model\data\Ontology;
 use oat\taoDelivery\model\execution\OntologyDeliveryExecution;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 use oat\taoResultServer\models\classes\ResultServerService;
+use oat\taoResultServer\models\Import\Exception\ImportResultException;
 use oat\taoResultServer\models\Import\Factory\QtiResultXmlFactory;
 use oat\taoResultServer\models\Import\Input\ImportResultInput;
 use oat\taoResultServer\models\Parser\QtiResultParser;
@@ -58,6 +59,11 @@ class QtiResultXmlImporter
         $this->qtiTestService = $qtiTestService;
     }
 
+    /**
+     * @param ImportResultInput $input
+     * @return void
+     * @throws ImportResultException
+     */
     public function importByResultInput(ImportResultInput $input)
     {
         $this->importQtiResultXml(

@@ -42,6 +42,13 @@ class DeliveryExecutionResults extends tao_actions_RestController
         $queryParams = $this->getPsrRequest()->getQueryParams();
 
         try {
+            $this->logInfo(
+                sprintf(
+                    '[DeliveryExecutionResults] requested with params: %s',
+                    var_export($queryParams, true)
+                )
+            );
+
             $task = $this->getResultImportScheduler()->scheduleByRequest($this->getPsrRequest());
 
             $this->setSuccessJsonResponse(
@@ -51,13 +58,29 @@ class DeliveryExecutionResults extends tao_actions_RestController
                     'taskId' => $task->getId()
                 ]
             );
+
+            $this->logInfo(
+                sprintf(
+                    '[DeliveryExecutionResults] successfully scheduled with params [%s]',
+                    var_export($queryParams, true)
+                )
+            );
         } catch (common_exception_MissingParameter $e) {
             $this->setErrorJsonResponse($e->getMessage());
         } catch (common_exception_ResourceNotFound $e) {
             $this->setErrorJsonResponse($e->getMessage(), 0, [], 404);
         } catch (Throwable $e) {
-            //@TODO Handle other proper exception types
-            $this->setErrorJsonResponse('Internal error : ' . $e->getMessage(), 0, [], 500);
+            $this->setErrorJsonResponse(sprintf('Internal error: %s', $e->getMessage()), 0, [], 500);
+        } finally {
+            if (isset($e)) {
+                $this->logError(
+                    sprintf(
+                        '[DeliveryExecutionResults] Error "%s" requesting with params [%s]',
+                        $e->__toString(),
+                        var_export($queryParams, true)
+                    )
+                );
+            }
         }
     }
 

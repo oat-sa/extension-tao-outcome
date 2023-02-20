@@ -16,6 +16,7 @@ use oat\taoResultServer\models\Import\Task\ResultImportScheduler;
 use oat\taoResultServer\models\Parser\QtiResultParser;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use taoQtiTest_models_classes_QtiTestService;
+
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
 class ImportServiceProvider implements ContainerServiceProviderInterface

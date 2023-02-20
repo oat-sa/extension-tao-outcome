@@ -25,7 +25,6 @@ namespace oat\taoResultServer\models\Import\Factory;
 use common_exception_MissingParameter;
 use common_exception_NotFound;
 use common_exception_ResourceNotFound;
-use Exception;
 use oat\taoDelivery\model\execution\DeliveryExecutionService;
 use oat\taoResultServer\models\Import\Input\ImportResultInput;
 use Psr\Http\Message\ServerRequestInterface;

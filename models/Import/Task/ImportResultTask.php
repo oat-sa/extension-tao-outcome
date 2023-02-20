@@ -54,9 +54,8 @@ class ImportResultTask extends AbstractAction implements TaskAwareInterface, Jso
             }
 
             $message = sprintf(
-                'Results imported for delivery execution %s, outcomes: %s',
-                $importResult->getDeliveryExecutionId(),
-                var_export($importResult->getOutcomes(), true)
+                '[DeliveryExecutionResults] Results imported [%s]',
+                var_export($importResult->jsonSerialize(), true)
             );
 
             $logger->info($message);
@@ -64,10 +63,9 @@ class ImportResultTask extends AbstractAction implements TaskAwareInterface, Jso
             return Report::createSuccess($message);
         } catch (Throwable $exception) {
             $message = sprintf(
-                'Error importing result for delivery execution %s, outcomes: %s, error: %s',
-                $importResult->getDeliveryExecutionId(),
-                var_export($importResult->getOutcomes(), true),
-                $exception->getMessage()
+                '[DeliveryExecutionResults] Error [%s] importing results [%s]',
+                $exception->getMessage(),
+                isset($importResult) ? var_export($importResult->jsonSerialize(), true) : ''
             );
 
             $logger->error($message);

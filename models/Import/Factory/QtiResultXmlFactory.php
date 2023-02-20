@@ -22,11 +22,13 @@ declare(strict_types=1);
 
 namespace oat\taoResultServer\models\Import\Factory;
 
-use Exception;
+use common_exception_Error;
+use core_kernel_persistence_Exception;
 use oat\dtms\DateTime;
 use oat\generis\model\data\Ontology;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 use oat\taoResultServer\models\classes\ResultServerService;
+use oat\taoResultServer\models\Import\Exception\ImportResultException;
 use oat\taoResultServer\models\Import\Input\ImportResultInput;
 use taoResultServer_models_classes_OutcomeVariable;
 use taoResultServer_models_classes_ResponseVariable;
@@ -42,6 +44,11 @@ class QtiResultXmlFactory
         $this->resultServerService = $resultServerService;
     }
 
+    /**
+     * @throws ImportResultException
+     * @throws common_exception_Error
+     * @throws core_kernel_persistence_Exception
+     */
     public function createByImportResult(ImportResultInput $input): string
     {
         $itemResults = [];
@@ -75,7 +82,7 @@ class QtiResultXmlFactory
         }
 
         if (is_null($scoreTotal)) {
-            throw new Exception(
+            throw new ImportResultException(
                 sprintf(
                     'SCORE_TOTAL is null for delivery execution %s',
                     $deliveryExecutionId
@@ -91,7 +98,7 @@ class QtiResultXmlFactory
                 $lastOutcomeVariable = (array)end($outcomeVariableVersions);
 
                 if (empty($lastOutcomeVariable)) {
-                    throw new Exception(
+                    throw new ImportResultException(
                         sprintf(
                             'There is no outcome variable %s for %s',
                             $outcomeId,
@@ -107,7 +114,7 @@ class QtiResultXmlFactory
                 $updatedScoreTotal = $updatedScoreTotal + $outcomeValue;
 
                 if ($updatedScoreTotal > $scoreTotalMax) {
-                    throw new Exception(
+                    throw new ImportResultException(
                         sprintf(
                             'SCORE_TOTAL_MAX cannot be higher than %s, %s provided',
                             $scoreTotalMax,
