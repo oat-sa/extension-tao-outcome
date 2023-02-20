@@ -22,62 +22,47 @@ declare(strict_types=1);
 
 namespace oat\taoResultServer\controller\rest;
 
+use common_exception_MissingParameter;
+use common_exception_ResourceNotFound;
 use oat\oatbox\event\EventManagerAwareTrait;
 use oat\tao\model\http\HttpJsonResponseTrait;
-use oat\taoDelivery\model\execution\DeliveryExecutionService;
-use oat\taoResultServer\models\Import\ImportResultInput;
-use oat\taoResultServer\models\Import\ResultImportScheduler;
+use oat\taoResultServer\models\Import\Task\ResultImportScheduler;
 use tao_actions_RestController;
+use Throwable;
 
 class DeliveryExecutionResults extends tao_actions_RestController
 {
     use EventManagerAwareTrait;
     use HttpJsonResponseTrait;
 
-    private const Q_PARAM_DELIVERY_EXECUTION_ID = 'execution';
     private const Q_PARAM_TRIGGER_AGS_SEND = 'send_ags';
 
-    public function patch(DeliveryExecutionService $deliveryExecutionService): void
+    public function patch(): void
     {
         $queryParams = $this->getPsrRequest()->getQueryParams();
-        $agsNotificationTriggered = false;
 
-        if (!isset($queryParams[self::Q_PARAM_DELIVERY_EXECUTION_ID])) {
-            $this->setErrorJsonResponse(
-                sprintf('Missing %s query param', self::Q_PARAM_DELIVERY_EXECUTION_ID)
+        try {
+            $task = $this->getResultImportScheduler()->scheduleByRequest($this->getPsrRequest());
+
+            $this->setSuccessJsonResponse(
+                [
+                    'agsNotificationTriggered' => isset($queryParams[self::Q_PARAM_TRIGGER_AGS_SEND]) &&
+                        $queryParams[self::Q_PARAM_TRIGGER_AGS_SEND] !== 'false',
+                    'taskId' => $task->getId()
+                ]
             );
-            return;
-        };
-
-        $deliveryExecution = $deliveryExecutionService->getDeliveryExecution(
-            $queryParams[self::Q_PARAM_DELIVERY_EXECUTION_ID]
-        );
-
-        if (!$deliveryExecution->getFinishTime()) {
-            $this->setErrorJsonResponse("Finished delivery execution not found", 0, [], 404);
-
-            return;
+        } catch (common_exception_MissingParameter $e) {
+            $this->setErrorJsonResponse($e->getMessage());
+        } catch (common_exception_ResourceNotFound $e) {
+            $this->setErrorJsonResponse($e->getMessage(), 0, [], 404);
+        } catch (Throwable $e) {
+            //@TODO Handle other proper exception types
+            $this->setErrorJsonResponse('Internal error : ' . $e->getMessage(), 0, [], 500);
         }
-
-        $task = $this->getResultImportScheduler()->schedule(ImportResultInput::fromRequest($this->getPsrRequest()));
-
-        if (
-            isset($queryParams[self::Q_PARAM_TRIGGER_AGS_SEND]) &&
-            $queryParams[self::Q_PARAM_TRIGGER_AGS_SEND] !== 'false'
-        ) {
-            $agsNotificationTriggered = true;
-        }
-
-        $this->setSuccessJsonResponse(
-            [
-                'agsNotificationTriggered' => $agsNotificationTriggered,
-                'taskId' => $task->getId()
-            ]
-        );
     }
 
     private function getResultImportScheduler(): ResultImportScheduler
     {
-        return $this->getServiceManager()->get(ResultImportScheduler::class);
+        return $this->getServiceManager()->getContainer()->get(ResultImportScheduler::class);
     }
 }

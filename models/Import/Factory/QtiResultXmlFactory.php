@@ -20,29 +20,35 @@
 
 declare(strict_types=1);
 
-namespace oat\taoResultServer\models\Import;
+namespace oat\taoResultServer\models\Import\Factory;
 
 use Exception;
 use oat\dtms\DateTime;
-use oat\generis\model\OntologyAwareTrait;
-use oat\oatbox\service\ConfigurableService;
+use oat\generis\model\data\Ontology;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 use oat\taoResultServer\models\classes\ResultServerService;
+use oat\taoResultServer\models\Import\Input\ImportResultInput;
 use taoResultServer_models_classes_OutcomeVariable;
 use taoResultServer_models_classes_ResponseVariable;
 
-class QtiResultXmlFactory extends ConfigurableService
+class QtiResultXmlFactory
 {
-    use OntologyAwareTrait;
+    private Ontology $ontology;
+    private ResultServerService $resultServerService;
+
+    public function __construct(Ontology $ontology, ResultServerService $resultServerService)
+    {
+        $this->ontology = $ontology;
+        $this->resultServerService = $resultServerService;
+    }
 
     public function createByImportResult(ImportResultInput $input): string
     {
         $itemResults = [];
-        $timestamp = (new DateTime())->format(DATE_RFC3339_EXTENDED); //'2023-02-26T14:13:54.548';
+        $timestamp = (new DateTime())->format(DATE_RFC3339_EXTENDED);
         $deliveryExecutionId = $input->getDeliveryExecutionId();
 
-        $resultServerService = $this->getResultServerService();
-        $resultStorage = $resultServerService->getResultStorage();
+        $resultStorage = $this->resultServerService->getResultStorage();
 
         $outcomeVariables = $resultStorage->getDeliveryVariables($deliveryExecutionId);
 
@@ -54,10 +60,11 @@ class QtiResultXmlFactory extends ConfigurableService
 
         foreach ($outcomeVariables as $id => $outcomeVariable) {
             /** @var taoResultServer_models_classes_ResponseVariable $variable */
-            $variable = $outcomeVariable[0]->variable;
+            $variable = current($outcomeVariable)->variable;
 
             if ($variable->getIdentifier() === 'SCORE_TOTAL') {
                 $scoreTotal = (float)$variable->getValue();
+
                 $updatedScoreTotal = $scoreTotal;
                 $scoreTotalVariable = $variable;
             }
@@ -128,20 +135,8 @@ class QtiResultXmlFactory extends ConfigurableService
         }
 
         $deliveryId = $resultStorage->getDelivery($deliveryExecutionId);
-        $testUri = $this->getResource($deliveryId)->getOnePropertyValue($this->getProperty(DeliveryAssemblyService::PROPERTY_ORIGIN));
-
-        $testResult = sprintf(
-            '<testResult identifier="%s" datestamp="%s">
-                <outcomeVariable identifier="SCORE_TOTAL" cardinality="%s" baseType="%s">
-                    <value>%s</value>
-                </outcomeVariable>
-            </testResult>',
-            $testUri,
-            $timestamp,
-            $scoreTotalVariable->getCardinality(),
-            $scoreTotalVariable->getBaseType(),
-            $updatedScoreTotal,
-        );
+        $testUri = $this->ontology->getResource($deliveryId)
+            ->getOnePropertyValue($this->ontology->getProperty(DeliveryAssemblyService::PROPERTY_ORIGIN));
 
         return sprintf(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -150,16 +145,19 @@ class QtiResultXmlFactory extends ConfigurableService
                         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
                         xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqti_result_v2p1 http://www.imsglobal.org/xsd/qti/qtiv2p1/imsqti_result_v2p1.xsd">
                     <context/>
-                    %s
+                    <testResult identifier="%s" datestamp="%s">
+                        <outcomeVariable identifier="SCORE_TOTAL" cardinality="%s" baseType="%s">
+                            <value>%s</value>
+                        </outcomeVariable>
+                    </testResult>
                     %s
                     </assessmentResult>',
-            $testResult,
+            $testUri,
+            $timestamp,
+            $scoreTotalVariable->getCardinality(),
+            $scoreTotalVariable->getBaseType(),
+            $updatedScoreTotal,
             implode('', $itemResults)
         );
-    }
-
-    private function getResultServerService(): ResultServerService
-    {
-        return $this->getServiceManager()->get(ResultServerService::SERVICE_ID);
     }
 }

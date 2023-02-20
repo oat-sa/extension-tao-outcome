@@ -20,14 +20,15 @@
 
 declare(strict_types=1);
 
-namespace oat\taoResultServer\models\Import;
+namespace oat\taoResultServer\models\Import\Service;
 
 use core_kernel_classes_Resource;
-use oat\generis\model\OntologyAwareTrait;
-use oat\oatbox\service\ConfigurableService;
+use oat\generis\model\data\Ontology;
 use oat\taoDelivery\model\execution\OntologyDeliveryExecution;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 use oat\taoResultServer\models\classes\ResultServerService;
+use oat\taoResultServer\models\Import\Factory\QtiResultXmlFactory;
+use oat\taoResultServer\models\Import\Input\ImportResultInput;
 use oat\taoResultServer\models\Parser\QtiResultParser;
 use qtism\data\AssessmentItemRef;
 use qtism\data\AssessmentTest;
@@ -35,15 +36,33 @@ use qtism\data\QtiComponentCollection;
 use taoQtiTest_models_classes_QtiTestService;
 use taoResultServer_models_classes_WritableResultStorage;
 
-class QtiResultXmlImporter extends ConfigurableService
+class QtiResultXmlImporter
 {
-    use OntologyAwareTrait;
+    private Ontology $ontology;
+    private ResultServerService $resultServerService;
+    private QtiResultXmlFactory $qtiResultXmlFactory;
+    private QtiResultParser $qtiResultParser;
+    private taoQtiTest_models_classes_QtiTestService $qtiTestService;
+
+    public function __construct(
+        Ontology $ontology,
+        ResultServerService $resultServerService,
+        QtiResultXmlFactory $qtiResultXmlFactory,
+        QtiResultParser $qtiResultParser,
+        taoQtiTest_models_classes_QtiTestService $qtiTestService
+    ) {
+        $this->ontology = $ontology;
+        $this->resultServerService = $resultServerService;
+        $this->qtiResultXmlFactory = $qtiResultXmlFactory;
+        $this->qtiResultParser = $qtiResultParser;
+        $this->qtiTestService = $qtiTestService;
+    }
 
     public function importByResultInput(ImportResultInput $input)
     {
         $this->importQtiResultXml(
             $input->getDeliveryExecutionId(),
-            $this->getQtiResultXmlFactory()->createByImportResult($input)
+            $this->qtiResultXmlFactory->createByImportResult($input)
         );
     }
 
@@ -51,19 +70,28 @@ class QtiResultXmlImporter extends ConfigurableService
         string $deliveryExecutionId,
         string $xmlContent
     ): void {
-        $parser = $this->getQtiResultParser();
-        $resultServerService = $this->getResultServerService();
-        $resultMapper = $parser->parse($xmlContent);
-        $deliveryExecution = $this->getClass($deliveryExecutionId);
+        $resultMapper = $this->qtiResultParser->parse($xmlContent);
+        $deliveryExecution = $this->ontology->getClass($deliveryExecutionId);
         $delivery = $deliveryExecution->getProperty(OntologyDeliveryExecution::PROPERTY_SUBJECT);
-        $resultStorage = $resultServerService->getResultStorage($delivery);
+        $resultStorage = $this->resultServerService->getResultStorage($delivery);
         $deliveryId = $resultStorage->getDelivery($deliveryExecutionId);
 
-        $test = $this->getResource($deliveryId)->getOnePropertyValue($this->getProperty(DeliveryAssemblyService::PROPERTY_ORIGIN));
-        $items = $this->getItems($test);
+        $test = $this->ontology->getResource($deliveryId)
+            ->getOnePropertyValue($this->ontology->getProperty(DeliveryAssemblyService::PROPERTY_ORIGIN));
 
-        $this->storeTestVariables($resultStorage, $test->getUri(), $deliveryExecutionId, $resultMapper->getTestVariables());
-        $this->storeItemVariables($resultStorage, $test->getUri(), $items, $deliveryExecutionId, $resultMapper->getItemVariables());
+        $this->storeTestVariables(
+            $resultStorage,
+            $test->getUri(),
+            $deliveryExecutionId,
+            $resultMapper->getTestVariables()
+        );
+        $this->storeItemVariables(
+            $resultStorage,
+            $test->getUri(),
+            $this->getItems($test),
+            $deliveryExecutionId,
+            $resultMapper->getItemVariables()
+        );
     }
 
     private function storeItemVariables(
@@ -115,30 +143,10 @@ class QtiResultXmlImporter extends ConfigurableService
 
     private function getItems(core_kernel_classes_Resource $test): QtiComponentCollection
     {
-        $testDoc = $this->getQtiTestService()->getDoc($test);
+        $testDoc = $this->qtiTestService->getDoc($test);
         /** @var AssessmentTest $test */
         $assessmentTest = $testDoc->getDocumentComponent();
 
         return $assessmentTest->getComponentsByClassName('assessmentItemRef');
-    }
-
-    private function getQtiResultParser(): QtiResultParser
-    {
-        return $this->getServiceManager()->get(QtiResultParser::class);
-    }
-
-    private function getResultServerService(): ResultServerService
-    {
-        return $this->getServiceManager()->get(ResultServerService::SERVICE_ID);
-    }
-
-    private function getQtiTestService(): taoQtiTest_models_classes_QtiTestService
-    {
-        return $this->getServiceManager()->get(taoQtiTest_models_classes_QtiTestService::class);
-    }
-
-    private function getQtiResultXmlFactory(): QtiResultXmlFactory
-    {
-        return $this->getServiceManager()->get(QtiResultXmlFactory::class);
     }
 }

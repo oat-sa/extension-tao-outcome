@@ -20,30 +20,46 @@
 
 declare(strict_types=1);
 
-namespace oat\taoResultServer\models\Import;
+namespace oat\taoResultServer\models\Import\Task;
 
-use oat\generis\model\OntologyAwareTrait;
-use oat\oatbox\service\ConfigurableService;
+use common_exception_MissingParameter;
+use common_exception_NotFound;
+use common_exception_ResourceNotFound;
 use oat\tao\model\taskQueue\QueueDispatcher;
 use oat\tao\model\taskQueue\Task\TaskInterface;
+use oat\taoResultServer\models\Import\Factory\ImportResultInputFactory;
+use oat\taoResultServer\models\Import\Input\ImportResultInput;
+use Psr\Http\Message\ServerRequestInterface;
 
-class ResultImportScheduler extends ConfigurableService
+class ResultImportScheduler
 {
-    use OntologyAwareTrait;
+    private QueueDispatcher $dispatcher;
+    private ImportResultInputFactory $importResultInputFactory;
+
+    public function __construct(QueueDispatcher $dispatcher, ImportResultInputFactory $importResultInputFactory)
+    {
+        $this->dispatcher = $dispatcher;
+        $this->importResultInputFactory = $importResultInputFactory;
+    }
+
+    /**
+     * @throws common_exception_MissingParameter
+     * @throws common_exception_NotFound
+     * @throws common_exception_ResourceNotFound
+     */
+    public function scheduleByRequest(ServerRequestInterface $request): TaskInterface
+    {
+        return $this->schedule($this->importResultInputFactory->createFromRequest($request));
+    }
 
     public function schedule(ImportResultInput $input): TaskInterface
     {
-        return $this->getQueueDispatcher()->createTask(
+        return $this->dispatcher->createTask(
             new ImportResultTask(),
             [
                 ImportResultTask::PARAM_IMPORT_JSON => $input->jsonSerialize()
             ],
             'Import Delivery Execution results'
         );
-    }
-
-    private function getQueueDispatcher(): QueueDispatcher
-    {
-        return $this->getServiceManager()->get(QueueDispatcher::SERVICE_ID);
     }
 }

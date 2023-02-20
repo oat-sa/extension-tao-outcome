@@ -9,6 +9,7 @@
 
 use oat\tao\model\routing\LegacyRoute;
 use oat\taoResultServer\models\AssessmentResultResolver\DependencyInjection\AssessmentResultResolverContainerServiceProvider;
+use oat\taoResultServer\models\Import\ImportServiceProvider;
 use oat\taoResultServer\models\routing\ApiRoute;
 use oat\taoResultServer\scripts\update\Updater;
 
@@ -66,6 +67,7 @@ return [
 
     ],
     'containerServiceProviders' => [
-        AssessmentResultResolverContainerServiceProvider::class
+        AssessmentResultResolverContainerServiceProvider::class,
+        ImportServiceProvider::class,
     ]
 ];

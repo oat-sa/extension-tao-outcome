@@ -20,10 +20,9 @@
 
 declare(strict_types=1);
 
-namespace oat\taoResultServer\models\Import;
+namespace oat\taoResultServer\models\Import\Input;
 
 use JsonSerializable;
-use Psr\Http\Message\ServerRequestInterface;
 
 class ImportResultInput implements JsonSerializable
 {
@@ -65,24 +64,6 @@ class ImportResultInput implements JsonSerializable
     public function getOutcomes(): array
     {
         return $this->outcomes;
-    }
-
-    public static function fromRequest(ServerRequestInterface $request): self
-    {
-        $queryParams = $request->getQueryParams();
-        $body = json_decode((string)$request->getBody(), true);
-        $new = new self(
-            $queryParams['execution'],
-            isset($queryParams['send_ags']) && $queryParams['send_ags'] !== false
-        );
-
-        foreach ($body as $item) {
-            foreach ($item['outcomes'] ?? [] as $outcome) {
-                $new->addOutcome($item['itemId'], $outcome['id'], (float)$outcome['value']);
-            }
-        }
-
-        return $new;
     }
 
     public static function fromJson(array $json): self
