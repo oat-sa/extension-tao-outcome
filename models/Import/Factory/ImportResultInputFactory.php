@@ -26,6 +26,7 @@ use common_exception_MissingParameter;
 use common_exception_NotFound;
 use common_exception_ResourceNotFound;
 use oat\taoDelivery\model\execution\DeliveryExecutionService;
+use oat\taoResultServer\models\Import\Exception\ImportResultException;
 use oat\taoResultServer\models\Import\Input\ImportResultInput;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -35,16 +36,19 @@ class ImportResultInputFactory
     private const Q_PARAM_TRIGGER_AGS_SEND = 'send_ags';
 
     private DeliveryExecutionService $deliveryExecutionService;
+    private array $allowedOutcomes;
 
-    public function __construct(DeliveryExecutionService $deliveryExecutionService)
+    public function __construct(DeliveryExecutionService $deliveryExecutionService, array $allowedOutcomes = ['SCORE'])
     {
         $this->deliveryExecutionService = $deliveryExecutionService;
+        $this->allowedOutcomes = $allowedOutcomes;
     }
 
     /**
      * @throws common_exception_NotFound
      * @throws common_exception_MissingParameter
      * @throws common_exception_ResourceNotFound
+     * @throws ImportResultException
      */
     public function createFromRequest(ServerRequestInterface $request): ImportResultInput
     {
@@ -52,9 +56,7 @@ class ImportResultInputFactory
         $body = json_decode((string)$request->getBody(), true);
 
         if (!isset($params[self::Q_PARAM_DELIVERY_EXECUTION_ID])) {
-            throw new common_exception_MissingParameter(
-                sprintf('Missing %s query param', self::Q_PARAM_DELIVERY_EXECUTION_ID)
-            );
+            throw new common_exception_MissingParameter(self::Q_PARAM_DELIVERY_EXECUTION_ID);
         };
 
         $deliveryExecution = $this->deliveryExecutionService
@@ -64,19 +66,36 @@ class ImportResultInputFactory
             throw new common_exception_ResourceNotFound(
                 sprintf(
                     'Finished delivery execution %s not found',
-                    $deliveryExecution->getIdentifier()
+                    $params[self::Q_PARAM_DELIVERY_EXECUTION_ID]
                 )
             );
         }
 
         $new = new ImportResultInput(
             $params[self::Q_PARAM_DELIVERY_EXECUTION_ID],
-            isset($params[self::Q_PARAM_TRIGGER_AGS_SEND]) && $params[self::Q_PARAM_TRIGGER_AGS_SEND] !== false
+            isset($params[self::Q_PARAM_TRIGGER_AGS_SEND]) && $params[self::Q_PARAM_TRIGGER_AGS_SEND] !== 'false'
         );
 
-        foreach ($body as $item) {
+        foreach ($body['itemVariables'] ?? [] as $item) {
+            if (!isset($item['itemId'], $item['outcomes'])) {
+                throw new common_exception_MissingParameter('itemId|outcomes');
+            }
+
             foreach ($item['outcomes'] ?? [] as $outcome) {
-                $new->addOutcome($item['itemId'], $outcome['id'], (float)$outcome['value']);
+                if (!isset($outcome['id'], $outcome['value'])) {
+                    throw new common_exception_MissingParameter('id|value');
+                }
+
+                if (!in_array($outcome['id'], $this->allowedOutcomes, true)) {
+                    throw new ImportResultException(
+                        sprintf(
+                            'Outcome %s not supported',
+                            $outcome['id']
+                        )
+                    );
+                }
+
+                $new->addOutcome((string)$item['itemId'], (string)$outcome['id'], (float)$outcome['value']);
             }
         }
 
