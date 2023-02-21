@@ -83,8 +83,8 @@ class ImportResultInput implements JsonSerializable
     {
         return [
             'deliveryExecutionId' => $this->deliveryExecutionId,
-            'outcomes' => $this->outcomes,
             'sendAgs' => $this->sendAgs,
+            'outcomes' => $this->outcomes,
         ];
     }
 }
