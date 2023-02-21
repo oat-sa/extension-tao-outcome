@@ -27,6 +27,7 @@ use common_exception_NotFound;
 use common_exception_ResourceNotFound;
 use oat\tao\model\taskQueue\QueueDispatcher;
 use oat\tao\model\taskQueue\Task\TaskInterface;
+use oat\taoResultServer\models\Import\Exception\ImportResultException;
 use oat\taoResultServer\models\Import\Factory\ImportResultInputFactory;
 use oat\taoResultServer\models\Import\Input\ImportResultInput;
 use Psr\Http\Message\ServerRequestInterface;
@@ -43,6 +44,7 @@ class ResultImportScheduler
     }
 
     /**
+     * @throws ImportResultException
      * @throws common_exception_MissingParameter
      * @throws common_exception_NotFound
      * @throws common_exception_ResourceNotFound
