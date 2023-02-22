@@ -22,7 +22,11 @@ declare(strict_types=1);
 
 namespace oat\taoResultServer\models\Import\Service;
 
+use common_exception_Error;
+use common_exception_InvalidArgumentType;
+use common_exception_NotImplemented;
 use core_kernel_classes_Resource;
+use core_kernel_persistence_Exception;
 use oat\generis\model\data\Ontology;
 use oat\taoDelivery\model\execution\OntologyDeliveryExecution;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
@@ -34,6 +38,7 @@ use oat\taoResultServer\models\Parser\QtiResultParser;
 use qtism\data\AssessmentItemRef;
 use qtism\data\AssessmentTest;
 use qtism\data\QtiComponentCollection;
+use qtism\data\storage\xml\XmlStorageException;
 use taoQtiTest_models_classes_QtiTestService;
 use taoResultServer_models_classes_WritableResultStorage;
 
@@ -60,11 +65,14 @@ class QtiResultXmlImporter
     }
 
     /**
-     * @param ImportResultInput $input
-     * @return void
      * @throws ImportResultException
+     * @throws XmlStorageException
+     * @throws common_exception_Error
+     * @throws common_exception_InvalidArgumentType
+     * @throws common_exception_NotImplemented
+     * @throws core_kernel_persistence_Exception
      */
-    public function importByResultInput(ImportResultInput $input)
+    public function importByResultInput(ImportResultInput $input): void
     {
         $this->importQtiResultXml(
             $input->getDeliveryExecutionId(),
@@ -72,6 +80,13 @@ class QtiResultXmlImporter
         );
     }
 
+    /**
+     * @throws common_exception_InvalidArgumentType
+     * @throws common_exception_NotImplemented
+     * @throws XmlStorageException
+     * @throws common_exception_Error
+     * @throws core_kernel_persistence_Exception
+     */
     public function importQtiResultXml(
         string $deliveryExecutionId,
         string $xmlContent
