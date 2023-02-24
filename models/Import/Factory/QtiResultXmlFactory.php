@@ -30,8 +30,10 @@ use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 use oat\taoResultServer\models\classes\ResultServerService;
 use oat\taoResultServer\models\Import\Exception\ImportResultException;
 use oat\taoResultServer\models\Import\Input\ImportResultInput;
-use taoResultServer_models_classes_OutcomeVariable;
+use stdClass;
+use taoResultServer_models_classes_ReadableResultStorage;
 use taoResultServer_models_classes_ResponseVariable;
+use taoResultServer_models_classes_Variable;
 
 class QtiResultXmlFactory
 {
@@ -66,8 +68,23 @@ class QtiResultXmlFactory
         $updatedScoreTotal = null;
 
         foreach ($outcomeVariables as $id => $outcomeVariable) {
-            /** @var taoResultServer_models_classes_ResponseVariable $variable */
-            $variable = current($outcomeVariable)->variable;
+            if (!is_array($outcomeVariable)) {
+                continue;
+            }
+
+            /** @var stdClass $variable */
+            $variable = current($outcomeVariable);
+
+            if (!is_object($variable) || !property_exists($variable, 'variable')) {
+                continue;
+            }
+
+            /** @var taoResultServer_models_classes_Variable $variable */
+            $variable = $variable->variable;
+
+            if (!$variable instanceof taoResultServer_models_classes_Variable) {
+                continue;
+            }
 
             if ($variable->getIdentifier() === 'SCORE_TOTAL') {
                 $scoreTotal = (float)$variable->getValue();
@@ -94,21 +111,13 @@ class QtiResultXmlFactory
             $callItemId = sprintf('%s.%s.0', $deliveryExecutionId, $itemId);
 
             foreach ($outcomes as $outcomeId => $outcomeValue) {
-                $outcomeVariableVersions = $resultStorage->getVariable($callItemId, $outcomeId);
-                $lastOutcomeVariable = (array)end($outcomeVariableVersions);
-
-                if (empty($lastOutcomeVariable)) {
-                    throw new ImportResultException(
-                        sprintf(
-                            'There is no outcome variable %s for %s',
-                            $outcomeId,
-                            $callItemId
-                        )
-                    );
-                }
-
-                /** @var taoResultServer_models_classes_OutcomeVariable $variable */
-                $variable = $lastOutcomeVariable['variable'];
+                $variable = $this->getCurrentOutcomeVariable(
+                    $resultStorage,
+                    $callItemId,
+                    $outcomeId,
+                    $itemId,
+                    $deliveryExecutionId
+                );
 
                 $updatedScoreTotal = $updatedScoreTotal - (float)$variable->getValue();
                 $updatedScoreTotal = $updatedScoreTotal + $outcomeValue;
@@ -166,5 +175,57 @@ class QtiResultXmlFactory
             $updatedScoreTotal,
             implode('', $itemResults)
         );
+    }
+
+
+    private function getCurrentOutcomeVariable(
+        taoResultServer_models_classes_ReadableResultStorage $resultStorage,
+        string $callItemId,
+        string $outcomeId,
+        string $itemId,
+        string $deliveryExecutionId
+    ): taoResultServer_models_classes_Variable {
+        $outcomeVariableVersions = $resultStorage->getVariable($callItemId, $outcomeId);
+
+        if (!is_array($outcomeVariableVersions) || empty($outcomeVariableVersions)) {
+            throw new ImportResultException(
+                sprintf(
+                    'Outcome variable %s not found for item %s on delivery execution %s',
+                    $outcomeId,
+                    $itemId,
+                    $deliveryExecutionId
+                )
+            );
+        }
+
+        $lastOutcomeVariable = (array)end($outcomeVariableVersions);
+
+        if (empty($lastOutcomeVariable)) {
+            throw new ImportResultException(
+                sprintf(
+                    'There is no outcome variable %s for %s',
+                    $outcomeId,
+                    $callItemId
+                )
+            );
+        }
+
+        /** @var taoResultServer_models_classes_Variable $variable */
+        $variable = $lastOutcomeVariable['variable'] ?? null;
+
+        if (!$variable instanceof taoResultServer_models_classes_Variable) {
+            throw new ImportResultException(
+                sprintf(
+                    'Outcome variable %s is typeof %s, expected instance of %s, for item %s and execution %s',
+                    $outcomeId,
+                    get_class($variable),
+                    taoResultServer_models_classes_Variable::class,
+                    $itemId,
+                    $deliveryExecutionId
+                )
+            );
+        }
+
+        return $variable;
     }
 }
