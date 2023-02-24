@@ -43,6 +43,7 @@ class ImportServiceProvider implements ContainerServiceProviderInterface
                     service(QtiResultXmlFactory::class),
                     service(QtiResultParser::class),
                     service(taoQtiTest_models_classes_QtiTestService::class),
+                    service(DeliveryExecutionService::SERVICE_ID),
                 ]
             );
 

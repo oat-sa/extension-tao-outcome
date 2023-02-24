@@ -20,13 +20,12 @@
 
 namespace oat\taoResultServer\test\Unit\models\Import\Service;
 
-use core_kernel_classes_Class;
 use core_kernel_classes_Property;
 use core_kernel_classes_Resource;
 use oat\generis\model\data\Ontology;
-use oat\taoDelivery\model\execution\OntologyDeliveryExecution;
+use oat\taoDelivery\model\execution\DeliveryExecution;
+use oat\taoDelivery\model\execution\DeliveryExecutionService;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
-use oat\taoOutcomeRds\model\RdsResultStorage;
 use oat\taoResultServer\models\classes\ResultServerService;
 use oat\taoResultServer\models\Import\Factory\QtiResultXmlFactory;
 use oat\taoResultServer\models\Import\Service\QtiResultXmlImporter;
@@ -40,6 +39,7 @@ use qtism\data\QtiComponentCollection;
 use qtism\data\storage\xml\XmlDocument;
 use taoQtiTest_models_classes_QtiTestService;
 use taoResultServer_models_classes_OutcomeVariable;
+use taoResultServer_models_classes_WritableResultStorage;
 
 class QtiResultXmlImporterTest extends TestCase
 {
@@ -57,6 +57,8 @@ class QtiResultXmlImporterTest extends TestCase
 
     /** @var taoQtiTest_models_classes_QtiTestService|MockObject */
     private $qtiTestService;
+    /** @var DeliveryExecutionService|MockObject */
+    private $deliveryExecutionService;
     private QtiResultXmlImporter $sut;
 
     public function setUp(): void
@@ -66,13 +68,15 @@ class QtiResultXmlImporterTest extends TestCase
         $this->qtiResultXmlFactory = $this->createMock(QtiResultXmlFactory::class);
         $this->qtiResultParser = $this->createMock(QtiResultParser::class);
         $this->qtiTestService = $this->createMock(taoQtiTest_models_classes_QtiTestService::class);
+        $this->deliveryExecutionService = $this->createMock(DeliveryExecutionService::class);
 
         $this->sut = new QtiResultXmlImporter(
             $this->ontology,
             $this->resultServerService,
             $this->qtiResultXmlFactory,
             $this->qtiResultParser,
-            $this->qtiTestService
+            $this->qtiTestService,
+            $this->deliveryExecutionService
         );
     }
 
@@ -94,98 +98,87 @@ class QtiResultXmlImporterTest extends TestCase
         $itemOutcomeVariable->setBaseType('float');
         $itemOutcomeVariable->setEpoch('0.00000100 1581515827');
 
-        $resultMapperMock = $this->getResultMapperMock($testOutcomeVariable, $itemOutcomeVariable);
-        $deliveryExecutionMock = $this->createMock(core_kernel_classes_Class::class);
-        $deliveryMock = $this->createMock(core_kernel_classes_Property::class);
-        $resultStorageMock = $this->createMock(RdsResultStorage::class);
+        $resultMapper = $this->getResultMapperMock($testOutcomeVariable, $itemOutcomeVariable);
+        $deliveryExecution = $this->createMock(DeliveryExecution::class);
+        $delivery = $this->createMock(core_kernel_classes_Property::class);
+        $resultStorage = $this->createMock(taoResultServer_models_classes_WritableResultStorage::class);
+        $resource = $this->createMock(core_kernel_classes_Resource::class);
+        $test = $this->createMock(core_kernel_classes_Resource::class);
+        $property = $this->createMock(core_kernel_classes_Property::class);
+        $item = $this->createMock(ExtendedAssessmentItemRef::class);
+        $qtiComponentCollection = new QtiComponentCollection([$item]);
+        $assessmentTest = $this->createMock(AssessmentTest::class);
+        $xmlDocument = $this->createMock(XmlDocument::class);
 
-        $resultStorageMock
-            ->expects($this->once())
-            ->method('getDelivery')
+        $this->deliveryExecutionService
+            ->method('getDeliveryExecution')
             ->with('deliveryExecutionId')
-            ->willReturn('deliveryId');
-
-        $deliveryExecutionMock
-            ->expects($this->once())
-            ->method('getProperty')
-            ->with(OntologyDeliveryExecution::PROPERTY_SUBJECT)
-            ->willReturn($deliveryMock);
+            ->willReturn($deliveryExecution);
 
         $this->resultServerService
             ->expects($this->once())
             ->method('getResultStorage')
-            ->with($deliveryMock)
-            ->willReturn($resultStorageMock);
+            ->willReturn($resultStorage);
 
         $this->qtiResultParser
             ->expects($this->once())
             ->method('parse')
             ->with($xmlContent)
-            ->willReturn($resultMapperMock);
-
-        $this->ontology
-            ->method('getClass')
-            ->with('deliveryExecutionId')
-            ->willReturn($deliveryExecutionMock);
-
-        $testMock = $this->createMock(core_kernel_classes_Resource::class);
-        $testMock
-            ->expects($this->any())
-            ->method('getUri')
-            ->willReturn('testId');
-
-        $resourceMock = $this->createMock(core_kernel_classes_Resource::class);
-        $resourceMock
-            ->expects($this->once())
-            ->method('getOnePropertyValue')
-            ->willReturn($testMock);
+            ->willReturn($resultMapper);
 
         $this->ontology
             ->expects($this->once())
             ->method('getResource')
             ->with('deliveryId')
-            ->willReturn($resourceMock);
-
-        $propertyMock = $this->createMock(core_kernel_classes_Property::class);
+            ->willReturn($resource);
 
         $this->ontology
             ->expects($this->once())
             ->method('getProperty')
             ->with(DeliveryAssemblyService::PROPERTY_ORIGIN)
-            ->willReturn($propertyMock);
-
-        $itemMock = $this->createMock(ExtendedAssessmentItemRef::class);
-        $itemMock
-            ->expects($this->once())
-            ->method('getIdentifier')
-            ->willReturn('itemIdentifier');
-        $itemMock
-            ->expects($this->once())
-            ->method('getHref')
-            ->willReturn('itemHref');
-
-        $qtiComponentCollection = new QtiComponentCollection([$itemMock]);
-
-        $assessmentTestMock = $this->createMock(AssessmentTest::class);
-        $assessmentTestMock
-            ->expects($this->once())
-            ->method('getComponentsByClassName')
-            ->with('assessmentItemRef')
-            ->willReturn($qtiComponentCollection);
-
-        $xmlDocumentMock = $this->createMock(XmlDocument::class);
-        $xmlDocumentMock
-            ->expects($this->once())
-            ->method('getDocumentComponent')
-            ->willReturn($assessmentTestMock);
+            ->willReturn($property);
 
         $this->qtiTestService
             ->expects($this->once())
             ->method('getDoc')
-            ->with($testMock)
-            ->willReturn($xmlDocumentMock);
+            ->with($test)
+            ->willReturn($xmlDocument);
 
-        $resultStorageMock
+        $delivery->expects($this->once())
+            ->method('getUri')
+            ->willReturn('deliveryId');
+
+        $deliveryExecution
+            ->expects($this->once())
+            ->method('getDelivery')
+            ->willReturn($delivery);
+
+        $test->expects($this->any())
+            ->method('getUri')
+            ->willReturn('testId');
+
+        $resource->expects($this->once())
+            ->method('getOnePropertyValue')
+            ->willReturn($test);
+
+        $item->expects($this->once())
+            ->method('getIdentifier')
+            ->willReturn('itemIdentifier');
+
+        $item->expects($this->once())
+            ->method('getHref')
+            ->willReturn('itemHref');
+
+        $assessmentTest->expects($this->once())
+            ->method('getComponentsByClassName')
+            ->with('assessmentItemRef')
+            ->willReturn($qtiComponentCollection);
+
+        $xmlDocument->expects($this->once())
+            ->method('getDocumentComponent')
+            ->willReturn($assessmentTest);
+
+        $resultStorage
             ->expects($this->once())
             ->method('storeTestVariables')
             ->with(
@@ -195,7 +188,7 @@ class QtiResultXmlImporterTest extends TestCase
                 'deliveryExecutionId'
             );
 
-        $resultStorageMock
+        $resultStorage
             ->expects($this->once())
             ->method('storeItemVariables')
             ->with(

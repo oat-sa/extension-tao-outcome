@@ -72,6 +72,7 @@
 		}
 	},
 	"require-dev": {
-		"oat-sa/extension-tao-delivery": ">=15.10.0"
+		"oat-sa/extension-tao-delivery": ">=15.10.0",
+		"oat-sa/extension-tao-testqti": ">=45.0"
 	}
 }

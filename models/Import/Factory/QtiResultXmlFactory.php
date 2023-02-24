@@ -27,6 +27,7 @@ use core_kernel_persistence_Exception;
 use oat\dtms\DateTime;
 use oat\generis\model\data\Ontology;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
+use oat\taoResultServer\models\classes\ResultManagement;
 use oat\taoResultServer\models\classes\ResultServerService;
 use oat\taoResultServer\models\Import\Exception\ImportResultException;
 use oat\taoResultServer\models\Import\Input\ImportResultInput;
@@ -58,6 +59,16 @@ class QtiResultXmlFactory
         $deliveryExecutionId = $input->getDeliveryExecutionId();
 
         $resultStorage = $this->resultServerService->getResultStorage();
+
+        if (!$resultStorage instanceof ResultManagement) {
+            throw new ImportResultException(
+                sprintf(
+                    'ResultsStorage must implement %s. Instance of %s provided',
+                    ResultManagement::class,
+                    get_class($resultStorage)
+                )
+            );
+        }
 
         $outcomeVariables = $resultStorage->getDeliveryVariables($deliveryExecutionId);
 

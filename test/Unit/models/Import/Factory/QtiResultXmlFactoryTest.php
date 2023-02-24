@@ -23,7 +23,7 @@ namespace oat\taoResultServer\test\Unit\models\Import\Factory;
 use core_kernel_classes_Property;
 use core_kernel_classes_Resource;
 use oat\generis\model\data\Ontology;
-use oat\taoOutcomeRds\model\RdsResultStorage;
+use oat\taoResultServer\models\classes\ResultManagement;
 use oat\taoResultServer\models\classes\ResultServerService;
 use oat\taoResultServer\models\Import\Factory\QtiResultXmlFactory;
 use oat\taoResultServer\models\Import\Input\ImportResultInput;
@@ -40,15 +40,15 @@ class QtiResultXmlFactoryTest extends TestCase
     /** @var ResultServerService|MockObject */
     private $resultServerService;
 
-    /** @var RdsResultStorage|MockObject */
-    private RdsResultStorage $resultStorage;
+    /** @var ResultManagement|MockObject */
+    private ResultManagement $resultStorage;
     private QtiResultXmlFactory $sut;
 
     public function setUp(): void
     {
         $this->ontology = $this->createMock(Ontology::class);
         $this->resultServerService = $this->createMock(ResultServerService::class);
-        $this->resultStorage = $this->createMock(RdsResultStorage::class);
+        $this->resultStorage = $this->createMock(ResultManagement::class);
         $this->sut = new QtiResultXmlFactory($this->ontology, $this->resultServerService);
 
         $this->resultServerService

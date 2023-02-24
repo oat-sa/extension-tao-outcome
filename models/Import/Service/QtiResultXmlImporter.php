@@ -24,11 +24,12 @@ namespace oat\taoResultServer\models\Import\Service;
 
 use common_exception_Error;
 use common_exception_InvalidArgumentType;
+use common_exception_NotFound;
 use common_exception_NotImplemented;
 use core_kernel_classes_Resource;
 use core_kernel_persistence_Exception;
 use oat\generis\model\data\Ontology;
-use oat\taoDelivery\model\execution\OntologyDeliveryExecution;
+use oat\taoDelivery\model\execution\DeliveryExecutionService;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 use oat\taoResultServer\models\classes\ResultServerService;
 use oat\taoResultServer\models\Import\Exception\ImportResultException;
@@ -49,19 +50,22 @@ class QtiResultXmlImporter
     private QtiResultXmlFactory $qtiResultXmlFactory;
     private QtiResultParser $qtiResultParser;
     private taoQtiTest_models_classes_QtiTestService $qtiTestService;
+    private DeliveryExecutionService $deliveryExecutionService;
 
     public function __construct(
         Ontology $ontology,
         ResultServerService $resultServerService,
         QtiResultXmlFactory $qtiResultXmlFactory,
         QtiResultParser $qtiResultParser,
-        taoQtiTest_models_classes_QtiTestService $qtiTestService
+        taoQtiTest_models_classes_QtiTestService $qtiTestService,
+        DeliveryExecutionService $deliveryExecutionService
     ) {
         $this->ontology = $ontology;
         $this->resultServerService = $resultServerService;
         $this->qtiResultXmlFactory = $qtiResultXmlFactory;
         $this->qtiResultParser = $qtiResultParser;
         $this->qtiTestService = $qtiTestService;
+        $this->deliveryExecutionService = $deliveryExecutionService;
     }
 
     /**
@@ -69,6 +73,7 @@ class QtiResultXmlImporter
      * @throws XmlStorageException
      * @throws common_exception_Error
      * @throws common_exception_InvalidArgumentType
+     * @throws common_exception_NotFound
      * @throws common_exception_NotImplemented
      * @throws core_kernel_persistence_Exception
      */
@@ -81,10 +86,12 @@ class QtiResultXmlImporter
     }
 
     /**
+     * @throws ImportResultException
+     * @throws XmlStorageException
+     * @throws common_exception_NotFound
+     * @throws common_exception_Error
      * @throws common_exception_InvalidArgumentType
      * @throws common_exception_NotImplemented
-     * @throws XmlStorageException
-     * @throws common_exception_Error
      * @throws core_kernel_persistence_Exception
      */
     public function importQtiResultXml(
@@ -92,12 +99,23 @@ class QtiResultXmlImporter
         string $xmlContent
     ): void {
         $resultMapper = $this->qtiResultParser->parse($xmlContent);
-        $deliveryExecution = $this->ontology->getClass($deliveryExecutionId);
-        $delivery = $deliveryExecution->getProperty(OntologyDeliveryExecution::PROPERTY_SUBJECT);
-        $resultStorage = $this->resultServerService->getResultStorage($delivery);
-        $deliveryId = $resultStorage->getDelivery($deliveryExecutionId);
 
-        $test = $this->ontology->getResource($deliveryId)
+        $deliveryExecution = $this->deliveryExecutionService->getDeliveryExecution($deliveryExecutionId);
+        $delivery = $deliveryExecution->getDelivery();
+
+        $resultStorage = $this->resultServerService->getResultStorage();
+
+        if (!$resultStorage instanceof taoResultServer_models_classes_WritableResultStorage) {
+            throw new ImportResultException(
+                sprintf(
+                    'ResultStorage must be an instance of %s. Instance of %s provided',
+                    taoResultServer_models_classes_WritableResultStorage::class,
+                    get_class($resultStorage)
+                )
+            );
+        }
+
+        $test = $this->ontology->getResource($delivery->getUri())
             ->getOnePropertyValue($this->ontology->getProperty(DeliveryAssemblyService::PROPERTY_ORIGIN));
 
         $this->storeTestVariables(
