@@ -165,6 +165,7 @@ class QtiResultXmlFactory
         $testUri = $this->ontology->getResource($deliveryId)
             ->getOnePropertyValue($this->ontology->getProperty(DeliveryAssemblyService::PROPERTY_ORIGIN));
 
+        // phpcs:disable
         return sprintf(
             '<?xml version="1.0" encoding="UTF-8"?>
                     <assessmentResult 
@@ -186,6 +187,7 @@ class QtiResultXmlFactory
             $updatedScoreTotal,
             implode('', $itemResults)
         );
+        // phpcs:enable
     }
 
 

@@ -32,7 +32,6 @@ use PHPUnit\Framework\TestCase;
 
 class ImportResultInputFactoryTest extends TestCase
 {
-
     /**
      * @var DeliveryExecutionService|MockObject
      */

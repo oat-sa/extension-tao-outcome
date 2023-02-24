@@ -229,6 +229,7 @@ class QtiResultXmlImporterTest extends TestCase
 
     private function getXmlContent(): string
     {
+        // phpcs:disable
         return <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <assessmentResult 
@@ -237,5 +238,6 @@ class QtiResultXmlImporterTest extends TestCase
     xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqti_result_v2p1 http://www.imsglobal.org/xsd/qti/qtiv2p1/imsqti_result_v2p1.xsd"
 ></assessmentResult>
 XML;
+        // phpcs:enable
     }
 }
