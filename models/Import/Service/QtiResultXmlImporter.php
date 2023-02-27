@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2023 (original work) Open Assessment Technologies SA;
+ * Copyright (c) 2023 (original work) Open Assessment Technologies SA.
  */
 
 declare(strict_types=1);
@@ -98,11 +98,6 @@ class QtiResultXmlImporter
         string $deliveryExecutionId,
         string $xmlContent
     ): void {
-        $resultMapper = $this->qtiResultParser->parse($xmlContent);
-
-        $deliveryExecution = $this->deliveryExecutionService->getDeliveryExecution($deliveryExecutionId);
-        $delivery = $deliveryExecution->getDelivery();
-
         $resultStorage = $this->resultServerService->getResultStorage();
 
         if (!$resultStorage instanceof taoResultServer_models_classes_WritableResultStorage) {
@@ -115,6 +110,9 @@ class QtiResultXmlImporter
             );
         }
 
+        $resultMapper = $this->qtiResultParser->parse($xmlContent);
+        $deliveryExecution = $this->deliveryExecutionService->getDeliveryExecution($deliveryExecutionId);
+        $delivery = $deliveryExecution->getDelivery();
         $test = $this->ontology->getResource($delivery->getUri())
             ->getOnePropertyValue($this->ontology->getProperty(DeliveryAssemblyService::PROPERTY_ORIGIN));
 

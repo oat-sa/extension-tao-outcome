@@ -73,7 +73,8 @@ class ImportResultInputFactory
 
         $new = new ImportResultInput(
             $params[self::Q_PARAM_DELIVERY_EXECUTION_ID],
-            isset($params[self::Q_PARAM_TRIGGER_AGS_SEND]) && $params[self::Q_PARAM_TRIGGER_AGS_SEND] !== 'false'
+            isset($params[self::Q_PARAM_TRIGGER_AGS_SEND]) &&
+            filter_var($params[self::Q_PARAM_TRIGGER_AGS_SEND], FILTER_VALIDATE_BOOLEAN)
         );
 
         foreach ($body['itemVariables'] ?? [] as $item) {

@@ -54,10 +54,6 @@ class QtiResultXmlFactory
      */
     public function createByImportResult(ImportResultInput $input): string
     {
-        $itemResults = [];
-        $timestamp = (new DateTime())->format(DATE_RFC3339_EXTENDED);
-        $deliveryExecutionId = $input->getDeliveryExecutionId();
-
         $resultStorage = $this->resultServerService->getResultStorage();
 
         if (!$resultStorage instanceof ResultManagement) {
@@ -70,6 +66,9 @@ class QtiResultXmlFactory
             );
         }
 
+        $itemResults = [];
+        $timestamp = (new DateTime())->format(DATE_RFC3339_EXTENDED);
+        $deliveryExecutionId = $input->getDeliveryExecutionId();
         $outcomeVariables = $resultStorage->getDeliveryVariables($deliveryExecutionId);
 
         /** @var taoResultServer_models_classes_ResponseVariable $scoreTotalVariable */
@@ -102,6 +101,8 @@ class QtiResultXmlFactory
 
                 $updatedScoreTotal = $scoreTotal;
                 $scoreTotalVariable = $variable;
+
+                continue;
             }
 
             if ($variable->getIdentifier() === 'SCORE_TOTAL_MAX') {

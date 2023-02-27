@@ -18,6 +18,8 @@
  * Copyright (c) 2023 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  */
 
+declare(strict_types=1);
+
 namespace oat\taoResultServer\models\Import\Service;
 
 use common_exception_Error;
@@ -26,8 +28,10 @@ use oat\oatbox\service\exception\InvalidServiceManagerException;
 use oat\taoDelivery\model\execution\DeliveryExecutionService;
 use oat\taoResultServer\models\classes\implementation\ResultServerService;
 use oat\taoResultServer\models\Events\DeliveryExecutionResultsRecalculated;
+use stdClass;
 use taoResultServer_models_classes_ReadableResultStorage as ReadableResultStorage;
 use taoResultServer_models_classes_ResponseVariable;
+use taoResultServer_models_classes_Variable;
 
 class SendCalculatedResultService
 {
@@ -47,19 +51,34 @@ class SendCalculatedResultService
 
     public function sendByDeliveryExecutionId(string $deliveryExecutionId): void
     {
-        $deliveryExecution = $this->deliveryExecutionService
-            ->getDeliveryExecution($deliveryExecutionId);
-
+        $deliveryExecution = $this->deliveryExecutionService->getDeliveryExecution($deliveryExecutionId);
         $outcomeVariables = $this->getResultsStorage()->getDeliveryVariables($deliveryExecutionId);
         $scoreTotal = null;
         $scoreTotalMax = null;
 
         foreach ($outcomeVariables as $id => $outcomeVariable) {
-            /** @var taoResultServer_models_classes_ResponseVariable $variable */
-            $variable = current($outcomeVariable)->variable;
+            if (!is_array($outcomeVariable)) {
+                continue;
+            }
+
+            /** @var stdClass $variable */
+            $variable = current($outcomeVariable);
+
+            if (!is_object($variable) || !property_exists($variable, 'variable')) {
+                continue;
+            }
+
+            /** @var taoResultServer_models_classes_Variable $variable */
+            $variable = $variable->variable;
+
+            if (!$variable instanceof taoResultServer_models_classes_Variable) {
+                continue;
+            }
 
             if ($variable->getIdentifier() === 'SCORE_TOTAL') {
                 $scoreTotal = (float)$variable->getValue();
+
+                continue;
             }
 
             if ($variable->getIdentifier() === 'SCORE_TOTAL_MAX') {

@@ -54,7 +54,7 @@ class DeliveryExecutionResults extends tao_actions_RestController
             $this->setSuccessJsonResponse(
                 [
                     'agsNotificationTriggered' => isset($queryParams[self::Q_PARAM_TRIGGER_AGS_SEND]) &&
-                        $queryParams[self::Q_PARAM_TRIGGER_AGS_SEND] !== 'false',
+                        filter_var($queryParams[self::Q_PARAM_TRIGGER_AGS_SEND], FILTER_VALIDATE_BOOLEAN),
                     'taskId' => $task->getId()
                 ]
             );
