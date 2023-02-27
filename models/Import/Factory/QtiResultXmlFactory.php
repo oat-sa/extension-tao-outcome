@@ -110,7 +110,7 @@ class QtiResultXmlFactory
             }
         }
 
-        if (is_null($scoreTotal)) {
+        if ($scoreTotal === null) {
             throw new ImportResultException(
                 sprintf(
                     'SCORE_TOTAL is null for delivery execution %s',
@@ -131,8 +131,8 @@ class QtiResultXmlFactory
                     $deliveryExecutionId
                 );
 
-                $updatedScoreTotal = $updatedScoreTotal - (float)$variable->getValue();
-                $updatedScoreTotal = $updatedScoreTotal + $outcomeValue;
+                $updatedScoreTotal -= (float)$variable->getValue();
+                $updatedScoreTotal += $outcomeValue;
 
                 if ($updatedScoreTotal > $scoreTotalMax) {
                     throw new ImportResultException(
@@ -155,8 +155,8 @@ class QtiResultXmlFactory
                     $outcomeId,
                     $variable->getCardinality(),
                     $variable->getBaseType(),
-                    $variable->getNormalMaximum() ? ('normalMaximum="' . $variable->getNormalMaximum() . '"') : '',
-                    $variable->getNormalMinimum() ? ('normalMinimum="' . $variable->getNormalMinimum() . '"') : '',
+                    $variable->getNormalMaximum() ? sprintf('normalMaximum="%s"', $variable->getNormalMaximum()) : '',
+                    $variable->getNormalMinimum() ? sprintf('normalMinimum="%s"', $variable->getNormalMinimum()) : '',
                     $outcomeValue
                 );
             }
