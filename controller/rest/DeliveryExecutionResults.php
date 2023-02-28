@@ -22,111 +22,70 @@ declare(strict_types=1);
 
 namespace oat\taoResultServer\controller\rest;
 
-use common_exception_Error;
+use common_exception_MissingParameter;
+use common_exception_ResourceNotFound;
 use oat\oatbox\event\EventManagerAwareTrait;
-use oat\oatbox\service\exception\InvalidServiceManagerException;
-use oat\oatbox\service\ServiceNotFoundException;
 use oat\tao\model\http\HttpJsonResponseTrait;
-use oat\taoDelivery\model\execution\DeliveryExecutionInterface;
-use oat\taoDelivery\model\execution\DeliveryExecutionService;
-use oat\taoResultServer\models\classes\implementation\ResultServerService;
-use oat\taoResultServer\models\Events\DeliveryExecutionResultsRecalculated;
+use oat\taoResultServer\models\Import\Task\ResultImportScheduler;
 use tao_actions_RestController;
-use taoResultServer_models_classes_ReadableResultStorage as ReadableResultStorage;
+use Throwable;
 
 class DeliveryExecutionResults extends tao_actions_RestController
 {
     use EventManagerAwareTrait;
     use HttpJsonResponseTrait;
 
-    private const Q_PARAM_DELIVERY_EXECUTION_ID = 'execution';
     private const Q_PARAM_TRIGGER_AGS_SEND = 'send_ags';
 
-    public function patch(DeliveryExecutionService $deliveryExecutionService): void
+    public function patch(): void
     {
         $queryParams = $this->getPsrRequest()->getQueryParams();
-        $agsNotificationTriggered = false;
 
-        if (!isset($queryParams[self::Q_PARAM_DELIVERY_EXECUTION_ID])) {
-            $this->setErrorJsonResponse(
-                sprintf('Missing %s query param', self::Q_PARAM_DELIVERY_EXECUTION_ID)
+        try {
+            $this->logInfo(
+                sprintf(
+                    '[DeliveryExecutionResults] requested with params: %s',
+                    var_export($queryParams, true)
+                )
             );
-            return;
-        };
 
-        $deliveryExecution = $deliveryExecutionService->getDeliveryExecution(
-            $queryParams[self::Q_PARAM_DELIVERY_EXECUTION_ID]
-        );
+            $task = $this->getResultImportScheduler()->scheduleByRequest($this->getPsrRequest());
 
-        if (!$deliveryExecution->getFinishTime()) {
-            $this->setErrorJsonResponse("Finished delivery execution not found", 0, [], 404);
-            return;
+            $this->setSuccessJsonResponse(
+                [
+                    'agsNotificationTriggered' => isset($queryParams[self::Q_PARAM_TRIGGER_AGS_SEND]) &&
+                        filter_var($queryParams[self::Q_PARAM_TRIGGER_AGS_SEND], FILTER_VALIDATE_BOOLEAN),
+                    'taskId' => $task->getId()
+                ]
+            );
+
+            $this->logInfo(
+                sprintf(
+                    '[DeliveryExecutionResults] successfully scheduled with params [%s]',
+                    var_export($queryParams, true)
+                )
+            );
+        } catch (common_exception_MissingParameter $e) {
+            $this->setErrorJsonResponse($e->getMessage());
+        } catch (common_exception_ResourceNotFound $e) {
+            $this->setErrorJsonResponse($e->getMessage(), 0, [], 404);
+        } catch (Throwable $e) {
+            $this->setErrorJsonResponse(sprintf('Internal error: %s', $e->getMessage()), 0, [], 500);
+        } finally {
+            if (isset($e)) {
+                $this->logError(
+                    sprintf(
+                        '[DeliveryExecutionResults] Error "%s" requesting with params [%s]',
+                        $e->__toString(),
+                        var_export($queryParams, true)
+                    )
+                );
+            }
         }
-
-        // Todo patch variables pending in scope of the next phase of development
-
-        if (
-            isset($queryParams[self::Q_PARAM_TRIGGER_AGS_SEND]) &&
-            $queryParams[self::Q_PARAM_TRIGGER_AGS_SEND] !== 'false'
-        ) {
-            $this->triggerAgsResultSend($deliveryExecution);
-            $agsNotificationTriggered = true;
-        }
-
-        $this->setSuccessJsonResponse([
-            'agsNotificationTriggered' => $agsNotificationTriggered
-        ]);
     }
 
-    private function triggerAgsResultSend(DeliveryExecutionInterface $deliveryExecution): void
+    private function getResultImportScheduler(): ResultImportScheduler
     {
-        $variables = $this->getResultsStorage()->getVariables(
-            $deliveryExecution->getIdentifier(),
-        );
-        $variableObjects = array_map(static function (array $variableObject) {
-            return current($variableObject)->variable;
-        }, $variables);
-
-        $scoreTotal = null;
-        $scoreTotalMax = null;
-
-        foreach ($variableObjects as $variable) {
-            if ($variable->getIdentifier() === 'SCORE_TOTAL') {
-                $scoreTotal = (float)$variable->getValue();
-                continue;
-            }
-
-            if ($variable->getIdentifier() === 'SCORE_TOTAL_MAX') {
-                $scoreTotalMax = (float)$variable->getValue();
-                continue;
-            }
-
-            if ($scoreTotal !== null && $scoreTotalMax !== null) {
-                break;
-            }
-        }
-
-        $this->getEventManager()->trigger(
-            new DeliveryExecutionResultsRecalculated($deliveryExecution, $scoreTotal, $scoreTotalMax)
-        );
-    }
-
-    /**
-     * @throws common_exception_Error
-     * @throws InvalidServiceManagerException
-     * @throws ServiceNotFoundException
-     */
-    private function getResultsStorage(): ReadableResultStorage
-    {
-        /* @var ResultServerService $resultService */
-        $resultService = $this->getServiceManager()->get(ResultServerService::SERVICE_ID);
-
-        $storage = $resultService->getResultStorage();
-
-        if (!$storage instanceof ReadableResultStorage) {
-            throw new common_exception_Error('Configured result storage is not writable.');
-        }
-
-        return $storage;
+        return $this->getServiceManager()->getContainer()->get(ResultImportScheduler::class);
     }
 }
