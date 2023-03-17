@@ -57,6 +57,12 @@ class ImportResultInputFactoryTest extends TestCase
                                 'id' => 'SCORE',
                                 'value' => 0.8
                             ]
+                        ],
+                        'responses' => [
+                            [
+                                'id' => 'RESPONSE',
+                                'correctResponse' => true
+                            ]
                         ]
                     ]
                 ]
@@ -82,8 +88,52 @@ class ImportResultInputFactoryTest extends TestCase
             true
         );
         $expected->addOutcome('item-1', 'SCORE', 0.8);
+        $expected->addResponse('item-1', 'RESPONSE', ['correctResponse' => true]);
 
         $this->assertSame($expected->jsonSerialize(), $this->sut->createFromRequest($request)->jsonSerialize());
+    }
+
+    public function testValidateMissingItemResponse(): void
+    {
+        $request = $this->createRequest(
+            [
+                'itemVariables' => [
+                    [
+                        'itemId' => 'item-1',
+                        'outcomes' => [
+                            [
+                                'id' => 'SCORE',
+                                'value' => 0.8
+                            ]
+                        ],
+                        'responses' => [
+                            [
+                                'id' => 'RESPONSE',
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            'deliveryExecutionId',
+            'true'
+        );
+
+        $deliveryExecution = $this->createMock(DeliveryExecution::class);
+
+        $this->deliveryExecutionService
+            ->expects($this->once())
+            ->method('getDeliveryExecution')
+            ->willReturn($deliveryExecution);
+
+        $deliveryExecution
+            ->expects($this->once())
+            ->method('getFinishTime')
+            ->willReturn('time');
+
+        $this->expectException(common_exception_MissingParameter::class);
+        $this->expectExceptionMessage('Expected parameter id|correctResponse is missing');
+
+        $this->sut->createFromRequest($request)->jsonSerialize();
     }
 
     public function testValidateMissingItemVariables(): void

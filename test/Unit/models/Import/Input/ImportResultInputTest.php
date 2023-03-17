@@ -30,6 +30,8 @@ class ImportResultInputTest extends TestCase
         $sut = new ImportResultInput('id', true);
         $sut->addOutcome('item-1', 'SCORE', 0.5);
         $sut->addOutcome('item-2', 'SCORE', 0.6);
+        $sut->addResponse('item-1', 'RESPONSE', ['correctResponse' => true]);
+        $sut->addResponse('item-2', 'RESPONSE', ['correctResponse' => true]);
 
         $this->assertSame('id', $sut->getDeliveryExecutionId());
         $this->assertTrue($sut->isSendAgs());
@@ -43,6 +45,14 @@ class ImportResultInputTest extends TestCase
                     ],
                     'item-2' => [
                         'SCORE' => 0.6,
+                    ]
+                ],
+                'responses' => [
+                    'item-1' => [
+                        'RESPONSE' => ['correctResponse' => true],
+                    ],
+                    'item-2' => [
+                        'RESPONSE' => ['correctResponse' => true],
                     ]
                 ],
             ],
@@ -61,6 +71,14 @@ class ImportResultInputTest extends TestCase
                 ],
                 'item-2' => [
                     'SCORE' => 0.6,
+                ]
+            ],
+            'responses' => [
+                'item-1' => [
+                    'RESPONSE' => ['correctResponse' => true],
+                ],
+                'item-2' => [
+                    'RESPONSE' => ['correctResponse' => true],
                 ]
             ],
         ];

@@ -29,12 +29,14 @@ class ImportResultInput implements JsonSerializable
     private string $deliveryExecutionId;
     private bool $sendAgs;
     private array $outcomes;
+    private array $responses;
 
     public function __construct(string $deliveryExecutionId, bool $sendAgs)
     {
         $this->deliveryExecutionId = $deliveryExecutionId;
         $this->sendAgs = $sendAgs;
         $this->outcomes = [];
+        $this->responses = [];
     }
 
     public function getDeliveryExecutionId(): string
@@ -52,6 +54,11 @@ class ImportResultInput implements JsonSerializable
         $this->outcomes[$itemId][$outcomeId] = $outcomeValue;
     }
 
+    public function addResponse(string $itemId, string $responseId, array $values): void
+    {
+        $this->responses[$itemId][$responseId] = $values;
+    }
+
     /**
      * [
      *    'itemId' => [
@@ -66,6 +73,22 @@ class ImportResultInput implements JsonSerializable
         return $this->outcomes;
     }
 
+    /**
+     * [
+     *    'itemId' => [
+     *        'responseId' => [
+     *            'correctResponse' => true
+     *        ]
+     *    ]
+     * ]
+     *
+     * @return array
+     */
+    public function getResponses(): array
+    {
+        return $this->responses;
+    }
+
     public static function fromJson(array $json): self
     {
         $new = new self($json['deliveryExecutionId'], $json['sendAgs']);
@@ -73,6 +96,16 @@ class ImportResultInput implements JsonSerializable
         foreach ($json['outcomes'] as $itemId => $values) {
             foreach ($values as $outcomeId => $outcomeValue) {
                 $new->addOutcome($itemId, $outcomeId, $outcomeValue);
+            }
+        }
+
+        foreach ($json['responses'] as $itemId => $values) {
+            foreach ($values as $responseId => $responseValues) {
+                $new->addResponse(
+                    $itemId,
+                    $responseId,
+                    $responseValues
+                );
             }
         }
 
@@ -85,6 +118,7 @@ class ImportResultInput implements JsonSerializable
             'deliveryExecutionId' => $this->deliveryExecutionId,
             'sendAgs' => $this->sendAgs,
             'outcomes' => $this->outcomes,
+            'responses' => $this->responses,
         ];
     }
 }
