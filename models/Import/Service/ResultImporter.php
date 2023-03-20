@@ -23,16 +23,13 @@ declare(strict_types=1);
 namespace oat\taoResultServer\models\Import\Service;
 
 use common_exception_Error;
-use common_exception_NotFound;
 use core_kernel_persistence_Exception;
 use oat\generis\model\data\Ontology;
-use oat\taoDelivery\model\execution\DeliveryExecutionService;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 use oat\taoOutcomeRds\model\AbstractRdsResultStorage;
 use oat\taoResultServer\models\classes\ResultServerService;
 use oat\taoResultServer\models\Import\Exception\ImportResultException;
 use oat\taoResultServer\models\Import\Input\ImportResultInput;
-use stdClass;
 use taoResultServer_models_classes_ResponseVariable;
 use taoResultServer_models_classes_Variable;
 
@@ -40,16 +37,11 @@ class ResultImporter
 {
     private Ontology $ontology;
     private ResultServerService $resultServerService;
-    private DeliveryExecutionService $deliveryExecutionService;
 
-    public function __construct(
-        Ontology $ontology,
-        ResultServerService $resultServerService,
-        DeliveryExecutionService $deliveryExecutionService
-    ) {
+    public function __construct(Ontology $ontology, ResultServerService $resultServerService)
+    {
         $this->ontology = $ontology;
         $this->resultServerService = $resultServerService;
-        $this->deliveryExecutionService = $deliveryExecutionService;
     }
 
     /**
@@ -57,47 +49,171 @@ class ResultImporter
      * @return void
      * @throws ImportResultException
      * @throws common_exception_Error
-     * @throws common_exception_NotFound
      * @throws core_kernel_persistence_Exception
      */
     public function importByResultInput(ImportResultInput $input): void
     {
-        //@TODO Add unit tests
-        //@TODO Refactor the code to be more maintainable
-
         $resultStorage = $this->getResultStorage();
-        $deliveryExecutionId = $input->getDeliveryExecutionId();
-        $deliveryId = $resultStorage->getDelivery($deliveryExecutionId);
-        $testUri = (string)$this->ontology->getResource($deliveryId)
-            ->getOnePropertyValue($this->ontology->getProperty(DeliveryAssemblyService::PROPERTY_ORIGIN));
+        $deliveryExecutionUri = $input->getDeliveryExecutionId();
+        $testUri = $this->getTestUri($resultStorage, $deliveryExecutionUri);
+        $testScoreVariables = $this->getTestScoreVariables($resultStorage, $deliveryExecutionUri);
 
-        $deliveryExecutionId = $input->getDeliveryExecutionId();
-        $outcomeVariables = $resultStorage->getDeliveryVariables($deliveryExecutionId);
+        $this->updateItemResponseVariables($resultStorage, $input, $testUri);
 
-        $this->updateResponses($resultStorage, $input, $testUri);
+        $updatedScoreTotal = $this->updateItemOutcomeVariables(
+            $resultStorage,
+            $input,
+            $testUri,
+            $testScoreVariables['scoreTotalMax'],
+            $testScoreVariables['updatedScoreTotal']
+        );
 
+        $this->updateTestVariables(
+            $resultStorage,
+            $testScoreVariables['scoreTotalVariable'],
+            $testScoreVariables['scoreTotalVariableId'],
+            $deliveryExecutionUri,
+            $testUri,
+            $updatedScoreTotal
+        );
+    }
+
+    private function updateTestVariables(
+        $resultStorage,
+        taoResultServer_models_classes_Variable $scoreTotalVariable,
+        int $scoreTotalVariableId,
+        string $deliveryExecutionUri,
+        string $testUri,
+        float $updatedScoreTotal
+    ): void {
+        $scoreTotalVariable->setValue($updatedScoreTotal);
+
+        $resultStorage->replaceTestVariables(
+            $deliveryExecutionUri,
+            $testUri,
+            $deliveryExecutionUri,
+            [
+                $scoreTotalVariableId => $scoreTotalVariable
+            ]
+        );
+    }
+
+    private function updateItemResponseVariables(
+        AbstractRdsResultStorage $resultStorage,
+        ImportResultInput $input,
+        string $testUri
+    ): void {
+        $deliveryExecutionUri = $input->getDeliveryExecutionId();
+
+        foreach ($input->getResponses() as $itemId => $responses) {
+            $callItemId = $this->createCallItemId($deliveryExecutionUri, $itemId);
+            $itemVariables = [];
+
+            foreach ($responses as $responseId => $responseValue) {
+                if (!array_key_exists('correctResponse', $responseValue)) {
+                    continue;
+                }
+
+                $responseVariable = $this->getItemVariable(
+                    $resultStorage,
+                    $deliveryExecutionUri,
+                    $itemId,
+                    $callItemId,
+                    $responseId
+                );
+
+                /** @var taoResultServer_models_classes_ResponseVariable $variable */
+                $variable = $responseVariable['variable'];
+                $variableId = $responseVariable['variableId'];
+                $itemUri = $responseVariable['itemUri'];
+
+                $variable->setCorrectResponse(boolval($responseValue['correctResponse']));
+
+                $itemVariables[$variableId] = $variable;
+            }
+
+            $resultStorage->replaceItemVariables(
+                $deliveryExecutionUri,
+                $testUri,
+                $itemUri,
+                $callItemId,
+                $itemVariables
+            );
+        }
+    }
+
+    private function updateItemOutcomeVariables(
+        AbstractRdsResultStorage $resultStorage,
+        ImportResultInput $input,
+        string $testUri,
+        float $scoreTotalMax,
+        float $updatedScoreTotal
+    ): float {
+        $deliveryExecutionUri = $input->getDeliveryExecutionId();
+
+        foreach ($input->getOutcomes() as $itemId => $outcomes) {
+            $itemUri = null;
+            $updateOutcomeVariables = [];
+            $callItemId = $this->createCallItemId($deliveryExecutionUri, $itemId);
+
+            foreach ($outcomes as $outcomeId => $outcomeValue) {
+                $outcomeVariable = $this->getItemVariable(
+                    $resultStorage,
+                    $deliveryExecutionUri,
+                    $itemId,
+                    $callItemId,
+                    $outcomeId
+                );
+
+                /** @var taoResultServer_models_classes_Variable $variable */
+                $variable = $outcomeVariable['variable'];
+                $itemUri = $outcomeVariable['itemUri'];
+                $variableId = $outcomeVariable['variableId'];
+
+                $updatedScoreTotal -= (float)$variable->getValue();
+                $updatedScoreTotal += $outcomeValue;
+
+                $variable->setValue($outcomeValue);
+
+                $updateOutcomeVariables[$variableId] = $variable;
+
+                if ($updatedScoreTotal > $scoreTotalMax) {
+                    throw new ImportResultException(
+                        sprintf(
+                            'SCORE_TOTAL_MAX cannot be higher than %s, %s provided',
+                            $scoreTotalMax,
+                            $updatedScoreTotal
+                        )
+                    );
+                }
+            }
+
+            $resultStorage->replaceItemVariables(
+                $deliveryExecutionUri,
+                $testUri,
+                $itemUri,
+                $callItemId,
+                $updateOutcomeVariables
+            );
+        }
+
+        return $updatedScoreTotal;
+    }
+
+    private function getTestScoreVariables(AbstractRdsResultStorage $resultStorage, string $deliveryExecutionUri): array
+    {
         /** @var taoResultServer_models_classes_ResponseVariable $scoreTotalVariable */
         $scoreTotalVariable = null;
         $scoreTotal = null;
         $scoreTotalMax = null;
         $updatedScoreTotal = null;
         $scoreTotalVariableId = null;
+        $outcomeVariables = $resultStorage->getDeliveryVariables($deliveryExecutionUri);
 
         foreach ($outcomeVariables as $id => $outcomeVariable) {
-            if (!is_array($outcomeVariable)) {
-                continue;
-            }
+            $variable = $this->getVariable($outcomeVariable);
 
-            $variable = current($outcomeVariable);
-
-            if (!is_object($variable) || !property_exists($variable, 'variable')) {
-                continue;
-            }
-
-            /** @var taoResultServer_models_classes_Variable $variable */
-            $variable = $variable->variable;
-
-            if (!$variable instanceof taoResultServer_models_classes_Variable) {
+            if ($variable === null) {
                 continue;
             }
 
@@ -120,172 +236,113 @@ class ResultImporter
             throw new ImportResultException(
                 sprintf(
                     'SCORE_TOTAL is null for delivery execution %s',
-                    $deliveryExecutionId
+                    $deliveryExecutionUri
                 )
             );
         }
 
-        foreach ($input->getOutcomes() as $itemId => $outcomes) {
-            $callItemId = sprintf('%s.%s.0', $deliveryExecutionId, $itemId);
-            $itemUri = null;
-            $updateOutcomeVariables = [];
-
-            foreach ($outcomes as $outcomeId => $outcomeValue) {
-                $outcomeVariableVersions = $resultStorage->getVariable($callItemId, $outcomeId);
-
-                if (!is_array($outcomeVariableVersions) || empty($outcomeVariableVersions)) {
-                    throw new ImportResultException(
-                        sprintf(
-                            'Outcome variable %s not found for item %s on delivery execution %s',
-                            $outcomeId,
-                            $itemId,
-                            $deliveryExecutionId
-                        )
-                    );
-                }
-
-                $lastOutcomeVariable = (array)end($outcomeVariableVersions);
-
-                if (empty($lastOutcomeVariable)) {
-                    throw new ImportResultException(
-                        sprintf(
-                            'There is no outcome variable %s for %s',
-                            $outcomeId,
-                            $callItemId
-                        )
-                    );
-                }
-
-                /** @var taoResultServer_models_classes_Variable $variable */
-                $variable = $lastOutcomeVariable['variable'] ?? null;
-                $itemUri = $lastOutcomeVariable['item'] ?? null;
-                $variableId = key($outcomeVariableVersions);
-
-                if (!$variable instanceof taoResultServer_models_classes_Variable) {
-                    throw new ImportResultException(
-                        sprintf(
-                            'Outcome variable %s is typeof %s, expected instance of %s, for item %s and execution %s',
-                            $outcomeId,
-                            get_class($variable),
-                            taoResultServer_models_classes_Variable::class,
-                            $itemId,
-                            $deliveryExecutionId
-                        )
-                    );
-                }
-
-                $updatedScoreTotal -= (float)$variable->getValue();
-                $updatedScoreTotal += $outcomeValue;
-
-                $variable->setValue($outcomeValue);
-
-                $updateOutcomeVariables[$variableId] = $variable;
-
-                if ($updatedScoreTotal > $scoreTotalMax) {
-                    throw new ImportResultException(
-                        sprintf(
-                            'SCORE_TOTAL_MAX cannot be higher than %s, %s provided',
-                            $scoreTotalMax,
-                            $updatedScoreTotal
-                        )
-                    );
-                }
-            }
-
-            $resultStorage->replaceItemVariables(
-                $deliveryExecutionId,
-                $testUri,
-                $itemUri,
-                $callItemId,
-                $updateOutcomeVariables
-            );
-        }
-
-        $scoreTotalVariable->setValue($updatedScoreTotal);
-
-        $resultStorage->replaceTestVariables(
-            $deliveryExecutionId,
-            $testUri,
-            $deliveryExecutionId,
-            [
-                $scoreTotalVariableId => $scoreTotalVariable
-            ]
-        );
+        return [
+            'scoreTotalVariableId' => $scoreTotalVariableId,
+            'scoreTotalVariable' => $scoreTotalVariable,
+            'updatedScoreTotal' => $updatedScoreTotal,
+            'scoreTotalMax' => $scoreTotalMax,
+        ];
     }
 
-    private function updateResponses(
+    private function getItemVariable(
         AbstractRdsResultStorage $resultStorage,
-        ImportResultInput $input,
-        string $testUri
-    ): void {
-        $deliveryExecutionId = $input->getDeliveryExecutionId();
+        string $deliveryExecutionUri,
+        string $itemId,
+        string $callItemId,
+        string $outcomeId
+    ): array {
+        $outcomeVariableVersions = $resultStorage->getVariable($callItemId, $outcomeId);
 
-        foreach ($input->getResponses() as $itemId => $responses) {
-            $callItemId = sprintf('%s.%s.0', $deliveryExecutionId, $itemId);
-            $itemVariables = [];
-
-            foreach ($responses as $responseId => $responseValue) {
-                if (!array_key_exists('correctResponse', $responseValue)) {
-                    continue;
-                }
-
-                $correctResponse = boolval($responseValue['correctResponse']);
-
-                $responseVariableVersions = $resultStorage->getVariable($callItemId, $responseId);
-
-                if (!is_array($responseVariableVersions) || empty($responseVariableVersions)) {
-                    throw new ImportResultException(
-                        sprintf(
-                            'Response variable %s not found for item %s on delivery execution %s',
-                            $responseId,
-                            $itemId,
-                            $deliveryExecutionId
-                        )
-                    );
-                }
-
-                $lastResponseVariable = (array)end($responseVariableVersions);
-                $variableId = key($responseVariableVersions);
-
-                if (empty($lastResponseVariable)) {
-                    throw new ImportResultException(
-                        sprintf(
-                            'There is no response variable %s for %s',
-                            $responseId,
-                            $callItemId
-                        )
-                    );
-                }
-
-                $itemUri = $lastResponseVariable['item'] ?? null;
-                $variable = $lastResponseVariable['variable'] ?? null;
-
-                if (!$variable instanceof taoResultServer_models_classes_ResponseVariable) {
-                    throw new ImportResultException(
-                        sprintf(
-                            'Response variable %s is typeof %s, expected instance of %s, for item %s and execution %s',
-                            $responseId,
-                            $variable ? get_class($variable) : 'NULL',
-                            taoResultServer_models_classes_ResponseVariable::class,
-                            $itemId,
-                            $deliveryExecutionId
-                        )
-                    );
-                }
-
-                $variable->setCorrectResponse($correctResponse);
-
-                $itemVariables[$variableId] = $variable;
-            }
-
-            $resultStorage->replaceItemVariables(
-                $deliveryExecutionId,
-                $testUri,
-                $itemUri,
-                $callItemId,
-                $itemVariables
+        if (!is_array($outcomeVariableVersions) || empty($outcomeVariableVersions)) {
+            throw new ImportResultException(
+                sprintf(
+                    'Outcome variable %s not found for item %s on delivery execution %s',
+                    $outcomeId,
+                    $itemId,
+                    $deliveryExecutionUri
+                )
             );
         }
+
+        $lastOutcomeVariable = (array)end($outcomeVariableVersions);
+
+        if (empty($lastOutcomeVariable)) {
+            throw new ImportResultException(
+                sprintf(
+                    'There is no outcome variable %s for %s',
+                    $outcomeId,
+                    $callItemId
+                )
+            );
+        }
+
+        /** @var taoResultServer_models_classes_Variable $variable */
+        $variable = $lastOutcomeVariable['variable'] ?? null;
+
+        if (!$variable instanceof taoResultServer_models_classes_Variable) {
+            throw new ImportResultException(
+                sprintf(
+                    'Outcome variable %s is typeof %s, expected instance of %s, for item %s and execution %s',
+                    $outcomeId,
+                    get_class($variable),
+                    taoResultServer_models_classes_Variable::class,
+                    $itemId,
+                    $deliveryExecutionUri
+                )
+            );
+        }
+
+        return [
+            'itemUri' => $lastOutcomeVariable['item'] ?? null,
+            'variableId' => key($outcomeVariableVersions),
+            'variable' => $variable,
+        ];
+    }
+
+    /**
+     * @param array|mixed $outcomeVariable
+     */
+    private function getVariable($outcomeVariable): ?taoResultServer_models_classes_Variable
+    {
+        if (!is_array($outcomeVariable)) {
+            return null;
+        }
+
+        $variable = current($outcomeVariable);
+
+        if (!is_object($variable) || !property_exists($variable, 'variable')) {
+            return null;
+        }
+
+        /** @var taoResultServer_models_classes_Variable $variable */
+        $variable = $variable->variable;
+
+        if ($variable instanceof taoResultServer_models_classes_Variable) {
+            return $variable;
+        }
+
+        return null;
+    }
+
+    private function createCallItemId(string $deliveryExecutionUri, string $itemId): string
+    {
+        return sprintf('%s.%s.0', $deliveryExecutionUri, $itemId);
+    }
+
+    /**
+     * @throws core_kernel_persistence_Exception
+     */
+    private function getTestUri(AbstractRdsResultStorage $resultStorage, string $deliveryExecutionUri): string
+    {
+        $deliveryId = $resultStorage->getDelivery($deliveryExecutionUri);
+
+        return (string)$this->ontology->getResource($deliveryId)
+            ->getOnePropertyValue($this->ontology->getProperty(DeliveryAssemblyService::PROPERTY_ORIGIN));
     }
 
     /**

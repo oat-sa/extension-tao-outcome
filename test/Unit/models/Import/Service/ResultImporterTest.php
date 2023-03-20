@@ -41,9 +41,6 @@ class ResultImporterTest extends TestCase
     /** @var ResultServerService|MockObject */
     private $resultServerService;
 
-    /** @var DeliveryExecutionService|MockObject */
-    private $deliveryExecutionService;
-
     /** @var AbstractRdsResultStorage|MockObject */
     private $resultStorage;
     private ResultImporter $sut;
@@ -52,7 +49,6 @@ class ResultImporterTest extends TestCase
     {
         $this->ontology = $this->createMock(Ontology::class);
         $this->resultServerService = $this->createMock(ResultServerService::class);
-        $this->deliveryExecutionService = $this->createMock(DeliveryExecutionService::class);
         $this->resultStorage = $this->createMock(AbstractRdsResultStorage::class);
 
         $this->resultServerService
@@ -62,8 +58,7 @@ class ResultImporterTest extends TestCase
 
         $this->sut = new ResultImporter(
             $this->ontology,
-            $this->resultServerService,
-            $this->deliveryExecutionService
+            $this->resultServerService
         );
     }
 
