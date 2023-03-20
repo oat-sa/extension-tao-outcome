@@ -58,7 +58,7 @@ class ResultImporter
         $testScoreVariables = $this->getTestScoreVariables($resultStorage, $deliveryExecutionUri);
 
         $resultStorage->getPersistence()->transactional(
-            function () use ($resultStorage, $input, $testUri, $deliveryExecutionUri, $testScoreVariables) {
+            function () use ($resultStorage, $input, $testUri, $deliveryExecutionUri, $testScoreVariables): void {
                 $this->updateItemResponseVariables($resultStorage, $input, $testUri);
 
                 $updatedScoreTotal = $this->updateItemOutcomeVariables(
@@ -66,7 +66,7 @@ class ResultImporter
                     $input,
                     $testUri,
                     $testScoreVariables['scoreTotalMax'],
-                    $testScoreVariables['updatedScoreTotal']
+                    $testScoreVariables['scoreTotal']
                 );
 
                 $this->updateTestVariables(
@@ -153,7 +153,7 @@ class ResultImporter
         ImportResultInput $input,
         string $testUri,
         float $scoreTotalMax,
-        float $updatedScoreTotal
+        float $scoreTotal
     ): float {
         $deliveryExecutionUri = $input->getDeliveryExecutionId();
 
@@ -176,19 +176,19 @@ class ResultImporter
                 $itemUri = $outcomeVariable['itemUri'];
                 $variableId = $outcomeVariable['variableId'];
 
-                $updatedScoreTotal -= (float)$variable->getValue();
-                $updatedScoreTotal += $outcomeValue;
+                $scoreTotal -= (float)$variable->getValue();
+                $scoreTotal += $outcomeValue;
 
                 $variable->setValue($outcomeValue);
 
                 $updateOutcomeVariables[$variableId] = $variable;
 
-                if ($updatedScoreTotal > $scoreTotalMax) {
+                if ($scoreTotal > $scoreTotalMax) {
                     throw new ImportResultException(
                         sprintf(
                             'SCORE_TOTAL_MAX cannot be higher than %s, %s provided',
                             $scoreTotalMax,
-                            $updatedScoreTotal
+                            $scoreTotal
                         )
                     );
                 }
@@ -203,7 +203,7 @@ class ResultImporter
             );
         }
 
-        return $updatedScoreTotal;
+        return $scoreTotal;
     }
 
     /**
@@ -211,15 +211,7 @@ class ResultImporter
      */
     private function getTestScoreVariables(AbstractRdsResultStorage $resultStorage, string $deliveryExecutionUri): array
     {
-        /** @var taoResultServer_models_classes_ResponseVariable $scoreTotalVariable */
-        $scoreTotalVariable = null;
-        $scoreTotal = null;
-        $scoreTotalMax = null;
-        $updatedScoreTotal = null;
-        $scoreTotalVariableId = null;
-        $outcomeVariables = $resultStorage->getDeliveryVariables($deliveryExecutionUri);
-
-        foreach ($outcomeVariables as $id => $outcomeVariable) {
+        foreach ($resultStorage->getDeliveryVariables($deliveryExecutionUri) as $id => $outcomeVariable) {
             $variable = $this->getVariable($outcomeVariable);
 
             if ($variable === null) {
@@ -228,10 +220,8 @@ class ResultImporter
 
             if ($variable->getIdentifier() === 'SCORE_TOTAL') {
                 $scoreTotalVariableId = $id;
-                $scoreTotal = (float)$variable->getValue();
-
-                $updatedScoreTotal = $scoreTotal;
                 $scoreTotalVariable = $variable;
+                $scoreTotal = (float)$variable->getValue();
 
                 continue;
             }
@@ -241,7 +231,7 @@ class ResultImporter
             }
         }
 
-        if ($scoreTotal === null) {
+        if (!isset($scoreTotal, $scoreTotalVariableId, $scoreTotalMax, $scoreTotalVariable)) {
             throw new ImportResultException(
                 sprintf(
                     'SCORE_TOTAL is null for delivery execution %s',
@@ -253,7 +243,7 @@ class ResultImporter
         return [
             'scoreTotalVariableId' => $scoreTotalVariableId,
             'scoreTotalVariable' => $scoreTotalVariable,
-            'updatedScoreTotal' => $updatedScoreTotal,
+            'scoreTotal' => $scoreTotal,
             'scoreTotalMax' => $scoreTotalMax,
         ];
     }
@@ -290,7 +280,7 @@ class ResultImporter
                 sprintf(
                     'Variable %s is typeof %s, expected instance of %s, for item %s and execution %s',
                     $variableIdentifier,
-                    get_class($variable),
+                    is_object($variable) ? get_class($variable) : gettype($variable),
                     taoResultServer_models_classes_Variable::class,
                     $itemId,
                     $deliveryExecutionUri
