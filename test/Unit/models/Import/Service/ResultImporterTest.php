@@ -20,10 +20,10 @@
 
 namespace oat\taoResultServer\test\Unit\models\Import\Service;
 
+use common_persistence_SqlPersistence;
 use core_kernel_classes_Property;
 use core_kernel_classes_Resource;
 use oat\generis\model\data\Ontology;
-use oat\taoDelivery\model\execution\DeliveryExecutionService;
 use oat\taoOutcomeRds\model\AbstractRdsResultStorage;
 use oat\taoResultServer\models\classes\ResultServerService;
 use oat\taoResultServer\models\Import\Input\ImportResultInput;
@@ -50,11 +50,24 @@ class ResultImporterTest extends TestCase
         $this->ontology = $this->createMock(Ontology::class);
         $this->resultServerService = $this->createMock(ResultServerService::class);
         $this->resultStorage = $this->createMock(AbstractRdsResultStorage::class);
+        $this->persistence = $this->createMock(common_persistence_SqlPersistence::class);
 
         $this->resultServerService
             ->expects($this->any())
             ->method('getResultStorage')
             ->willReturn($this->resultStorage);
+
+        $this->resultStorage
+            ->method('getPersistence')
+            ->willReturn($this->persistence);
+
+        $this->persistence
+            ->method('transactional')
+            ->willReturnCallback(
+                static function (callable $call) {
+                    $call();
+                }
+            );
 
         $this->sut = new ResultImporter(
             $this->ontology,

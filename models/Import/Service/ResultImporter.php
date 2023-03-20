@@ -58,23 +58,27 @@ class ResultImporter
         $testUri = $this->getTestUri($resultStorage, $deliveryExecutionUri);
         $testScoreVariables = $this->getTestScoreVariables($resultStorage, $deliveryExecutionUri);
 
-        $this->updateItemResponseVariables($resultStorage, $input, $testUri);
+        $resultStorage->getPersistence()->transactional(
+            function () use ($resultStorage, $input, $testUri, $deliveryExecutionUri, $testScoreVariables) {
+                $this->updateItemResponseVariables($resultStorage, $input, $testUri);
 
-        $updatedScoreTotal = $this->updateItemOutcomeVariables(
-            $resultStorage,
-            $input,
-            $testUri,
-            $testScoreVariables['scoreTotalMax'],
-            $testScoreVariables['updatedScoreTotal']
-        );
+                $updatedScoreTotal = $this->updateItemOutcomeVariables(
+                    $resultStorage,
+                    $input,
+                    $testUri,
+                    $testScoreVariables['scoreTotalMax'],
+                    $testScoreVariables['updatedScoreTotal']
+                );
 
-        $this->updateTestVariables(
-            $resultStorage,
-            $testScoreVariables['scoreTotalVariable'],
-            $testScoreVariables['scoreTotalVariableId'],
-            $deliveryExecutionUri,
-            $testUri,
-            $updatedScoreTotal
+                $this->updateTestVariables(
+                    $resultStorage,
+                    $testScoreVariables['scoreTotalVariable'],
+                    $testScoreVariables['scoreTotalVariableId'],
+                    $deliveryExecutionUri,
+                    $testUri,
+                    $updatedScoreTotal
+                );
+            }
         );
     }
 
