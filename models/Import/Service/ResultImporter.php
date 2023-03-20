@@ -66,13 +66,10 @@ class ResultImporter
         //@TODO Refactor the code to be more maintainable
 
         $resultStorage = $this->getResultStorage();
-
         $deliveryExecutionId = $input->getDeliveryExecutionId();
-        $deliveryExecution = $this->deliveryExecutionService->getDeliveryExecution($deliveryExecutionId);
-        $delivery = $deliveryExecution->getDelivery();
-        $test = $this->ontology->getResource($delivery->getUri())
+        $deliveryId = $resultStorage->getDelivery($deliveryExecutionId);
+        $testUri = (string)$this->ontology->getResource($deliveryId)
             ->getOnePropertyValue($this->ontology->getProperty(DeliveryAssemblyService::PROPERTY_ORIGIN));
-        $testUri = $test->getUri();
 
         $deliveryExecutionId = $input->getDeliveryExecutionId();
         $outcomeVariables = $resultStorage->getDeliveryVariables($deliveryExecutionId);
@@ -228,7 +225,7 @@ class ResultImporter
             $itemVariables = [];
 
             foreach ($responses as $responseId => $responseValue) {
-                if (!isset($responseValue['correctResponse'])) {
+                if (!array_key_exists('correctResponse', $responseValue)) {
                     continue;
                 }
 
