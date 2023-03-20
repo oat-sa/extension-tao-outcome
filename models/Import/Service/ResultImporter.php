@@ -32,6 +32,7 @@ use oat\taoResultServer\models\Import\Exception\ImportResultException;
 use oat\taoResultServer\models\Import\Input\ImportResultInput;
 use taoResultServer_models_classes_ResponseVariable;
 use taoResultServer_models_classes_Variable;
+use Throwable;
 
 class ResultImporter
 {
@@ -47,9 +48,7 @@ class ResultImporter
     /**
      * @param ImportResultInput $input
      * @return void
-     * @throws ImportResultException
-     * @throws common_exception_Error
-     * @throws core_kernel_persistence_Exception
+     * @throws core_kernel_persistence_Exception|Throwable|common_exception_Error|ImportResultException
      */
     public function importByResultInput(ImportResultInput $input): void
     {
@@ -146,6 +145,9 @@ class ResultImporter
         }
     }
 
+    /**
+     * @throws ImportResultException
+     */
     private function updateItemOutcomeVariables(
         AbstractRdsResultStorage $resultStorage,
         ImportResultInput $input,
@@ -204,6 +206,9 @@ class ResultImporter
         return $updatedScoreTotal;
     }
 
+    /**
+     * @throws ImportResultException
+     */
     private function getTestScoreVariables(AbstractRdsResultStorage $resultStorage, string $deliveryExecutionUri): array
     {
         /** @var taoResultServer_models_classes_ResponseVariable $scoreTotalVariable */
@@ -253,46 +258,49 @@ class ResultImporter
         ];
     }
 
+    /**
+     * @throws ImportResultException
+     */
     private function getItemVariable(
         AbstractRdsResultStorage $resultStorage,
         string $deliveryExecutionUri,
         string $itemId,
         string $callItemId,
-        string $outcomeId
+        string $variableIdentifier
     ): array {
-        $outcomeVariableVersions = $resultStorage->getVariable($callItemId, $outcomeId);
+        $variableVersions = $resultStorage->getVariable($callItemId, $variableIdentifier);
 
-        if (!is_array($outcomeVariableVersions) || empty($outcomeVariableVersions)) {
+        if (!is_array($variableVersions) || empty($variableVersions)) {
             throw new ImportResultException(
                 sprintf(
-                    'Outcome variable %s not found for item %s on delivery execution %s',
-                    $outcomeId,
+                    'Variable %s not found for item %s on delivery execution %s',
+                    $variableIdentifier,
                     $itemId,
                     $deliveryExecutionUri
                 )
             );
         }
 
-        $lastOutcomeVariable = (array)end($outcomeVariableVersions);
+        $lastVariable = (array)end($variableVersions);
 
-        if (empty($lastOutcomeVariable)) {
+        if (empty($lastVariable)) {
             throw new ImportResultException(
                 sprintf(
-                    'There is no outcome variable %s for %s',
-                    $outcomeId,
+                    'There is no variable %s for %s',
+                    $variableIdentifier,
                     $callItemId
                 )
             );
         }
 
         /** @var taoResultServer_models_classes_Variable $variable */
-        $variable = $lastOutcomeVariable['variable'] ?? null;
+        $variable = $lastVariable['variable'] ?? null;
 
         if (!$variable instanceof taoResultServer_models_classes_Variable) {
             throw new ImportResultException(
                 sprintf(
-                    'Outcome variable %s is typeof %s, expected instance of %s, for item %s and execution %s',
-                    $outcomeId,
+                    'Variable %s is typeof %s, expected instance of %s, for item %s and execution %s',
+                    $variableIdentifier,
                     get_class($variable),
                     taoResultServer_models_classes_Variable::class,
                     $itemId,
@@ -302,8 +310,8 @@ class ResultImporter
         }
 
         return [
-            'itemUri' => $lastOutcomeVariable['item'] ?? null,
-            'variableId' => key($outcomeVariableVersions),
+            'itemUri' => $lastVariable['item'] ?? null,
+            'variableId' => key($variableVersions),
             'variable' => $variable,
         ];
     }
