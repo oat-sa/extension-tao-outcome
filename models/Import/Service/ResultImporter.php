@@ -82,7 +82,7 @@ class ResultImporter
     }
 
     private function updateTestVariables(
-        $resultStorage,
+        AbstractRdsResultStorage $resultStorage,
         taoResultServer_models_classes_Variable $scoreTotalVariable,
         int $scoreTotalVariableId,
         string $deliveryExecutionUri,
@@ -269,26 +269,15 @@ class ResultImporter
         string $variableIdentifier
     ): array {
         $variableVersions = $resultStorage->getVariable($callItemId, $variableIdentifier);
+        $lastVariable = is_array($variableVersions) ? (array)end($variableVersions) : [];
 
-        if (!is_array($variableVersions) || empty($variableVersions)) {
+        if (empty($variableVersions)) {
             throw new ImportResultException(
                 sprintf(
                     'Variable %s not found for item %s on delivery execution %s',
                     $variableIdentifier,
                     $itemId,
                     $deliveryExecutionUri
-                )
-            );
-        }
-
-        $lastVariable = (array)end($variableVersions);
-
-        if (empty($lastVariable)) {
-            throw new ImportResultException(
-                sprintf(
-                    'There is no variable %s for %s',
-                    $variableIdentifier,
-                    $callItemId
                 )
             );
         }

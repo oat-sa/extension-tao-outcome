@@ -26,10 +26,12 @@ use core_kernel_classes_Resource;
 use oat\generis\model\data\Ontology;
 use oat\taoOutcomeRds\model\AbstractRdsResultStorage;
 use oat\taoResultServer\models\classes\ResultServerService;
+use oat\taoResultServer\models\Import\Exception\ImportResultException;
 use oat\taoResultServer\models\Import\Input\ImportResultInput;
 use oat\taoResultServer\models\Import\Service\ResultImporter;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 use taoResultServer_models_classes_OutcomeVariable;
 use taoResultServer_models_classes_ResponseVariable;
 
@@ -43,6 +45,7 @@ class ResultImporterTest extends TestCase
 
     /** @var AbstractRdsResultStorage|MockObject */
     private $resultStorage;
+    private ImportResultInput $input;
     private ResultImporter $sut;
 
     public function setUp(): void
@@ -51,6 +54,7 @@ class ResultImporterTest extends TestCase
         $this->resultServerService = $this->createMock(ResultServerService::class);
         $this->resultStorage = $this->createMock(AbstractRdsResultStorage::class);
         $this->persistence = $this->createMock(common_persistence_SqlPersistence::class);
+        $this->input = new ImportResultInput('executionId', true);
 
         $this->resultServerService
             ->expects($this->any())
@@ -69,20 +73,6 @@ class ResultImporterTest extends TestCase
                 }
             );
 
-        $this->sut = new ResultImporter(
-            $this->ontology,
-            $this->resultServerService
-        );
-    }
-
-    public function testCreateByImportResult(): void
-    {
-        $input = new ImportResultInput('executionId', true);
-        $input->addOutcome('item-1', 'SCORE', 1);
-        $input->addOutcome('item-2', 'SCORE', 1);
-        $input->addResponse('item-1', 'RESPONSE', ['correctResponse' => true]);
-        $input->addResponse('item-2', 'RESPONSE', ['correctResponse' => true]);
-
         $test = $this->createMock(core_kernel_classes_Resource::class);
         $test->expects($this->any())
             ->method('getUri')
@@ -93,22 +83,27 @@ class ResultImporterTest extends TestCase
             ->method('getOnePropertyValue')
             ->willReturn('testUri');
 
-        $testOutcomeScoreTotalFirst = $this->createTestVariable(3, 'SCORE_TOTAL'); // Considered
-        $testOutcomeScoreTotalLast = $this->createTestVariable(5, 'SCORE_TOTAL'); // Not considered
-        $testOutcomeScoreTotalMaxFirst = $this->createTestVariable(10, 'SCORE_TOTAL_MAX'); // Considered
-        $testOutcomeScoreTotalMaxLast = $this->createTestVariable(2, 'SCORE_TOTAL_MAX'); // Not considered
+        $this->resultStorage
+            ->method('getDelivery')
+            ->willReturn('deliveryId');
 
-        $itemOutcome1First = $this->createOutcomeVariable(1); // Not considered
-        $itemOutcome1Last = $this->createOutcomeVariable(0.5); // Considered
+        $this->ontology
+            ->method('getResource')
+            ->willReturn($delivery);
 
-        $itemOutcome2First = $this->createOutcomeVariable(1); // Not considered
-        $itemOutcome2Last = $this->createOutcomeVariable(0.5); // Considered
+        $this->ontology
+            ->method('getProperty')
+            ->willReturn($this->createMock(core_kernel_classes_Property::class));
 
-        $itemResponse1First = $this->createResponseVariable(false); // Not considered
-        $itemResponse1Last = $this->createResponseVariable(false); // Considered
+        $this->sut = new ResultImporter($this->ontology, $this->resultServerService);
+    }
 
-        $itemResponse2First = $this->createResponseVariable(false); // Not considered
-        $itemResponse2Last = $this->createResponseVariable(false); // Considered
+    public function testCreateByImportResult(): void
+    {
+        $this->input->addOutcome('item-1', 'SCORE', 1);
+        $this->input->addOutcome('item-2', 'SCORE', 1);
+        $this->input->addResponse('item-1', 'RESPONSE', ['correctResponse' => true]);
+        $this->input->addResponse('item-2', 'RESPONSE', ['correctResponse' => true]);
 
         $this->resultStorage
             ->expects($this->once())
@@ -117,18 +112,18 @@ class ResultImporterTest extends TestCase
                 [
                     777 => [
                         (object)[
-                            'variable' => $testOutcomeScoreTotalFirst,
+                            'variable' => $this->createTestVariable(3, 'SCORE_TOTAL'), // Considered
                         ],
                         (object)[
-                            'variable' => $testOutcomeScoreTotalLast,
+                            'variable' => $this->createTestVariable(5, 'SCORE_TOTAL'), // Not considered,
                         ]
                     ],
                     999 => [
                         (object)[
-                            'variable' => $testOutcomeScoreTotalMaxFirst,
+                            'variable' => $this->createTestVariable(10, 'SCORE_TOTAL_MAX'), // Considered,
                         ],
                         (object)[
-                            'variable' => $testOutcomeScoreTotalMaxLast,
+                            'variable' => $this->createTestVariable(2, 'SCORE_TOTAL_MAX'), // Not considered,
                         ],
                     ]
                 ]
@@ -193,29 +188,17 @@ class ResultImporterTest extends TestCase
         $this->resultStorage
             ->method('getVariable')
             ->willReturnCallback(
-                function (
-                    $callItemId,
-                    $responseId
-                ) use (
-                    $itemOutcome1First,
-                    $itemOutcome1Last,
-                    $itemOutcome2First,
-                    $itemOutcome2Last,
-                    $itemResponse1First,
-                    $itemResponse1Last,
-                    $itemResponse2First,
-                    $itemResponse2Last
-                ) {
+                function ($callItemId, $responseId) {
                     if (strpos($callItemId, 'item-1') !== false) {
                         if ($responseId === 'SCORE') {
                             return [
                                 11 => [
                                     'item' => 'item1Uri',
-                                    'variable' => $itemOutcome1First,
+                                    'variable' => $this->createOutcomeVariable(1), // Not considered,
                                 ],
                                 12 => [
                                     'item' => 'item1Uri',
-                                    'variable' => $itemOutcome1Last,
+                                    'variable' => $this->createOutcomeVariable(0.5), // Considered,
                                 ],
                             ];
                         }
@@ -224,11 +207,11 @@ class ResultImporterTest extends TestCase
                             return [
                                 11 => [
                                     'item' => 'item1Uri',
-                                    'variable' => $itemResponse1First,
+                                    'variable' => $this->createResponseVariable(false), // Not considered,
                                 ],
                                 12 => [
                                     'item' => 'item1Uri',
-                                    'variable' => $itemResponse1Last,
+                                    'variable' => $this->createResponseVariable(false), // Considered,
                                 ],
                             ];
                         }
@@ -239,11 +222,11 @@ class ResultImporterTest extends TestCase
                             return [
                                 21 => [
                                     'item' => 'item2Uri',
-                                    'variable' => $itemOutcome2First,
+                                    'variable' => $this->createOutcomeVariable(1), // Not considered,
                                 ],
                                 22 => [
                                     'item' => 'item2Uri',
-                                    'variable' => $itemOutcome2Last,
+                                    'variable' => $this->createOutcomeVariable(0.5), // Considered,
                                 ],
                             ];
                         }
@@ -252,11 +235,11 @@ class ResultImporterTest extends TestCase
                             return [
                                 21 => [
                                     'item' => 'item2Uri',
-                                    'variable' => $itemResponse2First,
+                                    'variable' => $this->createResponseVariable(false), // Not considered,
                                 ],
                                 22 => [
                                     'item' => 'item2Uri',
-                                    'variable' => $itemResponse2Last,
+                                    'variable' => $this->createResponseVariable(false), // Considered,
                                 ],
                             ];
                         }
@@ -266,19 +249,145 @@ class ResultImporterTest extends TestCase
                 }
             );
 
+        $this->sut->importByResultInput($this->input);
+    }
+
+    public function testCreateByImportResultWithOverflowMaxScoreWillFail(): void
+    {
+        $this->input->addOutcome('item-1', 'SCORE', 1.1);
+
         $this->resultStorage
-            ->method('getDelivery')
-            ->willReturn('deliveryId');
+            ->expects($this->once())
+            ->method('getDeliveryVariables')
+            ->willReturn(
+                [
+                    777 => [
+                        (object)[
+                            'variable' => $this->createTestVariable(1, 'SCORE_TOTAL'),
+                        ],
+                    ],
+                    999 => [
+                        (object)[
+                            'variable' => $this->createTestVariable(1, 'SCORE_TOTAL_MAX'),
+                        ],
+                    ]
+                ]
+            );
 
-        $this->ontology
-            ->method('getResource')
-            ->willReturn($delivery);
+        $this->resultStorage
+            ->method('getVariable')
+            ->willReturnCallback(
+                function ($callItemId, $responseId) {
+                    if (strpos($callItemId, 'item-1') !== false) {
+                        if ($responseId === 'SCORE') {
+                            return [
+                                11 => [
+                                    'item' => 'item1Uri',
+                                    'variable' => $this->createOutcomeVariable(1),
+                                ],
+                            ];
+                        }
+                    }
 
-        $this->ontology
-            ->method('getProperty')
-            ->willReturn($this->createMock(core_kernel_classes_Property::class));
+                    return [];
+                }
+            );
 
-        $this->sut->importByResultInput($input);
+        $this->expectException(ImportResultException::class);
+        $this->expectExceptionMessage('SCORE_TOTAL_MAX cannot be higher than 1, 1.1 provided');
+
+        $this->sut->importByResultInput($this->input);
+    }
+
+    public function testCreateByImportResultWithNoItemVariableWillFail(): void
+    {
+        $this->input->addOutcome('item-1', 'SCORE', 1.1);
+
+        $this->resultStorage
+            ->expects($this->once())
+            ->method('getDeliveryVariables')
+            ->willReturn(
+                [
+                    777 => [
+                        (object)[
+                            'variable' => $this->createTestVariable(1, 'SCORE_TOTAL'),
+                        ],
+                    ],
+                    999 => [
+                        (object)[
+                            'variable' => $this->createTestVariable(1, 'SCORE_TOTAL_MAX'),
+                        ],
+                    ]
+                ]
+            );
+
+        $this->resultStorage
+            ->method('getVariable')
+            ->willReturnCallback(
+                function ($callItemId, $responseId) {
+                    if (strpos($callItemId, 'item-1') !== false) {
+                        if ($responseId === 'SCORE') {
+                            return [];
+                        }
+                    }
+
+                    return [];
+                }
+            );
+
+        $this->expectException(ImportResultException::class);
+        $this->expectExceptionMessage('Variable SCORE not found for item item-1 on delivery execution executionId');
+
+        $this->sut->importByResultInput($this->input);
+    }
+
+    public function testCreateByImportResultWithInvalidVariableWillFail(): void
+    {
+        $this->input->addOutcome('item-1', 'SCORE', 1.1);
+
+        $this->resultStorage
+            ->expects($this->once())
+            ->method('getDeliveryVariables')
+            ->willReturn(
+                [
+                    777 => [
+                        (object)[
+                            'variable' => $this->createTestVariable(1, 'SCORE_TOTAL'),
+                        ],
+                    ],
+                    999 => [
+                        (object)[
+                            'variable' => $this->createTestVariable(1, 'SCORE_TOTAL_MAX'),
+                        ],
+                    ]
+                ]
+            );
+
+        $this->resultStorage
+            ->method('getVariable')
+            ->willReturnCallback(
+                function ($callItemId, $responseId) {
+                    if (strpos($callItemId, 'item-1') !== false) {
+                        if ($responseId === 'SCORE') {
+                            return [
+                                0 => [
+                                    'variable' => new stdClass(),
+                                ]
+                            ];
+                        }
+                    }
+
+                    return [];
+                }
+            );
+
+        $this->expectException(ImportResultException::class);
+        $this->expectExceptionMessage(
+            'Variable SCORE is typeof stdClass, expected instance of taoResultServer_models_classes_Variable, ' .
+            'for item item-1 and execution executionId'
+        );
+
+        $this->sut->importByResultInput($this->input);
     }
 
     private function createOutcomeVariable(float $value): taoResultServer_models_classes_OutcomeVariable
