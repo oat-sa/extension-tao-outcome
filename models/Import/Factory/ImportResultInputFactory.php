@@ -98,6 +98,20 @@ class ImportResultInputFactory
 
                 $new->addOutcome((string)$item['itemId'], (string)$outcome['id'], (float)$outcome['value']);
             }
+
+            foreach ($item['responses'] ?? [] as $response) {
+                if (!isset($response['id'], $response['correctResponse'])) {
+                    throw new common_exception_MissingParameter('id|correctResponse');
+                }
+
+                $new->addResponse(
+                    (string)$item['itemId'],
+                    (string)$response['id'],
+                    [
+                        'correctResponse' => boolval($response['correctResponse']),
+                    ]
+                );
+            }
         }
 
         return $new;
