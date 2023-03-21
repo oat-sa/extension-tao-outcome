@@ -29,7 +29,7 @@ paths:
           name: itemVariables
           description: Variables to update.
           schema:
-            $ref: '#/definitions/ResultItemVariables'
+            $ref: '#/definitions/DeliveryExecutionResultsPayload'
       responses:
         '200':
           description: Successful response in JSON format.
@@ -252,6 +252,19 @@ definitions:
       value:
         example: 0.5
         type: number
+  ResultItemResponse:
+    description: Item response to update
+    type: object
+    required:
+      - id
+      - correctResponse
+    properties:
+      id:
+        type: string
+        example: "RESPONSE"
+      correctResponse:
+        example: true
+        type: boolean
   ResultItemVariables:
     description: Item variables to update
     type: object
@@ -266,6 +279,19 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/ResultItemOutcome'
+      responses:
+        type: array
+        items:
+          $ref: '#/definitions/ResultItemResponse'
+
+  DeliveryExecutionResultsPayload:
+    description: DeliveryExecutionResults Payload
+    type: object
+    properties:
+      itemVariables:
+        type: array
+        items:
+          $ref: '#/definitions/ResultItemVariables'
 
   errorModel:
     type: object

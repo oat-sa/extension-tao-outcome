@@ -29,7 +29,7 @@ use oat\oatbox\service\ServiceManagerAwareTrait;
 use oat\tao\model\taskQueue\Task\TaskAwareInterface;
 use oat\tao\model\taskQueue\Task\TaskAwareTrait;
 use oat\taoResultServer\models\Import\Input\ImportResultInput;
-use oat\taoResultServer\models\Import\Service\QtiResultXmlImporter;
+use oat\taoResultServer\models\Import\Service\ResultImporter;
 use oat\taoResultServer\models\Import\Service\SendCalculatedResultService;
 use Throwable;
 
@@ -47,7 +47,7 @@ class ImportResultTask extends AbstractAction implements TaskAwareInterface, Jso
         try {
             $importResult = ImportResultInput::fromJson($params[self::PARAM_IMPORT_JSON]);
 
-            $this->getQtiResultXmlImporter()->importByResultInput($importResult);
+            $this->getResultImporter()->importByResultInput($importResult);
 
             if ($importResult->isSendAgs()) {
                 $this->getSendCalculatedResultService()->sendByDeliveryExecutionId(
@@ -81,9 +81,9 @@ class ImportResultTask extends AbstractAction implements TaskAwareInterface, Jso
         return __CLASS__;
     }
 
-    private function getQtiResultXmlImporter(): QtiResultXmlImporter
+    private function getResultImporter(): ResultImporter
     {
-        return $this->getServiceManager()->getContainer()->get(QtiResultXmlImporter::class);
+        return $this->getServiceManager()->getContainer()->get(ResultImporter::class);
     }
 
     private function getSendCalculatedResultService(): SendCalculatedResultService

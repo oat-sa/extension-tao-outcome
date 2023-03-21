@@ -31,6 +31,7 @@ use oat\taoResultServer\models\classes\ResultServerService;
 use oat\taoResultServer\models\Import\Factory\ImportResultInputFactory;
 use oat\taoResultServer\models\Import\Factory\QtiResultXmlFactory;
 use oat\taoResultServer\models\Import\Service\QtiResultXmlImporter;
+use oat\taoResultServer\models\Import\Service\ResultImporter;
 use oat\taoResultServer\models\Import\Service\SendCalculatedResultService;
 use oat\taoResultServer\models\Import\Task\ResultImportScheduler;
 use oat\taoResultServer\models\Parser\QtiResultParser;
@@ -63,6 +64,16 @@ class ImportServiceProvider implements ContainerServiceProviderInterface
                     service(QtiResultXmlFactory::class),
                     service(QtiResultParser::class),
                     service(taoQtiTest_models_classes_QtiTestService::class),
+                    service(DeliveryExecutionService::SERVICE_ID),
+                ]
+            );
+
+        $services->set(ResultImporter::class, ResultImporter::class)
+            ->public()
+            ->args(
+                [
+                    service(Ontology::SERVICE_ID),
+                    service(ResultServerService::SERVICE_ID),
                     service(DeliveryExecutionService::SERVICE_ID),
                 ]
             );
