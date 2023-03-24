@@ -27,6 +27,8 @@ declare(strict_types=1);
  * test at all. For example, items that are organized with learning resources and presented
  * individually in a formative context.
  */
+
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 abstract class taoResultServer_models_classes_Variable implements JsonSerializable
 {
     public const CARDINALITY_SINGLE = 'single';
@@ -90,12 +92,17 @@ abstract class taoResultServer_models_classes_Variable implements JsonSerializab
      */
     public function setCardinality($cardinality = self::CARDINALITY_SINGLE): self
     {
-        if (!in_array($cardinality, [
-            self::CARDINALITY_SINGLE,
-            self::CARDINALITY_MULTIPLE,
-            self::CARDINALITY_ORDERED,
-            self::CARDINALITY_RECORD,
-        ], true)
+        if (
+            !in_array(
+                $cardinality,
+                [
+                    self::CARDINALITY_SINGLE,
+                    self::CARDINALITY_MULTIPLE,
+                    self::CARDINALITY_ORDERED,
+                    self::CARDINALITY_RECORD,
+                ],
+                true
+            )
         ) {
             throw new common_exception_InvalidArgumentType('cardinality');
         }
