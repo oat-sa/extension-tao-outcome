@@ -397,6 +397,7 @@ class ResultImporterTest extends TestCase
         $variable->setIdentifier('SCORE');
         $variable->setCardinality('single');
         $variable->setBaseType('float');
+        $variable->setExternallyGraded(true);
 
         return $variable;
     }
