@@ -69,6 +69,8 @@ abstract class taoResultServer_models_classes_Variable implements JsonSerializab
      */
     protected $epoch;
 
+    private bool $isExternallyGraded = false;
+
     abstract protected function getType(): string;
 
     public function setIdentifier(string $identifier): self
@@ -256,5 +258,17 @@ abstract class taoResultServer_models_classes_Variable implements JsonSerializab
         self::validateKeys(['trace'], $rawTraceVariable);
 
         return (new taoResultServer_models_classes_TraceVariable())->setTrace($rawTraceVariable['trace']);
+    }
+
+    public function setExternallyGraded(bool $flag): self
+    {
+        $this->isExternallyGraded = $flag;
+
+        return $this;
+    }
+
+    public function getExternallyGraded(): bool
+    {
+        return $this->isExternallyGraded;
     }
 }

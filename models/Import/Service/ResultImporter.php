@@ -180,6 +180,7 @@ class ResultImporter
                 $scoreTotal += $outcomeValue;
 
                 $variable->setValue($outcomeValue);
+                $variable->setExternallyGraded(true);
 
                 $updateOutcomeVariables[$variableId] = $variable;
 
