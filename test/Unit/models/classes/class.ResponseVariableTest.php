@@ -42,6 +42,7 @@ class taoResultServer_models_classes_ResponseVariableTest extends TestCase
             'baseType' => 'testBaseType',
             'epoch' => 'testEpoch',
             'type' => \taoResultServer_models_classes_ResponseVariable::TYPE,
+            'externallyGraded' =>false,
             'correctResponse' => 'testCorrectResponse',
             'candidateResponse' => base64_encode('testCandidateResponse'),
         ]), json_encode($subject));

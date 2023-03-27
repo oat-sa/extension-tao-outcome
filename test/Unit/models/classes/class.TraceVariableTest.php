@@ -41,6 +41,7 @@ class taoResultServer_models_classes_TraceVariableTest extends TestCase
             'baseType' => 'testBaseType',
             'epoch' => 'testEpoch',
             'type' => \taoResultServer_models_classes_TraceVariable::TYPE,
+            'externallyGraded' =>false,
             'trace' => 'testTrace',
         ]), json_encode($subject));
     }

@@ -54,6 +54,7 @@ class taoResultServer_models_classes_VariableTest extends TestCase
             'baseType' => 'testBaseType',
             'epoch' => 'testEpoch',
             'type' => 'testType',
+            'externallyGraded' =>false,
         ]), json_encode($subject));
     }
 
@@ -92,6 +93,7 @@ class taoResultServer_models_classes_VariableTest extends TestCase
             'baseType' => 'testBaseType',
             'epoch' => 'testEpoch',
             'type' => \taoResultServer_models_classes_OutcomeVariable::TYPE,
+            'externallyGraded' =>false,
             'normalMinimum' => 0.0,
             'normalMaximum' => 10.0,
             'value' => 'testValue',
@@ -121,6 +123,7 @@ class taoResultServer_models_classes_VariableTest extends TestCase
             'baseType' => 'testBaseType',
             'epoch' => 'testEpoch',
             'type' => \taoResultServer_models_classes_ResponseVariable::TYPE,
+            'externallyGraded' =>false,
             'correctResponse' => 'testCorrectResponse',
             'candidateResponse' => 'testCandidateResponse',
         ];
@@ -148,6 +151,7 @@ class taoResultServer_models_classes_VariableTest extends TestCase
             'baseType' => 'testBaseType',
             'epoch' => 'testEpoch',
             'type' => \taoResultServer_models_classes_TraceVariable::TYPE,
+            'externallyGraded' =>false,
             'trace' => 'test',
         ];
 
