@@ -194,6 +194,7 @@ abstract class taoResultServer_models_classes_Variable implements JsonSerializab
             'baseType' => $this->baseType,
             'epoch' => $this->epoch,
             'type' => $this->getType(),
+            'externallyGraded' => $this->getExternallyGraded(),
         ];
     }
 
@@ -247,7 +248,8 @@ abstract class taoResultServer_models_classes_Variable implements JsonSerializab
         return (new taoResultServer_models_classes_OutcomeVariable())
             ->setNormalMinimum($rawOutcomeVariable['normalMinimum'])
             ->setNormalMaximum($rawOutcomeVariable['normalMaximum'])
-            ->setEncodedValue($rawOutcomeVariable['value']);
+            ->setEncodedValue($rawOutcomeVariable['value'])
+            ->setExternallyGraded($rawOutcomeVariable['externallyGraded'] ?? false);
     }
 
     private static function fromResponseVariableData(
