@@ -23,6 +23,8 @@ use PHPUnit\Framework\TestCase;
  *
  * Copyright (c) 2020 (original work) Open Assessment Technologies S.A.
  */
+
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class taoResultServer_models_classes_VariableTest extends TestCase
 {
     public function testVariableCanBeJsonSerialized(): void
@@ -54,7 +56,7 @@ class taoResultServer_models_classes_VariableTest extends TestCase
             'baseType' => 'testBaseType',
             'epoch' => 'testEpoch',
             'type' => 'testType',
-            'externallyGraded' =>false,
+            'externallyGraded' => false,
         ]), json_encode($subject));
     }
 
@@ -93,7 +95,7 @@ class taoResultServer_models_classes_VariableTest extends TestCase
             'baseType' => 'testBaseType',
             'epoch' => 'testEpoch',
             'type' => \taoResultServer_models_classes_OutcomeVariable::TYPE,
-            'externallyGraded' =>false,
+            'externallyGraded' => false,
             'normalMinimum' => 0.0,
             'normalMaximum' => 10.0,
             'value' => 'testValue',
@@ -123,7 +125,7 @@ class taoResultServer_models_classes_VariableTest extends TestCase
             'baseType' => 'testBaseType',
             'epoch' => 'testEpoch',
             'type' => \taoResultServer_models_classes_ResponseVariable::TYPE,
-            'externallyGraded' =>false,
+            'externallyGraded' => false,
             'correctResponse' => 'testCorrectResponse',
             'candidateResponse' => 'testCandidateResponse',
         ];
@@ -151,7 +153,7 @@ class taoResultServer_models_classes_VariableTest extends TestCase
             'baseType' => 'testBaseType',
             'epoch' => 'testEpoch',
             'type' => \taoResultServer_models_classes_TraceVariable::TYPE,
-            'externallyGraded' =>false,
+            'externallyGraded' => false,
             'trace' => 'test',
         ];
 

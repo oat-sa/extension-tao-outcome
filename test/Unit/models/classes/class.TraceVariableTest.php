@@ -24,6 +24,7 @@ use PHPUnit\Framework\TestCase;
  * Copyright (c) 2020 (original work) Open Assessment Technologies S.A.
  */
 
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class taoResultServer_models_classes_TraceVariableTest extends TestCase
 {
     public function testVariableCanBeJsonSerialized(): void
@@ -41,7 +42,7 @@ class taoResultServer_models_classes_TraceVariableTest extends TestCase
             'baseType' => 'testBaseType',
             'epoch' => 'testEpoch',
             'type' => \taoResultServer_models_classes_TraceVariable::TYPE,
-            'externallyGraded' =>false,
+            'externallyGraded' => false,
             'trace' => 'testTrace',
         ]), json_encode($subject));
     }

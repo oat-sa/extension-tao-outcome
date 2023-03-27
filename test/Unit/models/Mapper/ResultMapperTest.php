@@ -96,7 +96,10 @@ class ResultMapperTest extends TestCase
         $variable = reset($variables);
         $this->assertInstanceOf(taoResultServer_models_classes_ResponseVariable::class, $variable);
         $this->assertEquals('response-identifier', $variable->getIdentifier());
-        $this->assertEquals('fixture-test-value3;fixture-test-value4;fixture-test-value5', $variable->getCandidateResponse());
+        $this->assertEquals(
+            'fixture-test-value3;fixture-test-value4;fixture-test-value5',
+            $variable->getCandidateResponse()
+        );
         $this->assertEquals('fixture-test-value3;fixture-test-value4;fixture-test-value5', $variable->getValue());
         $this->assertEquals('fixture-test-value1;fixture-test-value2', $variable->getCorrectResponse());
         $this->assertEquals('single', $variable->getCardinality());
