@@ -27,6 +27,8 @@ declare(strict_types=1);
  * test at all. For example, items that are organized with learning resources and presented
  * individually in a formative context.
  */
+
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 abstract class taoResultServer_models_classes_Variable implements JsonSerializable
 {
     public const CARDINALITY_SINGLE = 'single';
@@ -69,6 +71,8 @@ abstract class taoResultServer_models_classes_Variable implements JsonSerializab
      */
     protected $epoch;
 
+    private bool $isExternallyGraded = false;
+
     abstract protected function getType(): string;
 
     public function setIdentifier(string $identifier): self
@@ -88,12 +92,17 @@ abstract class taoResultServer_models_classes_Variable implements JsonSerializab
      */
     public function setCardinality($cardinality = self::CARDINALITY_SINGLE): self
     {
-        if (!in_array($cardinality, [
-            self::CARDINALITY_SINGLE,
-            self::CARDINALITY_MULTIPLE,
-            self::CARDINALITY_ORDERED,
-            self::CARDINALITY_RECORD,
-        ], true)
+        if (
+            !in_array(
+                $cardinality,
+                [
+                    self::CARDINALITY_SINGLE,
+                    self::CARDINALITY_MULTIPLE,
+                    self::CARDINALITY_ORDERED,
+                    self::CARDINALITY_RECORD,
+                ],
+                true
+            )
         ) {
             throw new common_exception_InvalidArgumentType('cardinality');
         }
@@ -185,6 +194,7 @@ abstract class taoResultServer_models_classes_Variable implements JsonSerializab
             'baseType' => $this->baseType,
             'epoch' => $this->epoch,
             'type' => $this->getType(),
+            'externallyGraded' => $this->getExternallyGraded(),
         ];
     }
 
@@ -238,7 +248,8 @@ abstract class taoResultServer_models_classes_Variable implements JsonSerializab
         return (new taoResultServer_models_classes_OutcomeVariable())
             ->setNormalMinimum($rawOutcomeVariable['normalMinimum'])
             ->setNormalMaximum($rawOutcomeVariable['normalMaximum'])
-            ->setEncodedValue($rawOutcomeVariable['value']);
+            ->setEncodedValue($rawOutcomeVariable['value'])
+            ->setExternallyGraded($rawOutcomeVariable['externallyGraded'] ?? false);
     }
 
     private static function fromResponseVariableData(
@@ -256,5 +267,17 @@ abstract class taoResultServer_models_classes_Variable implements JsonSerializab
         self::validateKeys(['trace'], $rawTraceVariable);
 
         return (new taoResultServer_models_classes_TraceVariable())->setTrace($rawTraceVariable['trace']);
+    }
+
+    public function setExternallyGraded(bool $flag): self
+    {
+        $this->isExternallyGraded = $flag;
+
+        return $this;
+    }
+
+    public function getExternallyGraded(): bool
+    {
+        return $this->isExternallyGraded;
     }
 }
