@@ -22,10 +22,10 @@
 namespace oat\taoResultServer\test\Unit\models\Mapper;
 
 use oat\dtms\DateTime;
-use oat\generis\test\TestCase;
-use oat\oatbox\log\LoggerService;
+use oat\generis\test\ServiceManagerMockTrait;
 use oat\taoResultServer\models\Mapper\ResultMapper;
-use Psr\Log\NullLogger;
+use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use qtism\data\results\AssessmentResult;
 use qtism\data\storage\xml\XmlResultDocument;
 use taoResultServer_models_classes_ResponseVariable;
@@ -40,7 +40,9 @@ class ResultMapperTest extends TestCase
         $doc = new XmlResultDocument();
         $doc->loadFromString(file_get_contents($file));
         $resultMapper = new ResultMapper();
-        $resultMapper->setServiceLocator($this->getServiceLocatorMock([LoggerService::SERVICE_ID => new NullLogger()]));
+        $resultMapper->setLogger(
+            $this->createMock(LoggerInterface::class)
+        );
         return $resultMapper->loadSource($doc->getDocumentComponent());
     }
 
@@ -94,7 +96,10 @@ class ResultMapperTest extends TestCase
         $variable = reset($variables);
         $this->assertInstanceOf(taoResultServer_models_classes_ResponseVariable::class, $variable);
         $this->assertEquals('response-identifier', $variable->getIdentifier());
-        $this->assertEquals('fixture-test-value3;fixture-test-value4;fixture-test-value5', $variable->getCandidateResponse());
+        $this->assertEquals(
+            'fixture-test-value3;fixture-test-value4;fixture-test-value5',
+            $variable->getCandidateResponse()
+        );
         $this->assertEquals('fixture-test-value3;fixture-test-value4;fixture-test-value5', $variable->getValue());
         $this->assertEquals('fixture-test-value1;fixture-test-value2', $variable->getCorrectResponse());
         $this->assertEquals('single', $variable->getCardinality());
