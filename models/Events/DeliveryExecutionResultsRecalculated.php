@@ -25,21 +25,25 @@ namespace oat\taoResultServer\models\Events;
 
 use oat\oatbox\event\Event;
 use oat\taoDelivery\model\execution\DeliveryExecutionInterface;
+use Psr\Log\LoggerInterface;
 
 class DeliveryExecutionResultsRecalculated implements Event
 {
     private DeliveryExecutionInterface $deliveryExecution;
     private ?float $totalScore;
     private ?float $totalMaxScore;
+    private ?string $gradingStatus;
 
     public function __construct(
         DeliveryExecutionInterface $deliveryExecution,
         ?float $totalScore,
-        ?float $totalMaxScore
+        ?float $totalMaxScore,
+        ?string $gradingStatus,
     ) {
         $this->deliveryExecution = $deliveryExecution;
         $this->totalScore = $totalScore;
         $this->totalMaxScore = $totalMaxScore;
+        $this->gradingStatus = $gradingStatus;
     }
 
     public function getDeliveryExecution(): DeliveryExecutionInterface
@@ -60,5 +64,10 @@ class DeliveryExecutionResultsRecalculated implements Event
     public function getTotalMaxScore(): ?float
     {
         return $this->totalMaxScore;
+    }
+
+    public function getGradingStatus(): ?string
+    {
+        return $this->gradingStatus;
     }
 }

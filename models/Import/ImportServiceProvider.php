@@ -24,6 +24,7 @@ namespace oat\taoResultServer\models\Import;
 
 use oat\generis\model\data\Ontology;
 use oat\generis\model\DependencyInjection\ContainerServiceProviderInterface;
+use oat\ltiTestReview\models\QtiRunnerInitDataBuilderFactory;
 use oat\oatbox\event\EventManager;
 use oat\tao\model\taskQueue\QueueDispatcher;
 use oat\taoDelivery\model\execution\DeliveryExecutionService;
@@ -94,6 +95,7 @@ class ImportServiceProvider implements ContainerServiceProviderInterface
                     service(ResultServerService::SERVICE_ID),
                     service(EventManager::SERVICE_ID),
                     service(DeliveryExecutionService::SERVICE_ID),
+                    service(QtiRunnerInitDataBuilderFactory::SERVICE_ID),
                 ]
             );
 
