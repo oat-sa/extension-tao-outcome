@@ -30,6 +30,7 @@ use oat\taoDelivery\model\execution\DeliveryExecution;
 use oat\taoDelivery\model\execution\DeliveryExecutionService;
 use oat\taoOutcomeRds\model\RdsResultStorage;
 use oat\taoResultServer\models\classes\implementation\ResultServerService;
+use oat\taoResultServer\models\Import\Service\QtiTestItemsService;
 use oat\taoResultServer\models\Import\Service\SendCalculatedResultService;
 use PHPUnit\Framework\TestCase;
 use taoResultServer_models_classes_OutcomeVariable;
@@ -42,9 +43,7 @@ class SendCalculatedResultServiceTest extends TestCase
     private EventManager $eventManagerMock;
     private DeliveryExecutionService $deliveryExecutionServiceMock;
     private DeliveryExecution $deliveryExecutionMock;
-    private QtiRunnerInitDataBuilder $qtiRunnerInitDataBuilderMock;
-    private QtiRunnerInitDataBuilderFactory $qtiRunnerInitDataBuilderFactoryMock;
-    public string $gradingStatus;
+    private QtiTestItemsService $QtiTestItemsService;
 
     public function setUp(): void
     {
@@ -53,8 +52,7 @@ class SendCalculatedResultServiceTest extends TestCase
         $this->eventManagerMock = $this->createMock(EventManager::class);
         $this->deliveryExecutionServiceMock = $this->createMock(DeliveryExecutionService::class);
         $this->deliveryExecutionMock = $this->createMock(DeliveryExecution::class);
-        $this->qtiRunnerInitDataBuilderMock = $this->createMock(QtiRunnerInitDataBuilder::class);
-        $this->qtiRunnerInitDataBuilderFactoryMock = $this->createMock(QtiRunnerInitDataBuilderFactory::class);
+        $this->QtiTestItemsService = $this->createMock(QtiTestItemsService::class);
 
         $this->resultServerServiceMock
             ->expects($this->any())
@@ -69,11 +67,6 @@ class SendCalculatedResultServiceTest extends TestCase
             ->expects($this->any())
             ->method('getDeliveryExecution')
             ->willReturn($this->deliveryExecutionMock);
-
-        $this->qtiRunnerInitDataBuilderFactoryMock
-            ->expects($this->any())
-            ->method('create')
-            ->willReturn($this->qtiRunnerInitDataBuilderMock);
     }
 
     public function testDeclarationIsScoredVariableNotGraded()
@@ -183,16 +176,16 @@ class SendCalculatedResultServiceTest extends TestCase
             ->method('getDeliveryVariables')
             ->willReturn($outcomeVariables);
 
-        $this->qtiRunnerInitDataBuilderMock
+        $this->QtiTestItemsService
             ->expects($this->any())
-            ->method('getQtiTestItems')
+            ->method('getItemsByDeliveryExecutionId')
             ->willReturn($qtiTestItems);
 
         $scrs = new SendCalculatedResultService(
             $this->resultServerServiceMock,
             $this->eventManagerMock,
             $this->deliveryExecutionServiceMock,
-            $this->qtiRunnerInitDataBuilderFactoryMock
+            $this->QtiTestItemsService
         );
         return $scrs->sendByDeliveryExecutionId('test_delivery_id');
     }

@@ -39,19 +39,19 @@ class SendCalculatedResultService
     private ResultServerService $resultServerService;
     private EventManager $eventManager;
     private DeliveryExecutionService $deliveryExecutionService;
-    private QtiRunnerInitDataBuilderFactory $qtiRunnerInitDataBuilderFactory;
+    private QtiTestItemsService $qtiTestItemsService;
 
     public function __construct(
         ResultServerService $resultServerService,
         EventManager $eventManager,
         DeliveryExecutionService $deliveryExecutionService,
-        QtiRunnerInitDataBuilderFactory $qtiRunnerInitDataBuilderFactory,
+        QtiTestItemsService $qtiTestItemsService,
     )
     {
         $this->resultServerService = $resultServerService;
         $this->eventManager = $eventManager;
         $this->deliveryExecutionService = $deliveryExecutionService;
-        $this->qtiRunnerInitDataBuilderFactory = $qtiRunnerInitDataBuilderFactory;
+        $this->qtiTestItemsService = $qtiTestItemsService;
     }
 
     public function sendByDeliveryExecutionId(string $deliveryExecutionId): array
@@ -133,8 +133,7 @@ class SendCalculatedResultService
 
     private function getGradingStatus(string $deliveryExecutionId, array $outcomeVariables): string
     {
-        $dataBuilder = $this->qtiRunnerInitDataBuilderFactory->create();
-        $qtiTestItems = $dataBuilder->getQtiTestItems($deliveryExecutionId);
+        $qtiTestItems = $this->qtiTestItemsService->getItemsByDeliveryExecutionId($deliveryExecutionId);
         $gradingStatus = ScoreInterface::GRADING_PROGRESS_STATUS_FULLY_GRADED;
 
         foreach ($qtiTestItems as $parts) {

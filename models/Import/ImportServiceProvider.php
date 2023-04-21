@@ -24,14 +24,17 @@ namespace oat\taoResultServer\models\Import;
 
 use oat\generis\model\data\Ontology;
 use oat\generis\model\DependencyInjection\ContainerServiceProviderInterface;
-use oat\ltiTestReview\models\QtiRunnerInitDataBuilderFactory;
 use oat\oatbox\event\EventManager;
 use oat\tao\model\taskQueue\QueueDispatcher;
 use oat\taoDelivery\model\execution\DeliveryExecutionService;
+use oat\taoDeliveryRdf\model\DeliveryContainerService;
+use oat\taoProctoring\model\execution\DeliveryExecutionManagerService;
+use oat\taoQtiTest\models\runner\QtiRunnerService;
 use oat\taoResultServer\models\classes\ResultServerService;
 use oat\taoResultServer\models\Import\Factory\ImportResultInputFactory;
 use oat\taoResultServer\models\Import\Factory\QtiResultXmlFactory;
 use oat\taoResultServer\models\Import\Service\QtiResultXmlImporter;
+use oat\taoResultServer\models\Import\Service\QtiTestItemsService;
 use oat\taoResultServer\models\Import\Service\ResultImporter;
 use oat\taoResultServer\models\Import\Service\SendCalculatedResultService;
 use oat\taoResultServer\models\Import\Task\ResultImportScheduler;
@@ -88,6 +91,18 @@ class ImportServiceProvider implements ContainerServiceProviderInterface
                 ]
             );
 
+
+        $services->set(QtiTestItemsService::class, QtiTestItemsService::class)
+            ->public()
+            ->args(
+                [
+
+                    service(QtiRunnerService::SERVICE_ID),
+                    service(DeliveryExecutionManagerService::SERVICE_ID),
+                    service(DeliveryContainerService::SERVICE_ID),
+                ]
+            );
+
         $services->set(SendCalculatedResultService::class, SendCalculatedResultService::class)
             ->public()
             ->args(
@@ -95,9 +110,10 @@ class ImportServiceProvider implements ContainerServiceProviderInterface
                     service(ResultServerService::SERVICE_ID),
                     service(EventManager::SERVICE_ID),
                     service(DeliveryExecutionService::SERVICE_ID),
-                    service(QtiRunnerInitDataBuilderFactory::SERVICE_ID),
+                    service(QtiTestItemsService::class),
                 ]
             );
+
 
         $services->set(ImportResultInputFactory::class, ImportResultInputFactory::class)
             ->public()
