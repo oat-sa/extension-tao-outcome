@@ -54,7 +54,7 @@ class SendCalculatedResultService
         $this->qtiRunnerInitDataBuilderFactory = $qtiRunnerInitDataBuilderFactory;
     }
 
-    public function sendByDeliveryExecutionId(string $deliveryExecutionId): void
+    public function sendByDeliveryExecutionId(string $deliveryExecutionId): array
     {
         $deliveryExecution = $this->deliveryExecutionService->getDeliveryExecution($deliveryExecutionId);
         $outcomeVariables = $this->getResultsStorage()->getDeliveryVariables($deliveryExecutionId);
@@ -71,6 +71,13 @@ class SendCalculatedResultService
                 $gradingStatus,
             )
         );
+
+        return [
+            'deliveryExecution' => $deliveryExecution,
+            'scoreTotal' => $scoreTotal,
+            'scoreTotalMax' => $scoreTotalMax,
+            'gradingStatus' => $gradingStatus,
+        ];
     }
 
     /**
