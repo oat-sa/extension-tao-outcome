@@ -59,7 +59,7 @@ class SendCalculatedResultService
         $deliveryExecution = $this->deliveryExecutionService->getDeliveryExecution($deliveryExecutionId);
         $outcomeVariables = $this->getResultsStorage()->getDeliveryVariables($deliveryExecutionId);
 
-        list($scoreTotal, $scoreTotalMax) = $this->getScores($outcomeVariables);
+        [$scoreTotal, $scoreTotalMax] = $this->getScores($outcomeVariables);
 
         $gradingStatus = $this->getGradingStatus($deliveryExecutionId, $outcomeVariables);
 
@@ -121,7 +121,7 @@ class SendCalculatedResultService
                 $scoreTotalMax = (float)$variable->getValue();
             }
         }
-        return array($scoreTotal, $scoreTotalMax);
+        return [$scoreTotal, $scoreTotalMax];
     }
 
     private function getGradingStatus(string $deliveryExecutionId, array $outcomeVariables): string
@@ -136,8 +136,15 @@ class SendCalculatedResultService
                     if ($item['isExternallyScored'] === false) {
                         continue;
                     }
-                    foreach ($item['outcomes'] ?? [] as $outcome) {
-                        $gradingStatus = $this->statusOfOutcomeVariable($outcomeVariables, $outcome['identifier']);
+                    $gradingStatus = ScoreInterface::GRADING_PROGRESS_STATUS_PENDING_MANUAL;
+                    foreach ($item['outcomes'] ?? [] as $outcomeDeclaration) {
+                        $isOutcomeVariableFullyGraded = $this->isOutcomeVariableFullyGraded(
+                            $outcomeVariables,
+                            $outcomeDeclaration['identifier']
+                        );
+                        if ($isOutcomeVariableFullyGraded) {
+                            $gradingStatus = ScoreInterface::GRADING_PROGRESS_STATUS_FULLY_GRADED;
+                        }
                     }
                 }
             }
@@ -145,22 +152,21 @@ class SendCalculatedResultService
         return $gradingStatus;
     }
 
-    private function statusOfOutcomeVariable(array $outcomeVariables, string $identifier): string
+    private function isOutcomeVariableFullyGraded(array $outcomeVariables, string $outcomeDeclarationIdentifier): bool
     {
-        $gradingStatus = ScoreInterface::GRADING_PROGRESS_STATUS_PENDING_MANUAL;
         foreach ($outcomeVariables as $outcomeVariableArray) {
             $outcomeVariable = current($outcomeVariableArray);
             if ($outcomeVariable->variable instanceof taoResultServer_models_classes_Variable === false) {
                 continue;
             }
             $variable = $outcomeVariable->variable;
-            if ($identifier !== $variable->getIdentifier()) {
+            if ($outcomeDeclarationIdentifier !== $variable->getIdentifier()) {
                 continue;
             }
             if ($variable->getExternallyGraded()) {
-                $gradingStatus = ScoreInterface::GRADING_PROGRESS_STATUS_FULLY_GRADED;
+                return true;
             }
         }
-        return $gradingStatus;
+        return false;
     }
 }
