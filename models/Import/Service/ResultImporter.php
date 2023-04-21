@@ -36,26 +36,29 @@ use Throwable;
 
 class ResultImporter
 {
+
     private Ontology $ontology;
+
     private ResultServerService $resultServerService;
+
 
     public function __construct(Ontology $ontology, ResultServerService $resultServerService)
     {
-        $this->ontology = $ontology;
+        $this->ontology            = $ontology;
         $this->resultServerService = $resultServerService;
     }
 
     /**
-     * @param ImportResultInput $input
+     * @param  ImportResultInput $input
      * @return void
      * @throws core_kernel_persistence_Exception|Throwable|common_exception_Error|ImportResultException
      */
     public function importByResultInput(ImportResultInput $input): void
     {
-        $resultStorage = $this->getResultStorage();
+        $resultStorage        = $this->getResultStorage();
         $deliveryExecutionUri = $input->getDeliveryExecutionId();
-        $testUri = $this->getTestUri($resultStorage, $deliveryExecutionUri);
-        $testScoreVariables = $this->getTestScoreVariables($resultStorage, $deliveryExecutionUri);
+        $testUri              = $this->getTestUri($resultStorage, $deliveryExecutionUri);
+        $testScoreVariables   = $this->getTestScoreVariables($resultStorage, $deliveryExecutionUri);
 
         $resultStorage->getPersistence()->transactional(
             function () use ($resultStorage, $input, $testUri, $deliveryExecutionUri, $testScoreVariables): void {
@@ -97,16 +100,16 @@ class ResultImporter
         float $updatedScoreTotal,
         float $scoreTotalMax
     ): void {
-
-         if (!empty($scoreTotalMax) && $updatedScoreTotal > $scoreTotalMax) {
-             throw new ImportResultException(
-                 sprintf(
+        if (!empty($scoreTotalMax) && $updatedScoreTotal > $scoreTotalMax) {
+            throw new ImportResultException(
+                sprintf(
                     'SCORE_TOTAL cannot be higher than SCORE_TOTAL_MAX:%s, %s provided',
                     $scoreTotalMax,
                     $updatedScoreTotal
                 )
-             );
+            );
         }
+
         $scoreTotalVariable->setValue($updatedScoreTotal);
 
         $resultStorage->replaceTestVariables(
@@ -214,8 +217,10 @@ class ResultImporter
     /**
      * @throws ImportResultException
      */
-    private function getTestScoreVariables(AbstractRdsResultStorage $resultStorage, string $deliveryExecutionUri): ?array
-    {
+    private function getTestScoreVariables(
+        AbstractRdsResultStorage $resultStorage,
+        string $deliveryExecutionUri
+    ): ?array {
         foreach ($resultStorage->getDeliveryVariables($deliveryExecutionUri) as $id => $outcomeVariable) {
             $variable = $this->getVariable($outcomeVariable);
 
