@@ -61,13 +61,16 @@ class ResultImporter
             function () use ($resultStorage, $input, $testUri, $deliveryExecutionUri, $testScoreVariables): void {
                 $this->updateItemResponseVariables($resultStorage, $input, $testUri);
 
-                $updatedScoreTotal = $this->updateItemOutcomeVariables(
+                $totalScoreCalculatedByItemOutcomes = $this->updateItemOutcomeVariables(
                     $resultStorage,
                     $input,
                     $testUri,
-                    $testScoreVariables['scoreTotalMax'],
-                    $testScoreVariables['scoreTotal']
+                    $testScoreVariables['scoreTotal'] ?? 0
                 );
+
+                if (null === $testScoreVariables) {
+                    return;
+                }
 
                 $this->updateTestVariables(
                     $resultStorage,
@@ -75,20 +78,35 @@ class ResultImporter
                     $testScoreVariables['scoreTotalVariableId'],
                     $deliveryExecutionUri,
                     $testUri,
-                    $updatedScoreTotal
+                    $totalScoreCalculatedByItemOutcomes,
+                    $testScoreVariables['scoreTotalMax']
                 );
             }
         );
     }
 
+    /**
+     * @throws ImportResultException
+     */
     private function updateTestVariables(
         AbstractRdsResultStorage $resultStorage,
         taoResultServer_models_classes_Variable $scoreTotalVariable,
         int $scoreTotalVariableId,
         string $deliveryExecutionUri,
         string $testUri,
-        float $updatedScoreTotal
+        float $updatedScoreTotal,
+        float $scoreTotalMax
     ): void {
+
+         if (!empty($scoreTotalMax) && $updatedScoreTotal > $scoreTotalMax) {
+             throw new ImportResultException(
+                 sprintf(
+                    'SCORE_TOTAL cannot be higher than SCORE_TOTAL_MAX:%s, %s provided',
+                    $scoreTotalMax,
+                    $updatedScoreTotal
+                )
+             );
+        }
         $scoreTotalVariable->setValue($updatedScoreTotal);
 
         $resultStorage->replaceTestVariables(
@@ -145,14 +163,10 @@ class ResultImporter
         }
     }
 
-    /**
-     * @throws ImportResultException
-     */
     private function updateItemOutcomeVariables(
         AbstractRdsResultStorage $resultStorage,
         ImportResultInput $input,
         string $testUri,
-        float $scoreTotalMax,
         float $scoreTotal
     ): float {
         $deliveryExecutionUri = $input->getDeliveryExecutionId();
@@ -183,16 +197,6 @@ class ResultImporter
                 $variable->setExternallyGraded(true);
 
                 $updateOutcomeVariables[$variableId] = $variable;
-
-                if ($scoreTotal > $scoreTotalMax) {
-                    throw new ImportResultException(
-                        sprintf(
-                            'SCORE_TOTAL_MAX cannot be higher than %s, %s provided',
-                            $scoreTotalMax,
-                            $scoreTotal
-                        )
-                    );
-                }
             }
 
             $resultStorage->replaceItemVariables(
@@ -210,7 +214,7 @@ class ResultImporter
     /**
      * @throws ImportResultException
      */
-    private function getTestScoreVariables(AbstractRdsResultStorage $resultStorage, string $deliveryExecutionUri): array
+    private function getTestScoreVariables(AbstractRdsResultStorage $resultStorage, string $deliveryExecutionUri): ?array
     {
         foreach ($resultStorage->getDeliveryVariables($deliveryExecutionUri) as $id => $outcomeVariable) {
             $variable = $this->getVariable($outcomeVariable);
@@ -230,6 +234,10 @@ class ResultImporter
             if ($variable->getIdentifier() === 'SCORE_TOTAL_MAX') {
                 $scoreTotalMax = (float)$variable->getValue();
             }
+        }
+
+        if (!isset($scoreTotalVariable)) {
+            return null;
         }
 
         if (!isset($scoreTotal, $scoreTotalVariableId, $scoreTotalMax, $scoreTotalVariable)) {
