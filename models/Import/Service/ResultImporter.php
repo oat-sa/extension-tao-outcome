@@ -36,7 +36,6 @@ use Throwable;
 
 class ResultImporter
 {
-
     private Ontology $ontology;
 
     private ResultServerService $resultServerService;
