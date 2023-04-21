@@ -25,8 +25,6 @@ namespace oat\taoResultServer\models\Events;
 
 use oat\oatbox\event\Event;
 use oat\taoDelivery\model\execution\DeliveryExecutionInterface;
-use Psr\Log\LoggerInterface;
-
 class DeliveryExecutionResultsRecalculated implements Event
 {
     private DeliveryExecutionInterface $deliveryExecution;

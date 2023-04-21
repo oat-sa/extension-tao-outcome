@@ -88,11 +88,7 @@ class SendCalculatedResultService
         return $storage;
     }
 
-    /**
-     * @param $outcomeVariables
-     * @return array
-     */
-    private function getScores($outcomeVariables): array
+    private function getScores(array $outcomeVariables): array
     {
         $scoreTotal = null;
         $scoreTotalMax = null;
@@ -128,7 +124,7 @@ class SendCalculatedResultService
         return array($scoreTotal, $scoreTotalMax);
     }
 
-    private function getGradingStatus(string $deliveryExecutionId, $outcomeVariables): string
+    private function getGradingStatus(string $deliveryExecutionId, array $outcomeVariables): string
     {
         $dataBuilder = $this->qtiRunnerInitDataBuilderFactory->create();
         $qtiTestItems = $dataBuilder->getQtiTestItems($deliveryExecutionId);
@@ -149,7 +145,7 @@ class SendCalculatedResultService
         return $gradingStatus;
     }
 
-    private function statusOfOutcomeVariable($outcomeVariables, $identifier): string
+    private function statusOfOutcomeVariable(array $outcomeVariables, string $identifier): string
     {
         $gradingStatus = ScoreInterface::GRADING_PROGRESS_STATUS_PENDING_MANUAL;
         foreach ($outcomeVariables as $outcomeVariableArray) {
