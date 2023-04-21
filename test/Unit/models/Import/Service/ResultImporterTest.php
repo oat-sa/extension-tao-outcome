@@ -258,7 +258,6 @@ class ResultImporterTest extends TestCase
     public function testCreateByImportResultCanWorkWithScoreTotalMissing(): void
     {
         $this->input->addOutcome('item-1', 'SCORE', 1);
-        $this->input->addResponse('item-1', 'RESPONSE', ['correctResponse' => true]);
 
         $this->resultStorage
             ->expects($this->once())
@@ -269,16 +268,6 @@ class ResultImporterTest extends TestCase
             ->expects($this->any())
             ->method('replaceItemVariables')
             ->withConsecutive(
-            // Replace item responses
-                [
-                    'executionId',
-                    'testUri',
-                    'item1Uri',
-                    'executionId.item-1.0',
-                    [
-                        12 => $this->createResponseVariable(true),
-                    ]
-                ],
                 // Replace item outcomes
                 [
                     'executionId',
@@ -302,26 +291,9 @@ class ResultImporterTest extends TestCase
                     if (strpos($callItemId, 'item-1') !== false) {
                         if ($responseId === 'SCORE') {
                             return [
-                                11 => [
-                                    'item' => 'item1Uri',
-                                    'variable' => $this->createOutcomeVariable(1), // Not considered,
-                                ],
                                 12 => [
                                     'item' => 'item1Uri',
-                                    'variable' => $this->createOutcomeVariable(0.5), // Considered,
-                                ],
-                            ];
-                        }
-
-                        if ($responseId === 'RESPONSE') {
-                            return [
-                                11 => [
-                                    'item' => 'item1Uri',
-                                    'variable' => $this->createResponseVariable(false), // Not considered,
-                                ],
-                                12 => [
-                                    'item' => 'item1Uri',
-                                    'variable' => $this->createResponseVariable(false), // Considered,
+                                    'variable' => $this->createOutcomeVariable(0.5),
                                 ],
                             ];
                         }
