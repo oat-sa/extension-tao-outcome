@@ -43,7 +43,7 @@ class ResultImporter
 
     public function __construct(Ontology $ontology, ResultServerService $resultServerService)
     {
-        $this->ontology            = $ontology;
+        $this->ontology = $ontology;
         $this->resultServerService = $resultServerService;
     }
 
@@ -54,10 +54,10 @@ class ResultImporter
      */
     public function importByResultInput(ImportResultInput $input): void
     {
-        $resultStorage        = $this->getResultStorage();
+        $resultStorage  = $this->getResultStorage();
         $deliveryExecutionUri = $input->getDeliveryExecutionId();
-        $testUri              = $this->getTestUri($resultStorage, $deliveryExecutionUri);
-        $testScoreVariables   = $this->getTestScoreVariables($resultStorage, $deliveryExecutionUri);
+        $testUri = $this->getTestUri($resultStorage, $deliveryExecutionUri);
+        $testScoreVariables = $this->getTestScoreVariables($resultStorage, $deliveryExecutionUri);
 
         $resultStorage->getPersistence()->transactional(
             function () use ($resultStorage, $input, $testUri, $deliveryExecutionUri, $testScoreVariables): void {
