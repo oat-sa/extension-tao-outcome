@@ -163,7 +163,7 @@ class SendCalculatedResultService
     {
         foreach ($outcomeVariables as $outcomeVariableArray) {
             $outcomeVariable = current($outcomeVariableArray);
-            if ($outcomeVariable->variable instanceof taoResultServer_models_classes_Variable === false) {
+            if (!$outcomeVariable->variable instanceof taoResultServer_models_classes_Variable) {
                 continue;
             }
             $variable = $outcomeVariable->variable;
