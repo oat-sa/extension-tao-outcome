@@ -37,9 +37,7 @@ use Throwable;
 class ResultImporter
 {
     private Ontology $ontology;
-
     private ResultServerService $resultServerService;
-
 
     public function __construct(Ontology $ontology, ResultServerService $resultServerService)
     {
