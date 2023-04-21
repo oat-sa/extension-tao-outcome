@@ -52,7 +52,7 @@ class ResultImporter
      */
     public function importByResultInput(ImportResultInput $input): void
     {
-        $resultStorage  = $this->getResultStorage();
+        $resultStorage = $this->getResultStorage();
         $deliveryExecutionUri = $input->getDeliveryExecutionId();
         $testUri = $this->getTestUri($resultStorage, $deliveryExecutionUri);
         $testScoreVariables = $this->getTestScoreVariables($resultStorage, $deliveryExecutionUri);
