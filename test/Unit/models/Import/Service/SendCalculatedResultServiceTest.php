@@ -23,8 +23,6 @@ declare(strict_types=1);
 namespace oat\taoResultServer\test\Unit\models\Import\Service;
 
 use OAT\Library\Lti1p3Ags\Model\Score\ScoreInterface;
-use oat\ltiTestReview\models\QtiRunnerInitDataBuilder;
-use oat\ltiTestReview\models\QtiRunnerInitDataBuilderFactory;
 use oat\oatbox\event\EventManager;
 use oat\taoDelivery\model\execution\DeliveryExecution;
 use oat\taoDelivery\model\execution\DeliveryExecutionService;
@@ -71,9 +69,8 @@ class SendCalculatedResultServiceTest extends TestCase
 
     public function testDeclarationIsScoredVariableNotGraded()
     {
-        $qtiTestItems = $this->createDeclarations(true);
-
-        $outcomeVariables = $this->createVariables(false);
+        $qtiTestItems = $this->createDeclarations(1, true);
+        $outcomeVariables = $this->createVariables(1, false);
 
         $return = $this->doDeliveryExecution($outcomeVariables, $qtiTestItems);
 
@@ -84,9 +81,9 @@ class SendCalculatedResultServiceTest extends TestCase
 
     public function testDeclarationIsNotScoredVariableIsGraded()
     {
-        $qtiTestItems = $this->createDeclarations(false);
+        $qtiTestItems = $this->createDeclarations(1, false);
 
-        $outcomeVariables = $this->createVariables(true);
+        $outcomeVariables = $this->createVariables(1, true);
 
         $return = $this->doDeliveryExecution($outcomeVariables, $qtiTestItems);
 
@@ -97,9 +94,9 @@ class SendCalculatedResultServiceTest extends TestCase
 
     public function testDeclarationIsNotScoredVariableNotGraded()
     {
-        $qtiTestItems = $this->createDeclarations(false);
+        $qtiTestItems = $this->createDeclarations(1, false);
 
-        $outcomeVariables = $this->createVariables(false);
+        $outcomeVariables = $this->createVariables(1, false);
 
         $return = $this->doDeliveryExecution($outcomeVariables, $qtiTestItems);
 
@@ -110,9 +107,9 @@ class SendCalculatedResultServiceTest extends TestCase
 
     public function testDeclarationIsScoredVariableIsGraded()
     {
-        $qtiTestItems = $this->createDeclarations(true);
+        $qtiTestItems = $this->createDeclarations(1, true);
 
-        $outcomeVariables = $this->createVariables(true);
+        $outcomeVariables = $this->createVariables(1, true);
 
         $return = $this->doDeliveryExecution($outcomeVariables, $qtiTestItems);
 
@@ -121,52 +118,166 @@ class SendCalculatedResultServiceTest extends TestCase
         $this->assertSame(ScoreInterface::GRADING_PROGRESS_STATUS_FULLY_GRADED, $return['gradingStatus']);
     }
 
-    private function createVariables(bool $isExternallyGraded): array
+    /**
+     * One of items need to be externally scored and it has connected variable which was scored
+     */
+    public function testMultipleDeclarationsOneIsScoredVariableIsGraded()
+    {
+        $qtiTestItems1 = $this->createDeclarations(2, true);
+        $qtiTestItems2 = $this->createDeclarations(1, false);
+
+        $qtiTestItems['testPart-1']['assessmentSection-1'] =
+            array_merge(
+                $qtiTestItems1['testPart-1']['assessmentSection-1'],
+                $qtiTestItems2['testPart-1']['assessmentSection-1']
+            );
+
+        $outcomeVariables = $this->createVariables(1, true);
+
+        $return = $this->doDeliveryExecution($outcomeVariables, $qtiTestItems);
+
+        $this->assertIsArray($return);
+        $this->assertArrayHasKey('gradingStatus', $return);
+        $this->assertSame(ScoreInterface::GRADING_PROGRESS_STATUS_PENDING_MANUAL, $return['gradingStatus']);
+    }
+
+    /**
+     * One of items need to be externally scored and it has connected variable which was not scored
+     */
+    public function testMultipleMixedDeclarationsVariableIsNotScored()
+    {
+        $qtiTestItems1 = $this->createDeclarations(2, true);
+        $qtiTestItems2 = $this->createDeclarations(1, false);
+
+        $qtiTestItems['testPart-1']['assessmentSection-1'] =
+            array_merge(
+                $qtiTestItems1['testPart-1']['assessmentSection-1'],
+                $qtiTestItems2['testPart-1']['assessmentSection-1']
+            );
+        $outcomeVariables1 = $this->createVariables(1, true);
+        $outcomeVariables2 = $this->createVariables(2, false);
+        $outcomeVariables = array_merge($outcomeVariables1, $outcomeVariables2);
+
+        $return = $this->doDeliveryExecution($outcomeVariables, $qtiTestItems);
+
+        $this->assertIsArray($return);
+        $this->assertArrayHasKey('gradingStatus', $return);
+        $this->assertSame(ScoreInterface::GRADING_PROGRESS_STATUS_PENDING_MANUAL, $return['gradingStatus']);
+    }
+
+    /**
+     * Multiple items need to be graded and all of them have scored variables
+     */
+    public function testMultipleGradedDeclarationsMultipleVariableScored()
+    {
+        $qtiTestItems1 = $this->createDeclarations(2, true);
+        $qtiTestItems2 = $this->createDeclarations(1, true);
+
+        $qtiTestItems['testPart-1']['assessmentSection-1'] =
+            array_merge(
+                $qtiTestItems1['testPart-1']['assessmentSection-1'],
+                $qtiTestItems2['testPart-1']['assessmentSection-1']
+            );
+        $outcomeVariables1 = $this->createVariables(1, true);
+        $outcomeVariables2 = $this->createVariables(2, true);
+        $outcomeVariables = array_merge($outcomeVariables1, $outcomeVariables2);
+
+        $return = $this->doDeliveryExecution($outcomeVariables, $qtiTestItems);
+
+        $this->assertIsArray($return);
+        $this->assertArrayHasKey('gradingStatus', $return);
+        $this->assertSame(ScoreInterface::GRADING_PROGRESS_STATUS_FULLY_GRADED, $return['gradingStatus']);
+    }
+
+    /**
+     * Multiple items need to be graded and all of them have scored variables
+     */
+    public function testMultipleGradedDeclarationsMultipleVariableNotScored()
+    {
+        $qtiTestItems1 = $this->createDeclarations(2, true);
+        $qtiTestItems2 = $this->createDeclarations(1, true);
+
+        $qtiTestItems['testPart-1']['assessmentSection-1'] =
+            array_merge(
+                $qtiTestItems1['testPart-1']['assessmentSection-1'],
+                $qtiTestItems2['testPart-1']['assessmentSection-1']
+            );
+        $outcomeVariables1 = $this->createVariables(1, false);
+        $outcomeVariables2 = $this->createVariables(2, false);
+        $outcomeVariables = array_merge($outcomeVariables1, $outcomeVariables2);
+
+        $return = $this->doDeliveryExecution($outcomeVariables, $qtiTestItems);
+
+        $this->assertIsArray($return);
+        $this->assertArrayHasKey('gradingStatus', $return);
+        $this->assertSame(ScoreInterface::GRADING_PROGRESS_STATUS_PENDING_MANUAL, $return['gradingStatus']);
+    }
+
+    private function createVariables(int $howMany, bool $isExternallyGraded): array
+    {
+        $list = [];
+        for ($i = 1; $i <= $howMany; $i++) {
+            $variable = $this->createVariable($i, $isExternallyGraded);
+            $container = new stdClass;
+            $container->variable = $variable;
+            $list[] = [$container];
+        }
+
+        return $list;
+    }
+
+    private function createVariable(int $number, bool $isExternallyGraded): taoResultServer_models_classes_OutcomeVariable
     {
         $data = [
             'type' => taoResultServer_models_classes_OutcomeVariable::TYPE,
             'normalMaximum' => null,
             'normalMinimum' => null,
-            'value' => 'MA==',
-            'identifier' => 'OUTCOME_1',
+            'value' => uniqid(),
+            'identifier' => sprintf('OUTCOME_%d', $number),
             'cardinality' => 'single',
             'baseType' => 'float',
-            'epoch' => '0.80757100 1681904685',
+            'epoch' => (string)time(),
             'externallyGraded' => $isExternallyGraded,
         ];
-        $variable = taoResultServer_models_classes_OutcomeVariable::fromData($data);
-
-        $container = new stdClass;
-        $container->variable = $variable;
-
-        return [
-            [
-                $container
-            ]
-        ];
+        return taoResultServer_models_classes_OutcomeVariable::fromData($data);
     }
 
-    private function createDeclarations($isExternallyScored): array
+    private function createDeclarations(int $howMany, $isExternallyScored): array
     {
-        return [
+        $declaration = [
             'testPart-1' => [
                 'assessmentSection-1' => [
-                    'item-1' => [
-                        'outcomes' => [
-                            [
-                                'identifier' => 'OUTCOME_1',
-                                'attributes' =>
-                                    [
-                                        'identifier' => 'OUTCOME_1',
-                                        'externalScored' => 'externalMachine',
-                                    ],
-                            ]
-                        ],
-                        'isExternallyScored' => $isExternallyScored
-                    ]
                 ],
             ]
         ];
+        for ($i = 1; $i <= $howMany; $i++) {
+            $declaration['testPart-1']['assessmentSection-1'] = array_merge($declaration['testPart-1']['assessmentSection-1'], $this->createDeclarationItem($i, $isExternallyScored));
+        }
+        return $declaration;
+    }
+
+    private function createDeclarationItem(int $number, bool $isExternallyScored): array
+    {
+        $item = [
+            sprintf('item-%d', $number) => [
+                'outcomes' => [
+                    [
+                        'identifier' => sprintf('OUTCOME_%d', $number),
+                        'attributes' =>
+                            [
+                                'identifier' => sprintf('OUTCOME_%d', $number),
+                            ],
+                    ]
+                ],
+                'isExternallyScored' => $isExternallyScored
+            ]
+        ];
+
+        if ($isExternallyScored) {
+            $item[sprintf('item-%d', $number)]['outcomes'][0]['attributes']['externalScored'] = 'externalMachine';
+        }
+
+        return $item;
     }
 
     private function doDeliveryExecution(array $outcomeVariables, array $qtiTestItems): array

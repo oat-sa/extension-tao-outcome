@@ -20,13 +20,13 @@
 
 declare(strict_types=1);
 
-
 namespace oat\taoResultServer\models\Import\Service;
 
 use oat\taoDeliveryRdf\model\DeliveryContainerService;
 use oat\taoProctoring\model\execution\DeliveryExecutionManagerService;
 use oat\taoQtiTest\models\runner\QtiRunnerService;
 use oat\taoQtiTest\models\runner\QtiRunnerServiceContext;
+use qtism\data\AssessmentTest;
 use qtism\data\ExtendedAssessmentItemRef;
 use qtism\data\ExtendedAssessmentSection;
 use qtism\data\TestPart;
@@ -52,7 +52,7 @@ class QtiTestItemsService
     public function getItemsByDeliveryExecutionId(string $deliveryExecutionId): array
     {
         $context = $this->getServiceContext($deliveryExecutionId);
-        $testDefinition = taoQtiTest_helpers_Utils::getTestDefinition($context->getTestCompilationUri());
+        $testDefinition = $this->getDefinition($context);
         $testParts = [];
         /** @var TestPart $testPart */
         foreach ($testDefinition->getTestParts() as $testPart) {
@@ -77,7 +77,12 @@ class QtiTestItemsService
         return $testParts;
     }
 
-    private function getServiceContext($deliveryExecutionId): QtiRunnerServiceContext
+    protected function getDefinition(QtiRunnerServiceContext $context): AssessmentTest
+    {
+        return taoQtiTest_helpers_Utils::getTestDefinition($context->getTestCompilationUri());
+    }
+
+    protected function getServiceContext($deliveryExecutionId): QtiRunnerServiceContext
     {
         $deliveryExecution = $this->deliveryExecutionService->getDeliveryExecutionById($deliveryExecutionId);
 
