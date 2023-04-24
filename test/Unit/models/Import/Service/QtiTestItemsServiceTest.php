@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace oat\taoResultServer\test\Unit\models\Import\Service;
 
 use oat\taoDeliveryRdf\model\DeliveryContainerService;
-use oat\taoProctoring\model\execution\DeliveryExecutionManagerService;
+use oat\taoDelivery\model\execution\DeliveryExecutionService;
 use oat\taoQtiTest\models\runner\QtiRunnerService;
 use oat\taoResultServer\models\Import\Service\QtiTestItemsService;
 use PHPUnit\Framework\TestCase;
@@ -36,13 +36,13 @@ use oat\taoQtiTest\models\runner\QtiRunnerServiceContext;
 class QtiTestItemsServiceTest extends TestCase
 {
     private QtiRunnerService $qtiRunnerServiceMock;
-    private DeliveryExecutionManagerService $deliveryExecutionServiceMock;
+    private DeliveryExecutionService $deliveryExecutionServiceMock;
     private DeliveryContainerService $deliveryContainerServiceMock;
 
     public function setUp(): void
     {
         $this->qtiRunnerServiceMock = $this->createMock(QtiRunnerService::class);
-        $this->deliveryExecutionServiceMock = $this->createMock(DeliveryExecutionManagerService::class);
+        $this->deliveryExecutionServiceMock = $this->createMock(DeliveryExecutionService::class);
         $this->deliveryContainerServiceMock = $this->createMock(DeliveryContainerService::class);
         $this->item = [
             'type' => 'qti',

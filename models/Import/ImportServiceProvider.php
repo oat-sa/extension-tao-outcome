@@ -28,7 +28,6 @@ use oat\oatbox\event\EventManager;
 use oat\tao\model\taskQueue\QueueDispatcher;
 use oat\taoDelivery\model\execution\DeliveryExecutionService;
 use oat\taoDeliveryRdf\model\DeliveryContainerService;
-use oat\taoProctoring\model\execution\DeliveryExecutionManagerService;
 use oat\taoQtiTest\models\runner\QtiRunnerService;
 use oat\taoResultServer\models\classes\ResultServerService;
 use oat\taoResultServer\models\Import\Factory\ImportResultInputFactory;
@@ -98,7 +97,7 @@ class ImportServiceProvider implements ContainerServiceProviderInterface
                 [
 
                     service(QtiRunnerService::SERVICE_ID),
-                    service(DeliveryExecutionManagerService::SERVICE_ID),
+                    service(DeliveryExecutionService::SERVICE_ID),
                     service(DeliveryContainerService::SERVICE_ID),
                 ]
             );

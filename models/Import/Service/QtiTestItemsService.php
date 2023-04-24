@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace oat\taoResultServer\models\Import\Service;
 
 use oat\taoDeliveryRdf\model\DeliveryContainerService;
-use oat\taoProctoring\model\execution\DeliveryExecutionManagerService;
+use oat\taoDelivery\model\execution\DeliveryExecutionService;
 use oat\taoQtiTest\models\runner\QtiRunnerService;
 use oat\taoQtiTest\models\runner\QtiRunnerServiceContext;
 use qtism\data\AssessmentTest;
@@ -35,12 +35,12 @@ use taoQtiTest_helpers_Utils;
 class QtiTestItemsService
 {
     private QtiRunnerService $qtiRunnerService;
-    private DeliveryExecutionManagerService $deliveryExecutionService;
+    private DeliveryExecutionService $deliveryExecutionService;
     private DeliveryContainerService $deliveryContainerService;
 
     public function __construct(
         QtiRunnerService $qtiRunnerService,
-        DeliveryExecutionManagerService $deliveryExecutionService,
+        DeliveryExecutionService $deliveryExecutionService,
         DeliveryContainerService $deliveryContainerService
     ) {
 
@@ -84,7 +84,7 @@ class QtiTestItemsService
 
     protected function getServiceContext($deliveryExecutionId): QtiRunnerServiceContext
     {
-        $deliveryExecution = $this->deliveryExecutionService->getDeliveryExecutionById($deliveryExecutionId);
+        $deliveryExecution = $this->deliveryExecutionService->getDeliveryExecution($deliveryExecutionId);
 
         $compilation = $this->deliveryContainerService->getTestCompilation($deliveryExecution);
         $testId = $this->deliveryContainerService->getTestDefinition($deliveryExecution);
