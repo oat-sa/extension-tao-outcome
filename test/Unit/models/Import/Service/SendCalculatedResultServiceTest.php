@@ -345,11 +345,4 @@ class SendCalculatedResultServiceTest extends TestCase
 
         return $item;
     }
-
-    private function doDeliveryExecution(array $outcomeVariables, array $qtiTestItems): array
-    {
-
-return [];
-
-    }
 }
