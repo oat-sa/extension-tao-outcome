@@ -41,6 +41,7 @@ class SendCalculatedResultServiceTest extends TestCase
     private DeliveryExecutionService $deliveryExecutionServiceMock;
     private DeliveryExecution $deliveryExecutionMock;
     private DeliveredTestOutcomeDeclarationsService $QtiTestItemsService;
+    private SendCalculatedResultService $sut;
 
     public function setUp(): void
     {
@@ -64,13 +65,31 @@ class SendCalculatedResultServiceTest extends TestCase
             ->expects($this->any())
             ->method('getDeliveryExecution')
             ->willReturn($this->deliveryExecutionMock);
+
+        $this->sut = new SendCalculatedResultService(
+            $this->resultServerServiceMock,
+            $this->eventManagerMock,
+            $this->deliveryExecutionServiceMock,
+            $this->QtiTestItemsService
+        );
     }
 
     public function testDeclarationIsScoredVariableNotGraded()
     {
         $qtiTestItems = $this->createDeclarations(1, true);
         $outcomeVariables = $this->createVariables(1, false);
-        $return = $this->doDeliveryExecution($outcomeVariables, $qtiTestItems);
+
+        $this->rdsResultStorageMock
+            ->expects($this->any())
+            ->method('getDeliveryVariables')
+            ->willReturn($outcomeVariables);
+
+        $this->QtiTestItemsService
+            ->expects($this->any())
+            ->method('getDeliveredTestOutcomeDeclarations')
+            ->willReturn($qtiTestItems);
+
+        $return = $this->sut->sendByDeliveryExecutionId('test_delivery_id');
 
         $this->assertIsArray($return);
         $this->assertArrayHasKey('isFullyGraded', $return);
@@ -83,7 +102,17 @@ class SendCalculatedResultServiceTest extends TestCase
 
         $outcomeVariables = $this->createVariables(1, true);
 
-        $return = $this->doDeliveryExecution($outcomeVariables, $qtiTestItems);
+        $this->rdsResultStorageMock
+            ->expects($this->any())
+            ->method('getDeliveryVariables')
+            ->willReturn($outcomeVariables);
+
+        $this->QtiTestItemsService
+            ->expects($this->any())
+            ->method('getDeliveredTestOutcomeDeclarations')
+            ->willReturn($qtiTestItems);
+
+        $return = $this->sut->sendByDeliveryExecutionId('test_delivery_id');
 
         $this->assertIsArray($return);
         $this->assertArrayHasKey('isFullyGraded', $return);
@@ -96,7 +125,17 @@ class SendCalculatedResultServiceTest extends TestCase
 
         $outcomeVariables = $this->createVariables(1, false);
 
-        $return = $this->doDeliveryExecution($outcomeVariables, $qtiTestItems);
+        $this->rdsResultStorageMock
+            ->expects($this->any())
+            ->method('getDeliveryVariables')
+            ->willReturn($outcomeVariables);
+
+        $this->QtiTestItemsService
+            ->expects($this->any())
+            ->method('getDeliveredTestOutcomeDeclarations')
+            ->willReturn($qtiTestItems);
+
+        $return = $this->sut->sendByDeliveryExecutionId('test_delivery_id');
 
         $this->assertIsArray($return);
         $this->assertArrayHasKey('isFullyGraded', $return);
@@ -109,7 +148,17 @@ class SendCalculatedResultServiceTest extends TestCase
 
         $outcomeVariables = $this->createVariables(1, true);
 
-        $return = $this->doDeliveryExecution($outcomeVariables, $qtiTestItems);
+        $this->rdsResultStorageMock
+            ->expects($this->any())
+            ->method('getDeliveryVariables')
+            ->willReturn($outcomeVariables);
+
+        $this->QtiTestItemsService
+            ->expects($this->any())
+            ->method('getDeliveredTestOutcomeDeclarations')
+            ->willReturn($qtiTestItems);
+
+        $return = $this->sut->sendByDeliveryExecutionId('test_delivery_id');
 
         $this->assertIsArray($return);
         $this->assertArrayHasKey('isFullyGraded', $return);
@@ -128,7 +177,17 @@ class SendCalculatedResultServiceTest extends TestCase
 
         $outcomeVariables = $this->createVariables(1, true);
 
-        $return = $this->doDeliveryExecution($outcomeVariables, $qtiTestItems);
+        $this->rdsResultStorageMock
+            ->expects($this->any())
+            ->method('getDeliveryVariables')
+            ->willReturn($outcomeVariables);
+
+        $this->QtiTestItemsService
+            ->expects($this->any())
+            ->method('getDeliveredTestOutcomeDeclarations')
+            ->willReturn($qtiTestItems);
+
+        $return = $this->sut->sendByDeliveryExecutionId('test_delivery_id');
 
         $this->assertIsArray($return);
         $this->assertArrayHasKey('isFullyGraded', $return);
@@ -148,7 +207,17 @@ class SendCalculatedResultServiceTest extends TestCase
         $outcomeVariables2 = $this->createVariables(2, false);
         $outcomeVariables = array_merge($outcomeVariables1, $outcomeVariables2);
 
-        $return = $this->doDeliveryExecution($outcomeVariables, $qtiTestItems);
+        $this->rdsResultStorageMock
+            ->expects($this->any())
+            ->method('getDeliveryVariables')
+            ->willReturn($outcomeVariables);
+
+        $this->QtiTestItemsService
+            ->expects($this->any())
+            ->method('getDeliveredTestOutcomeDeclarations')
+            ->willReturn($qtiTestItems);
+
+        $return = $this->sut->sendByDeliveryExecutionId('test_delivery_id');
 
         $this->assertIsArray($return);
         $this->assertArrayHasKey('isFullyGraded', $return);
@@ -168,7 +237,17 @@ class SendCalculatedResultServiceTest extends TestCase
         $outcomeVariables2 = $this->createVariables(2, true);
         $outcomeVariables = array_merge($outcomeVariables1, $outcomeVariables2);
 
-        $return = $this->doDeliveryExecution($outcomeVariables, $qtiTestItems);
+        $this->rdsResultStorageMock
+            ->expects($this->any())
+            ->method('getDeliveryVariables')
+            ->willReturn($outcomeVariables);
+
+        $this->QtiTestItemsService
+            ->expects($this->any())
+            ->method('getDeliveredTestOutcomeDeclarations')
+            ->willReturn($qtiTestItems);
+
+        $return = $this->sut->sendByDeliveryExecutionId('test_delivery_id');
 
         $this->assertIsArray($return);
         $this->assertArrayHasKey('isFullyGraded', $return);
@@ -188,7 +267,17 @@ class SendCalculatedResultServiceTest extends TestCase
         $outcomeVariables2 = $this->createVariables(2, false);
         $outcomeVariables = array_merge($outcomeVariables1, $outcomeVariables2);
 
-        $return = $this->doDeliveryExecution($outcomeVariables, $qtiTestItems);
+        $this->rdsResultStorageMock
+            ->expects($this->any())
+            ->method('getDeliveryVariables')
+            ->willReturn($outcomeVariables);
+
+        $this->QtiTestItemsService
+            ->expects($this->any())
+            ->method('getDeliveredTestOutcomeDeclarations')
+            ->willReturn($qtiTestItems);
+
+        $return = $this->sut->sendByDeliveryExecutionId('test_delivery_id');
 
         $this->assertIsArray($return);
         $this->assertArrayHasKey('isFullyGraded', $return);
@@ -259,22 +348,8 @@ class SendCalculatedResultServiceTest extends TestCase
 
     private function doDeliveryExecution(array $outcomeVariables, array $qtiTestItems): array
     {
-        $this->rdsResultStorageMock
-            ->expects($this->any())
-            ->method('getDeliveryVariables')
-            ->willReturn($outcomeVariables);
 
-        $this->QtiTestItemsService
-            ->expects($this->any())
-            ->method('getDeliveredTestOutcomeDeclarations')
-            ->willReturn($qtiTestItems);
+return [];
 
-        $scrs = new SendCalculatedResultService(
-            $this->resultServerServiceMock,
-            $this->eventManagerMock,
-            $this->deliveryExecutionServiceMock,
-            $this->QtiTestItemsService
-        );
-        return $scrs->sendByDeliveryExecutionId('test_delivery_id');
     }
 }
