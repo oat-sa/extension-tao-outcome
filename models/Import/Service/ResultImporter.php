@@ -100,7 +100,7 @@ class ResultImporter
         if (!empty($scoreTotalMax) && $updatedScoreTotal > $scoreTotalMax) {
             throw new ImportResultException(
                 sprintf(
-                    'SCORE_TOTAL cannot be higher than SCORE_TOTAL_MAX:%s, %s provided',
+                    'SCORE_TOTAL cannot be higher than SCORE_TOTAL_MAX: %s, %s provided',
                     $scoreTotalMax,
                     $updatedScoreTotal
                 )
@@ -242,7 +242,7 @@ class ResultImporter
             return null;
         }
 
-        if (!isset($scoreTotal, $scoreTotalVariableId, $scoreTotalMax, $scoreTotalVariable)) {
+        if (!isset($scoreTotal, $scoreTotalVariableId, $scoreTotalMax)) {
             throw new ImportResultException(
                 sprintf(
                     'SCORE_TOTAL is null for delivery execution %s',

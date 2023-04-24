@@ -348,7 +348,7 @@ class ResultImporterTest extends TestCase
             );
 
         $this->expectException(ImportResultException::class);
-        $this->expectExceptionMessage('SCORE_TOTAL cannot be higher than SCORE_TOTAL_MAX:1, 1.1 provided');
+        $this->expectExceptionMessage('SCORE_TOTAL cannot be higher than SCORE_TOTAL_MAX: 1, 1.1 provided');
 
         $this->sut->importByResultInput($this->input);
     }
