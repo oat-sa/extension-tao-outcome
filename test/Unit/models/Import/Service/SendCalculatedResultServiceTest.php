@@ -22,13 +22,12 @@ declare(strict_types=1);
 
 namespace oat\taoResultServer\test\Unit\models\Import\Service;
 
-use OAT\Library\Lti1p3Ags\Model\Score\ScoreInterface;
 use oat\oatbox\event\EventManager;
 use oat\taoDelivery\model\execution\DeliveryExecution;
 use oat\taoDelivery\model\execution\DeliveryExecutionService;
 use oat\taoOutcomeRds\model\RdsResultStorage;
 use oat\taoResultServer\models\classes\implementation\ResultServerService;
-use oat\taoResultServer\models\Import\Service\QtiTestItemsService;
+use oat\taoResultServer\models\Import\Service\DeliveredTestOutcomeDeclarationsService;
 use oat\taoResultServer\models\Import\Service\SendCalculatedResultService;
 use PHPUnit\Framework\TestCase;
 use taoResultServer_models_classes_OutcomeVariable;
@@ -41,7 +40,7 @@ class SendCalculatedResultServiceTest extends TestCase
     private EventManager $eventManagerMock;
     private DeliveryExecutionService $deliveryExecutionServiceMock;
     private DeliveryExecution $deliveryExecutionMock;
-    private QtiTestItemsService $QtiTestItemsService;
+    private DeliveredTestOutcomeDeclarationsService $QtiTestItemsService;
 
     public function setUp(): void
     {
@@ -50,7 +49,7 @@ class SendCalculatedResultServiceTest extends TestCase
         $this->eventManagerMock = $this->createMock(EventManager::class);
         $this->deliveryExecutionServiceMock = $this->createMock(DeliveryExecutionService::class);
         $this->deliveryExecutionMock = $this->createMock(DeliveryExecution::class);
-        $this->QtiTestItemsService = $this->createMock(QtiTestItemsService::class);
+        $this->QtiTestItemsService = $this->createMock(DeliveredTestOutcomeDeclarationsService::class);
 
         $this->resultServerServiceMock
             ->expects($this->any())
@@ -71,12 +70,11 @@ class SendCalculatedResultServiceTest extends TestCase
     {
         $qtiTestItems = $this->createDeclarations(1, true);
         $outcomeVariables = $this->createVariables(1, false);
-
         $return = $this->doDeliveryExecution($outcomeVariables, $qtiTestItems);
 
         $this->assertIsArray($return);
-        $this->assertArrayHasKey('gradingStatus', $return);
-        $this->assertSame(ScoreInterface::GRADING_PROGRESS_STATUS_PENDING_MANUAL, $return['gradingStatus']);
+        $this->assertArrayHasKey('isFullyGraded', $return);
+        $this->assertFalse($return['isFullyGraded']);
     }
 
     public function testDeclarationIsNotScoredVariableIsGraded()
@@ -88,8 +86,8 @@ class SendCalculatedResultServiceTest extends TestCase
         $return = $this->doDeliveryExecution($outcomeVariables, $qtiTestItems);
 
         $this->assertIsArray($return);
-        $this->assertArrayHasKey('gradingStatus', $return);
-        $this->assertSame(ScoreInterface::GRADING_PROGRESS_STATUS_FULLY_GRADED, $return['gradingStatus']);
+        $this->assertArrayHasKey('isFullyGraded', $return);
+        $this->assertTrue( $return['isFullyGraded']);
     }
 
     public function testDeclarationIsNotScoredVariableNotGraded()
@@ -101,8 +99,8 @@ class SendCalculatedResultServiceTest extends TestCase
         $return = $this->doDeliveryExecution($outcomeVariables, $qtiTestItems);
 
         $this->assertIsArray($return);
-        $this->assertArrayHasKey('gradingStatus', $return);
-        $this->assertSame(ScoreInterface::GRADING_PROGRESS_STATUS_FULLY_GRADED, $return['gradingStatus']);
+        $this->assertArrayHasKey('isFullyGraded', $return);
+        $this->assertTrue($return['isFullyGraded']);
     }
 
     public function testDeclarationIsScoredVariableIsGraded()
@@ -114,8 +112,8 @@ class SendCalculatedResultServiceTest extends TestCase
         $return = $this->doDeliveryExecution($outcomeVariables, $qtiTestItems);
 
         $this->assertIsArray($return);
-        $this->assertArrayHasKey('gradingStatus', $return);
-        $this->assertSame(ScoreInterface::GRADING_PROGRESS_STATUS_FULLY_GRADED, $return['gradingStatus']);
+        $this->assertArrayHasKey('isFullyGraded', $return);
+        $this->assertTrue($return['isFullyGraded']);
     }
 
     /**
@@ -126,19 +124,15 @@ class SendCalculatedResultServiceTest extends TestCase
         $qtiTestItems1 = $this->createDeclarations(2, true);
         $qtiTestItems2 = $this->createDeclarations(1, false);
 
-        $qtiTestItems['testPart-1']['assessmentSection-1'] =
-            array_merge(
-                $qtiTestItems1['testPart-1']['assessmentSection-1'],
-                $qtiTestItems2['testPart-1']['assessmentSection-1']
-            );
+        $qtiTestItems = array_merge($qtiTestItems1, $qtiTestItems2);
 
         $outcomeVariables = $this->createVariables(1, true);
 
         $return = $this->doDeliveryExecution($outcomeVariables, $qtiTestItems);
 
         $this->assertIsArray($return);
-        $this->assertArrayHasKey('gradingStatus', $return);
-        $this->assertSame(ScoreInterface::GRADING_PROGRESS_STATUS_PENDING_MANUAL, $return['gradingStatus']);
+        $this->assertArrayHasKey('isFullyGraded', $return);
+        $this->assertFalse($return['isFullyGraded']);
     }
 
     /**
@@ -149,11 +143,7 @@ class SendCalculatedResultServiceTest extends TestCase
         $qtiTestItems1 = $this->createDeclarations(2, true);
         $qtiTestItems2 = $this->createDeclarations(1, false);
 
-        $qtiTestItems['testPart-1']['assessmentSection-1'] =
-            array_merge(
-                $qtiTestItems1['testPart-1']['assessmentSection-1'],
-                $qtiTestItems2['testPart-1']['assessmentSection-1']
-            );
+        $qtiTestItems = array_merge($qtiTestItems1, $qtiTestItems2);
         $outcomeVariables1 = $this->createVariables(1, true);
         $outcomeVariables2 = $this->createVariables(2, false);
         $outcomeVariables = array_merge($outcomeVariables1, $outcomeVariables2);
@@ -161,8 +151,8 @@ class SendCalculatedResultServiceTest extends TestCase
         $return = $this->doDeliveryExecution($outcomeVariables, $qtiTestItems);
 
         $this->assertIsArray($return);
-        $this->assertArrayHasKey('gradingStatus', $return);
-        $this->assertSame(ScoreInterface::GRADING_PROGRESS_STATUS_PENDING_MANUAL, $return['gradingStatus']);
+        $this->assertArrayHasKey('isFullyGraded', $return);
+        $this->assertFalse($return['isFullyGraded']);
     }
 
     /**
@@ -173,11 +163,7 @@ class SendCalculatedResultServiceTest extends TestCase
         $qtiTestItems1 = $this->createDeclarations(2, true);
         $qtiTestItems2 = $this->createDeclarations(1, true);
 
-        $qtiTestItems['testPart-1']['assessmentSection-1'] =
-            array_merge(
-                $qtiTestItems1['testPart-1']['assessmentSection-1'],
-                $qtiTestItems2['testPart-1']['assessmentSection-1']
-            );
+        $qtiTestItems = array_merge($qtiTestItems1, $qtiTestItems2);
         $outcomeVariables1 = $this->createVariables(1, true);
         $outcomeVariables2 = $this->createVariables(2, true);
         $outcomeVariables = array_merge($outcomeVariables1, $outcomeVariables2);
@@ -185,8 +171,8 @@ class SendCalculatedResultServiceTest extends TestCase
         $return = $this->doDeliveryExecution($outcomeVariables, $qtiTestItems);
 
         $this->assertIsArray($return);
-        $this->assertArrayHasKey('gradingStatus', $return);
-        $this->assertSame(ScoreInterface::GRADING_PROGRESS_STATUS_FULLY_GRADED, $return['gradingStatus']);
+        $this->assertArrayHasKey('isFullyGraded', $return);
+        $this->assertTrue($return['isFullyGraded']);
     }
 
     /**
@@ -197,11 +183,7 @@ class SendCalculatedResultServiceTest extends TestCase
         $qtiTestItems1 = $this->createDeclarations(2, true);
         $qtiTestItems2 = $this->createDeclarations(1, true);
 
-        $qtiTestItems['testPart-1']['assessmentSection-1'] =
-            array_merge(
-                $qtiTestItems1['testPart-1']['assessmentSection-1'],
-                $qtiTestItems2['testPart-1']['assessmentSection-1']
-            );
+        $qtiTestItems = array_merge($qtiTestItems1, $qtiTestItems2);
         $outcomeVariables1 = $this->createVariables(1, false);
         $outcomeVariables2 = $this->createVariables(2, false);
         $outcomeVariables = array_merge($outcomeVariables1, $outcomeVariables2);
@@ -209,8 +191,8 @@ class SendCalculatedResultServiceTest extends TestCase
         $return = $this->doDeliveryExecution($outcomeVariables, $qtiTestItems);
 
         $this->assertIsArray($return);
-        $this->assertArrayHasKey('gradingStatus', $return);
-        $this->assertSame(ScoreInterface::GRADING_PROGRESS_STATUS_PENDING_MANUAL, $return['gradingStatus']);
+        $this->assertArrayHasKey('isFullyGraded', $return);
+        $this->assertFalse($return['isFullyGraded']);
     }
 
     private function createVariables(int $howMany, bool $isExternallyGraded): array
@@ -244,14 +226,9 @@ class SendCalculatedResultServiceTest extends TestCase
 
     private function createDeclarations(int $howMany, $isExternallyScored): array
     {
-        $declaration = [
-            'testPart-1' => [
-                'assessmentSection-1' => [
-                ],
-            ]
-        ];
+        $declaration = [];
         for ($i = 1; $i <= $howMany; $i++) {
-            $declaration['testPart-1']['assessmentSection-1'] = array_merge($declaration['testPart-1']['assessmentSection-1'], $this->createDeclarationItem($i, $isExternallyScored));
+            $declaration = array_merge($declaration, $this->createDeclarationItem($i, $isExternallyScored));
         }
         return $declaration;
     }
@@ -289,7 +266,7 @@ class SendCalculatedResultServiceTest extends TestCase
 
         $this->QtiTestItemsService
             ->expects($this->any())
-            ->method('getItemsByDeliveryExecutionId')
+            ->method('getDeliveredTestOutcomeDeclarations')
             ->willReturn($qtiTestItems);
 
         $scrs = new SendCalculatedResultService(

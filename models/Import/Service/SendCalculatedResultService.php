@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace oat\taoResultServer\models\Import\Service;
 
 use common_exception_Error;
-use OAT\Library\Lti1p3Ags\Model\Score\ScoreInterface;
 use oat\oatbox\event\EventManager;
 use oat\oatbox\service\exception\InvalidServiceManagerException;
 use oat\taoDelivery\model\execution\DeliveryExecutionService;
@@ -38,19 +37,19 @@ class SendCalculatedResultService
     private ResultServerService $resultServerService;
     private EventManager $eventManager;
     private DeliveryExecutionService $deliveryExecutionService;
-    private QtiTestItemsService $qtiTestItemsService;
+    private DeliveredTestOutcomeDeclarationsService $deliveredTestOutcomeDeclarationsService;
 
     public function __construct(
         ResultServerService $resultServerService,
         EventManager $eventManager,
         DeliveryExecutionService $deliveryExecutionService,
-        QtiTestItemsService $qtiTestItemsService
+        DeliveredTestOutcomeDeclarationsService $qtiTestItemsService
     )
     {
         $this->resultServerService = $resultServerService;
         $this->eventManager = $eventManager;
         $this->deliveryExecutionService = $deliveryExecutionService;
-        $this->qtiTestItemsService = $qtiTestItemsService;
+        $this->deliveredTestOutcomeDeclarationsService = $qtiTestItemsService;
     }
 
     public function sendByDeliveryExecutionId(string $deliveryExecutionId): array
@@ -60,14 +59,14 @@ class SendCalculatedResultService
 
         [$scoreTotal, $scoreTotalMax] = $this->getScores($outcomeVariables);
 
-        $gradingStatus = $this->getGradingStatus($deliveryExecutionId, $outcomeVariables);
+        $isFullyGraded = $this->checkIsFullyGraded($deliveryExecutionId, $outcomeVariables);
 
         $this->eventManager->trigger(
             new DeliveryExecutionResultsRecalculated(
                 $deliveryExecution,
                 $scoreTotal,
                 $scoreTotalMax,
-                $gradingStatus,
+                $isFullyGraded,
             )
         );
 
@@ -75,7 +74,7 @@ class SendCalculatedResultService
             'deliveryExecution' => $deliveryExecution,
             'scoreTotal' => $scoreTotal,
             'scoreTotalMax' => $scoreTotalMax,
-            'gradingStatus' => $gradingStatus,
+            'isFullyGraded' => $isFullyGraded,
         ];
     }
 
@@ -130,34 +129,31 @@ class SendCalculatedResultService
         return [$scoreTotal, $scoreTotalMax];
     }
 
-    private function getGradingStatus(string $deliveryExecutionId, array $outcomeVariables): string
+    private function checkIsFullyGraded(string $deliveryExecutionId, array $outcomeVariables): bool
     {
-        $qtiTestItems = $this->qtiTestItemsService->getItemsByDeliveryExecutionId($deliveryExecutionId);
-        $gradingStatus = ScoreInterface::GRADING_PROGRESS_STATUS_FULLY_GRADED;
+        $testOutcomeDeclarations = $this->deliveredTestOutcomeDeclarationsService
+            ->getDeliveredTestOutcomeDeclarations($deliveryExecutionId);
 
-        foreach ($qtiTestItems as $parts) {
-            foreach ($parts as $section) {
-                foreach ($section as $item) {
-                    if ($item['isExternallyScored'] === false) {
-                        continue;
-                    }
-                    $gradingStatus = ScoreInterface::GRADING_PROGRESS_STATUS_PENDING_MANUAL;
-                    foreach ($item['outcomes'] ?? [] as $outcomeDeclaration) {
-                        $isOutcomeVariableFullyGraded = $this->isOutcomeVariableFullyGraded(
-                            $outcomeVariables,
-                            $outcomeDeclaration['identifier']
-                        );
-                        if ($isOutcomeVariableFullyGraded) {
-                            $gradingStatus = ScoreInterface::GRADING_PROGRESS_STATUS_FULLY_GRADED;
-                        }
-                    }
+        $isFullyGraded = true;
+        foreach ($testOutcomeDeclarations as $declarationAttributes) {
+            if ($declarationAttributes['isExternallyScored'] === false) {
+                continue;
+            }
+            $isFullyGraded = false;
+            foreach ($declarationAttributes['outcomes'] ?? [] as $outcomeDeclaration) {
+                $isSubjectOutcomeVariableGraded = $this->isSubjectOutcomeVariableGraded(
+                    $outcomeVariables,
+                    $outcomeDeclaration['identifier']
+                );
+                if ($isSubjectOutcomeVariableGraded) {
+                    $isFullyGraded = true;
                 }
             }
         }
-        return $gradingStatus;
+        return $isFullyGraded;
     }
 
-    private function isOutcomeVariableFullyGraded(array $outcomeVariables, string $outcomeDeclarationIdentifier): bool
+    private function isSubjectOutcomeVariableGraded(array $outcomeVariables, string $outcomeDeclarationIdentifier): bool
     {
         foreach ($outcomeVariables as $outcomeVariableArray) {
             $outcomeVariable = current($outcomeVariableArray);

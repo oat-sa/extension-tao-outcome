@@ -25,7 +25,7 @@ namespace oat\taoResultServer\test\Unit\models\Import\Service;
 use oat\taoDeliveryRdf\model\DeliveryContainerService;
 use oat\taoDelivery\model\execution\DeliveryExecutionService;
 use oat\taoQtiTest\models\runner\QtiRunnerService;
-use oat\taoResultServer\models\Import\Service\QtiTestItemsService;
+use oat\taoResultServer\models\Import\Service\DeliveredTestOutcomeDeclarationsService;
 use PHPUnit\Framework\TestCase;
 use qtism\data\AssessmentTest;
 use qtism\data\ExtendedAssessmentItemRef;
@@ -33,7 +33,7 @@ use qtism\data\ExtendedAssessmentSection;
 use qtism\data\TestPart;
 use oat\taoQtiTest\models\runner\QtiRunnerServiceContext;
 
-class QtiTestItemsServiceTest extends TestCase
+class DeliveredTestOutcomeDeclarationsServiceTest extends TestCase
 {
     private QtiRunnerService $qtiRunnerServiceMock;
     private DeliveryExecutionService $deliveryExecutionServiceMock;
@@ -79,55 +79,69 @@ class QtiTestItemsServiceTest extends TestCase
     public function testGetItemsByDeliveryExecutionIdReturnStructure()
     {
         $extendedAssessmentItemRef = $this->createMock(ExtendedAssessmentItemRef::class);
-        $extendedAssessmentItemRef->expects($this->once())->method('getIdentifier')->willReturn('test-item-1');
-        $extendedAssessmentItemRef->expects($this->once())->method('getHref')->willReturn('test-href');
+        $extendedAssessmentItemRef
+            ->expects($this->once())
+            ->method('getIdentifier')
+            ->willReturn('test-item-1');
 
         $extendedAssessmentSectionMock = $this->createMock(ExtendedAssessmentSection::class);
-        $extendedAssessmentSectionMock->expects($this->once())->method('getSectionParts')->willReturn([$extendedAssessmentItemRef]);
-        $extendedAssessmentSectionMock->expects($this->once())->method('getIdentifier')->willReturn('test-section-1');
+        $extendedAssessmentSectionMock
+            ->expects($this->once())
+            ->method('getSectionParts')
+            ->willReturn([$extendedAssessmentItemRef]);
 
         $testPartMock = $this->createMock(TestPart::class);
-        $testPartMock->expects($this->once())->method('getAssessmentSections')->willReturn([$extendedAssessmentSectionMock]);
-        $testPartMock->expects($this->once())->method('getIdentifier')->willReturn('test-part-1');
+        $testPartMock
+            ->expects($this->once())
+            ->method('getAssessmentSections')
+            ->willReturn([$extendedAssessmentSectionMock]);
 
         $definitionMock = $this->createMock(AssessmentTest::class);
         $definitionMock->expects($this->once())->method('getTestParts')->willReturn([$testPartMock]);
 
         $this->qtiRunnerServiceMock->method('getItemData')->willReturn($this->item);
         $qtiTestItemsServicePartialMock = $this
-            ->getMockBuilder(QtiTestItemsService::class)
-            ->setMethodsExcept(['getItemsByDeliveryExecutionId'])
-            ->onlyMethods(['getDefinition', 'getServiceContext'])
-            ->setConstructorArgs([$this->qtiRunnerServiceMock, $this->deliveryExecutionServiceMock, $this->deliveryContainerServiceMock])
+            ->getMockBuilder(DeliveredTestOutcomeDeclarationsService::class)
+            ->onlyMethods(['getDefinition','getServiceContext'])
+            ->setConstructorArgs(
+                [
+                    $this->qtiRunnerServiceMock,
+                    $this->deliveryExecutionServiceMock,
+                    $this->deliveryContainerServiceMock
+                ]
+            )
             ->getMock();
-        $qtiTestItemsServicePartialMock->expects($this->once())->method('getDefinition')->willReturn($definitionMock);
+        $qtiTestItemsServicePartialMock
+            ->expects($this->once())
+            ->method('getDefinition')
+            ->willReturn($definitionMock);
 
         $contextMock = $this->createMock(QtiRunnerServiceContext::class);
-        $qtiTestItemsServicePartialMock->expects($this->once())->method('getServiceContext')->willReturn($contextMock);
+        $qtiTestItemsServicePartialMock
+            ->expects($this->once())
+            ->method('getServiceContext')
+            ->willReturn($contextMock);
 
-        $testItems = $qtiTestItemsServicePartialMock->getItemsByDeliveryExecutionId('test_execution_id');
+        $testItems = $qtiTestItemsServicePartialMock
+            ->getDeliveredTestOutcomeDeclarations('test_execution_id');
         $this->assertIsArray($testItems);
         $this->assertArrayNotHasKey('type', $testItems);
         $this->assertArrayNotHasKey('data', $testItems);
 
-        $this->assertArrayHasKey('test-part-1', $testItems);
-        $this->assertArrayHasKey('test-section-1', $testItems['test-part-1']);
-        $this->assertArrayHasKey('test-item-1', $testItems['test-part-1']['test-section-1']);
-        $this->assertArrayHasKey('outcomes', $testItems['test-part-1']['test-section-1']['test-item-1']);
+        $testItems = current($testItems);
+        $this->assertCount(3, $testItems['outcomes']);
 
-        $this->assertCount(3, $testItems['test-part-1']['test-section-1']['test-item-1']['outcomes']);
-
-        foreach ($testItems['test-part-1']['test-section-1']['test-item-1']['outcomes'] as $outcome) {
+        foreach ($testItems['outcomes'] as $outcome) {
             $this->assertArrayHasKey('identifier', $outcome);
             $this->assertArrayHasKey('attributes', $outcome);
             $this->assertArrayHasKey('identifier', $outcome['attributes']);
             $this->assertSame($outcome['identifier'], $outcome['attributes']['identifier']);
         }
 
-        $this->assertArrayHasKey(2, $testItems['test-part-1']['test-section-1']['test-item-1']['outcomes']);
-        $this->assertArrayHasKey('externalScored', $testItems['test-part-1']['test-section-1']['test-item-1']['outcomes'][2]['attributes']);
-        $this->assertSame('externalMachine', $testItems['test-part-1']['test-section-1']['test-item-1']['outcomes'][2]['attributes']['externalScored']);
+        $this->assertArrayHasKey(2, $testItems['outcomes']);
+        $this->assertArrayHasKey('externalScored', $testItems['outcomes'][2]['attributes']);
+        $this->assertSame('externalMachine', $testItems['outcomes'][2]['attributes']['externalScored']);
 
-        $this->assertTrue($testItems['test-part-1']['test-section-1']['test-item-1']['isExternallyScored']);
+        $this->assertTrue($testItems['isExternallyScored']);
     }
 }

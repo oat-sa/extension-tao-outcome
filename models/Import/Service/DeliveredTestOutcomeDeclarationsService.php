@@ -32,7 +32,7 @@ use qtism\data\ExtendedAssessmentSection;
 use qtism\data\TestPart;
 use taoQtiTest_helpers_Utils;
 
-class QtiTestItemsService
+class DeliveredTestOutcomeDeclarationsService
 {
     private QtiRunnerService $qtiRunnerService;
     private DeliveryExecutionService $deliveryExecutionService;
@@ -49,14 +49,13 @@ class QtiTestItemsService
         $this->deliveryContainerService = $deliveryContainerService;
     }
 
-    public function getItemsByDeliveryExecutionId(string $deliveryExecutionId): array
+    public function getDeliveredTestOutcomeDeclarations(string $deliveryExecutionId): array
     {
         $context = $this->getServiceContext($deliveryExecutionId);
         $testDefinition = $this->getDefinition($context);
-        $testParts = [];
+        $items = [];
         /** @var TestPart $testPart */
         foreach ($testDefinition->getTestParts() as $testPart) {
-            $sections = [];
             /** @var ExtendedAssessmentSection $section */
             foreach ($testPart->getAssessmentSections() as $section) {
                 $items = [];
@@ -67,14 +66,10 @@ class QtiTestItemsService
 
                     $items[$item->getIdentifier()] = $itemData['data'];
                 }
-                $sectionId = $section->getIdentifier();
-                $sections[$sectionId] = $items;
             }
-            $testPartId = $testPart->getIdentifier();
-            $testParts[$testPartId] = $sections;
         }
 
-        return $testParts;
+        return $items;
     }
 
     protected function getDefinition(QtiRunnerServiceContext $context): AssessmentTest

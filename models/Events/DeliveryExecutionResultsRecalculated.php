@@ -30,18 +30,18 @@ class DeliveryExecutionResultsRecalculated implements Event
     private DeliveryExecutionInterface $deliveryExecution;
     private ?float $totalScore;
     private ?float $totalMaxScore;
-    private string $gradingStatus;
+    private bool $isFullyGraded;
 
     public function __construct(
         DeliveryExecutionInterface $deliveryExecution,
         ?float $totalScore,
         ?float $totalMaxScore,
-        string $gradingStatus,
+        bool $gradingStatus
     ) {
         $this->deliveryExecution = $deliveryExecution;
         $this->totalScore = $totalScore;
         $this->totalMaxScore = $totalMaxScore;
-        $this->gradingStatus = $gradingStatus;
+        $this->isFullyGraded = $gradingStatus;
     }
 
     public function getDeliveryExecution(): DeliveryExecutionInterface
@@ -64,8 +64,8 @@ class DeliveryExecutionResultsRecalculated implements Event
         return $this->totalMaxScore;
     }
 
-    public function getGradingStatus(): ?string
+    public function isFullyGraded(): bool
     {
-        return $this->gradingStatus;
+        return $this->isFullyGraded;
     }
 }
