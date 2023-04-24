@@ -41,7 +41,7 @@ class QtiTestItemsService
     public function __construct(
         QtiRunnerService $qtiRunnerService,
         DeliveryExecutionManagerService $deliveryExecutionService,
-        DeliveryContainerService $deliveryContainerService,
+        DeliveryContainerService $deliveryContainerService
     ) {
 
         $this->qtiRunnerService = $qtiRunnerService;
