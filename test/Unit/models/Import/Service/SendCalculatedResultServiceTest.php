@@ -30,7 +30,7 @@ use oat\taoResultServer\models\classes\implementation\ResultServerService;
 use oat\taoResultServer\models\Import\Service\DeliveredTestOutcomeDeclarationsService;
 use oat\taoResultServer\models\Import\Service\SendCalculatedResultService;
 use PHPUnit\Framework\TestCase;
-use taoResultServer_models_classes_OutcomeVariable;
+use taoResultServer_models_classes_OutcomeVariable as OutcomeVariable;
 use stdClass;
 
 class SendCalculatedResultServiceTest extends TestCase
@@ -87,7 +87,7 @@ class SendCalculatedResultServiceTest extends TestCase
 
         $this->assertIsArray($return);
         $this->assertArrayHasKey('isFullyGraded', $return);
-        $this->assertTrue( $return['isFullyGraded']);
+        $this->assertTrue($return['isFullyGraded']);
     }
 
     public function testDeclarationIsNotScoredVariableNotGraded()
@@ -200,7 +200,7 @@ class SendCalculatedResultServiceTest extends TestCase
         $list = [];
         for ($i = 1; $i <= $howMany; $i++) {
             $variable = $this->createVariable($i, $isExternallyGraded);
-            $container = new stdClass;
+            $container = new stdClass();
             $container->variable = $variable;
             $list[] = [$container];
         }
@@ -208,10 +208,10 @@ class SendCalculatedResultServiceTest extends TestCase
         return $list;
     }
 
-    private function createVariable(int $number, bool $isExternallyGraded): taoResultServer_models_classes_OutcomeVariable
+    private function createVariable(int $number, bool $isExternallyGraded): OutcomeVariable
     {
         $data = [
-            'type' => taoResultServer_models_classes_OutcomeVariable::TYPE,
+            'type' => OutcomeVariable::TYPE,
             'normalMaximum' => null,
             'normalMinimum' => null,
             'value' => uniqid(),
@@ -221,7 +221,7 @@ class SendCalculatedResultServiceTest extends TestCase
             'epoch' => (string)time(),
             'externallyGraded' => $isExternallyGraded,
         ];
-        return taoResultServer_models_classes_OutcomeVariable::fromData($data);
+        return OutcomeVariable::fromData($data);
     }
 
     private function createDeclarations(int $howMany, $isExternallyScored): array

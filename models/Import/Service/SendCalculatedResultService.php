@@ -44,8 +44,7 @@ class SendCalculatedResultService
         EventManager $eventManager,
         DeliveryExecutionService $deliveryExecutionService,
         DeliveredTestOutcomeDeclarationsService $qtiTestItemsService
-    )
-    {
+    ) {
         $this->resultServerService = $resultServerService;
         $this->eventManager = $eventManager;
         $this->deliveryExecutionService = $deliveryExecutionService;
