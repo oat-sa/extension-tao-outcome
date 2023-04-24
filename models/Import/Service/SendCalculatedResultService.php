@@ -24,7 +24,6 @@ namespace oat\taoResultServer\models\Import\Service;
 
 use common_exception_Error;
 use OAT\Library\Lti1p3Ags\Model\Score\ScoreInterface;
-use oat\ltiTestReview\models\QtiRunnerInitDataBuilderFactory;
 use oat\oatbox\event\EventManager;
 use oat\oatbox\service\exception\InvalidServiceManagerException;
 use oat\taoDelivery\model\execution\DeliveryExecutionService;
@@ -45,7 +44,7 @@ class SendCalculatedResultService
         ResultServerService $resultServerService,
         EventManager $eventManager,
         DeliveryExecutionService $deliveryExecutionService,
-        QtiTestItemsService $qtiTestItemsService,
+        QtiTestItemsService $qtiTestItemsService
     )
     {
         $this->resultServerService = $resultServerService;
