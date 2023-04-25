@@ -132,12 +132,12 @@ class SendCalculatedResultService
 
     private function checkIsFullyGraded(string $deliveryExecutionId, array $outcomeVariables): bool
     {
-        $testOutcomeDeclarations = $this->deliveredTestOutcomeDeclarationsService
+        $testItemsData = $this->deliveredTestOutcomeDeclarationsService
             ->getDeliveredTestOutcomeDeclarations($deliveryExecutionId);
 
         $isFullyGraded = true;
-        foreach ($testOutcomeDeclarations as $declarationItem) {
-            foreach ($declarationItem['outcomes'] ?? [] as $outcomeDeclaration) {
+        foreach ($testItemsData as $itemData) {
+            foreach ($itemData['outcomes'] ?? [] as $outcomeDeclaration) {
                 if (!isset($outcomeDeclaration['attributes']['externalScored'])) {
                     continue;
                 }
@@ -145,7 +145,7 @@ class SendCalculatedResultService
                 $isSubjectOutcomeVariableGraded = $this->isSubjectOutcomeVariableGraded(
                     $outcomeVariables,
                     $outcomeDeclaration['identifier'],
-                    $declarationItem['identifier']
+                    $itemData['identifier']
                 );
                 if ($isSubjectOutcomeVariableGraded) {
                     $isFullyGraded = true;
@@ -158,14 +158,14 @@ class SendCalculatedResultService
     private function isSubjectOutcomeVariableGraded(
         array $outcomeVariables,
         string $outcomeDeclarationIdentifier,
-        string $declarationAttributeIdentifier
+        string $itemIdentifier
     ): bool
     {
         foreach ($outcomeVariables as $outcomeVariableArray) {
             $outcomeVariable = current($outcomeVariableArray);
             $outcomeItemIdentifier = $outcomeVariable->item;
             if ($outcomeItemIdentifier !== null
-                && strpos($outcomeItemIdentifier, $declarationAttributeIdentifier) === false
+                && strpos($outcomeItemIdentifier, $itemIdentifier) === false
             ) {
                 continue;
             }
