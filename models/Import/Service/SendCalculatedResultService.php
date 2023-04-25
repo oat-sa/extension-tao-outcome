@@ -144,7 +144,8 @@ class SendCalculatedResultService
             foreach ($declarationAttributes['outcomes'] ?? [] as $outcomeDeclaration) {
                 $isSubjectOutcomeVariableGraded = $this->isSubjectOutcomeVariableGraded(
                     $outcomeVariables,
-                    $outcomeDeclaration['identifier']
+                    $outcomeDeclaration['identifier'],
+                    $declarationAttributes['identifier']
                 );
                 if ($isSubjectOutcomeVariableGraded) {
                     $isFullyGraded = true;
@@ -154,10 +155,18 @@ class SendCalculatedResultService
         return $isFullyGraded;
     }
 
-    private function isSubjectOutcomeVariableGraded(array $outcomeVariables, string $outcomeDeclarationIdentifier): bool
+    private function isSubjectOutcomeVariableGraded(
+        array $outcomeVariables,
+        string $outcomeDeclarationIdentifier,
+        string $declarationAttributeIdentifier
+    ): bool
     {
         foreach ($outcomeVariables as $outcomeVariableArray) {
             $outcomeVariable = current($outcomeVariableArray);
+            $outcomeItemIdentifier = $outcomeVariable->item;
+            if (!strpos($outcomeItemIdentifier, $declarationAttributeIdentifier)) {
+                continue;
+            }
             if (!$outcomeVariable->variable instanceof taoResultServer_models_classes_Variable) {
                 continue;
             }
