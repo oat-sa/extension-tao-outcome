@@ -141,7 +141,5 @@ class DeliveredTestOutcomeDeclarationsServiceTest extends TestCase
         $this->assertArrayHasKey(2, $testItems['outcomes']);
         $this->assertArrayHasKey('externalScored', $testItems['outcomes'][2]['attributes']);
         $this->assertSame('externalMachine', $testItems['outcomes'][2]['attributes']['externalScored']);
-
-        $this->assertTrue($testItems['isExternallyScored']);
     }
 }

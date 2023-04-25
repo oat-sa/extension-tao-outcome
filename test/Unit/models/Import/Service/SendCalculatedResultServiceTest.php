@@ -291,6 +291,7 @@ class SendCalculatedResultServiceTest extends TestCase
             $variable = $this->createVariable($i, $isExternallyGraded);
             $container = new stdClass();
             $container->variable = $variable;
+            $container->item = sprintf('item_%d', $i);
             $list[] = [$container];
         }
 
@@ -326,6 +327,7 @@ class SendCalculatedResultServiceTest extends TestCase
     {
         $item = [
             sprintf('item-%d', $number) => [
+                'identifier' => sprintf('item_%d', $number),
                 'outcomes' => [
                     [
                         'identifier' => sprintf('OUTCOME_%d', $number),
@@ -334,13 +336,13 @@ class SendCalculatedResultServiceTest extends TestCase
                                 'identifier' => sprintf('OUTCOME_%d', $number),
                             ],
                     ]
-                ],
-                'isExternallyScored' => $isExternallyScored
+                ]
             ]
         ];
 
         if ($isExternallyScored) {
-            $item[sprintf('item-%d', $number)]['outcomes'][0]['attributes']['externalScored'] = 'externalMachine';
+            $item[sprintf('item-%d', $number)]['outcomes'][0]['attributes']['externalScored']
+                = 'externalMachine';
         }
 
         return $item;

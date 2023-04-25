@@ -62,8 +62,6 @@ class DeliveredTestOutcomeDeclarationsService
                 /** @var ExtendedAssessmentItemRef $item */
                 foreach ($section->getSectionParts() as $item) {
                     $itemData = $this->qtiRunnerService->getItemData($context, $item->getHref());
-                    $itemData['data']['isExternallyScored'] = $this->isExternallyScored($itemData['data'] ?? []);
-
                     $items[$item->getIdentifier()] = $itemData['data'];
                 }
             }
@@ -85,16 +83,5 @@ class DeliveredTestOutcomeDeclarationsService
         $testId = $this->deliveryContainerService->getTestDefinition($deliveryExecution);
 
         return $this->qtiRunnerService->getServiceContext($testId, $compilation, $deliveryExecutionId);
-    }
-
-    private function isExternallyScored(array $data): bool
-    {
-        foreach ($data['outcomes'] ?? [] as $outcome) {
-            if (isset($outcome['attributes']['externalScored'])) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

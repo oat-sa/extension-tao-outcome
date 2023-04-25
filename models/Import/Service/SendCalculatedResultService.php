@@ -30,7 +30,7 @@ use oat\taoResultServer\models\classes\implementation\ResultServerService;
 use oat\taoResultServer\models\Events\DeliveryExecutionResultsRecalculated;
 use stdClass;
 use taoResultServer_models_classes_ReadableResultStorage as ReadableResultStorage;
-use taoResultServer_models_classes_Variable;
+use taoResultServer_models_classes_Variable as ResultVariable;
 
 class SendCalculatedResultService
 {
@@ -111,9 +111,9 @@ class SendCalculatedResultService
                 continue;
             }
 
-            /** @var taoResultServer_models_classes_Variable $variable */
+            /** @var ResultVariable $variable */
             $variable = $variable->variable;
-            if (!$variable instanceof taoResultServer_models_classes_Variable) {
+            if (!$variable instanceof ResultVariable) {
                 continue;
             }
 
@@ -136,16 +136,16 @@ class SendCalculatedResultService
             ->getDeliveredTestOutcomeDeclarations($deliveryExecutionId);
 
         $isFullyGraded = true;
-        foreach ($testOutcomeDeclarations as $declarationAttributes) {
-            if ($declarationAttributes['isExternallyScored'] === false) {
-                continue;
-            }
-            $isFullyGraded = false;
-            foreach ($declarationAttributes['outcomes'] ?? [] as $outcomeDeclaration) {
+        foreach ($testOutcomeDeclarations as $declarationItem) {
+            foreach ($declarationItem['outcomes'] ?? [] as $outcomeDeclaration) {
+                if (!isset($outcomeDeclaration['attributes']['externalScored'])) {
+                    continue;
+                }
+                $isFullyGraded = false;
                 $isSubjectOutcomeVariableGraded = $this->isSubjectOutcomeVariableGraded(
                     $outcomeVariables,
                     $outcomeDeclaration['identifier'],
-                    $declarationAttributes['identifier']
+                    $declarationItem['identifier']
                 );
                 if ($isSubjectOutcomeVariableGraded) {
                     $isFullyGraded = true;
@@ -164,13 +164,17 @@ class SendCalculatedResultService
         foreach ($outcomeVariables as $outcomeVariableArray) {
             $outcomeVariable = current($outcomeVariableArray);
             $outcomeItemIdentifier = $outcomeVariable->item;
-            if ($outcomeItemIdentifier !== null && !strpos($outcomeItemIdentifier, $declarationAttributeIdentifier)) {
+            if ($outcomeItemIdentifier !== null
+                && strpos($outcomeItemIdentifier, $declarationAttributeIdentifier) === false
+            ) {
                 continue;
             }
-            if (!$outcomeVariable->variable instanceof taoResultServer_models_classes_Variable) {
+
+            if (!$outcomeVariable->variable instanceof ResultVariable) {
                 continue;
             }
             $variable = $outcomeVariable->variable;
+
             if ($outcomeDeclarationIdentifier !== $variable->getIdentifier()) {
                 continue;
             }
