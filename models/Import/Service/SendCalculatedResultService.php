@@ -59,7 +59,7 @@ class SendCalculatedResultService
         [$scoreTotal, $scoreTotalMax] = $this->getScores($outcomeVariables);
 
         $isFullyGraded = $this->checkIsFullyGraded($deliveryExecutionId, $outcomeVariables);
-        $gradingTimestamp = (string) time();
+        $gradingTimestamp = time();
         $this->eventManager->trigger(
             new DeliveryExecutionResultsRecalculated(
                 $deliveryExecution,
