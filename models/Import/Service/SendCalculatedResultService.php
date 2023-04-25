@@ -164,7 +164,7 @@ class SendCalculatedResultService
         foreach ($outcomeVariables as $outcomeVariableArray) {
             $outcomeVariable = current($outcomeVariableArray);
             $outcomeItemIdentifier = $outcomeVariable->item;
-            if (!strpos($outcomeItemIdentifier, $declarationAttributeIdentifier)) {
+            if ($outcomeItemIdentifier !== null && !strpos($outcomeItemIdentifier, $declarationAttributeIdentifier)) {
                 continue;
             }
             if (!$outcomeVariable->variable instanceof taoResultServer_models_classes_Variable) {
