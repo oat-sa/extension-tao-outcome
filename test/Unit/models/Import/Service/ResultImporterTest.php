@@ -252,6 +252,60 @@ class ResultImporterTest extends TestCase
         $this->sut->importByResultInput($this->input);
     }
 
+    /*
+     * SCORE_TOTAL can be not defined if none OutcomeProcessing is set
+     */
+    public function testCreateByImportResultCanWorkWithScoreTotalMissing(): void
+    {
+        $this->input->addOutcome('item-1', 'SCORE', 1);
+
+        $this->resultStorage
+            ->expects($this->once())
+            ->method('getDeliveryVariables')
+            ->willReturn([]);
+
+        $this->resultStorage
+            ->expects($this->any())
+            ->method('replaceItemVariables')
+            ->withConsecutive(
+                // Replace item outcomes
+                [
+                    'executionId',
+                    'testUri',
+                    'item1Uri',
+                    'executionId.item-1.0',
+                    [
+                        12 => $this->createOutcomeVariable(1),
+                    ]
+                ]
+            );
+
+        $this->resultStorage
+            ->expects($this->never())
+            ->method('replaceTestVariables');
+
+        $this->resultStorage
+            ->method('getVariable')
+            ->willReturnCallback(
+                function ($callItemId, $responseId) {
+                    if (strpos($callItemId, 'item-1') !== false) {
+                        if ($responseId === 'SCORE') {
+                            return [
+                                12 => [
+                                    'item' => 'item1Uri',
+                                    'variable' => $this->createOutcomeVariable(0.5),
+                                ],
+                            ];
+                        }
+                    }
+
+                    return [];
+                }
+            );
+
+        $this->sut->importByResultInput($this->input);
+    }
+
     public function testCreateByImportResultWithOverflowMaxScoreWillFail(): void
     {
         $this->input->addOutcome('item-1', 'SCORE', 1.1);
@@ -294,7 +348,51 @@ class ResultImporterTest extends TestCase
             );
 
         $this->expectException(ImportResultException::class);
-        $this->expectExceptionMessage('SCORE_TOTAL_MAX cannot be higher than 1, 1.1 provided');
+        $this->expectExceptionMessage('SCORE_TOTAL cannot be higher than SCORE_TOTAL_MAX: 1, 1.1 provided');
+
+        $this->sut->importByResultInput($this->input);
+    }
+
+    public function testCreateByImportResultCanWorkWithScoreTotalMaxEmpty(): void
+    {
+        $this->input->addOutcome('item-1', 'SCORE', 1.1);
+
+        $this->resultStorage
+            ->expects($this->once())
+            ->method('getDeliveryVariables')
+            ->willReturn(
+                [
+                    777 => [
+                        (object)[
+                            'variable' => $this->createTestVariable(1, 'SCORE_TOTAL'),
+                        ],
+                    ],
+                    999 => [
+                        (object)[
+                            'variable' => $this->createTestVariable(0, 'SCORE_TOTAL_MAX'),
+                        ],
+                    ]
+                ]
+            );
+
+        $this->resultStorage
+            ->method('getVariable')
+            ->willReturnCallback(
+                function ($callItemId, $responseId) {
+                    if (strpos($callItemId, 'item-1') !== false) {
+                        if ($responseId === 'SCORE') {
+                            return [
+                                11 => [
+                                    'item' => 'item1Uri',
+                                    'variable' => $this->createOutcomeVariable(1),
+                                ],
+                            ];
+                        }
+                    }
+
+                    return [];
+                }
+            );
 
         $this->sut->importByResultInput($this->input);
     }
