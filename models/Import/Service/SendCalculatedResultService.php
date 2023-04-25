@@ -159,12 +159,12 @@ class SendCalculatedResultService
         array $outcomeVariables,
         string $outcomeDeclarationIdentifier,
         string $itemIdentifier
-    ): bool
-    {
+    ): bool {
         foreach ($outcomeVariables as $outcomeVariableArray) {
             $outcomeVariable = current($outcomeVariableArray);
             $outcomeItemIdentifier = $outcomeVariable->item;
-            if ($outcomeItemIdentifier !== null
+            if (
+                $outcomeItemIdentifier !== null
                 && strpos($outcomeItemIdentifier, $itemIdentifier) === false
             ) {
                 continue;
