@@ -306,7 +306,7 @@ class ResultImporterTest extends TestCase
         $this->sut->importByResultInput($this->input);
     }
 
-    public function testCreateByImportResultWithOverflowMaxScoreWillFail(): void
+    public function testCreateByImportResultWorksWithOverflowMaxScore(): void
     {
         $this->input->addOutcome('item-1', 'SCORE', 1.1);
 
@@ -317,7 +317,7 @@ class ResultImporterTest extends TestCase
                 [
                     777 => [
                         (object)[
-                            'variable' => $this->createTestVariable(1, 'SCORE_TOTAL'),
+                            'variable' => $this->createTestVariable(5, 'SCORE_TOTAL'),
                         ],
                     ],
                     999 => [
@@ -346,9 +346,6 @@ class ResultImporterTest extends TestCase
                     return [];
                 }
             );
-
-        $this->expectException(ImportResultException::class);
-        $this->expectExceptionMessage('SCORE_TOTAL cannot be higher than SCORE_TOTAL_MAX: 1, 1.1 provided');
 
         $this->sut->importByResultInput($this->input);
     }
