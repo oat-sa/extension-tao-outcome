@@ -78,8 +78,7 @@ class ResultImporter
                     $testScoreVariables['scoreTotalVariableId'],
                     $deliveryExecutionUri,
                     $testUri,
-                    $totalScoreCalculatedByItemOutcomes,
-                    $testScoreVariables['scoreTotalMax']
+                    $totalScoreCalculatedByItemOutcomes
                 );
             }
         );
@@ -94,19 +93,8 @@ class ResultImporter
         int $scoreTotalVariableId,
         string $deliveryExecutionUri,
         string $testUri,
-        float $updatedScoreTotal,
-        float $scoreTotalMax
+        float $updatedScoreTotal
     ): void {
-        if (!empty($scoreTotalMax) && $updatedScoreTotal > $scoreTotalMax) {
-            throw new ImportResultException(
-                sprintf(
-                    'SCORE_TOTAL cannot be higher than SCORE_TOTAL_MAX: %s, %s provided',
-                    $scoreTotalMax,
-                    $updatedScoreTotal
-                )
-            );
-        }
-
         $scoreTotalVariable->setValue($updatedScoreTotal);
 
         $resultStorage->replaceTestVariables(
