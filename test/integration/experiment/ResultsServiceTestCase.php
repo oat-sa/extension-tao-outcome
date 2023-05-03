@@ -9,10 +9,10 @@ class ResultsServiceTestCase extends UnitTestCase
     /**
      * tests initialization
      */
-     /**
-      *
-      * @var taoResultServer_models_classes_LocalResultsService
-      */
+    /**
+     *
+     * @var taoResultServer_models_classes_LocalResultsService
+     */
     private $localResultsService;
     public function setUp(): void
     {

@@ -35,12 +35,12 @@ use taoResultServer_models_classes_Variable;
 
 class OutcomeFilesystemRepository extends ConfigurableService implements ResultStorageInterface
 {
-    const SERVICE_ID = 'taoResultServer/fileSystemRepository';
+    public const SERVICE_ID = 'taoResultServer/fileSystemRepository';
 
-    const OPTION_STORAGE = 'storage';
-    const OPTION_FILESYSTEM = 'filesystem';
+    public const OPTION_STORAGE = 'storage';
+    public const OPTION_FILESYSTEM = 'filesystem';
 
-    const BASE_TYPE_FILE_REFERENCE = 'fileReference';
+    public const BASE_TYPE_FILE_REFERENCE = 'fileReference';
 
     /**
      * @var ResultStorageInterface

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,8 +21,6 @@
 
 interface taoResultServer_models_classes_ReadableResultStorage
 {
-    
-
     /**
      * get the complete variables list stored for a call id (item or test)
      * @param string|array $callId an execution identifier
@@ -134,7 +133,7 @@ interface taoResultServer_models_classes_ReadableResultStorage
      * @return string the uri of the delivery related to the delivery execution
      */
     public function getDelivery($deliveryResultIdentifier);
-    
+
     /**
      * Get the entire list of call ids that are stored (item or test)
      * @return array the list of executions ids (across all results)

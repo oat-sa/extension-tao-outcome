@@ -34,7 +34,6 @@ use oat\taoResultServer\models\Exceptions\DuplicateVariableException;
  */
 interface taoResultServer_models_classes_WritableResultStorage
 {
-
     /**
      * Spawn Result
      *
@@ -122,7 +121,7 @@ interface taoResultServer_models_classes_WritableResultStorage
      * @throws DuplicateVariableException
      */
     public function storeTestVariables($deliveryResultIdentifier, $test, array $testVariables, $callIdTest);
-    
+
     /**
      * Configure
      *

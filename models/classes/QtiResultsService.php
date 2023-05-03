@@ -206,7 +206,7 @@ class QtiResultsService extends ConfigurableService implements ResultService
 
                     if ($itemVariable['identifier'] == 'comment') {
                         /** Comment */
-                        $itemVariableElement = $dom->createElementNS(self::QTI_NS,'candidateComment', $itemVariable['value']);
+                        $itemVariableElement = $dom->createElementNS(self::QTI_NS, 'candidateComment', $itemVariable['value']);
                     } else {
                         $itemVariableElement = $this->createItemVariableNode($dom, $isResponseVariable, $itemVariable);
                     }

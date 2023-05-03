@@ -33,7 +33,7 @@ class StorageAggregation implements
     StorageManage
 {
     private $implementations = [];
-    
+
     public function __construct($implementations)
     {
         $interfaces = class_implements($this);
@@ -52,14 +52,14 @@ class StorageAggregation implements
     {
         return reset($this->implementations[$interface]);
     }
-    
+
     protected function getAllImplementations($interface)
     {
         return $this->implementations[$interface];
     }
-    
+
     // read interface
-    
+
     public function getVariables($callId)
     {
         return $this->getOneImplementation(StorageRead::class)->getVariables($callId);
@@ -69,34 +69,34 @@ class StorageAggregation implements
     {
         return $this->getOneImplementation(StorageRead::class)->getVariable($callId, $variableIdentifier);
     }
-    
+
     public function getTestTaker($deliveryResultIdentifier)
     {
         return $this->getOneImplementation(StorageRead::class)->getTestTaker($deliveryResultIdentifier);
     }
-    
+
     public function getDelivery($deliveryResultIdentifier)
     {
         return $this->getOneImplementation(StorageRead::class)->getDelivery($deliveryResultIdentifier);
     }
-    
+
     public function getAllCallIds()
     {
         return $this->getOneImplementation(StorageRead::class)->getAllCallIds();
     }
-    
+
     public function getAllTestTakerIds()
     {
         return $this->getOneImplementation(StorageRead::class)->getAllTestTakerIds();
     }
-    
+
     public function getAllDeliveryIds()
     {
         return $this->getOneImplementation(StorageRead::class)->getAllDeliveryIds();
     }
 
     // write interface
-    
+
     /**
      * Not sure how multiple engines are supposed to handle this
      */
@@ -108,78 +108,78 @@ class StorageAggregation implements
         }
         return $result;
     }
-    
+
     public function storeRelatedTestTaker($deliveryResultIdentifier, $testTakerIdentifier)
     {
         foreach ($this->getAllImplementations(StorageWrite::class) as $impl) {
             $impl->storeRelatedTestTaker($deliveryResultIdentifier, $testTakerIdentifier);
         }
     }
-    
+
     public function storeRelatedDelivery($deliveryResultIdentifier, $deliveryIdentifier)
     {
         foreach ($this->getAllImplementations(StorageWrite::class) as $impl) {
             $impl->storeRelatedDelivery($deliveryResultIdentifier, $deliveryIdentifier);
         }
     }
-    
+
     public function storeItemVariable($deliveryResultIdentifier, $test, $item, taoResultServer_models_classes_Variable $itemVariable, $callIdItem)
     {
         foreach ($this->getAllImplementations(StorageWrite::class) as $impl) {
             $impl->storeItemVariable($deliveryResultIdentifier, $test, $item, $itemVariable, $callIdItem);
         }
     }
-    
+
     public function storeItemVariables($deliveryResultIdentifier, $test, $item, array $itemVariables, $callIdItem)
     {
         foreach ($this->getAllImplementations(StorageWrite::class) as $impl) {
             $impl->storeItemVariables($deliveryResultIdentifier, $test, $item, $itemVariables, $callIdItem);
         }
     }
-    
+
     public function storeTestVariable($deliveryResultIdentifier, $test, taoResultServer_models_classes_Variable $testVariable, $callIdTest)
     {
         foreach ($this->getAllImplementations(StorageWrite::class) as $impl) {
             $impl->storeTestVariable($deliveryResultIdentifier, $test, $testVariable, $callIdTest);
         }
     }
-    
+
     public function storeTestVariables($deliveryResultIdentifier, $test, array $testVariables, $callIdTest)
     {
         foreach ($this->getAllImplementations(StorageWrite::class) as $impl) {
             $impl->storeTestVariables($deliveryResultIdentifier, $test, $testVariables, $callIdTest);
         }
     }
-    
+
     public function configure($callOptions = [])
     {
         foreach ($this->getAllImplementations(StorageWrite::class) as $impl) {
             $success = $impl->configure($callOptions);
         }
     }
-    
+
     // manage interface
 
     public function getVariableProperty($variableId, $property)
     {
         return $this->getOneImplementation(StorageManage::class)->getVariableProperty($variableId, $property);
     }
-    
+
     public function getRelatedItemCallIds($deliveryResultIdentifier)
     {
         return $this->getOneImplementation(StorageManage::class)->getRelatedItemCallIds($deliveryResultIdentifier);
     }
-    
+
     public function getRelatedTestCallIds($deliveryResultIdentifier)
     {
         return $this->getOneImplementation(StorageManage::class)->getRelatedTestCallIds($deliveryResultIdentifier);
     }
-    
+
     public function getResultByDelivery($delivery, $options = [])
     {
         return $this->getOneImplementation(StorageManage::class)->getResultByDelivery($delivery, $options = []);
     }
-    
+
     public function countResultByDelivery($delivery)
     {
         return $this->getOneImplementation(StorageManage::class)->countResultByDelivery($delivery);

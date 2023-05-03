@@ -25,11 +25,11 @@ use oat\taoResultServer\models\classes\ResultService;
 
 class taoResultServer_actions_QtiRestResults extends tao_actions_RestController
 {
-    const TESTTAKER = 'testtaker';
-    const DELIVERY = 'delivery';
-    const LAST_RESULT = 'last_result';
-    const DELIVERY_EXECUTION = 'deliveryExecution';
-    const RESULT = 'result';
+    public const TESTTAKER = 'testtaker';
+    public const DELIVERY = 'delivery';
+    public const LAST_RESULT = 'last_result';
+    public const DELIVERY_EXECUTION = 'deliveryExecution';
+    public const RESULT = 'result';
 
     protected $service;
 

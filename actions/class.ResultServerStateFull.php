@@ -20,7 +20,7 @@
  *
  */
 
-use \oat\tao\model\routing\AnnotationReader\security;
+use oat\tao\model\routing\AnnotationReader\security;
 
 /**
  *
@@ -33,7 +33,6 @@ use \oat\tao\model\routing\AnnotationReader\security;
  */
 class taoResultServer_actions_ResultServerStateFull extends tao_actions_SaSModule
 {
-
     protected $service;
 
     /**

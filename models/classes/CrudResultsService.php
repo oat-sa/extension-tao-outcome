@@ -35,7 +35,6 @@ use taoResultServer_models_classes_ResponseVariable;
  */
 class CrudResultsService extends tao_models_classes_CrudService
 {
-
     public const GROUP_BY_DELIVERY = 0;
     public const GROUP_BY_TEST = 1;
     public const GROUP_BY_ITEM = 2;

@@ -36,7 +36,7 @@ class QtiResultsServiceTest extends TestCase
 
     public function binaryContentDataProvider(): array
     {
-        $basePath = realpath(__DIR__.'/../../../resources');
+        $basePath = realpath(__DIR__ . '/../../../resources');
 
         return [
             [

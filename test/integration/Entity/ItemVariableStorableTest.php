@@ -27,7 +27,6 @@ use oat\generis\test\TestCase;
 
 class ItemVariableStorableTest extends TestCase
 {
-
     public function testSerializeAsExpected()
     {
         $resultVariable = $this->getMockBuilder(\taoResultServer_models_classes_Variable::class)->disableOriginalConstructor()->getMock();

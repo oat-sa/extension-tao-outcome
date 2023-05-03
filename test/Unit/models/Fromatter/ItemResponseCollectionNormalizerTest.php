@@ -26,7 +26,6 @@ use stdClass;
 
 class ItemResponseCollectionNormalizerTest extends TestCase
 {
-
     public function testNormalize()
     {
         $normalizer = new ItemResponseCollectionNormalizer();

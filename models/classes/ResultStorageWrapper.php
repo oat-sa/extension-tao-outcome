@@ -23,7 +23,6 @@ namespace oat\taoResultServer\models\classes;
 
 class ResultStorageWrapper
 {
-
     /**
      * @var string
      */

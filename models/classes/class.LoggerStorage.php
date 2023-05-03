@@ -23,7 +23,6 @@
  */
 class taoResultServer_models_classes_LoggerStorage extends tao_models_classes_GenerisService implements taoResultServer_models_classes_WritableResultStorage
 {
-    
     /*
      * (non-PHPdoc) @see taoResultServer_models_classes_WritableResultStorage::storeRelatedTestTaker()
      */
@@ -31,7 +30,7 @@ class taoResultServer_models_classes_LoggerStorage extends tao_models_classes_Ge
     {
         common_logger::i("LoggerStorage - Test taker storage :" . $testTakerIdentifier . " into " . $deliveryResultIdentifier);
     }
-    
+
     /*
      * (non-PHPdoc) @see taoResultServer_models_classes_WritableResultStorage::storeRelatedDelivery()
      */
@@ -39,7 +38,7 @@ class taoResultServer_models_classes_LoggerStorage extends tao_models_classes_Ge
     {
         common_logger::i("LoggerStorage - Delivery storage:" . $deliveryResultIdentifier . " into " . $deliveryResultIdentifier);
     }
-    
+
     /*
      * (non-PHPdoc) @see taoResultServer_models_classes_WritableResultStorage::storeItemVariable()
      */
@@ -47,7 +46,7 @@ class taoResultServer_models_classes_LoggerStorage extends tao_models_classes_Ge
     {
         common_logger::i("LoggerStorage - StoreItemVariable :" . $test . " item:" . $item . " callid:" . $callIdItem . "variable:" . serialize($itemVariable) . " into " . $deliveryResultIdentifier);
     }
-    
+
     /*
      * (non-PHPdoc) @see taoResultServer_models_classes_WritableResultStorage::storeItemVariables()
      */
@@ -61,7 +60,7 @@ class taoResultServer_models_classes_LoggerStorage extends tao_models_classes_Ge
         );
         common_logger::i("LoggerStorage - StoreItemVariables :" . $test . " item:" . $item . " callid:" . $callIdItem . "variables:" . implode(' - ', $varContents) . " into " . $deliveryResultIdentifier);
     }
-    
+
     /*
      * (non-PHPdoc) @see taoResultServer_models_classes_WritableResultStorage::storeTestVariable()
      */
@@ -69,18 +68,18 @@ class taoResultServer_models_classes_LoggerStorage extends tao_models_classes_Ge
     {
         common_logger::i("LoggerStorage - StoreTestVariable :" . $test . " callid:" . $callIdTest . "variable:" . serialize($testVariable) . " into " . $deliveryResultIdentifier);
     }
-    
+
     public function storeTestVariables($deliveryResultIdentifier, $test, array $testVariables, $callIdTest)
     {
-         $varContents = array_map(
-                function ($value) {
-                    return serialize($value);
-                },
-             $testVariables
-         );
+        $varContents = array_map(
+            function ($value) {
+                return serialize($value);
+            },
+            $testVariables
+        );
         common_logger::i("LoggerStorage - StoreTestVariable :" . $test . " callid:" . $callIdTest . "variables:" . implode(' - ', $varContents) . " into " . $deliveryResultIdentifier);
     }
-    
+
     /*
      * (non-PHPdoc) @see taoResultServer_models_classes_WritableResultStorage::configure()
      */
@@ -88,7 +87,7 @@ class taoResultServer_models_classes_LoggerStorage extends tao_models_classes_Ge
     {
         common_logger::i("LoggerStorage - configuration:" . serialize($callOptions));
     }
-    
+
     /*
      * (non-PHPdoc) @see taoResultServer_models_classes_WritableResultStorage::spawnResult()
      */
