@@ -136,8 +136,7 @@ class SendCalculatedResultService
             ->getDeliveredTestOutcomeDeclarations($deliveryExecutionId);
 
         $isFullyGraded = true;
-        foreach ($testItemsData as $itemData) {
-            $itemIdentifier = $itemData['identifier'];
+        foreach ($testItemsData as $itemIdentifier => $itemData) {
             $itemUri = $itemData['itemUri'];
             foreach ($itemData['outcomes'] ?? [] as $outcomeDeclaration) {
                 if (!isset($outcomeDeclaration['attributes']['externalScored'])) {
@@ -166,14 +165,8 @@ class SendCalculatedResultService
     ): bool {
         foreach ($outcomeVariables as $outcomeVariableArray) {
             $outcomeVariable = current($outcomeVariableArray);
-            $outcomeItemIdentifier = $outcomeVariable->item;
-            if (
-                $outcomeItemIdentifier !== null
-                && (
-                    strpos($outcomeItemIdentifier, $itemIdentifier) === false
-                    && strpos($outcomeItemIdentifier, $itemUri) === false
-                )
-            ) {
+            $outcomeItemIdentifier = $outcomeVariable->callIdItem;
+            if ($outcomeItemIdentifier !== null && strpos($outcomeItemIdentifier, $itemIdentifier) === false) {
                 continue;
             }
 
