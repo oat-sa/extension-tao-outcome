@@ -42,9 +42,18 @@ class taoResultServer_actions_QtiRestResults extends tao_actions_RestController
 
             $deliveryId = $this->getRequestParameter(self::DELIVERY);
             $resultId = $this->getRequestParameter(self::RESULT);
-            $fetchOnlyLastAttemptResult = filter_var($this->getRequestParameter(self::LAST_RESULT), FILTER_VALIDATE_BOOLEAN);
+            $fetchOnlyLastAttemptResult = filter_var(
+                $this->getRequestParameter(self::LAST_RESULT),
+                FILTER_VALIDATE_BOOLEAN
+            );
 
-            $this->returnValidXml($this->getQtiResultService()->getQtiResultXml($deliveryId, $resultId, $fetchOnlyLastAttemptResult));
+            $this->returnValidXml(
+                $this->getQtiResultService()->getQtiResultXml(
+                    $deliveryId,
+                    $resultId,
+                    $fetchOnlyLastAttemptResult
+                )
+            );
         } catch (Exception $e) {
             $this->returnFailure($e);
         }
@@ -136,7 +145,10 @@ class taoResultServer_actions_QtiRestResults extends tao_actions_RestController
     {
         foreach ($params as $param) {
             if (!$this->hasRequestParameter($param)) {
-                throw new common_exception_MissingParameter($param . ' is missing from the request.', $this->getRequestURI());
+                throw new common_exception_MissingParameter(
+                    $param . ' is missing from the request.',
+                    $this->getRequestURI()
+                );
             }
 
             if (empty($this->getRequestParameter($param))) {

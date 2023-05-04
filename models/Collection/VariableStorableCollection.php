@@ -50,8 +50,12 @@ class VariableStorableCollection
      *
      * @return VariableStorableCollection
      */
-    public static function createTestVariableCollection($callIdTest, $deliveryResultIdentifier, $testIdentifier, array $testVariables)
-    {
+    public static function createTestVariableCollection(
+        $callIdTest,
+        $deliveryResultIdentifier,
+        $testIdentifier,
+        array $testVariables
+    ) {
         $storableVariables = [];
 
         foreach ($testVariables as $testVariable) {
@@ -59,7 +63,12 @@ class VariableStorableCollection
                 $testVariable->setEpoch(microtime());
             }
 
-            $storableVariables[] = new TestVariableStorable($deliveryResultIdentifier, $testIdentifier, $testVariable, $callIdTest);
+            $storableVariables[] = new TestVariableStorable(
+                $deliveryResultIdentifier,
+                $testIdentifier,
+                $testVariable,
+                $callIdTest
+            );
         }
 
         return new self($callIdTest, $storableVariables);
@@ -74,8 +83,13 @@ class VariableStorableCollection
      *
      * @return VariableStorableCollection
      */
-    public static function createItemVariableCollection($callIdItem, $item, $deliveryResultIdentifier, $testIdentifier, array $testVariables)
-    {
+    public static function createItemVariableCollection(
+        $callIdItem,
+        $item,
+        $deliveryResultIdentifier,
+        $testIdentifier,
+        array $testVariables
+    ) {
         $storableVariables = [];
 
         foreach ($testVariables as $testVariable) {
@@ -83,7 +97,13 @@ class VariableStorableCollection
                 $testVariable->setEpoch(microtime());
             }
 
-            $storableVariables[] = new ItemVariableStorable($deliveryResultIdentifier, $testIdentifier, $testVariable, $item, $callIdItem);
+            $storableVariables[] = new ItemVariableStorable(
+                $deliveryResultIdentifier,
+                $testIdentifier,
+                $testVariable,
+                $item,
+                $callIdItem
+            );
         }
 
         return new self($callIdItem, $storableVariables);

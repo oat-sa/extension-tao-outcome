@@ -32,25 +32,48 @@ class VariableStorableCollectionTest extends TestCase
     public function testCreateWithSuccess()
     {
         $testVariables = [
-            $this->getMockBuilder(taoResultServer_models_classes_Variable::class)->disableOriginalConstructor()->getMock(),
-            $this->getMockBuilder(taoResultServer_models_classes_Variable::class)->disableOriginalConstructor()->getMock(),
+            $this
+                ->getMockBuilder(taoResultServer_models_classes_Variable::class)
+                ->disableOriginalConstructor()
+                ->getMock(),
+            $this
+                ->getMockBuilder(taoResultServer_models_classes_Variable::class)
+                ->disableOriginalConstructor()
+                ->getMock(),
         ];
 
-        $testCollection = VariableStorableCollection::createTestVariableCollection('callIdTest', 'deliveryResultIdentifier', 'testIdentifier', $testVariables);
-        $itemCollection = VariableStorableCollection::createItemVariableCollection('callIdItem', 'item', 'deliveryResultIdentifier', 'testIdentifier', $testVariables);
+        $testCollection = VariableStorableCollection::createTestVariableCollection(
+            'callIdTest',
+            'deliveryResultIdentifier',
+            'testIdentifier',
+            $testVariables
+        );
+        $itemCollection = VariableStorableCollection::createItemVariableCollection(
+            'callIdItem',
+            'item',
+            'deliveryResultIdentifier',
+            'testIdentifier',
+            $testVariables
+        );
 
         $this->assertInstanceOf(VariableStorableCollection::class, $testCollection);
-        $this->assertInstanceOf(\oat\taoResultServer\models\Collection\VariableStorableCollection::class, $itemCollection);
+        $this->assertInstanceOf(VariableStorableCollection::class, $itemCollection);
     }
 
     public function testTestsCollection()
     {
-        $resultVariable1 = $this->getMockBuilder(taoResultServer_models_classes_OutcomeVariable::class)->disableOriginalConstructor()->getMock();
+        $resultVariable1 = $this
+            ->getMockBuilder(taoResultServer_models_classes_OutcomeVariable::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         $resultVariable1
             ->method('getIdentifier')
             ->willReturn('variable1');
 
-        $resultVariable2 = $this->getMockBuilder(taoResultServer_models_classes_OutcomeVariable::class)->disableOriginalConstructor()->getMock();
+        $resultVariable2 = $this
+            ->getMockBuilder(taoResultServer_models_classes_OutcomeVariable::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         $resultVariable2
             ->method('getIdentifier')
             ->willReturn('variable2');
@@ -60,7 +83,12 @@ class VariableStorableCollectionTest extends TestCase
             $resultVariable2
         ];
 
-        $collection = VariableStorableCollection::createTestVariableCollection('callIdTest', 'deliveryResultIdentifier', 'testIdentifier', $testVariables);
+        $collection = VariableStorableCollection::createTestVariableCollection(
+            'callIdTest',
+            'deliveryResultIdentifier',
+            'testIdentifier',
+            $testVariables
+        );
 
         $this->assertInstanceOf(VariableStorableCollection::class, $collection);
 
@@ -74,12 +102,18 @@ class VariableStorableCollectionTest extends TestCase
 
     public function testItemsCollection()
     {
-        $resultVariable1 = $this->getMockBuilder(taoResultServer_models_classes_Variable::class)->disableOriginalConstructor()->getMock();
+        $resultVariable1 = $this
+            ->getMockBuilder(taoResultServer_models_classes_Variable::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         $resultVariable1
             ->method('getIdentifier')
             ->willReturn('variable1');
 
-        $resultVariable2 = $this->getMockBuilder(taoResultServer_models_classes_Variable::class)->disableOriginalConstructor()->getMock();
+        $resultVariable2 = $this
+            ->getMockBuilder(taoResultServer_models_classes_Variable::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         $resultVariable2
             ->method('getIdentifier')
             ->willReturn('variable2');
@@ -89,7 +123,13 @@ class VariableStorableCollectionTest extends TestCase
             $resultVariable2
         ];
 
-        $collection = VariableStorableCollection::createItemVariableCollection('callIdItem', 'item', 'deliveryResultIdentifier', 'testIdentifier', $testVariables);
+        $collection = VariableStorableCollection::createItemVariableCollection(
+            'callIdItem',
+            'item',
+            'deliveryResultIdentifier',
+            'testIdentifier',
+            $testVariables
+        );
 
         $this->assertInstanceOf(VariableStorableCollection::class, $collection);
 

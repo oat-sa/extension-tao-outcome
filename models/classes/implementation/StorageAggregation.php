@@ -123,8 +123,13 @@ class StorageAggregation implements
         }
     }
 
-    public function storeItemVariable($deliveryResultIdentifier, $test, $item, taoResultServer_models_classes_Variable $itemVariable, $callIdItem)
-    {
+    public function storeItemVariable(
+        $deliveryResultIdentifier,
+        $test,
+        $item,
+        taoResultServer_models_classes_Variable $itemVariable,
+        $callIdItem
+    ) {
         foreach ($this->getAllImplementations(StorageWrite::class) as $impl) {
             $impl->storeItemVariable($deliveryResultIdentifier, $test, $item, $itemVariable, $callIdItem);
         }
@@ -137,8 +142,12 @@ class StorageAggregation implements
         }
     }
 
-    public function storeTestVariable($deliveryResultIdentifier, $test, taoResultServer_models_classes_Variable $testVariable, $callIdTest)
-    {
+    public function storeTestVariable(
+        $deliveryResultIdentifier,
+        $test,
+        taoResultServer_models_classes_Variable $testVariable,
+        $callIdTest
+    ) {
         foreach ($this->getAllImplementations(StorageWrite::class) as $impl) {
             $impl->storeTestVariable($deliveryResultIdentifier, $test, $testVariable, $callIdTest);
         }

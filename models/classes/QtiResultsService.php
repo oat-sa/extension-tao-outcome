@@ -128,7 +128,11 @@ class QtiResultsService extends ConfigurableService implements ResultService
      */
     public function getQtiResultXml($deliveryId, $resultId, $fetchOnlyLastAttemptResult = false)
     {
-        $deId = $this->getServiceManager()->get(ResultAliasServiceInterface::SERVICE_ID)->getDeliveryExecutionId($resultId);
+        $deId = $this
+            ->getServiceManager()
+            ->get(ResultAliasServiceInterface::SERVICE_ID)
+            ->getDeliveryExecutionId($resultId);
+
         if ($deId === null) {
             $deId = $resultId;
         }
@@ -141,7 +145,13 @@ class QtiResultsService extends ConfigurableService implements ResultService
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $itemResultsByAttempt = $crudService->format($resultServer, $deId, CrudResultsService::GROUP_BY_ITEM, $fetchOnlyLastAttemptResult, true);
+        $itemResultsByAttempt = $crudService->format(
+            $resultServer,
+            $deId,
+            CrudResultsService::GROUP_BY_ITEM,
+            $fetchOnlyLastAttemptResult,
+            true
+        );
         $testResults = $crudService->format($resultServer, $deId, CrudResultsService::GROUP_BY_TEST);
 
         $assessmentResultElt = $dom->createElementNS(self::QTI_NS, 'assessmentResult');
@@ -152,7 +162,9 @@ class QtiResultsService extends ConfigurableService implements ResultService
         $userId = $resultServer->getTestTaker($deId);
 
         if ($userId === false) {
-            throw new common_exception_ResourceNotFound('Provided parameters don\'t match with any delivery execution.');
+            throw new common_exception_ResourceNotFound(
+                'Provided parameters don\'t match with any delivery execution.'
+            );
         }
 
         if (\common_Utils::isUri($userId)) {
@@ -174,7 +186,10 @@ class QtiResultsService extends ConfigurableService implements ResultService
             /** Item Variable */
             foreach ($testResult as $itemVariable) {
                 $isResponseVariable = $itemVariable['type']->getUri() === self::CLASS_RESPONSE_VARIABLE;
-                $testVariableElement = $dom->createElementNS(self::QTI_NS, ($isResponseVariable) ? 'responseVariable' : 'outcomeVariable');
+                $testVariableElement = $dom->createElementNS(
+                    self::QTI_NS,
+                    ($isResponseVariable) ? 'responseVariable' : 'outcomeVariable'
+                );
                 $testVariableElement->setAttribute('identifier', $itemVariable['identifier']);
                 $testVariableElement->setAttribute('cardinality', $itemVariable['cardinality']);
                 $testVariableElement->setAttribute('baseType', $itemVariable['basetype']);
@@ -206,7 +221,11 @@ class QtiResultsService extends ConfigurableService implements ResultService
 
                     if ($itemVariable['identifier'] == 'comment') {
                         /** Comment */
-                        $itemVariableElement = $dom->createElementNS(self::QTI_NS, 'candidateComment', $itemVariable['value']);
+                        $itemVariableElement = $dom->createElementNS(
+                            self::QTI_NS,
+                            'candidateComment',
+                            $itemVariable['value']
+                        );
                     } else {
                         $itemVariableElement = $this->createItemVariableNode($dom, $isResponseVariable, $itemVariable);
                     }
@@ -257,8 +276,11 @@ class QtiResultsService extends ConfigurableService implements ResultService
      * @param array $itemVariablesByTestResult
      * @throws DuplicateVariableException
      */
-    protected function storeTestVariables(WritableResultStorage $resultStorage, $deliveryExecutionId, array $itemVariablesByTestResult)
-    {
+    protected function storeTestVariables(
+        WritableResultStorage $resultStorage,
+        $deliveryExecutionId,
+        array $itemVariablesByTestResult
+    ) {
         $test = ' ';
         foreach ($itemVariablesByTestResult as $test => $testVariables) {
             $resultStorage->storeTestVariables($deliveryExecutionId, $test, $testVariables, $test);
@@ -273,8 +295,11 @@ class QtiResultsService extends ConfigurableService implements ResultService
      * @param array $itemVariablesByItemResult
      * @throws DuplicateVariableException
      */
-    protected function storeItemVariables(WritableResultStorage $resultStorage, $deliveryExecutionId, array $itemVariablesByItemResult)
-    {
+    protected function storeItemVariables(
+        WritableResultStorage $resultStorage,
+        $deliveryExecutionId,
+        array $itemVariablesByItemResult
+    ) {
         $test = null;
         foreach ($itemVariablesByItemResult as $itemResultIdentifier => $itemVariables) {
             $callIdItem = $deliveryExecutionId . '.' . $itemResultIdentifier;
@@ -283,7 +308,13 @@ class QtiResultsService extends ConfigurableService implements ResultService
                     $callIdItem .= '.' . (int)$variable->getValue();
                 }
             }
-            $resultStorage->storeItemVariables($deliveryExecutionId, $test, $itemResultIdentifier, $itemVariables, $callIdItem);
+            $resultStorage->storeItemVariables(
+                $deliveryExecutionId,
+                $test,
+                $itemResultIdentifier,
+                $itemVariables,
+                $callIdItem
+            );
         }
     }
 

@@ -30,7 +30,10 @@ class TestVariableStorableTest extends TestCase
 {
     public function testSerializeAsExpected()
     {
-        $resultVariable = $this->getMockBuilder(taoResultServer_models_classes_OutcomeVariable::class)->disableOriginalConstructor()->getMock();
+        $resultVariable = $this
+            ->getMockBuilder(taoResultServer_models_classes_OutcomeVariable::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $var = new TestVariableStorable('deliveryResultIdentifier', 'test', $resultVariable, 'callIdTest');
 

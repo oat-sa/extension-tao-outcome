@@ -39,16 +39,25 @@ class NoResultStorage extends ConfigurableService implements taoResultServer_mod
     {
     }
 
-    public function storeItemVariable($deliveryResultIdentifier, $test, $item, taoResultServer_models_classes_Variable $itemVariable, $callIdItem)
-    {
+    public function storeItemVariable(
+        $deliveryResultIdentifier,
+        $test,
+        $item,
+        taoResultServer_models_classes_Variable $itemVariable,
+        $callIdItem
+    ) {
     }
 
     public function storeItemVariables($deliveryResultIdentifier, $test, $item, array $itemVariables, $callIdItem)
     {
     }
 
-    public function storeTestVariable($deliveryResultIdentifier, $test, taoResultServer_models_classes_Variable $testVariable, $callIdTest)
-    {
+    public function storeTestVariable(
+        $deliveryResultIdentifier,
+        $test,
+        taoResultServer_models_classes_Variable $testVariable,
+        $callIdTest
+    ) {
     }
 
     public function storeTestVariables($deliveryResultIdentifier, $test, array $testVariables, $callIdTest)

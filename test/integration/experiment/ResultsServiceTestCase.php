@@ -2,7 +2,9 @@
 
 //TODO simpletest testcase that need to be migrate to phpunit
 
+// phpcs:disable PSR1.Files.SideEffects
 include_once dirname(__FILE__) . '/../../../includes/raw_start.php';
+// phpcs:enable PSR1.Files.SideEffects
 
 class ResultsServiceTestCase extends UnitTestCase
 {
@@ -25,7 +27,10 @@ class ResultsServiceTestCase extends UnitTestCase
     }
     public function testGetAssessmentResult()
     {
-        $this->assertIsA($this->localResultsService->getAssessmentResult(), 'taoResultServer_models_classes_assessmentResult');
+        $this->assertIsA(
+            $this->localResultsService->getAssessmentResult(),
+            'taoResultServer_models_classes_assessmentResult'
+        );
     }
     public function testResultsServerModel()
     {
@@ -36,8 +41,13 @@ class ResultsServiceTestCase extends UnitTestCase
         $context->addSessionIdentifier($sessionIdentifier);
         $context->setSourcedID("MyUniqueTestTaker");
         $this->localResultsService->getAssessmentResult()->setContext($context);
-        $this->assertIsA($this->localResultsService->getAssessmentResult()->getContext(), 'taoResultServer_models_classes_context');
-        $sessionIdentifier = current($this->localResultsService->getAssessmentResult()->getContext()->getSessionIdentifiers());
+        $this->assertIsA(
+            $this->localResultsService->getAssessmentResult()->getContext(),
+            'taoResultServer_models_classes_context'
+        );
+        $sessionIdentifier = current(
+            $this->localResultsService->getAssessmentResult()->getContext()->getSessionIdentifiers()
+        );
 
         $this->assertIsA($sessionIdentifier, 'taoResultServer_models_classes_sessionIdentifier');
         $this->assertEqual($sessionIdentifier->getIdentifier(), 'MyUniqueSession');

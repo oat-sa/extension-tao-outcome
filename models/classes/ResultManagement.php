@@ -56,7 +56,8 @@ interface ResultManagement extends \taoResultServer_models_classes_ReadableResul
      * "offset"=> an int,
      * "limit"=> an int
      * )
-     * @return array of results that match the filter : array(array('deliveryResultIdentifier' => '123', 'testTakerIdentifier' => '456', 'deliveryIdentifier' => '789'))
+     * @return array of results that match the filter : array(array('deliveryResultIdentifier' => '123',
+     *               'testTakerIdentifier' => '456', 'deliveryIdentifier' => '789'))
      */
     public function getResultByDelivery($delivery, $options = []);
 

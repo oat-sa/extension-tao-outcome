@@ -76,7 +76,9 @@ class Updater extends common_ext_ExtensionUpdater
 
         if ($this->isVersion('11.0.1')) {
             $resultServerService = $this->safeLoadService(ResultServerService::SERVICE_ID);
-            if (get_class($resultServerService) === 'oat\taoResultServer\models\classes\implementation\OntologyService') {
+            if (
+                get_class($resultServerService) === 'oat\taoResultServer\models\classes\implementation\OntologyService'
+            ) {
                 $resultService = new ResultServerService([
                     ResultServerService::OPTION_RESULT_STORAGE => 'taoOutcomeRds/RdsResultStorage'
                 ]);
