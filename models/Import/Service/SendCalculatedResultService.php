@@ -169,7 +169,10 @@ class SendCalculatedResultService
             $outcomeItemIdentifier = $outcomeVariable->item;
             if (
                 $outcomeItemIdentifier !== null
-                && (strpos($outcomeItemIdentifier, $itemIdentifier) === false && strpos($outcomeItemIdentifier, $itemUri) === false)
+                && (
+                    strpos($outcomeItemIdentifier, $itemIdentifier) === false
+                    && strpos($outcomeItemIdentifier, $itemUri) === false
+                )
             ) {
                 continue;
             }
