@@ -328,6 +328,7 @@ class SendCalculatedResultServiceTest extends TestCase
         $item = [
             sprintf('item-%d', $number) => [
                 'identifier' => sprintf('item_%d', $number),
+                'itemUri' => 'test|test',
                 'outcomes' => [
                     [
                         'identifier' => sprintf('OUTCOME_%d', $number),
