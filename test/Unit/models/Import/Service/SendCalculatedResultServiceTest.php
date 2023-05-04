@@ -292,6 +292,7 @@ class SendCalculatedResultServiceTest extends TestCase
             $container = new stdClass();
             $container->variable = $variable;
             $container->item = sprintf('item_%d', $i);
+            $container->callIdItem = sprintf('item-%d', $i);
             $list[] = [$container];
         }
 
@@ -328,7 +329,6 @@ class SendCalculatedResultServiceTest extends TestCase
         $item = [
             sprintf('item-%d', $number) => [
                 'identifier' => sprintf('item_%d', $number),
-                'itemUri' => 'test|test',
                 'outcomes' => [
                     [
                         'identifier' => sprintf('OUTCOME_%d', $number),

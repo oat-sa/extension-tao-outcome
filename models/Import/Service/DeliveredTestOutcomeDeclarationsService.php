@@ -62,8 +62,6 @@ class DeliveredTestOutcomeDeclarationsService
                 /** @var ExtendedAssessmentItemRef $item */
                 foreach ($section->getSectionParts() as $item) {
                     $itemData = $this->qtiRunnerService->getItemData($context, $item->getHref());
-                    $directoryIds = explode('|', $item->getHref());
-                    $itemData['data']['itemUri'] = $directoryIds[0] ?? '';
                     $items[$item->getIdentifier()] = $itemData['data'];
                 }
             }

@@ -137,7 +137,6 @@ class SendCalculatedResultService
 
         $isFullyGraded = true;
         foreach ($testItemsData as $itemIdentifier => $itemData) {
-            $itemUri = $itemData['itemUri'];
             foreach ($itemData['outcomes'] ?? [] as $outcomeDeclaration) {
                 if (!isset($outcomeDeclaration['attributes']['externalScored'])) {
                     continue;
@@ -147,7 +146,6 @@ class SendCalculatedResultService
                     $outcomeVariables,
                     $outcomeDeclaration['identifier'],
                     $itemIdentifier,
-                    $itemUri
                 );
                 if ($isSubjectOutcomeVariableGraded) {
                     $isFullyGraded = true;
@@ -160,8 +158,7 @@ class SendCalculatedResultService
     private function isSubjectOutcomeVariableGraded(
         array $outcomeVariables,
         string $outcomeDeclarationIdentifier,
-        string $itemIdentifier,
-        string $itemUri
+        string $itemIdentifier
     ): bool {
         foreach ($outcomeVariables as $outcomeVariableArray) {
             $outcomeVariable = current($outcomeVariableArray);

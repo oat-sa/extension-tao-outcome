@@ -83,10 +83,6 @@ class DeliveredTestOutcomeDeclarationsServiceTest extends TestCase
             ->expects($this->once())
             ->method('getIdentifier')
             ->willReturn('test-item-1');
-        $extendedAssessmentItemRef
-            ->expects($this->any())
-            ->method('getHref')
-            ->willReturn('test|test');
 
         $extendedAssessmentSectionMock = $this->createMock(ExtendedAssessmentSection::class);
         $extendedAssessmentSectionMock
