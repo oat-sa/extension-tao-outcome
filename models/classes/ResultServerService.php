@@ -25,7 +25,7 @@ use oat\taoDelivery\model\execution\Delete\DeliveryExecutionDelete;
 
 interface ResultServerService extends DeliveryExecutionDelete
 {
-    const SERVICE_ID = 'taoResultServer/resultservice';
+    public const SERVICE_ID = 'taoResultServer/resultservice';
 
     /**
      * For legacy non stateless storage

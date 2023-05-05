@@ -36,7 +36,6 @@ use oat\taoResultServer\models\classes\ResultService;
  */
 class Updater extends common_ext_ExtensionUpdater
 {
-
     /**
      * @inheritDoc
      */
@@ -77,7 +76,9 @@ class Updater extends common_ext_ExtensionUpdater
 
         if ($this->isVersion('11.0.1')) {
             $resultServerService = $this->safeLoadService(ResultServerService::SERVICE_ID);
-            if (get_class($resultServerService) === 'oat\taoResultServer\models\classes\implementation\OntologyService') {
+            if (
+                get_class($resultServerService) === 'oat\taoResultServer\models\classes\implementation\OntologyService'
+            ) {
                 $resultService = new ResultServerService([
                     ResultServerService::OPTION_RESULT_STORAGE => 'taoOutcomeRds/RdsResultStorage'
                 ]);
@@ -88,7 +89,7 @@ class Updater extends common_ext_ExtensionUpdater
         }
 
         $this->skip('12.0.0', '12.1.1');
-        
+
         //Updater files are deprecated. Please use migrations.
         //See: https://github.com/oat-sa/generis/wiki/Tao-Update-Process
 

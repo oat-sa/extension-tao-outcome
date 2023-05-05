@@ -23,7 +23,7 @@ namespace oat\taoResultServer\models\classes;
 
 class NoResultStorageException extends \common_exception_Error
 {
-    const MESSAGE = 'No Results are available. The No Storage for the delivery is selected.';
+    public const MESSAGE = 'No Results are available. The No Storage for the delivery is selected.';
 
     public static function create()
     {

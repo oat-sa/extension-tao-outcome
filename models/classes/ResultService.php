@@ -26,15 +26,15 @@ use oat\taoDelivery\model\execution\DeliveryExecution as DeliveryExecutionInterf
 
 interface ResultService extends PhpSerializable
 {
-    const SERVICE_ID = 'taoResultServer/qtiResultsService';
+    public const SERVICE_ID = 'taoResultServer/qtiResultsService';
 
-    const CONFIG_ID = 'qtiResultsService';
+    public const CONFIG_ID = 'qtiResultsService';
 
-    const DELIVERY_RESULT_CLASS_URI = 'http://www.tao.lu/Ontologies/TAOResult.rdf#DeliveryResult';
+    public const DELIVERY_RESULT_CLASS_URI = 'http://www.tao.lu/Ontologies/TAOResult.rdf#DeliveryResult';
 
-    const SUBJECT_CLASS_URI = 'http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfSubject';
+    public const SUBJECT_CLASS_URI = 'http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfSubject';
 
-    const DELIVERY_CLASS_URI = 'http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfDelivery';
+    public const DELIVERY_CLASS_URI = 'http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfDelivery';
 
     /**
      * Get last delivery execution from $delivery & $testtaker uri

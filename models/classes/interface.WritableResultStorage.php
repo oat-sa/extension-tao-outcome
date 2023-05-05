@@ -34,7 +34,6 @@ use oat\taoResultServer\models\Exceptions\DuplicateVariableException;
  */
 interface taoResultServer_models_classes_WritableResultStorage
 {
-
     /**
      * Spawn Result
      *
@@ -77,17 +76,24 @@ interface taoResultServer_models_classes_WritableResultStorage
     /**
      * Store Item Variable
      *
-     * Submit a specific Item Variable, (ResponseVariable and OutcomeVariable shall be used respectively for collected data and score/interpretation computation)
-     * and store it with all the dependencies
+     * Submit a specific Item Variable, (ResponseVariable and OutcomeVariable shall be used respectively for collected
+     * data and score/interpretation computation) and store it with all the dependencies
      *
      * @param string $deliveryResultIdentifier
      * @param string $test (uri recommended)
      * @param string $item (uri recommended)
      * @param taoResultServer_models_classes_Variable $itemVariable the variable to store
-     * @param string $callIdItem contextual call id for the variable, ex. :  to distinguish the same variable output by the same item and that is presented several times in the same test
+     * @param string $callIdItem contextual call id for the variable, ex. :  to distinguish the same variable output
+     *                           by the same item and that is presented several times in the same test
      * @throws DuplicateVariableException
      */
-    public function storeItemVariable($deliveryResultIdentifier, $test, $item, taoResultServer_models_classes_Variable $itemVariable, $callIdItem);
+    public function storeItemVariable(
+        $deliveryResultIdentifier,
+        $test,
+        $item,
+        taoResultServer_models_classes_Variable $itemVariable,
+        $callIdItem
+    );
 
     /**
      * @param $deliveryResultIdentifier
@@ -111,7 +117,12 @@ interface taoResultServer_models_classes_WritableResultStorage
      * @param $callIdTest
      * @throws DuplicateVariableException
      */
-    public function storeTestVariable($deliveryResultIdentifier, $test, taoResultServer_models_classes_Variable $testVariable, $callIdTest);
+    public function storeTestVariable(
+        $deliveryResultIdentifier,
+        $test,
+        taoResultServer_models_classes_Variable $testVariable,
+        $callIdTest
+    );
 
     /**
      * @param $deliveryResultIdentifier
@@ -122,7 +133,7 @@ interface taoResultServer_models_classes_WritableResultStorage
      * @throws DuplicateVariableException
      */
     public function storeTestVariables($deliveryResultIdentifier, $test, array $testVariables, $callIdTest);
-    
+
     /**
      * Configure
      *

@@ -24,7 +24,6 @@ use oat\tao\model\routing\AnnotationReader\security;
 
 class taoResultServer_actions_RestResults extends \tao_actions_CommonRestModule
 {
-
     /**
      * taoResultServer_actions_RestResults constructor.
      * @security("hide")

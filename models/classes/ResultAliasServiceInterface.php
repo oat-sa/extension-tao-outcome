@@ -31,7 +31,7 @@ namespace oat\taoResultServer\models\classes;
  */
 interface ResultAliasServiceInterface
 {
-    const SERVICE_ID = 'taoResultServer/ResultAliasService';
+    public const SERVICE_ID = 'taoResultServer/ResultAliasService';
 
     /**
      * Get result alias by delivery execution identifier.

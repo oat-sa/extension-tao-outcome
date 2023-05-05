@@ -50,7 +50,12 @@ class TestVariableStorable extends VariableStorable
      */
     public static function createFromArray(array $data)
     {
-        return new static($data['deliveryResultIdentifier'], $data['test'], unserialize($data['variable']), $data['callIdTest']);
+        return new static(
+            $data['deliveryResultIdentifier'],
+            $data['test'],
+            unserialize($data['variable']),
+            $data['callIdTest']
+        );
     }
 
     /**

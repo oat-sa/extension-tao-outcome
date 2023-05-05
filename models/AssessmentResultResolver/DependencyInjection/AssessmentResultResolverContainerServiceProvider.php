@@ -6,6 +6,7 @@ use GuzzleHttp\Client;
 use oat\generis\model\DependencyInjection\ContainerServiceProviderInterface;
 use oat\taoResultServer\models\AssessmentResultResolver\AssessmentResultFileResponseResolver;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+
 use function Symfony\Component\DependencyInjection\Loader\Configurator\inline_service;
 
 class AssessmentResultResolverContainerServiceProvider implements ContainerServiceProviderInterface

@@ -250,7 +250,8 @@ class AssessmentResultFileResponseResolverTest extends TestCase
         $packedUnsignedShortFileNameLen = pack('S', strlen($fileName));
         $packedUnsignedShortMimeTypeLen = pack('S', strlen($mimeType));
 
-        return $packedUnsignedShortFileNameLen . $fileName . $packedUnsignedShortMimeTypeLen . $mimeType . $binaryContent;
+        return $packedUnsignedShortFileNameLen . $fileName . $packedUnsignedShortMimeTypeLen . $mimeType
+            . $binaryContent;
     }
 
     /**

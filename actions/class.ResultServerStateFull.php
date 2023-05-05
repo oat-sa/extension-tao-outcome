@@ -20,7 +20,7 @@
  *
  */
 
-use \oat\tao\model\routing\AnnotationReader\security;
+use oat\tao\model\routing\AnnotationReader\security;
 
 /**
  *
@@ -33,7 +33,6 @@ use \oat\tao\model\routing\AnnotationReader\security;
  */
 class taoResultServer_actions_ResultServerStateFull extends tao_actions_SaSModule
 {
-
     protected $service;
 
     /**
@@ -51,7 +50,9 @@ class taoResultServer_actions_ResultServerStateFull extends tao_actions_SaSModul
         $data = [];
         $data['success'] = false;
         $data['errorCode'] = $exception->getCode();
-        $data['errorMsg'] = ($exception instanceof common_exception_UserReadableException) ? $exception->getUserMessage() : $exception->getMessage();
+        $data['errorMsg'] = ($exception instanceof common_exception_UserReadableException)
+            ? $exception->getUserMessage()
+            : $exception->getMessage();
         $data['version'] = TAO_VERSION;
         echo json_encode($data);
         exit(0);
@@ -75,7 +76,9 @@ class taoResultServer_actions_ResultServerStateFull extends tao_actions_SaSModul
     {
         $variables = [];
         $item = $this->hasRequestParameter("itemId") ? $this->getRequestParameter("itemId") : "undefined";
-        $callIdItem = $this->hasRequestParameter("serviceCallId") ? $this->getRequestParameter("serviceCallId") : "undefined";
+        $callIdItem = $this->hasRequestParameter("serviceCallId")
+            ? $this->getRequestParameter("serviceCallId")
+            : "undefined";
         $test = $this->hasRequestParameter("testId") ? $this->getRequestParameter("testId") : "undefined";
         if ($this->hasRequestParameter("outcomeVariables")) {
             $outcomeVariables = $this->getRequestParameter("outcomeVariables");
