@@ -1,0 +1,129 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tao-3x\n"
+"PO-Revision-Date: 2023-04-21 15:46\n"
+"Last-Translator: TAO Translation Team <translation@tao.lu>\n"
+"MIME-Version: 1.0\n"
+"Language: pt\n"
+"sourceLanguage: en-US\n"
+"targetLanguage: en-US\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: tao-3x\n"
+"X-Crowdin-Project-ID: 582145\n"
+"X-Crowdin-Language: pt-BR\n"
+"X-Crowdin-File: /taoResultServer/locales/en-US/taoResultServer.rdf.po\n"
+"X-Crowdin-File-ID: 1667\n"
+"Language-Team: Portuguese, Brazilian\n"
+
+# http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerRole
+msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
+msgid "Result Server Manager"
+msgstr "Gerenciador de Servidor de Resultados"
+
+# http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerRole
+msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
+msgid "Result Server Manager Role"
+msgstr "Função de Gerenciador de Servidor de Resultados"
+
+# http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServer
+msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
+msgid "Result Server"
+msgstr "Servidor de resultados"
+
+# http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServer
+msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
+msgid "the Result Server for the Delivery"
+msgstr "o Servidor de Resultados para a Entrega"
+
+# http://www.tao.lu/Ontologies/TAOResultServer.rdf#hasResultServerModel
+msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
+msgid "Result Storage Engine"
+msgstr "Motor de Armazenamento de Resultados"
+
+# http://www.tao.lu/Ontologies/TAOResultServer.rdf#hasResultServerModel
+msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
+msgid "Result Storage Engine"
+msgstr "Definir Motor de Armazenamento de Resultados"
+
+# http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerEndpoint
+msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
+msgid "Result Server Endpoint"
+msgstr "Endpoint do Servidor de Resultados"
+
+# http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerEndpoint
+msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
+msgid "Endpoint of the Result Server"
+msgstr "Endpoint do Servidor de Resultados"
+
+# http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerModel
+msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
+msgid "Result Storage"
+msgstr "Armazenamento de resultados"
+
+# http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerModel
+msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
+msgid "Result Storage"
+msgstr "Armazenamento de resultados"
+
+# http://www.tao.lu/Ontologies/TAOResultServer.rdf#fileStorage
+msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
+msgid "tao logger"
+msgstr "tao logger"
+
+# http://www.tao.lu/Ontologies/TAOResultServer.rdf#fileStorage
+msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
+msgid "Data about the storage is sent into the logger"
+msgstr "Dados sobre o armazenamento são enviados ao registrador"
+
+# http://www.tao.lu/Ontologies/TAOResultServer.rdf#implementation
+msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
+msgid "Link to the implementation Class"
+msgstr "Link para a classe de implementação"
+
+# http://www.tao.lu/Ontologies/TAOResultServer.rdf#implementation
+msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
+msgid "Link to the implementation Class"
+msgstr "Link para a classe de implementação"
+
+# http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultNoStorageModel
+msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
+msgid "Data about the result storage is sent to the logger"
+msgstr "Dados sobre o armazenamento são enviados ao registrador"
+
+# http://www.tao.lu/Ontologies/TAOResultServer.rdf#void
+msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
+msgid "No storage"
+msgstr "Sem armazenamento"
+
+# http://www.tao.lu/Ontologies/TAOResultServer.rdf#void
+msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
+msgid "No storage "
+msgstr "Sem armazenamento "
+
+# http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServer
+msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
+msgid "Result Server"
+msgstr "Servidor de resultados"
+
+# http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerEndpoint
+msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
+msgid "Result Server Endpoint"
+msgstr "Endpoint do Servidor de Resultados"
+
+# http://www.tao.lu/Ontologies/TAOResultServer.rdf#fileStorage
+msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
+msgid "tao logger"
+msgstr "tao logger"
+
+# http://www.tao.lu/Ontologies/TAOResultServer.rdf#void
+msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
+msgid "No storage"
+msgstr "Sem armazenamento"
+
+# http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerRole
+msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
+msgid "Result Server Manager"
+msgstr "Gerenciador de Servidor de Resultados"
+
