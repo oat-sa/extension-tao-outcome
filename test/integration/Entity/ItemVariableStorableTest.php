@@ -27,12 +27,20 @@ use oat\generis\test\TestCase;
 
 class ItemVariableStorableTest extends TestCase
 {
-
     public function testSerializeAsExpected()
     {
-        $resultVariable = $this->getMockBuilder(\taoResultServer_models_classes_Variable::class)->disableOriginalConstructor()->getMock();
+        $resultVariable = $this
+            ->getMockBuilder(\taoResultServer_models_classes_Variable::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $var = new \oat\taoResultServer\models\Entity\ItemVariableStorable('deliveryResultIdentifier', 'test', $resultVariable, 'item', 'callIdItem');
+        $var = new ItemVariableStorable(
+            'deliveryResultIdentifier',
+            'test',
+            $resultVariable,
+            'item',
+            'callIdItem'
+        );
 
         $this->assertInstanceOf(\JsonSerializable::class, $var);
         $this->assertEquals([

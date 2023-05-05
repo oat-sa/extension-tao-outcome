@@ -43,10 +43,9 @@ use oat\oatbox\service\exception\InvalidServiceManagerException;
  * @package oat\taoResultServer\models\classes\implementation
  * @author Aleh Hutnikau, <hutnikau@1pt.com>
  */
-class ResultServerService  extends ConfigurableService implements ResultServerServiceInterface
+class ResultServerService extends ConfigurableService implements ResultServerServiceInterface
 {
-
-    const OPTION_RESULT_STORAGE = 'result_storage';
+    public const OPTION_RESULT_STORAGE = 'result_storage';
 
     /**
      * Starts or resume a taoResultServerStateFull session for results submission

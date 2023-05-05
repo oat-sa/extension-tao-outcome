@@ -34,5 +34,4 @@ use common_Exception;
  */
 class DuplicateVariableException extends common_Exception
 {
-
 }

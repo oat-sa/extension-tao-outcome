@@ -16,7 +16,9 @@ use tao_helpers_File;
 
 class AssessmentResultFileResponseResolver
 {
+    // phpcs:disable Generic.Files.LineLength
     private const PATTERN = '/^(?<' . self::FILENAME_KEY . '>[^,]+).*download_url,(?<' . self::DOWNLOAD_URL_KEY . '>[^,]+)/';
+    // phpcs:enable Generic.Files.LineLength
     private const FILENAME_KEY = 'fileName';
     private const DOWNLOAD_URL_KEY = 'downloadUrl';
 
@@ -90,6 +92,7 @@ class AssessmentResultFileResponseResolver
         $packedUnsignedShortFileNameLen = pack('S', strlen($fileName));
         $packedUnsignedShortMimeTypeLen = pack('S', strlen($mimeType));
 
-        return $packedUnsignedShortFileNameLen . $fileName . $packedUnsignedShortMimeTypeLen . $mimeType . $binaryContent;
+        return $packedUnsignedShortFileNameLen . $fileName . $packedUnsignedShortMimeTypeLen . $mimeType
+            . $binaryContent;
     }
 }

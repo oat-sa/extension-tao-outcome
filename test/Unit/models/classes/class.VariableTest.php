@@ -29,7 +29,7 @@ class taoResultServer_models_classes_VariableTest extends TestCase
 {
     public function testVariableCanBeJsonSerialized(): void
     {
-        $subject = new class extends \taoResultServer_models_classes_Variable {
+        $subject = new class () extends \taoResultServer_models_classes_Variable {
             public function getValue()
             {
             }
