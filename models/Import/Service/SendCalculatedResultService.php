@@ -30,69 +30,53 @@ use oat\taoResultServer\models\classes\implementation\ResultServerService;
 use oat\taoResultServer\models\Events\DeliveryExecutionResultsRecalculated;
 use stdClass;
 use taoResultServer_models_classes_ReadableResultStorage as ReadableResultStorage;
-use taoResultServer_models_classes_ResponseVariable;
-use taoResultServer_models_classes_Variable;
+use taoResultServer_models_classes_Variable as ResultVariable;
 
 class SendCalculatedResultService
 {
     private ResultServerService $resultServerService;
     private EventManager $eventManager;
     private DeliveryExecutionService $deliveryExecutionService;
+    private DeliveredTestOutcomeDeclarationsService $deliveredTestOutcomeDeclarationsService;
 
     public function __construct(
         ResultServerService $resultServerService,
         EventManager $eventManager,
-        DeliveryExecutionService $deliveryExecutionService
+        DeliveryExecutionService $deliveryExecutionService,
+        DeliveredTestOutcomeDeclarationsService $qtiTestItemsService
     ) {
         $this->resultServerService = $resultServerService;
         $this->eventManager = $eventManager;
         $this->deliveryExecutionService = $deliveryExecutionService;
+        $this->deliveredTestOutcomeDeclarationsService = $qtiTestItemsService;
     }
 
-    public function sendByDeliveryExecutionId(string $deliveryExecutionId): void
+    public function sendByDeliveryExecutionId(string $deliveryExecutionId): array
     {
         $deliveryExecution = $this->deliveryExecutionService->getDeliveryExecution($deliveryExecutionId);
         $outcomeVariables = $this->getResultsStorage()->getDeliveryVariables($deliveryExecutionId);
-        $scoreTotal = null;
-        $scoreTotalMax = null;
 
-        foreach ($outcomeVariables as $id => $outcomeVariable) {
-            if (!is_array($outcomeVariable)) {
-                continue;
-            }
+        [$scoreTotal, $scoreTotalMax] = $this->getScores($outcomeVariables);
 
-            /** @var stdClass $variable */
-            $variable = current($outcomeVariable);
-
-            if (!is_object($variable) || !property_exists($variable, 'variable')) {
-                continue;
-            }
-
-            /** @var taoResultServer_models_classes_Variable $variable */
-            $variable = $variable->variable;
-
-            if (!$variable instanceof taoResultServer_models_classes_Variable) {
-                continue;
-            }
-
-            if ($variable->getIdentifier() === 'SCORE_TOTAL') {
-                $scoreTotal = (float)$variable->getValue();
-
-                continue;
-            }
-
-            if ($variable->getIdentifier() === 'SCORE_TOTAL_MAX') {
-                $scoreTotalMax = (float)$variable->getValue();
-            }
-        }
-
+        $isFullyGraded = $this->checkIsFullyGraded($deliveryExecutionId, $outcomeVariables);
+        $gradingTimestamp = time();
         $this->eventManager->trigger(
             new DeliveryExecutionResultsRecalculated(
                 $deliveryExecution,
                 $scoreTotal,
-                $scoreTotalMax
+                $scoreTotalMax,
+                $isFullyGraded,
+                $gradingTimestamp
             )
         );
+
+        return [
+            'deliveryExecution' => $deliveryExecution,
+            'scoreTotal' => $scoreTotal,
+            'scoreTotalMax' => $scoreTotalMax,
+            'isFullyGraded' => $isFullyGraded,
+            'gradingTimestamp' => $gradingTimestamp
+        ];
     }
 
     /**
@@ -108,5 +92,93 @@ class SendCalculatedResultService
         }
 
         return $storage;
+    }
+
+    private function getScores(array $outcomeVariables): array
+    {
+        $scoreTotal = null;
+        $scoreTotalMax = null;
+
+        foreach ($outcomeVariables as $outcomeVariable) {
+            if (!is_array($outcomeVariable)) {
+                continue;
+            }
+
+            /** @var stdClass $variable */
+            $variable = current($outcomeVariable);
+
+            if (!is_object($variable) || !property_exists($variable, 'variable')) {
+                continue;
+            }
+
+            /** @var ResultVariable $variable */
+            $variable = $variable->variable;
+            if (!$variable instanceof ResultVariable) {
+                continue;
+            }
+
+            if ($variable->getIdentifier() === 'SCORE_TOTAL') {
+                $scoreTotal = (float)$variable->getValue();
+
+                continue;
+            }
+
+            if ($variable->getIdentifier() === 'SCORE_TOTAL_MAX') {
+                $scoreTotalMax = (float)$variable->getValue();
+            }
+        }
+        return [$scoreTotal, $scoreTotalMax];
+    }
+
+    private function checkIsFullyGraded(string $deliveryExecutionId, array $outcomeVariables): bool
+    {
+        $testItemsData = $this->deliveredTestOutcomeDeclarationsService
+            ->getDeliveredTestOutcomeDeclarations($deliveryExecutionId);
+
+        $isFullyGraded = true;
+        foreach ($testItemsData as $itemIdentifier => $itemData) {
+            foreach ($itemData['outcomes'] ?? [] as $outcomeDeclaration) {
+                if (!isset($outcomeDeclaration['attributes']['externalScored'])) {
+                    continue;
+                }
+                $isFullyGraded = false;
+                $isSubjectOutcomeVariableGraded = $this->isSubjectOutcomeVariableGraded(
+                    $outcomeVariables,
+                    $outcomeDeclaration['identifier'],
+                    $itemIdentifier,
+                );
+                if ($isSubjectOutcomeVariableGraded) {
+                    $isFullyGraded = true;
+                }
+            }
+        }
+        return $isFullyGraded;
+    }
+
+    private function isSubjectOutcomeVariableGraded(
+        array $outcomeVariables,
+        string $outcomeDeclarationIdentifier,
+        string $itemIdentifier
+    ): bool {
+        foreach ($outcomeVariables as $outcomeVariableArray) {
+            $outcomeVariable = current($outcomeVariableArray);
+            $outcomeItemIdentifier = $outcomeVariable->callIdItem;
+            if ($outcomeItemIdentifier !== null && strpos($outcomeItemIdentifier, $itemIdentifier) === false) {
+                continue;
+            }
+
+            if (!$outcomeVariable->variable instanceof ResultVariable) {
+                continue;
+            }
+            $variable = $outcomeVariable->variable;
+
+            if ($outcomeDeclarationIdentifier !== $variable->getIdentifier()) {
+                continue;
+            }
+            if ($variable->getExternallyGraded()) {
+                return true;
+            }
+        }
+        return false;
     }
 }
