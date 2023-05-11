@@ -27,10 +27,13 @@ use oat\generis\model\DependencyInjection\ContainerServiceProviderInterface;
 use oat\oatbox\event\EventManager;
 use oat\tao\model\taskQueue\QueueDispatcher;
 use oat\taoDelivery\model\execution\DeliveryExecutionService;
+use oat\taoDeliveryRdf\model\DeliveryContainerService;
+use oat\taoQtiTest\models\runner\QtiRunnerService;
 use oat\taoResultServer\models\classes\ResultServerService;
 use oat\taoResultServer\models\Import\Factory\ImportResultInputFactory;
 use oat\taoResultServer\models\Import\Factory\QtiResultXmlFactory;
 use oat\taoResultServer\models\Import\Service\QtiResultXmlImporter;
+use oat\taoResultServer\models\Import\Service\DeliveredTestOutcomeDeclarationsService;
 use oat\taoResultServer\models\Import\Service\ResultImporter;
 use oat\taoResultServer\models\Import\Service\SendCalculatedResultService;
 use oat\taoResultServer\models\Import\Task\ResultImportScheduler;
@@ -87,6 +90,18 @@ class ImportServiceProvider implements ContainerServiceProviderInterface
                 ]
             );
 
+
+        $services->set(DeliveredTestOutcomeDeclarationsService::class, DeliveredTestOutcomeDeclarationsService::class)
+            ->public()
+            ->args(
+                [
+
+                    service(QtiRunnerService::SERVICE_ID),
+                    service(DeliveryExecutionService::SERVICE_ID),
+                    service(DeliveryContainerService::SERVICE_ID),
+                ]
+            );
+
         $services->set(SendCalculatedResultService::class, SendCalculatedResultService::class)
             ->public()
             ->args(
@@ -94,8 +109,10 @@ class ImportServiceProvider implements ContainerServiceProviderInterface
                     service(ResultServerService::SERVICE_ID),
                     service(EventManager::SERVICE_ID),
                     service(DeliveryExecutionService::SERVICE_ID),
+                    service(DeliveredTestOutcomeDeclarationsService::class),
                 ]
             );
+
 
         $services->set(ImportResultInputFactory::class, ImportResultInputFactory::class)
             ->public()
