@@ -32,14 +32,14 @@ class DeliveryExecutionResultsRecalculated implements Event
     private ?float $totalScore;
     private ?float $totalMaxScore;
     private bool $isFullyGraded;
-    private int $gradingTimestamp;
+    private ?int $gradingTimestamp;
 
     public function __construct(
         DeliveryExecutionInterface $deliveryExecution,
         ?float $totalScore,
         ?float $totalMaxScore,
         bool $isFullyGraded,
-        int $gradingTimestamp
+        ?int $gradingTimestamp
     ) {
         $this->deliveryExecution = $deliveryExecution;
         $this->totalScore = $totalScore;
@@ -73,7 +73,7 @@ class DeliveryExecutionResultsRecalculated implements Event
         return $this->isFullyGraded;
     }
 
-    public function getGradingTimestamp(): int
+    public function getGradingTimestamp(): ?int
     {
         return $this->gradingTimestamp;
     }
