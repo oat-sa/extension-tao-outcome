@@ -65,10 +65,10 @@ class SendCalculatedResultService
 
         $isFullyGraded = $this->checkIsFullyGraded($deliveryExecutionId, $outcomeVariables);
 
-        $gradingTimestamp = time();
+        $timestamp = time();
         $deliveryFinishMicrotime = $deliveryExecution->getFinishTime();
         if ($deliveryFinishMicrotime !== null && $hasOutcomes === false) {
-            $gradingTimestamp = $this->secondsFromMicrotime($deliveryFinishMicrotime);
+            $timestamp = $this->secondsFromMicrotime($deliveryFinishMicrotime);
         }
 
         $this->eventManager->trigger(
@@ -77,7 +77,7 @@ class SendCalculatedResultService
                 $scoreTotal,
                 $scoreTotalMax,
                 $isFullyGraded,
-                $gradingTimestamp
+                $timestamp
             )
         );
 
@@ -86,7 +86,7 @@ class SendCalculatedResultService
             'scoreTotal' => $scoreTotal,
             'scoreTotalMax' => $scoreTotalMax,
             'isFullyGraded' => $isFullyGraded,
-            'gradingTimestamp' => $gradingTimestamp
+            'timestamp' => $timestamp
         ];
     }
 
