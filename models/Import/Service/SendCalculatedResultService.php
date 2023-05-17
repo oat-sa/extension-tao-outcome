@@ -51,7 +51,12 @@ class SendCalculatedResultService
         $this->deliveredTestOutcomeDeclarationsService = $qtiTestItemsService;
     }
 
-    public function sendByDeliveryExecutionId(string $deliveryExecutionId): array
+    /**
+     * @throws common_exception_Error
+     * @throws \common_exception_NotFound
+     * @throws InvalidServiceManagerException
+     */
+    public function sendByDeliveryExecutionId(string $deliveryExecutionId, $hasOutcomes): array
     {
         $deliveryExecution = $this->deliveryExecutionService->getDeliveryExecution($deliveryExecutionId);
         $outcomeVariables = $this->getResultsStorage()->getDeliveryVariables($deliveryExecutionId);
@@ -60,9 +65,10 @@ class SendCalculatedResultService
 
         $isFullyGraded = $this->checkIsFullyGraded($deliveryExecutionId, $outcomeVariables);
 
-        $gradingTimestamp = null;
-        if ($isFullyGraded) {
-            $gradingTimestamp = time();
+        $gradingTimestamp = time();
+        $deliveryFinishMicrotime = $deliveryExecution->getFinishTime();
+        if ($deliveryFinishMicrotime !== null && $hasOutcomes === false) {
+            $gradingTimestamp = $this->secondsFromMicrotime($deliveryFinishMicrotime);
         }
 
         $this->eventManager->trigger(
@@ -185,5 +191,12 @@ class SendCalculatedResultService
             }
         }
         return false;
+    }
+
+    private function secondsFromMicrotime(string $microtime): int
+    {
+        list(, $seconds) = explode(' ', $microtime);
+
+        return (int) $seconds;
     }
 }

@@ -51,7 +51,8 @@ class ImportResultTask extends AbstractAction implements TaskAwareInterface, Jso
 
             if ($importResult->isSendAgs()) {
                 $this->getSendCalculatedResultService()->sendByDeliveryExecutionId(
-                    $importResult->getDeliveryExecutionId()
+                    $importResult->getDeliveryExecutionId(),
+                    $importResult->hasOutcomes()
                 );
             }
 

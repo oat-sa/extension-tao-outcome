@@ -73,6 +73,11 @@ class ImportResultInput implements JsonSerializable
         return $this->outcomes;
     }
 
+    public function hasOutcomes(): bool
+    {
+        return count($this->outcomes) > 0;
+    }
+
     /**
      * [
      *    'itemId' => [
