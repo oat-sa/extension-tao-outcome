@@ -56,7 +56,7 @@ class SendCalculatedResultService
      * @throws \common_exception_NotFound
      * @throws InvalidServiceManagerException
      */
-    public function sendByDeliveryExecutionId(string $deliveryExecutionId, $hasOutcomes): array
+    public function sendByDeliveryExecutionId(string $deliveryExecutionId, bool $resultsUpdated): array
     {
         $deliveryExecution = $this->deliveryExecutionService->getDeliveryExecution($deliveryExecutionId);
         $outcomeVariables = $this->getResultsStorage()->getDeliveryVariables($deliveryExecutionId);
@@ -67,7 +67,7 @@ class SendCalculatedResultService
 
         $timestamp = time();
         $deliveryFinishMicrotime = $deliveryExecution->getFinishTime();
-        if ($deliveryFinishMicrotime !== null && $hasOutcomes === false) {
+        if ($deliveryFinishMicrotime !== null && $resultsUpdated === false) {
             $timestamp = $this->secondsFromMicrotime($deliveryFinishMicrotime);
         }
 
