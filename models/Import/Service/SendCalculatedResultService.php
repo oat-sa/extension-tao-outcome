@@ -51,7 +51,12 @@ class SendCalculatedResultService
         $this->deliveredTestOutcomeDeclarationsService = $qtiTestItemsService;
     }
 
-    public function sendByDeliveryExecutionId(string $deliveryExecutionId): array
+    /**
+     * @throws common_exception_Error
+     * @throws \common_exception_NotFound
+     * @throws InvalidServiceManagerException
+     */
+    public function sendByDeliveryExecutionId(string $deliveryExecutionId, bool $resultsUpdated): array
     {
         $deliveryExecution = $this->deliveryExecutionService->getDeliveryExecution($deliveryExecutionId);
         $outcomeVariables = $this->getResultsStorage()->getDeliveryVariables($deliveryExecutionId);
@@ -59,14 +64,20 @@ class SendCalculatedResultService
         [$scoreTotal, $scoreTotalMax] = $this->getScores($outcomeVariables);
 
         $isFullyGraded = $this->checkIsFullyGraded($deliveryExecutionId, $outcomeVariables);
-        $gradingTimestamp = time();
+
+        $timestamp = time();
+        $deliveryFinishMicrotime = $deliveryExecution->getFinishTime();
+        if ($deliveryFinishMicrotime !== null && $resultsUpdated === false) {
+            $timestamp = $this->secondsFromMicrotime($deliveryFinishMicrotime);
+        }
+
         $this->eventManager->trigger(
             new DeliveryExecutionResultsRecalculated(
                 $deliveryExecution,
                 $scoreTotal,
                 $scoreTotalMax,
                 $isFullyGraded,
-                $gradingTimestamp
+                $timestamp
             )
         );
 
@@ -75,7 +86,7 @@ class SendCalculatedResultService
             'scoreTotal' => $scoreTotal,
             'scoreTotalMax' => $scoreTotalMax,
             'isFullyGraded' => $isFullyGraded,
-            'gradingTimestamp' => $gradingTimestamp
+            'timestamp' => $timestamp
         ];
     }
 
@@ -180,5 +191,12 @@ class SendCalculatedResultService
             }
         }
         return false;
+    }
+
+    private function secondsFromMicrotime(string $microtime): int
+    {
+        list(, $seconds) = explode(' ', $microtime);
+
+        return (int) $seconds;
     }
 }
