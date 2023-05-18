@@ -89,7 +89,7 @@ class SendCalculatedResultServiceTest extends TestCase
             ->method('getDeliveredTestOutcomeDeclarations')
             ->willReturn($qtiTestItems);
 
-        $return = $this->sut->sendByDeliveryExecutionId('test_delivery_id');
+        $return = $this->sut->sendByDeliveryExecutionId('test_delivery_id', true);
 
         $this->assertIsArray($return);
         $this->assertArrayHasKey('isFullyGraded', $return);
@@ -112,7 +112,7 @@ class SendCalculatedResultServiceTest extends TestCase
             ->method('getDeliveredTestOutcomeDeclarations')
             ->willReturn($qtiTestItems);
 
-        $return = $this->sut->sendByDeliveryExecutionId('test_delivery_id');
+        $return = $this->sut->sendByDeliveryExecutionId('test_delivery_id', true);
 
         $this->assertIsArray($return);
         $this->assertArrayHasKey('isFullyGraded', $return);
@@ -135,7 +135,7 @@ class SendCalculatedResultServiceTest extends TestCase
             ->method('getDeliveredTestOutcomeDeclarations')
             ->willReturn($qtiTestItems);
 
-        $return = $this->sut->sendByDeliveryExecutionId('test_delivery_id');
+        $return = $this->sut->sendByDeliveryExecutionId('test_delivery_id', true);
 
         $this->assertIsArray($return);
         $this->assertArrayHasKey('isFullyGraded', $return);
@@ -158,7 +158,7 @@ class SendCalculatedResultServiceTest extends TestCase
             ->method('getDeliveredTestOutcomeDeclarations')
             ->willReturn($qtiTestItems);
 
-        $return = $this->sut->sendByDeliveryExecutionId('test_delivery_id');
+        $return = $this->sut->sendByDeliveryExecutionId('test_delivery_id', true);
 
         $this->assertIsArray($return);
         $this->assertArrayHasKey('isFullyGraded', $return);
@@ -187,7 +187,7 @@ class SendCalculatedResultServiceTest extends TestCase
             ->method('getDeliveredTestOutcomeDeclarations')
             ->willReturn($qtiTestItems);
 
-        $return = $this->sut->sendByDeliveryExecutionId('test_delivery_id');
+        $return = $this->sut->sendByDeliveryExecutionId('test_delivery_id', true);
 
         $this->assertIsArray($return);
         $this->assertArrayHasKey('isFullyGraded', $return);
@@ -217,7 +217,7 @@ class SendCalculatedResultServiceTest extends TestCase
             ->method('getDeliveredTestOutcomeDeclarations')
             ->willReturn($qtiTestItems);
 
-        $return = $this->sut->sendByDeliveryExecutionId('test_delivery_id');
+        $return = $this->sut->sendByDeliveryExecutionId('test_delivery_id', true);
 
         $this->assertIsArray($return);
         $this->assertArrayHasKey('isFullyGraded', $return);
@@ -247,7 +247,7 @@ class SendCalculatedResultServiceTest extends TestCase
             ->method('getDeliveredTestOutcomeDeclarations')
             ->willReturn($qtiTestItems);
 
-        $return = $this->sut->sendByDeliveryExecutionId('test_delivery_id');
+        $return = $this->sut->sendByDeliveryExecutionId('test_delivery_id', true);
 
         $this->assertIsArray($return);
         $this->assertArrayHasKey('isFullyGraded', $return);
@@ -277,7 +277,7 @@ class SendCalculatedResultServiceTest extends TestCase
             ->method('getDeliveredTestOutcomeDeclarations')
             ->willReturn($qtiTestItems);
 
-        $return = $this->sut->sendByDeliveryExecutionId('test_delivery_id');
+        $return = $this->sut->sendByDeliveryExecutionId('test_delivery_id', true);
 
         $this->assertIsArray($return);
         $this->assertArrayHasKey('isFullyGraded', $return);
