@@ -26,7 +26,6 @@ use common_exception_MissingParameter;
 use common_exception_NotFound;
 use common_exception_ResourceNotFound;
 use oat\taoDelivery\model\execution\DeliveryExecutionService;
-use oat\taoResultServer\models\Import\Exception\ImportResultException;
 use oat\taoResultServer\models\Import\Input\ImportResultInput;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -36,19 +35,18 @@ class ImportResultInputFactory
     private const Q_PARAM_TRIGGER_AGS_SEND = 'send_ags';
 
     private DeliveryExecutionService $deliveryExecutionService;
-    private array $allowedOutcomes;
 
-    public function __construct(DeliveryExecutionService $deliveryExecutionService, array $allowedOutcomes = ['SCORE'])
+    public function __construct(DeliveryExecutionService $deliveryExecutionService)
     {
         $this->deliveryExecutionService = $deliveryExecutionService;
-        $this->allowedOutcomes = $allowedOutcomes;
     }
 
     /**
-     * @throws common_exception_NotFound
+     * @param ServerRequestInterface $request
+     * @return ImportResultInput
      * @throws common_exception_MissingParameter
+     * @throws common_exception_NotFound
      * @throws common_exception_ResourceNotFound
-     * @throws ImportResultException
      */
     public function createFromRequest(ServerRequestInterface $request): ImportResultInput
     {
@@ -85,15 +83,6 @@ class ImportResultInputFactory
             foreach ($item['outcomes'] ?? [] as $outcome) {
                 if (!isset($outcome['id'], $outcome['value'])) {
                     throw new common_exception_MissingParameter('id|value');
-                }
-
-                if (!in_array($outcome['id'], $this->allowedOutcomes, true)) {
-                    throw new ImportResultException(
-                        sprintf(
-                            'Outcome %s not supported',
-                            $outcome['id']
-                        )
-                    );
                 }
 
                 $new->addOutcome((string)$item['itemId'], (string)$outcome['id'], (float)$outcome['value']);
