@@ -57,7 +57,7 @@ class SendCalculatedResultService
      * @throws \common_exception_NotFound
      * @throws InvalidServiceManagerException
      */
-    public function sendByDeliveryExecutionId(string $deliveryExecutionId, bool $resultsUpdated): array
+    public function sendByDeliveryExecutionId(string $deliveryExecutionId): array
     {
         $deliveryExecution = $this->deliveryExecutionService->getDeliveryExecution($deliveryExecutionId);
         $outcomeVariables = $this->getResultsStorage()->getDeliveryVariables($deliveryExecutionId);
