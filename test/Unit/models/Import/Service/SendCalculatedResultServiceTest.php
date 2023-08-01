@@ -309,7 +309,7 @@ class SendCalculatedResultServiceTest extends TestCase
             'identifier' => sprintf('OUTCOME_%d', $number),
             'cardinality' => 'single',
             'baseType' => 'float',
-            'epoch' => (string)time(),
+            'epoch' => '0.69485100 1690808122',
             'externallyGraded' => $isExternallyGraded,
         ];
         return OutcomeVariable::fromData($data);
