@@ -29,6 +29,7 @@ use oat\taoDelivery\model\execution\DeliveryExecutionService;
 use oat\taoResultServer\models\classes\implementation\ResultServerService;
 use oat\taoResultServer\models\Events\DeliveryExecutionResultsRecalculated;
 use stdClass;
+use taoResultServer_models_classes_OutcomeVariable;
 use taoResultServer_models_classes_ReadableResultStorage as ReadableResultStorage;
 use taoResultServer_models_classes_Variable as ResultVariable;
 
@@ -65,10 +66,17 @@ class SendCalculatedResultService
 
         $isFullyGraded = $this->checkIsFullyGraded($deliveryExecutionId, $outcomeVariables);
 
-        $timestamp = time();
-        $deliveryFinishMicrotime = $deliveryExecution->getFinishTime();
-        if ($deliveryFinishMicrotime !== null && $resultsUpdated === false) {
-            $timestamp = $this->secondsFromMicrotime($deliveryFinishMicrotime);
+        $microtime = null;
+        $timestamp = null;
+        $lastOutcome = end($outcomeVariables);
+        if (is_array($lastOutcome)) {
+            $lastOutcome = end($lastOutcome);
+        }
+        if ($lastOutcome->variable instanceof taoResultServer_models_classes_OutcomeVariable) {
+            $microtime = $lastOutcome->variable->getEpoch();
+        }
+        if ($microtime !== null) {
+            $timestamp = $this->secondsFromMicrotime($microtime);
         }
 
         $this->eventManager->trigger(
