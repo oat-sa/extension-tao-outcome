@@ -45,8 +45,7 @@ class SendCalculatedResultService
         EventManager $eventManager,
         DeliveryExecutionService $deliveryExecutionService,
         DeliveredTestOutcomeDeclarationsService $qtiTestItemsService
-    )
-    {
+    ) {
         $this->resultServerService = $resultServerService;
         $this->eventManager = $eventManager;
         $this->deliveryExecutionService = $deliveryExecutionService;
@@ -171,8 +170,7 @@ class SendCalculatedResultService
         array $outcomeVariables,
         string $outcomeDeclarationIdentifier,
         string $itemIdentifier
-    ): bool
-    {
+    ): bool {
         foreach ($outcomeVariables as $outcomeVariableArray) {
             $outcomeVariable = current($outcomeVariableArray);
             $outcomeItemIdentifier = $outcomeVariable->callIdItem;
