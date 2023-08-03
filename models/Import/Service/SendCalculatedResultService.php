@@ -41,9 +41,9 @@ class SendCalculatedResultService
     private DeliveredTestOutcomeDeclarationsService $deliveredTestOutcomeDeclarationsService;
 
     public function __construct(
-        ResultServerService                     $resultServerService,
-        EventManager                            $eventManager,
-        DeliveryExecutionService                $deliveryExecutionService,
+        ResultServerService $resultServerService,
+        EventManager $eventManager,
+        DeliveryExecutionService $deliveryExecutionService,
         DeliveredTestOutcomeDeclarationsService $qtiTestItemsService
     )
     {
@@ -168,7 +168,7 @@ class SendCalculatedResultService
     }
 
     private function isSubjectOutcomeVariableGraded(
-        array  $outcomeVariables,
+        array $outcomeVariables,
         string $outcomeDeclarationIdentifier,
         string $itemIdentifier
     ): bool
