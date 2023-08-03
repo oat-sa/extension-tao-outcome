@@ -41,11 +41,12 @@ class SendCalculatedResultService
     private DeliveredTestOutcomeDeclarationsService $deliveredTestOutcomeDeclarationsService;
 
     public function __construct(
-        ResultServerService $resultServerService,
-        EventManager $eventManager,
-        DeliveryExecutionService $deliveryExecutionService,
+        ResultServerService                     $resultServerService,
+        EventManager                            $eventManager,
+        DeliveryExecutionService                $deliveryExecutionService,
         DeliveredTestOutcomeDeclarationsService $qtiTestItemsService
-    ) {
+    )
+    {
         $this->resultServerService = $resultServerService;
         $this->eventManager = $eventManager;
         $this->deliveryExecutionService = $deliveryExecutionService;
@@ -66,17 +67,9 @@ class SendCalculatedResultService
 
         $isFullyGraded = $this->checkIsFullyGraded($deliveryExecutionId, $outcomeVariables);
 
-        $microtime = null;
-        $timestamp = null;
-        $lastOutcome = end($outcomeVariables);
-        if (is_array($lastOutcome)) {
-            $lastOutcome = end($lastOutcome);
-        }
-        if ($lastOutcome->variable instanceof taoResultServer_models_classes_OutcomeVariable) {
-            $microtime = $lastOutcome->variable->getEpoch();
-        }
-        if ($microtime !== null) {
-            $timestamp = $this->secondsFromMicrotime($microtime);
+        $timestamp = $deliveryExecution->getFinishTime();
+        if ($isFullyGraded) {
+            $timestamp = $this->getLatestOutcomesTimestamp($outcomeVariables);
         }
 
         $this->eventManager->trigger(
@@ -175,10 +168,11 @@ class SendCalculatedResultService
     }
 
     private function isSubjectOutcomeVariableGraded(
-        array $outcomeVariables,
+        array  $outcomeVariables,
         string $outcomeDeclarationIdentifier,
         string $itemIdentifier
-    ): bool {
+    ): bool
+    {
         foreach ($outcomeVariables as $outcomeVariableArray) {
             $outcomeVariable = current($outcomeVariableArray);
             $outcomeItemIdentifier = $outcomeVariable->callIdItem;
@@ -206,5 +200,20 @@ class SendCalculatedResultService
         list(, $seconds) = explode(' ', $microtime);
 
         return (int) $seconds;
+    }
+
+    private function getLatestOutcomesTimestamp(array $outcomeVariables): ?int
+    {
+        $microtimeList = array_map(function ($outcome) {
+            $outcome = end($outcome);
+            if ($outcome->variable instanceof taoResultServer_models_classes_OutcomeVariable) {
+                return $outcome->variable->getEpoch();
+            }
+            return 0;
+        }, $outcomeVariables);
+
+        $timestampList = array_map('self::secondsFromMicrotime', array_filter($microtimeList));
+
+        return max($timestampList);
     }
 }
