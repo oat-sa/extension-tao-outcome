@@ -96,8 +96,8 @@ class ImportServiceProvider implements ContainerServiceProviderInterface
                 [
                     service(QtiRunnerService::SERVICE_ID),
                     service(DeliveryExecutionService::SERVICE_ID),
-                    class_exists('oat\taoDeliveryRdf\model\DeliveryContainerService') ?
-                        service(oat\taoDeliveryRdf\model\DeliveryContainerService::SERVICE_ID) :
+                    class_exists('oat\taoDelivery\model\DeliveryContainerService') ?
+                        service(oat\taoDeliver\model\DeliveryContainerService::SERVICE_ID) :
                         null,
                 ]
             );
