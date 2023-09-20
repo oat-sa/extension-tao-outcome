@@ -66,6 +66,8 @@ class SendCalculatedResultServiceTest extends TestCase
             ->method('getDeliveryExecution')
             ->willReturn($this->deliveryExecutionMock);
 
+        $this->deliveryExecutionMock->expects($this->any())->method('getFinishTime')->willReturn(1690808169);
+
         $this->sut = new SendCalculatedResultService(
             $this->resultServerServiceMock,
             $this->eventManagerMock,
