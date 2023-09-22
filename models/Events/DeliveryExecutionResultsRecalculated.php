@@ -32,7 +32,7 @@ class DeliveryExecutionResultsRecalculated implements Event
     private ?float $totalScore;
     private ?float $totalMaxScore;
     private bool $isFullyGraded;
-    private ?int $timestamp;
+    private int $timestamp;
 
     public function __construct(
         DeliveryExecutionInterface $deliveryExecution,
