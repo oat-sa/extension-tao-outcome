@@ -77,7 +77,7 @@ class SendCalculatedResultService
                 $scoreTotal,
                 $scoreTotalMax,
                 $isFullyGraded,
-                $timestamp
+                (int)$timestamp
             )
         );
 
