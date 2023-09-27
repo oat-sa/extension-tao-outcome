@@ -66,7 +66,7 @@ class SendCalculatedResultService
 
         $isFullyGraded = $this->checkIsFullyGraded($deliveryExecutionId, $outcomeVariables);
 
-        $timestamp = $deliveryExecution->getFinishTime();
+        $timestamp = $this->secondsFromMicrotime($deliveryExecution->getFinishTime());
         if ($isFullyGraded) {
             $timestamp = $this->getLatestOutcomesTimestamp($outcomeVariables);
         }
@@ -77,7 +77,7 @@ class SendCalculatedResultService
                 $scoreTotal,
                 $scoreTotalMax,
                 $isFullyGraded,
-                (int)$timestamp
+                $timestamp
             )
         );
 
