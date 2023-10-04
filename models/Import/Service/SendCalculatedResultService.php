@@ -29,6 +29,7 @@ use oat\taoDelivery\model\execution\DeliveryExecutionService;
 use oat\taoResultServer\models\classes\implementation\ResultServerService;
 use oat\taoResultServer\models\Events\DeliveryExecutionResultsRecalculated;
 use stdClass;
+use taoResultServer_models_classes_OutcomeVariable;
 use taoResultServer_models_classes_ReadableResultStorage as ReadableResultStorage;
 use taoResultServer_models_classes_Variable as ResultVariable;
 
@@ -56,7 +57,7 @@ class SendCalculatedResultService
      * @throws \common_exception_NotFound
      * @throws InvalidServiceManagerException
      */
-    public function sendByDeliveryExecutionId(string $deliveryExecutionId, bool $resultsUpdated): array
+    public function sendByDeliveryExecutionId(string $deliveryExecutionId): array
     {
         $deliveryExecution = $this->deliveryExecutionService->getDeliveryExecution($deliveryExecutionId);
         $outcomeVariables = $this->getResultsStorage()->getDeliveryVariables($deliveryExecutionId);
@@ -65,10 +66,10 @@ class SendCalculatedResultService
 
         $isFullyGraded = $this->checkIsFullyGraded($deliveryExecutionId, $outcomeVariables);
 
-        $timestamp = time();
-        $deliveryFinishMicrotime = $deliveryExecution->getFinishTime();
-        if ($deliveryFinishMicrotime !== null && $resultsUpdated === false) {
-            $timestamp = $this->secondsFromMicrotime($deliveryFinishMicrotime);
+        $timestamp = $this->secondsFromMicrotime($deliveryExecution->getFinishTime());
+        if ($isFullyGraded) {
+            $outcomeTimestamp = $this->getLatestOutcomesTimestamp($outcomeVariables);
+            $timestamp = max($outcomeTimestamp, $timestamp);
         }
 
         $this->eventManager->trigger(
@@ -198,5 +199,20 @@ class SendCalculatedResultService
         list(, $seconds) = explode(' ', $microtime);
 
         return (int) $seconds;
+    }
+
+    private function getLatestOutcomesTimestamp(array $outcomeVariables): ?int
+    {
+        $microtimeList = array_map(function ($outcome) {
+            $outcome = end($outcome);
+            if ($outcome->variable instanceof taoResultServer_models_classes_OutcomeVariable) {
+                return $outcome->variable->getEpoch();
+            }
+            return 0;
+        }, $outcomeVariables);
+
+        $timestampList = array_map('self::secondsFromMicrotime', array_filter($microtimeList));
+
+        return max($timestampList);
     }
 }

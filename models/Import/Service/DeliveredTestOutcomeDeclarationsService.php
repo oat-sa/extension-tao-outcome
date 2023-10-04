@@ -58,7 +58,6 @@ class DeliveredTestOutcomeDeclarationsService
         foreach ($testDefinition->getTestParts() as $testPart) {
             /** @var ExtendedAssessmentSection $section */
             foreach ($testPart->getAssessmentSections() as $section) {
-                $items = [];
                 /** @var ExtendedAssessmentItemRef $item */
                 foreach ($section->getSectionParts() as $item) {
                     $itemData = $this->qtiRunnerService->getItemData($context, $item->getHref());

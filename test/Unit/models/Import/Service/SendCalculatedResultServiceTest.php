@@ -66,6 +66,12 @@ class SendCalculatedResultServiceTest extends TestCase
             ->method('getDeliveryExecution')
             ->willReturn($this->deliveryExecutionMock);
 
+        $this
+            ->deliveryExecutionMock
+            ->expects($this->any())
+            ->method('getFinishTime')
+            ->willReturn('0.69485100 1690808122');
+
         $this->sut = new SendCalculatedResultService(
             $this->resultServerServiceMock,
             $this->eventManagerMock,
@@ -89,7 +95,7 @@ class SendCalculatedResultServiceTest extends TestCase
             ->method('getDeliveredTestOutcomeDeclarations')
             ->willReturn($qtiTestItems);
 
-        $return = $this->sut->sendByDeliveryExecutionId('test_delivery_id', true);
+        $return = $this->sut->sendByDeliveryExecutionId('test_delivery_id');
 
         $this->assertIsArray($return);
         $this->assertArrayHasKey('isFullyGraded', $return);
@@ -112,7 +118,7 @@ class SendCalculatedResultServiceTest extends TestCase
             ->method('getDeliveredTestOutcomeDeclarations')
             ->willReturn($qtiTestItems);
 
-        $return = $this->sut->sendByDeliveryExecutionId('test_delivery_id', true);
+        $return = $this->sut->sendByDeliveryExecutionId('test_delivery_id');
 
         $this->assertIsArray($return);
         $this->assertArrayHasKey('isFullyGraded', $return);
@@ -135,7 +141,7 @@ class SendCalculatedResultServiceTest extends TestCase
             ->method('getDeliveredTestOutcomeDeclarations')
             ->willReturn($qtiTestItems);
 
-        $return = $this->sut->sendByDeliveryExecutionId('test_delivery_id', true);
+        $return = $this->sut->sendByDeliveryExecutionId('test_delivery_id');
 
         $this->assertIsArray($return);
         $this->assertArrayHasKey('isFullyGraded', $return);
@@ -158,7 +164,7 @@ class SendCalculatedResultServiceTest extends TestCase
             ->method('getDeliveredTestOutcomeDeclarations')
             ->willReturn($qtiTestItems);
 
-        $return = $this->sut->sendByDeliveryExecutionId('test_delivery_id', true);
+        $return = $this->sut->sendByDeliveryExecutionId('test_delivery_id');
 
         $this->assertIsArray($return);
         $this->assertArrayHasKey('isFullyGraded', $return);
@@ -187,7 +193,7 @@ class SendCalculatedResultServiceTest extends TestCase
             ->method('getDeliveredTestOutcomeDeclarations')
             ->willReturn($qtiTestItems);
 
-        $return = $this->sut->sendByDeliveryExecutionId('test_delivery_id', true);
+        $return = $this->sut->sendByDeliveryExecutionId('test_delivery_id');
 
         $this->assertIsArray($return);
         $this->assertArrayHasKey('isFullyGraded', $return);
@@ -217,7 +223,7 @@ class SendCalculatedResultServiceTest extends TestCase
             ->method('getDeliveredTestOutcomeDeclarations')
             ->willReturn($qtiTestItems);
 
-        $return = $this->sut->sendByDeliveryExecutionId('test_delivery_id', true);
+        $return = $this->sut->sendByDeliveryExecutionId('test_delivery_id');
 
         $this->assertIsArray($return);
         $this->assertArrayHasKey('isFullyGraded', $return);
@@ -247,7 +253,7 @@ class SendCalculatedResultServiceTest extends TestCase
             ->method('getDeliveredTestOutcomeDeclarations')
             ->willReturn($qtiTestItems);
 
-        $return = $this->sut->sendByDeliveryExecutionId('test_delivery_id', true);
+        $return = $this->sut->sendByDeliveryExecutionId('test_delivery_id');
 
         $this->assertIsArray($return);
         $this->assertArrayHasKey('isFullyGraded', $return);
@@ -277,7 +283,7 @@ class SendCalculatedResultServiceTest extends TestCase
             ->method('getDeliveredTestOutcomeDeclarations')
             ->willReturn($qtiTestItems);
 
-        $return = $this->sut->sendByDeliveryExecutionId('test_delivery_id', true);
+        $return = $this->sut->sendByDeliveryExecutionId('test_delivery_id');
 
         $this->assertIsArray($return);
         $this->assertArrayHasKey('isFullyGraded', $return);
@@ -309,7 +315,7 @@ class SendCalculatedResultServiceTest extends TestCase
             'identifier' => sprintf('OUTCOME_%d', $number),
             'cardinality' => 'single',
             'baseType' => 'float',
-            'epoch' => (string)time(),
+            'epoch' => '0.69485100 1690808122',
             'externallyGraded' => $isExternallyGraded,
         ];
         return OutcomeVariable::fromData($data);
