@@ -100,7 +100,7 @@ msgstr "Sem armazenamento"
 # http://www.tao.lu/Ontologies/TAOResultServer.rdf#void
 msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
 msgid "No storage "
-msgstr "Sem armazenamento "
+msgstr "Sem armazenamento"
 
 # http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServer
 msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
@@ -116,11 +116,6 @@ msgstr "Endpoint do Servidor de Resultados"
 msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
 msgid "tao logger"
 msgstr "tao logger"
-
-# http://www.tao.lu/Ontologies/TAOResultServer.rdf#void
-msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
-msgid "No storage"
-msgstr "Sem armazenamento"
 
 # http://www.tao.lu/Ontologies/TAOResultServer.rdf#ResultServerRole
 msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
