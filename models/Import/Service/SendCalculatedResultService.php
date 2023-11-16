@@ -197,7 +197,7 @@ class SendCalculatedResultService
         return false;
     }
 
-    private function getLatestOutcomesTimestamp(array $outcomeVariables): ?int
+    private function getLatestOutcomesTimestamp(array $outcomeVariables): ?string
     {
         $microtimeList = array_map(function ($outcome) {
             $outcome = end($outcome);
@@ -206,11 +206,10 @@ class SendCalculatedResultService
             }
             return 0;
         }, $outcomeVariables);
-        $this->logInfo('getLatestOutcomesTimestamp:'.print_r($microtimeList,true));
-        $timestampList = array_map('self::formatTime', array_filter($microtimeList));
-        $this->logInfo('formatTime:'.print_r($timestampList,true));
 
-        return max($timestampList);
+        $latestOutcome = array_pop($microtimeList);
+
+        return $this->formatTime($latestOutcome);
     }
 
     /**
