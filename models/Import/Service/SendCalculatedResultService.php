@@ -71,8 +71,7 @@ class SendCalculatedResultService
         $timestamp = $this->formatTime($deliveryExecution->getFinishTime());
 
         if ($isFullyGraded) {
-            $outcomeTimestamp = $this->getLatestOutcomesTimestamp($outcomeVariables);
-            $timestamp = max($outcomeTimestamp, $timestamp);
+            $timestamp = $this->getLatestOutcomesTimestamp($outcomeVariables);
         }
 
         $this->eventManager->trigger(
