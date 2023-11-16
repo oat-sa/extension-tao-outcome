@@ -65,7 +65,7 @@ class SendCalculatedResultService
 
         $isFullyGraded = $this->checkIsFullyGraded($deliveryExecutionId, $outcomeVariables);
 
-        $timestamp = $deliveryExecution->getFinishTime();
+        $timestamp = $this->formatTime($deliveryExecution->getFinishTime());
 
         $this->eventManager->trigger(
             new DeliveryExecutionResultsRecalculated(
@@ -187,5 +187,30 @@ class SendCalculatedResultService
             }
         }
         return false;
+    }
+
+    /**
+     * Converts from microseconds seconds format to readable by Carbon seconds microseconds
+     * @example 0.47950700 1700135696 to 1700135696.47950700
+     * @param string|null $time
+     * @return string|null
+     */
+    private function formatTime(?string $time): ?string
+    {
+        if ($time === null) {
+            return null;
+        }
+
+        // Split the string into microseconds and seconds
+        list($microseconds, $seconds) = explode(' ', $time);
+
+        // Show only the numbers after the dot without the integral part
+        list(, $decimalPart) = explode('.', sprintf('%0.8f', $microseconds));
+
+
+        $dateTime = \DateTimeImmutable::createFromFormat('U', $seconds);
+
+        // Combine seconds and microseconds
+        return  $dateTime->format('U') . '.' . $decimalPart;
     }
 }
