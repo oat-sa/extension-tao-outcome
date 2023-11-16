@@ -24,16 +24,19 @@ namespace oat\taoResultServer\models\Import\Service;
 
 use common_exception_Error;
 use oat\oatbox\event\EventManager;
+use oat\oatbox\log\LoggerAwareTrait;
 use oat\oatbox\service\exception\InvalidServiceManagerException;
 use oat\taoDelivery\model\execution\DeliveryExecutionService;
 use oat\taoResultServer\models\classes\implementation\ResultServerService;
 use oat\taoResultServer\models\Events\DeliveryExecutionResultsRecalculated;
 use stdClass;
+use taoResultServer_models_classes_OutcomeVariable;
 use taoResultServer_models_classes_ReadableResultStorage as ReadableResultStorage;
 use taoResultServer_models_classes_Variable as ResultVariable;
 
 class SendCalculatedResultService
 {
+    use LoggerAwareTrait;
     private ResultServerService $resultServerService;
     private EventManager $eventManager;
     private DeliveryExecutionService $deliveryExecutionService;
@@ -66,6 +69,11 @@ class SendCalculatedResultService
         $isFullyGraded = $this->checkIsFullyGraded($deliveryExecutionId, $outcomeVariables);
 
         $timestamp = $this->formatTime($deliveryExecution->getFinishTime());
+
+        if ($isFullyGraded) {
+            $outcomeTimestamp = $this->getLatestOutcomesTimestamp($outcomeVariables);
+            $timestamp = max($outcomeTimestamp, $timestamp);
+        }
 
         $this->eventManager->trigger(
             new DeliveryExecutionResultsRecalculated(
@@ -187,6 +195,22 @@ class SendCalculatedResultService
             }
         }
         return false;
+    }
+
+    private function getLatestOutcomesTimestamp(array $outcomeVariables): ?int
+    {
+        $microtimeList = array_map(function ($outcome) {
+            $outcome = end($outcome);
+            if ($outcome->variable instanceof taoResultServer_models_classes_OutcomeVariable) {
+                return $outcome->variable->getEpoch();
+            }
+            return 0;
+        }, $outcomeVariables);
+        $this->logInfo('getLatestOutcomesTimestamp:'.print_r($microtimeList,true));
+        $timestampList = array_map('self::formatTime', array_filter($microtimeList));
+        $this->logInfo('formatTime:'.print_r($timestampList,true));
+
+        return max($timestampList);
     }
 
     /**
