@@ -25,6 +25,7 @@ namespace oat\taoResultServer\models\Import\Service;
 use common_exception_Error;
 use core_kernel_persistence_Exception;
 use oat\generis\model\data\Ontology;
+use oat\oatbox\log\LoggerAwareTrait;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 use oat\taoOutcomeRds\model\AbstractRdsResultStorage;
 use oat\taoResultServer\models\classes\ResultServerService;
@@ -36,6 +37,7 @@ use Throwable;
 
 class ResultImporter
 {
+    use LoggerAwareTrait;
     private Ontology $ontology;
     private ResultServerService $resultServerService;
 
@@ -97,6 +99,7 @@ class ResultImporter
     ): void {
         $scoreTotalVariable->setValue($updatedScoreTotal);
         $scoreTotalVariable->setEpoch(microtime());
+        $this->logInfo('updateTestVariables: Setting epoch '.print_r($scoreTotalVariable,true));
 
         $resultStorage->replaceTestVariables(
             $deliveryExecutionUri,
@@ -185,7 +188,7 @@ class ResultImporter
                 $variable->setValue($outcomeValue);
                 $variable->setEpoch(microtime());
                 $variable->setExternallyGraded(true);
-
+                $this->logInfo('updateItemOutcomeVariables: Setting epoch '.print_r($variable,true));
                 $updateOutcomeVariables[$variableId] = $variable;
             }
 
