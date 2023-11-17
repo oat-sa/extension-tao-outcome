@@ -137,6 +137,7 @@ class ResultImporter
                 $itemUri = $responseVariable['itemUri'];
 
                 $variable->setCorrectResponse(boolval($responseValue['correctResponse']));
+                $variable->setEpoch(microtime());
 
                 $itemVariables[$variableId] = $variable;
             }
