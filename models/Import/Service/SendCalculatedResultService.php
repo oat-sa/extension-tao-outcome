@@ -30,7 +30,6 @@ use oat\taoDelivery\model\execution\DeliveryExecutionService;
 use oat\taoResultServer\models\classes\implementation\ResultServerService;
 use oat\taoResultServer\models\Events\DeliveryExecutionResultsRecalculated;
 use stdClass;
-use taoResultServer_models_classes_OutcomeVariable;
 use taoResultServer_models_classes_ReadableResultStorage as ReadableResultStorage;
 use taoResultServer_models_classes_Variable as ResultVariable;
 
@@ -200,7 +199,7 @@ class SendCalculatedResultService
     {
         $microtimeList = array_map(function ($outcome) {
             $outcome = end($outcome);
-            if ($outcome->variable instanceof taoResultServer_models_classes_OutcomeVariable) {
+            if ($outcome->variable instanceof ResultVariable) {
                 return $outcome->variable->getEpoch();
             }
             return 0;
