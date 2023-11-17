@@ -205,7 +205,7 @@ class SendCalculatedResultService
             }
             return 0;
         }, $outcomeVariables);
-
+        $this->logInfo('getLatestOutcomesTimestamp:$microtimeList'.print_r($microtimeList,true));
         $latestOutcome = array_pop($microtimeList);
 
         return $this->formatTime($latestOutcome);

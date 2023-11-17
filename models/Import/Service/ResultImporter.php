@@ -182,6 +182,7 @@ class ResultImporter
                 $scoreTotal += $outcomeValue;
 
                 $variable->setValue($outcomeValue);
+                $variable->setEpoch(microtime());
                 $variable->setExternallyGraded(true);
 
                 $updateOutcomeVariables[$variableId] = $variable;
