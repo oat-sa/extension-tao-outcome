@@ -96,6 +96,7 @@ class ResultImporter
         float $updatedScoreTotal
     ): void {
         $scoreTotalVariable->setValue($updatedScoreTotal);
+        $scoreTotalVariable->setEpoch(microtime());
 
         $resultStorage->replaceTestVariables(
             $deliveryExecutionUri,
@@ -137,7 +138,6 @@ class ResultImporter
                 $itemUri = $responseVariable['itemUri'];
 
                 $variable->setCorrectResponse(boolval($responseValue['correctResponse']));
-                $variable->setEpoch(microtime());
 
                 $itemVariables[$variableId] = $variable;
             }
