@@ -36,6 +36,7 @@ use taoResultServer_models_classes_Variable as ResultVariable;
 class SendCalculatedResultService
 {
     use LoggerAwareTrait;
+
     private ResultServerService $resultServerService;
     private EventManager $eventManager;
     private DeliveryExecutionService $deliveryExecutionService;
@@ -46,7 +47,8 @@ class SendCalculatedResultService
         EventManager $eventManager,
         DeliveryExecutionService $deliveryExecutionService,
         DeliveredTestOutcomeDeclarationsService $qtiTestItemsService
-    ) {
+    )
+    {
         $this->resultServerService = $resultServerService;
         $this->eventManager = $eventManager;
         $this->deliveryExecutionService = $deliveryExecutionService;
@@ -169,10 +171,11 @@ class SendCalculatedResultService
     }
 
     private function isSubjectOutcomeVariableGraded(
-        array $outcomeVariables,
+        array  $outcomeVariables,
         string $outcomeDeclarationIdentifier,
         string $itemIdentifier
-    ): bool {
+    ): bool
+    {
         foreach ($outcomeVariables as $outcomeVariableArray) {
             $outcomeVariable = current($outcomeVariableArray);
             $outcomeItemIdentifier = $outcomeVariable->callIdItem;
@@ -204,17 +207,18 @@ class SendCalculatedResultService
             }
             return 0;
         }, $outcomeVariables);
-        $this->logInfo('getLatestOutcomesTimestamp:$microtimeList'.print_r($microtimeList,true));
-        $latestOutcome = array_pop($microtimeList);
-
+        $this->logInfo('getLatestOutcomesTimestamp:$microtimeList' . print_r($microtimeList, true));
+        $sortedMicrotime = $this->sortMicrotimeList($microtimeList);
+        $this->logInfo('$sortedMicrotime:'. print_r($sortedMicrotime, true));
+        $latestOutcome = array_pop($sortedMicrotime);
         return $this->formatTime($latestOutcome);
     }
 
     /**
      * Converts from microseconds seconds format to readable by Carbon seconds microseconds
-     * @example 0.47950700 1700135696 to 1700135696.47950700
      * @param string|null $time
      * @return string|null
+     * @example 0.47950700 1700135696 to 1700135696.47950700
      */
     private function formatTime(?string $time): ?string
     {
@@ -232,6 +236,34 @@ class SendCalculatedResultService
         $dateTime = \DateTimeImmutable::createFromFormat('U', $seconds);
 
         // Combine seconds and microseconds
-        return  $dateTime->format('U') . '.' . $decimalPart;
+        return $dateTime->format('U') . '.' . $decimalPart;
+    }
+
+    private function sortMicrotimeList(array $microtimeList): array
+    {
+        usort($microtimeList, function ($a, $b) {
+            // Extract the values from each string
+            $microtimeA = explode(' ', $a);
+            $microtimeB = explode(' ', $b);
+
+            // Compare the timestamp values
+            $compareTimestamp = (float)$microtimeA[1] - (float)$microtimeB[1];
+
+            // If the timestamp values are equal, compare the microseconds
+            if ($compareTimestamp == 0) {
+                $d = (float)$microtimeA[0] - (float)$microtimeB[0];
+                if ($d == 0) {
+                    return 0;
+                } elseif ($d > 0) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            }
+
+            return $compareTimestamp;
+        });
+
+        return $microtimeList;
     }
 }
