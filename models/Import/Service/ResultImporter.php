@@ -96,7 +96,9 @@ class ResultImporter
         float $updatedScoreTotal
     ): void {
         $scoreTotalVariable->setValue($updatedScoreTotal);
-        $scoreTotalVariable->setEpoch(microtime());
+        if ($scoreTotalVariable->getValue() != $updatedScoreTotal) {
+            $scoreTotalVariable->setEpoch(microtime());
+        }
 
         $resultStorage->replaceTestVariables(
             $deliveryExecutionUri,
@@ -183,7 +185,6 @@ class ResultImporter
                 $scoreTotal += $outcomeValue;
 
                 $variable->setValue($outcomeValue);
-                $variable->setEpoch(microtime());
                 $variable->setExternallyGraded(true);
 
                 $updateOutcomeVariables[$variableId] = $variable;
