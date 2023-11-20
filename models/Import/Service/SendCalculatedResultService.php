@@ -32,6 +32,7 @@ use oat\taoResultServer\models\Events\DeliveryExecutionResultsRecalculated;
 use stdClass;
 use taoResultServer_models_classes_ReadableResultStorage as ReadableResultStorage;
 use taoResultServer_models_classes_Variable as ResultVariable;
+use taoResultServer_models_classes_OutcomeVariable as OutcomeVariable;
 
 class SendCalculatedResultService
 {
@@ -183,7 +184,7 @@ class SendCalculatedResultService
                 continue;
             }
 
-            if (!$outcomeVariable->variable instanceof ResultVariable) {
+            if (!$outcomeVariable->variable instanceof OutcomeVariable) {
                 continue;
             }
             $variable = $outcomeVariable->variable;
@@ -207,10 +208,9 @@ class SendCalculatedResultService
             }
             return 0;
         }, $outcomeVariables);
-        $this->logInfo('getLatestOutcomesTimestamp:$microtimeList' . print_r($microtimeList, true));
         $sortedMicrotime = $this->sortMicrotimeList($microtimeList);
-        $this->logInfo('$sortedMicrotime:'. print_r($sortedMicrotime, true));
         $latestOutcome = array_pop($sortedMicrotime);
+
         return $this->formatTime($latestOutcome);
     }
 
