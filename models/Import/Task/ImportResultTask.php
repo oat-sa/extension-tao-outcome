@@ -65,9 +65,8 @@ class ImportResultTask extends AbstractAction implements TaskAwareInterface, Jso
             return Report::createSuccess($message);
         } catch (Throwable $exception) {
             $message = sprintf(
-                '[DeliveryExecutionResults] Error [%s] Stacktrace [%s] importing results [%s]',
+                '[DeliveryExecutionResults] Error [%s] importing results [%s]',
                 $exception->getMessage(),
-                $exception->getTraceAsString(),
                 isset($importResult) ? var_export($importResult->jsonSerialize(), true) : ''
             );
 
