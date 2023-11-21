@@ -36,8 +36,6 @@ use taoResultServer_models_classes_OutcomeVariable as OutcomeVariable;
 
 class SendCalculatedResultService
 {
-    use LoggerAwareTrait;
-
     private ResultServerService $resultServerService;
     private EventManager $eventManager;
     private DeliveryExecutionService $deliveryExecutionService;
