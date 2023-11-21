@@ -180,7 +180,7 @@ class ResultImporterTest extends TestCase
                 'executionId',
                 'testUri',
                 'executionId',
-                $this->callback(function($array) {
+                $this->callback(function ($array) {
                     $variable = array_pop($array);
                     return $variable->getIdentifier() === 'SCORE_TOTAL'
                         && $variable->getCardinality() === 'single'
