@@ -180,9 +180,13 @@ class ResultImporterTest extends TestCase
                 'executionId',
                 'testUri',
                 'executionId',
-                [
-                    777 => $this->createTestVariable(4, 'SCORE_TOTAL'),
-                ]
+                $this->callback(function($array) {
+                    $variable = array_pop($array);
+                    return $variable->getIdentifier() === 'SCORE_TOTAL'
+                        && $variable->getCardinality() === 'single'
+                        && $variable->getBaseType() === 'float'
+                        && $variable->getExternallyGraded() === false;
+                })
             );
 
         $this->resultStorage
