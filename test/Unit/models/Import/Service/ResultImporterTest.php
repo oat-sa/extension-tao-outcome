@@ -515,6 +515,7 @@ class ResultImporterTest extends TestCase
         $variable->setIdentifier($identifier);
         $variable->setCardinality('single');
         $variable->setBaseType('float');
+        $variable->setEpoch(microtime());
 
         return $variable;
     }
