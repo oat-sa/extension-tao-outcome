@@ -24,7 +24,6 @@ namespace oat\taoResultServer\models\Import\Service;
 
 use common_exception_Error;
 use oat\oatbox\event\EventManager;
-use oat\oatbox\log\LoggerAwareTrait;
 use oat\oatbox\service\exception\InvalidServiceManagerException;
 use oat\taoDelivery\model\execution\DeliveryExecutionService;
 use oat\taoResultServer\models\classes\implementation\ResultServerService;
