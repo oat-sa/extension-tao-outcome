@@ -184,7 +184,7 @@ class SendCalculatedResultService
                 continue;
             }
 
-            if (!$outcomeVariable->variable instanceof OutcomeVariable) {
+            if (!$outcomeVariable->variable instanceof ResultVariable) {
                 continue;
             }
             $variable = $outcomeVariable->variable;
@@ -203,7 +203,7 @@ class SendCalculatedResultService
     {
         $microtimeList = array_map(function ($outcome) {
             $outcome = end($outcome);
-            if ($outcome->variable instanceof ResultVariable) {
+            if ($outcome->variable instanceof OutcomeVariable) {
                 return $outcome->variable->getEpoch();
             }
             return 0;
