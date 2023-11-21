@@ -203,7 +203,7 @@ class SendCalculatedResultService
             }
             return 0;
         }, $outcomeVariables);
-        $sortedMicrotime = $this->sortMicrotimeList($microtimeList);
+        $sortedMicrotime = $this->sortMicrotimeList(array_filter($microtimeList));
         $latestOutcome = array_pop($sortedMicrotime);
 
         return $this->formatTime($latestOutcome);
