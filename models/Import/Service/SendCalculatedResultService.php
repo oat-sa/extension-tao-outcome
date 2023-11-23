@@ -226,11 +226,12 @@ class SendCalculatedResultService
 
         // Show only the numbers after the dot without the integral part
         list(, $decimalPart) = explode('.', sprintf('%0.6f', $microseconds));
+        //To preserve time zone we are not using createFromFormat()
+        $date = new \DateTime();
+        $date->setTimestamp((int)$seconds);
+        $date->modify('+ ' . $decimalPart . ' microseconds');
 
-        $dateTimeWithZone =  \DateTime::createFromFormat('U.u', $seconds.'.'.$decimalPart);
-        $dateTimeWithZone->setTimeZone(new DateTimeZone(TIME_ZONE));
-
-        return $dateTimeWithZone->format(DateTimeInterface::RFC3339_EXTENDED);
+        return $date->format(DateTimeInterface::RFC3339_EXTENDED);
     }
 
     private function sortMicrotimeList(array $microtimeList): array
