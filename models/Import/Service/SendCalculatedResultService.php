@@ -23,6 +23,8 @@ declare(strict_types=1);
 namespace oat\taoResultServer\models\Import\Service;
 
 use common_exception_Error;
+use DateTimeInterface;
+use DateTimeZone;
 use oat\oatbox\event\EventManager;
 use oat\oatbox\service\exception\InvalidServiceManagerException;
 use oat\taoDelivery\model\execution\DeliveryExecutionService;
@@ -69,7 +71,7 @@ class SendCalculatedResultService
         $timestamp = $this->formatTime($deliveryExecution->getFinishTime());
 
         if ($isFullyGraded) {
-            $timestamp = $this->getLatestOutcomesTimestamp($outcomeVariables);
+            $timestamp = $this->formatTime($this->getLatestOutcomesTimestamp($outcomeVariables));
         }
 
         $this->eventManager->trigger(
@@ -204,9 +206,7 @@ class SendCalculatedResultService
             return 0;
         }, $outcomeVariables);
         $sortedMicrotime = $this->sortMicrotimeList(array_filter($microtimeList));
-        $latestOutcome = array_pop($sortedMicrotime);
-
-        return $this->formatTime($latestOutcome);
+        return array_pop($sortedMicrotime);
     }
 
     /**
@@ -225,13 +225,12 @@ class SendCalculatedResultService
         list($microseconds, $seconds) = explode(' ', $time);
 
         // Show only the numbers after the dot without the integral part
-        list(, $decimalPart) = explode('.', sprintf('%0.8f', $microseconds));
+        list(, $decimalPart) = explode('.', sprintf('%0.6f', $microseconds));
 
+        $dateTimeWithZone =  \DateTime::createFromFormat('U.u', $seconds.'.'.$decimalPart);
+        $dateTimeWithZone->setTimeZone(new DateTimeZone(TIME_ZONE));
 
-        $dateTime = \DateTimeImmutable::createFromFormat('U', $seconds);
-
-        // Combine seconds and microseconds
-        return $dateTime->format('U') . '.' . $decimalPart;
+        return $dateTimeWithZone->format(DateTimeInterface::RFC3339_EXTENDED);
     }
 
     private function sortMicrotimeList(array $microtimeList): array
