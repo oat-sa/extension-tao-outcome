@@ -23,8 +23,6 @@ declare(strict_types=1);
 namespace oat\taoResultServer\models\Import\Service;
 
 use common_exception_Error;
-use DateTimeInterface;
-use DateTimeZone;
 use oat\oatbox\event\EventManager;
 use oat\oatbox\service\exception\InvalidServiceManagerException;
 use oat\taoDelivery\model\execution\DeliveryExecutionService;
@@ -34,6 +32,7 @@ use stdClass;
 use taoResultServer_models_classes_ReadableResultStorage as ReadableResultStorage;
 use taoResultServer_models_classes_Variable as ResultVariable;
 use taoResultServer_models_classes_OutcomeVariable as OutcomeVariable;
+use tao_helpers_Date as DateHelper;
 
 class SendCalculatedResultService
 {
@@ -68,10 +67,10 @@ class SendCalculatedResultService
 
         $isFullyGraded = $this->checkIsFullyGraded($deliveryExecutionId, $outcomeVariables);
 
-        $timestamp = $this->formatTime($deliveryExecution->getFinishTime());
+        $timestamp = DateHelper::formatMicrotime($deliveryExecution->getFinishTime());
 
         if ($isFullyGraded) {
-            $timestamp = $this->formatTime($this->getLatestOutcomesTimestamp($outcomeVariables));
+            $timestamp = DateHelper::formatMicrotime($this->getLatestOutcomesTimestamp($outcomeVariables));
         }
 
         $this->eventManager->trigger(
@@ -207,31 +206,6 @@ class SendCalculatedResultService
         }, $outcomeVariables);
         $sortedMicrotime = $this->sortMicrotimeList(array_filter($microtimeList));
         return array_pop($sortedMicrotime);
-    }
-
-    /**
-     * Converts from microseconds seconds format to readable by Carbon seconds microseconds
-     * @param string|null $time
-     * @return string|null
-     * @example 0.47950700 1700135696 to 1700135696.47950700
-     */
-    private function formatTime(?string $time): ?string
-    {
-        if ($time === null) {
-            return null;
-        }
-
-        // Split the string into microseconds and seconds
-        list($microseconds, $seconds) = explode(' ', $time);
-
-        // Show only the numbers after the dot without the integral part
-        list(, $decimalPart) = explode('.', sprintf('%0.6f', $microseconds));
-        //To preserve time zone we are not using createFromFormat()
-        $date = new \DateTime();
-        $date->setTimestamp((int)$seconds);
-        $date->modify('+ ' . $decimalPart . ' microseconds');
-
-        return $date->format(DateTimeInterface::RFC3339_EXTENDED);
     }
 
     private function sortMicrotimeList(array $microtimeList): array
