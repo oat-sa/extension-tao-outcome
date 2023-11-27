@@ -29,9 +29,10 @@ use oat\taoDelivery\model\execution\DeliveryExecutionService;
 use oat\taoResultServer\models\classes\implementation\ResultServerService;
 use oat\taoResultServer\models\Events\DeliveryExecutionResultsRecalculated;
 use stdClass;
-use taoResultServer_models_classes_OutcomeVariable;
 use taoResultServer_models_classes_ReadableResultStorage as ReadableResultStorage;
 use taoResultServer_models_classes_Variable as ResultVariable;
+use taoResultServer_models_classes_OutcomeVariable as OutcomeVariable;
+use tao_helpers_Date as DateHelper;
 
 class SendCalculatedResultService
 {
@@ -66,10 +67,10 @@ class SendCalculatedResultService
 
         $isFullyGraded = $this->checkIsFullyGraded($deliveryExecutionId, $outcomeVariables);
 
-        $timestamp = $this->secondsFromMicrotime($deliveryExecution->getFinishTime());
+        $timestamp = DateHelper::formatMicrotime($deliveryExecution->getFinishTime());
+
         if ($isFullyGraded) {
-            $outcomeTimestamp = $this->getLatestOutcomesTimestamp($outcomeVariables);
-            $timestamp = max($outcomeTimestamp, $timestamp);
+            $timestamp = DateHelper::formatMicrotime($this->getLatestOutcomesTimestamp($outcomeVariables));
         }
 
         $this->eventManager->trigger(
@@ -194,25 +195,44 @@ class SendCalculatedResultService
         return false;
     }
 
-    private function secondsFromMicrotime(string $microtime): int
-    {
-        list(, $seconds) = explode(' ', $microtime);
-
-        return (int) $seconds;
-    }
-
-    private function getLatestOutcomesTimestamp(array $outcomeVariables): ?int
+    private function getLatestOutcomesTimestamp(array $outcomeVariables): ?string
     {
         $microtimeList = array_map(function ($outcome) {
             $outcome = end($outcome);
-            if ($outcome->variable instanceof taoResultServer_models_classes_OutcomeVariable) {
+            if ($outcome->variable instanceof OutcomeVariable) {
                 return $outcome->variable->getEpoch();
             }
             return 0;
         }, $outcomeVariables);
+        $sortedMicrotime = $this->sortMicrotimeList(array_filter($microtimeList));
+        return array_pop($sortedMicrotime);
+    }
 
-        $timestampList = array_map('self::secondsFromMicrotime', array_filter($microtimeList));
+    private function sortMicrotimeList(array $microtimeList): array
+    {
+        usort($microtimeList, function ($a, $b) {
+            // Extract the values from each string
+            $microtimeA = explode(' ', $a);
+            $microtimeB = explode(' ', $b);
 
-        return max($timestampList);
+            // Compare the timestamp values
+            $compareTimestamp = (float)$microtimeA[1] - (float)$microtimeB[1];
+
+            // If the timestamp values are equal, compare the microseconds
+            if ($compareTimestamp == 0) {
+                $d = (float)$microtimeA[0] - (float)$microtimeB[0];
+                if ($d == 0) {
+                    return 0;
+                } elseif ($d > 0) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            }
+
+            return $compareTimestamp;
+        });
+
+        return $microtimeList;
     }
 }
