@@ -150,14 +150,14 @@ class SendCalculatedResultService
                 if (!isset($outcomeDeclaration['attributes']['externalScored'])) {
                     continue;
                 }
-                $isFullyGraded = false;
                 $isSubjectOutcomeVariableGraded = $this->isSubjectOutcomeVariableGraded(
                     $outcomeVariables,
                     $outcomeDeclaration['identifier'],
                     $itemIdentifier,
                 );
-                if ($isSubjectOutcomeVariableGraded) {
-                    $isFullyGraded = true;
+                if ($isSubjectOutcomeVariableGraded === false) {
+                    $isFullyGraded = false;
+                    break;
                 }
             }
         }
