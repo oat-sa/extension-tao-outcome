@@ -193,7 +193,8 @@ class SendCalculatedResultService
 
     private function getScoreTotalTimestamp(array $outcomeVariables): ?string
     {
-        foreach ($outcomeVariables as $outcomeVariable) {
+        foreach ($outcomeVariables as $outcomeVariableList) {
+            $outcomeVariable = $outcomeVariableList[0]->variable;
             if ($outcomeVariable instanceof OutcomeVariable && $outcomeVariable->getIdentifier() === 'SCORE_TOTAL') {
                 return $outcomeVariable->getEpoch();
             }
