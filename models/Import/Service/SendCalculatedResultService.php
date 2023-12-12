@@ -201,45 +201,4 @@ class SendCalculatedResultService
         }
         return null;
     }
-
-    private function getLatestOutcomesTimestamp(array $outcomeVariables): ?string
-    {
-        $microtimeList = array_map(function ($outcome) {
-            $outcome = end($outcome);
-            if ($outcome->variable instanceof OutcomeVariable) {
-                return $outcome->variable->getEpoch();
-            }
-            return 0;
-        }, $outcomeVariables);
-        $sortedMicrotime = $this->sortMicrotimeList(array_filter($microtimeList));
-        return array_pop($sortedMicrotime);
-    }
-
-    private function sortMicrotimeList(array $microtimeList): array
-    {
-        usort($microtimeList, function ($a, $b) {
-            // Extract the values from each string
-            $microtimeA = explode(' ', $a);
-            $microtimeB = explode(' ', $b);
-
-            // Compare the timestamp values
-            $compareTimestamp = (float)$microtimeA[1] - (float)$microtimeB[1];
-
-            // If the timestamp values are equal, compare the microseconds
-            if ($compareTimestamp == 0) {
-                $d = (float)$microtimeA[0] - (float)$microtimeB[0];
-                if ($d == 0) {
-                    return 0;
-                } elseif ($d > 0) {
-                    return 1;
-                } else {
-                    return -1;
-                }
-            }
-
-            return $compareTimestamp;
-        });
-
-        return $microtimeList;
-    }
 }
