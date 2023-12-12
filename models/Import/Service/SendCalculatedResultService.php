@@ -67,7 +67,7 @@ class SendCalculatedResultService
 
         $isFullyGraded = $this->checkIsFullyGraded($deliveryExecutionId, $outcomeVariables);
 
-        $timestamp = DateHelper::formatMicrotime($this->getLatestOutcomesTimestamp($outcomeVariables));
+        $timestamp = DateHelper::formatMicrotime($this->getScoreTotalTimestamp($outcomeVariables));
 
         $this->eventManager->trigger(
             new DeliveryExecutionResultsRecalculated(
@@ -189,6 +189,16 @@ class SendCalculatedResultService
             }
         }
         return false;
+    }
+
+    private function getScoreTotalTimestamp(array $outcomeVariables): ?string
+    {
+        foreach ($outcomeVariables as $outcomeVariable) {
+            if ($outcomeVariable instanceof OutcomeVariable && $outcomeVariable->getIdentifier() === 'SCORE_TOTAL') {
+                return $outcomeVariable->getEpoch();
+            }
+        }
+        return null;
     }
 
     private function getLatestOutcomesTimestamp(array $outcomeVariables): ?string
