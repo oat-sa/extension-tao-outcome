@@ -69,7 +69,7 @@ class SendCalculatedResultService
 
         $microtime = $deliveryExecution->getFinishTime();
         $scoreTotalMicrotime = $this->getScoreTotalTimestamp($outcomeVariables);
-        if ($scoreTotalMicrotime != null) {
+        if ($scoreTotalMicrotime !== null) {
             $microtime = $scoreTotalMicrotime;
         }
         $timestamp = DateHelper::formatMicrotime($microtime);
