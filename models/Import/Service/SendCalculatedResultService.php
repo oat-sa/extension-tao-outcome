@@ -67,12 +67,7 @@ class SendCalculatedResultService
 
         $isFullyGraded = $this->checkIsFullyGraded($deliveryExecutionId, $outcomeVariables);
 
-        $microtime = $deliveryExecution->getFinishTime();
-        $scoreTotalMicrotime = $this->getScoreTotalTimestamp($outcomeVariables);
-        if ($scoreTotalMicrotime !== null) {
-            $microtime = $scoreTotalMicrotime;
-        }
-        $timestamp = DateHelper::formatMicrotime($microtime);
+        $timestamp = DateHelper::formatMicrotime($this->getScoreTotalTimestamp($outcomeVariables));
 
         $this->eventManager->trigger(
             new DeliveryExecutionResultsRecalculated(
