@@ -95,9 +95,7 @@ class ResultImporter
         string $testUri,
         float $updatedScoreTotal
     ): void {
-        if ($scoreTotalVariable->getValue() != $updatedScoreTotal) {
-            $scoreTotalVariable->setEpoch(microtime());
-        }
+        $scoreTotalVariable->setEpoch(microtime());
         $scoreTotalVariable->setValue($updatedScoreTotal);
 
         $resultStorage->replaceTestVariables(
