@@ -59,8 +59,9 @@ class ResultImporter
 
         $resultStorage->getPersistence()->transactional(
             function () use ($resultStorage, $input, $testUri, $deliveryExecutionUri, $testScoreVariables): void {
-                $this->updateItemResponseVariables($resultStorage, $input, $testUri);
+                $isOutcomeWithNewZeroValue = $this->checkOutcomeWithNewZeroValue($input);
 
+                $this->updateItemResponseVariables($resultStorage, $input, $testUri);
                 $totalScoreCalculatedByItemOutcomes = $this->updateItemOutcomeVariables(
                     $resultStorage,
                     $input,
@@ -71,21 +72,27 @@ class ResultImporter
                 if (null === $testScoreVariables) {
                     return;
                 }
-
                 $this->updateTestVariables(
                     $resultStorage,
                     $testScoreVariables['scoreTotalVariable'],
                     $testScoreVariables['scoreTotalVariableId'],
                     $deliveryExecutionUri,
                     $testUri,
-                    $totalScoreCalculatedByItemOutcomes
+                    $totalScoreCalculatedByItemOutcomes,
+                    $isOutcomeWithNewZeroValue
                 );
             }
         );
     }
 
     /**
-     * @throws ImportResultException
+     * @param AbstractRdsResultStorage $resultStorage
+     * @param taoResultServer_models_classes_Variable $scoreTotalVariable
+     * @param int $scoreTotalVariableId
+     * @param string $deliveryExecutionUri
+     * @param string $testUri
+     * @param float $updatedScoreTotal
+     * @param bool $isOutcomeWithNewZeroValue
      */
     private function updateTestVariables(
         AbstractRdsResultStorage $resultStorage,
@@ -93,9 +100,12 @@ class ResultImporter
         int $scoreTotalVariableId,
         string $deliveryExecutionUri,
         string $testUri,
-        float $updatedScoreTotal
+        float $updatedScoreTotal,
+        bool $isOutcomeWithNewZeroValue
     ): void {
-        $scoreTotalVariable->setEpoch(microtime());
+        if ($scoreTotalVariable->getValue() != $updatedScoreTotal || $isOutcomeWithNewZeroValue) {
+            $scoreTotalVariable->setEpoch(microtime());
+        }
         $scoreTotalVariable->setValue($updatedScoreTotal);
 
         $resultStorage->replaceTestVariables(
@@ -355,5 +365,39 @@ class ResultImporter
                 get_class($resultStorage)
             )
         );
+    }
+
+    /**
+     * Zero don't change SCORE_TOTAL value, but we want to update its timestamp when we have new value
+     * @param ImportResultInput $input
+     * @return bool
+     * @throws ImportResultException
+     * @throws common_exception_Error
+     */
+    private function checkOutcomeWithNewZeroValue(ImportResultInput $input): bool
+    {
+        $deliveryExecutionUri = $input->getDeliveryExecutionId();
+        $resultStorage = $this->getResultStorage();
+
+        foreach ($input->getOutcomes() as $itemId => $outcomes) {
+            $callItemId = $this->createCallItemId($deliveryExecutionUri, $itemId);
+            foreach ($outcomes as $outcomeId => $outcomeValue) {
+                $outcomeVariable = $this->getItemVariable(
+                    $resultStorage,
+                    $deliveryExecutionUri,
+                    $itemId,
+                    $callItemId,
+                    $outcomeId
+                );
+
+                /** @var taoResultServer_models_classes_Variable $variable */
+                $variable = $outcomeVariable['variable'];
+                if ($outcomeValue === 0.0 && $variable->getExternallyGraded() === false) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }
