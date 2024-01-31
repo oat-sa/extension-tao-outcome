@@ -78,7 +78,8 @@ class ResultImporter
                     $testScoreVariables['scoreTotalVariableId'],
                     $deliveryExecutionUri,
                     $testUri,
-                    $totalScoreCalculatedByItemOutcomes
+                    $totalScoreCalculatedByItemOutcomes,
+                    $input->hasOutcomes()
                 );
             }
         );
@@ -93,9 +94,12 @@ class ResultImporter
         int $scoreTotalVariableId,
         string $deliveryExecutionUri,
         string $testUri,
-        float $updatedScoreTotal
+        float $updatedScoreTotal,
+        bool $hasOutcomes
     ): void {
-        $scoreTotalVariable->setEpoch(microtime());
+        if ($hasOutcomes) {
+            $scoreTotalVariable->setEpoch(microtime());
+        }
         $scoreTotalVariable->setValue($updatedScoreTotal);
 
         $resultStorage->replaceTestVariables(
