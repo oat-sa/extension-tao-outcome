@@ -221,10 +221,13 @@ abstract class taoResultServer_models_classes_Variable implements JsonSerializab
                 throw new \LogicException(sprintf('Unsupported variable type: %s', $rawVariable['type']));
         }
 
+        if (isset($rawVariable['baseType'])) {
+            $variable->setBaseType($rawVariable['baseType']);
+        }
+
         return $variable
             ->setIdentifier($rawVariable['identifier'])
             ->setCardinality($rawVariable['cardinality'])
-            ->setBaseType($rawVariable['baseType'])
             ->setEpoch($rawVariable['epoch']);
     }
 
