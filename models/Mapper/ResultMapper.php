@@ -15,8 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2019 (original work) Open Assessment Technologies SA;
- *
+ * Copyright (c) 2019-2024 (original work) Open Assessment Technologies SA;
  */
 
 namespace oat\taoResultServer\models\Mapper;
@@ -325,14 +324,26 @@ class ResultMapper extends ConfigurableService
      */
     protected function serializeValueCollection(ValueCollection $valueCollection)
     {
-        $values = array_map(
-            function (Value $value) {
-                return $value->getValue();
-            },
-            iterator_to_array($valueCollection)
-        );
+        $isRecord = false;
+        $values = [];
+        /** @var Value $value */
+        foreach ($valueCollection as $value) {
+            $fieldIdentifier = $value->getFieldIdentifier();
+            $baseType = $value->getBaseType();
+            $isRecord = $isRecord || $fieldIdentifier && $baseType !== -1;
+            $values[] = $isRecord
+                ? [
+                    'name' => $fieldIdentifier,
+                    'base' => [
+                        BaseType::getNameByConstant($baseType) => $value->getValue(),
+                    ]
+                ]
+                : $value->getValue();
+        }
 
-        return implode(';', $values);
+        return $isRecord
+            ? json_encode(['record' => $values])
+            : implode(';', $values);
     }
 
     /**
