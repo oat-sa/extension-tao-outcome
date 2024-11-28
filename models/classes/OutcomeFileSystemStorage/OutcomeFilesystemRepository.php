@@ -146,7 +146,7 @@ class OutcomeFilesystemRepository extends ConfigurableService implements ResultS
             /** @var taoResultServer_models_classes_Variable $variable */
             $variable = $rawVariable[0]->variable;
             if ($this->isFileReference($variable)) {
-                $this->getFileSystem()->deleteDir(
+                $this->getFileSystem()->deleteDirectory(
                     $this->getFilePathFactory()->getDirPath($deliveryResultIdentifier)
                 );
             }

@@ -55,9 +55,9 @@
 	},
 	"require": {
 		"oat-sa/oatbox-extension-installer": "~1.1||dev-master",
-		"oat-sa/generis" : ">=15.22",
-		"oat-sa/tao-core" : ">=50.24.6",
-		"oat-sa/lib-tao-dtms" : "^1.0.1",
+		"oat-sa/generis": ">=16.0.0",
+		"oat-sa/tao-core": ">=54.26.0",
+		"oat-sa/lib-tao-dtms": "^1.0.1",
 		"qtism/qtism": ">=0.25.0"
 	},
 	"autoload" : {
