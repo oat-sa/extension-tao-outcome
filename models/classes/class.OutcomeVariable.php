@@ -99,7 +99,7 @@ class taoResultServer_models_classes_OutcomeVariable extends taoResultServer_mod
     /**
      * {@inheritdoc}
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return parent::jsonSerialize() +
             [

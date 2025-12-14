@@ -25,25 +25,27 @@ use PHPUnit\Framework\TestCase;
  */
 
 // phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class taoResultServer_models_classes_TraceVariableTest extends TestCase
+class ResponseVariableTest extends TestCase
 {
     public function testVariableCanBeJsonSerialized(): void
     {
-        $subject = (new \taoResultServer_models_classes_TraceVariable())
+        $subject = (new \taoResultServer_models_classes_ResponseVariable())
             ->setIdentifier('testIdentifier')
             ->setCardinality('single')
             ->setBaseType('testBaseType')
             ->setEpoch('testEpoch')
-            ->setTrace('testTrace');
+            ->setCorrectResponse('testCorrectResponse')
+            ->setCandidateResponse('testCandidateResponse');
 
         $this->assertSame(json_encode([
             'identifier' => 'testIdentifier',
             'cardinality' => 'single',
             'baseType' => 'testBaseType',
             'epoch' => 'testEpoch',
-            'type' => \taoResultServer_models_classes_TraceVariable::TYPE,
+            'type' => \taoResultServer_models_classes_ResponseVariable::TYPE,
             'externallyGraded' => false,
-            'trace' => 'testTrace',
+            'correctResponse' => 'testCorrectResponse',
+            'candidateResponse' => base64_encode('testCandidateResponse'),
         ]), json_encode($subject));
     }
 }

@@ -77,7 +77,7 @@ class ImportResultTask extends AbstractAction implements TaskAwareInterface, Jso
         }
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): string
     {
         return __CLASS__;
     }

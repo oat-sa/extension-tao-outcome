@@ -186,7 +186,7 @@ abstract class taoResultServer_models_classes_Variable implements JsonSerializab
     /**
      * {@inheritdoc}
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return [
             'identifier' => $this->identifier,
