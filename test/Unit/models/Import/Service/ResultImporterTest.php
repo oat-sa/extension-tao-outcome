@@ -37,26 +37,20 @@ use taoResultServer_models_classes_ResponseVariable;
 
 class ResultImporterTest extends TestCase
 {
-    /** @var Ontology|MockObject */
-    private $ontology;
-
-    /** @var ResultServerService|MockObject */
-    private $resultServerService;
-
-    /** @var AbstractRdsResultStorage|MockObject */
-    private $resultStorage;
+    private AbstractRdsResultStorage|MockObject $resultStorage;
     private ImportResultInput $input;
     private ResultImporter $sut;
+    private common_persistence_SqlPersistence|MockObject $persistence;
 
     public function setUp(): void
     {
-        $this->ontology = $this->createMock(Ontology::class);
-        $this->resultServerService = $this->createMock(ResultServerService::class);
+        $ontology = $this->createMock(Ontology::class);
+        $resultServerService = $this->createMock(ResultServerService::class);
         $this->resultStorage = $this->createMock(AbstractRdsResultStorage::class);
         $this->persistence = $this->createMock(common_persistence_SqlPersistence::class);
         $this->input = new ImportResultInput('executionId', true);
 
-        $this->resultServerService
+        $resultServerService
             ->expects($this->any())
             ->method('getResultStorage')
             ->willReturn($this->resultStorage);
@@ -87,15 +81,15 @@ class ResultImporterTest extends TestCase
             ->method('getDelivery')
             ->willReturn('deliveryId');
 
-        $this->ontology
+        $ontology
             ->method('getResource')
             ->willReturn($delivery);
 
-        $this->ontology
+        $ontology
             ->method('getProperty')
             ->willReturn($this->createMock(core_kernel_classes_Property::class));
 
-        $this->sut = new ResultImporter($this->ontology, $this->resultServerService);
+        $this->sut = new ResultImporter($ontology, $resultServerService);
     }
 
     public function testCreateByImportResult(): void

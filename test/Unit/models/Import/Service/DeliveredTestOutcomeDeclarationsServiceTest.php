@@ -26,6 +26,7 @@ use oat\taoDeliveryRdf\model\DeliveryContainerService;
 use oat\taoDelivery\model\execution\DeliveryExecutionService;
 use oat\taoQtiTest\models\runner\QtiRunnerService;
 use oat\taoResultServer\models\Import\Service\DeliveredTestOutcomeDeclarationsService;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use qtism\data\AssessmentTest;
 use qtism\data\ExtendedAssessmentItemRef;
@@ -35,9 +36,10 @@ use oat\taoQtiTest\models\runner\QtiRunnerServiceContext;
 
 class DeliveredTestOutcomeDeclarationsServiceTest extends TestCase
 {
-    private QtiRunnerService $qtiRunnerServiceMock;
-    private DeliveryExecutionService $deliveryExecutionServiceMock;
-    private DeliveryContainerService $deliveryContainerServiceMock;
+    private QtiRunnerService|MockObject $qtiRunnerServiceMock;
+    private DeliveryExecutionService|MockObject $deliveryExecutionServiceMock;
+    private DeliveryContainerService|MockObject $deliveryContainerServiceMock;
+    private array $item;
 
     public function setUp(): void
     {

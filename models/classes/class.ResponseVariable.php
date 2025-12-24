@@ -99,7 +99,7 @@ class taoResultServer_models_classes_ResponseVariable extends taoResultServer_mo
     /**
      * {@inheritdoc}
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return parent::jsonSerialize() +
             [
