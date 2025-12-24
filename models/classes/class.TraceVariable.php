@@ -67,7 +67,7 @@ class taoResultServer_models_classes_TraceVariable extends taoResultServer_model
     /**
      * {@inheritdoc}
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return parent::jsonSerialize() +
             [

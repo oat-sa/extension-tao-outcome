@@ -83,7 +83,7 @@ class ItemVariableStorable extends VariableStorable
     /**
      * @inheritdoc
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return [
             "deliveryResultIdentifier" => $this->deliveryResultIdentifier,

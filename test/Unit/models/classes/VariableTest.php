@@ -25,7 +25,7 @@ use PHPUnit\Framework\TestCase;
  */
 
 // phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class taoResultServer_models_classes_VariableTest extends TestCase
+class VariableTest extends TestCase
 {
     public function testVariableCanBeJsonSerialized(): void
     {
